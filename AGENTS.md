@@ -9,10 +9,15 @@ anything. It is binding.
 
 **Open Research Lab** — open-source software for scientific research. Licence: Apache-2.0.
 
-Current state: **Phase 1 (market validation) complete, no application code exists, and none
-should be added here.** This is the **umbrella repository**: strategy, research and product
-documentation. Products live in their own repositories; the `sample-operations` repository does
-not exist yet and must not be created until user validation returns a GO.
+Current state: **Phase 1 (market validation) complete; no product code exists and none should be
+added here.** This is the **umbrella repository**: strategy, research and product documentation.
+Products live in their own repositories; the `sample-operations` repository does not exist yet and
+must not be created until user validation returns a GO.
+
+The single exception is [`tools/collection-validator`](tools/collection-validator/README.md), a
+throwaway prototype built to gather evidence during user validation: a read-only CSV checker with
+no persistence, no UI and no domain model. Keep it that way — it is not the seed of a product, and
+nothing in it may be promoted to a shared package or reused as an architecture precedent.
 
 The candidate first product, **Sample Operations**, is a local-first desktop tool for tracking
 where physical specimens and samples are and what has happened to them. Its target users are
@@ -133,16 +138,17 @@ Full detail in [docs/architecture/testing-strategy.md](docs/architecture/testing
 
 ## 9. Repository facts (keep current)
 
-- Structure today: `docs/` only. Planned code location:
-  `products/sample-operations/{packages,apps}` (ADR-0008).
-- No `package.json`, no toolchain, no CI yet — that is Phase 1 of the
-  [roadmap](docs/product/roadmap.md).
+- Structure today: `docs/`, plus the `tools/collection-validator` prototype. Sample Operations
+  code, when it exists, goes in its own repository (ADR-0008, as amended).
+- No repository-wide toolchain and no CI. `tools/collection-validator` has its own
+  self-contained `package.json` (three development dependencies, nothing at runtime) and is not
+  a workspace, a monorepo root, or a precedent for one.
 - No pre-commit hooks configured (no `.pre-commit-config.yaml`, no `.husky/`). If you introduce
   a toolchain, wire lint and format into CI first; hooks are optional and must never be skipped
   with `--no-verify` once they exist.
-- Commands: none yet. When Phase 1 lands, `npm run verify` (lint + typecheck + test) becomes the
-  single command every agent must run before opening a PR, and this section must be updated to
-  say so.
+- Commands, run from `tools/collection-validator`: `npm install`, `npm test`,
+  `npm run typecheck`, `npm run validate -- <file.csv>`. Both checks must be green before a PR
+  that touches the prototype. There is no repository-wide command.
 
 ## 10. When in doubt
 

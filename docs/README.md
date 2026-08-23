@@ -51,7 +51,9 @@
 architecture documents are proposals with rationale, and all ADRs are `Proposed`. **Nothing has
 been validated with real users**; that is Phase 2 of the [roadmap](product/roadmap.md) and it gates
 all code. `open-research-lab` is the umbrella repository — no product code lives here, and the
-Sample Operations repository does not exist yet.
+Sample Operations repository does not exist yet. The one piece of code in the repository,
+[`tools/collection-validator`](../tools/collection-validator/README.md), is a throwaway prototype
+used to make Phase 2 interviews concrete; it is not a product and not an architecture precedent.
 
 Where Phase 0 and Phase 1 conflict, Phase 1 wins: the beachhead is small natural-history
 collections, not small research laboratories.
