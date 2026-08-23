@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
 import { detectDelimiter, parseCsv } from '../src/csv.ts';
-import { validate, type Finding, type ValidationResult } from '../src/validation.ts';
+import { inspectDate, validate, type Finding, type ValidationResult } from '../src/validation.ts';
 
 function check(fixture: string): ValidationResult {
   const path = fileURLToPath(new URL(`../fixtures/${fixture}`, import.meta.url));
@@ -116,6 +116,26 @@ test('a date that cannot exist is an error; unclear dates are warnings', () => {
   assert.equal(found(result, 'future-date').severity, 'warning');
 });
 
+test('a date whose day and month order is decided by the value itself is accepted', () => {
+  const today = new Date('2026-01-01T00:00:00Z');
+  assert.equal(inspectDate('14/07/1998', today).kind, 'ok');
+  assert.equal(inspectDate('1998.07.14', today).kind, 'ok');
+  assert.equal(inspectDate('03/04/1998', today).kind, 'ambiguous');
+});
+
+test('a two-digit year is unclear rather than impossible', () => {
+  const verdict = inspectDate('03/04/98', new Date('2026-01-01T00:00:00Z'));
+  assert.equal(verdict.kind, 'ambiguous');
+  assert.match(verdict.detail ?? '', /two digits/);
+});
+
+test('a day that exists in neither reading is impossible', () => {
+  const today = new Date('2026-01-01T00:00:00Z');
+  assert.equal(inspectDate('31/02/1998', today).kind, 'impossible');
+  assert.equal(inspectDate('13/13/1998', today).kind, 'impossible');
+  assert.equal(inspectDate('14/07/2999', today).kind, 'future');
+});
+
 test('a four-digit year on its own is accepted', () => {
   const result = check('messy-dates.csv');
   for (const finding of result.findings) {
@@ -176,6 +196,14 @@ test('rows with the wrong number of values are errors that explain the shift', (
 test('errors are listed before warnings', () => {
   const severities = check('duplicate-identifiers.csv').findings.map((f) => f.severity);
   assert.deepEqual(severities, [...severities].sort());
+});
+
+test('a column heading padded with spaces is reported and still recognised', () => {
+  const table = parseCsv('  CatalogNumber  ,Locality\nX-1,Site\n', ',');
+  const result = validate('inline.csv', table);
+  const finding = found(result, 'untidy-column-heading');
+  assert.equal(finding.severity, 'warning');
+  assert.equal(result.detection.identifier?.header, '  CatalogNumber  ');
 });
 
 test('repeated and blank column headings are reported', () => {

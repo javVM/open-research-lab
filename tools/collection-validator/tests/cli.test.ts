@@ -75,6 +75,16 @@ test('the input file is never modified', () => {
   assert.equal(statSync(path).mtimeMs, stat.mtimeMs);
 });
 
+test('control characters in a value cannot rewrite the report', () => {
+  const path = join(mkdtempSync(join(tmpdir(), 'validator-')), 'escapes.csv');
+  writeFileSync(path, 'CatalogNumber,DecimalLatitude\nX-1,"\u001b[2Jwiped\rERROR"\n', 'utf8');
+  const result = run([path]);
+  assert.equal(result.status, 1);
+  assert.ok(!result.stdout.includes('\u001b'));
+  assert.ok(!result.stdout.includes('\r'));
+  assert.match(result.stdout, /\?\[2Jwiped\?ERROR/);
+});
+
 test('--json writes a machine-readable report to the given path', () => {
   const out = join(mkdtempSync(join(tmpdir(), 'cv-')), 'report.json');
   const result = run([fixture('bad-coordinates.csv'), '--json', out]);

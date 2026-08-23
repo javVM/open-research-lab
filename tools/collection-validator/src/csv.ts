@@ -135,7 +135,7 @@ export function parseCsv(text: string, delimiter: string): CsvTable {
   }
 
   return {
-    header: headerRecord.values.map((value) => value.trim()),
+    header: headerRecord.values,
     rows: records.map((record) => ({ line: record.line, values: record.values })),
     delimiter,
   };

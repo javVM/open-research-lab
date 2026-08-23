@@ -116,7 +116,7 @@ function findingWithCount(
 function checkHeader(table: CsvTable): Finding[] {
   const findings: Finding[] = [];
 
-  const blank = table.header.filter((name) => name === '').length;
+  const blank = table.header.filter((name) => name.trim() === '').length;
   if (blank > 0) {
     findings.push(
       findingWithCount(
@@ -132,8 +132,8 @@ function checkHeader(table: CsvTable): Finding[] {
 
   const seen = new Map<string, number>();
   for (const name of table.header) {
-    if (name === '') continue;
-    seen.set(name, (seen.get(name) ?? 0) + 1);
+    if (name.trim() === '') continue;
+    seen.set(name.trim(), (seen.get(name.trim()) ?? 0) + 1);
   }
   const repeated = [...seen.entries()].filter(([, count]) => count > 1);
   if (repeated.length > 0) {
@@ -148,7 +148,9 @@ function checkHeader(table: CsvTable): Finding[] {
     );
   }
 
-  const padded = table.header.filter((name) => name !== name.trim() || / {2,}/.test(name));
+  const padded = table.header.filter(
+    (name) => name.trim() !== '' && (name !== name.trim() || / {2,}/.test(name)),
+  );
   if (padded.length > 0) {
     findings.push(
       finding(
@@ -432,17 +434,56 @@ export function inspectDate(raw: string, today: Date = new Date()): DateVerdict 
 
   const slashed = SLASHED.exec(value);
   if (slashed) {
-    const parts = [slashed[1], slashed[2], slashed[3]].filter((p): p is string => p !== undefined);
-    const numbers = parts.map(Number);
-    const [a, b] = numbers as [number, number];
-    if (a > 12 && b > 12) return { kind: 'impossible', detail: 'no part of it can be a month' };
-    if (numbers.some((n) => n > 31 && String(n).length !== 4)) {
-      return { kind: 'impossible', detail: 'one part is too large to be a day, month or year' };
+    const [, first, second, third] = slashed;
+    if (first === undefined || second === undefined) return { kind: 'unrecognised' };
+
+    if (first.length === 4) {
+      const day = third === undefined ? 1 : Number(third);
+      if (!isRealDate(Number(first), Number(second), day)) {
+        return { kind: 'impossible', detail: 'that day does not exist' };
+      }
+      if (Date.UTC(Number(first), Number(second) - 1, day) > today.getTime()) {
+        return { kind: 'future', detail: 'the date is in the future' };
+      }
+      return { kind: 'ok' };
     }
-    return {
-      kind: 'ambiguous',
-      detail: 'day and month order cannot be determined from the value alone',
-    };
+
+    const a = Number(first);
+    const b = Number(second);
+    if (a > 12 && b > 12) return { kind: 'impossible', detail: 'no part of it can be a month' };
+    if (a > 31 || b > 31) {
+      return { kind: 'impossible', detail: 'one part is too large to be a day or a month' };
+    }
+
+    if (third === undefined) {
+      return { kind: 'ambiguous', detail: 'no year is given, so the date cannot be checked' };
+    }
+    if (third.length === 3) {
+      return { kind: 'impossible', detail: 'the year is neither two nor four digits' };
+    }
+
+    const twoDigitYear = third.length === 2;
+    const year = twoDigitYear ? 2000 : Number(third);
+    const readings: readonly (readonly [number, number])[] =
+      a > 12 ? [[a, b]] : b > 12 ? [[b, a]] : [[a, b], [b, a]];
+    const possible = readings.filter(([day, month]) => isRealDate(year, month, day));
+    const resolved = possible[0];
+    if (resolved === undefined) return { kind: 'impossible', detail: 'that day does not exist' };
+
+    if (twoDigitYear) {
+      return { kind: 'ambiguous', detail: 'the year has two digits, so the century is a guess' };
+    }
+    if (possible.length > 1) {
+      return {
+        kind: 'ambiguous',
+        detail: 'day and month order cannot be determined from the value alone',
+      };
+    }
+    const [day, month] = resolved;
+    if (Date.UTC(year, month - 1, day) > today.getTime()) {
+      return { kind: 'future', detail: 'the date is in the future' };
+    }
+    return { kind: 'ok' };
   }
 
   return { kind: 'unrecognised' };
@@ -571,7 +612,7 @@ function checkColumnConsistency(table: CsvTable, detection: Detection): Finding[
   );
 
   table.header.forEach((header, index) => {
-    if (header === '' || alreadyChecked.has(index)) return;
+    if (header.trim() === '' || alreadyChecked.has(index)) return;
     const values = table.rows
       .map((row) => ({ line: row.line, value: cell(row.values, index) }))
       .filter((entry) => entry.value !== '');

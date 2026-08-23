@@ -23,7 +23,7 @@ away. Either answer is useful, so please tell us which one it is.
 | A date that cannot exist (e.g. `1989-02-31`) | ERROR |
 | A row with more or fewer values than there are columns | ERROR |
 | The same column heading used twice | ERROR |
-| A date written so it could be read two ways (`03/04/1998`) | WARNING |
+| A date written so it could be read two ways (`03/04/1998`), or with a two-digit year (`03/04/98`) | WARNING |
 | A date in a format we could not read (`summer 1976`) | WARNING |
 | A date in the future | WARNING |
 | A row with no date, or no locality | WARNING |

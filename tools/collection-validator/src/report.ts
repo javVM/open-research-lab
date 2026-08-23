@@ -82,7 +82,7 @@ export function renderTextReport(result: ValidationResult): string {
   push('data is correct or that it meets any published standard.');
   push();
 
-  return lines.join('\n');
+  return lines.map(withoutControlCharacters).join('\n');
 }
 
 export function renderJsonReport(result: ValidationResult): string {
@@ -118,6 +118,14 @@ export function renderJsonReport(result: ValidationResult): string {
     null,
     2,
   )}\n`;
+}
+
+/**
+ * Values come from a file we did not write. Escape sequences, carriage returns and stray
+ * line breaks inside a value would otherwise rewrite the report on the way to the terminal.
+ */
+function withoutControlCharacters(line: string): string {
+  return line.replace(/[\u0000-\u001f\u007f-\u009f]/g, '?');
 }
 
 function label(found: Finding): string {
