@@ -109,6 +109,23 @@ Ask about the past and the concrete. Never about a hypothetical future product.
   budget and what they bought last instead (Q18).
 - Anything that describes our proposed solution before Q20.
 
+### Optional follow-up: the data-check prototype
+
+After the interview — never before, or it contaminates everything above — offer
+[`tools/collection-validator`](../../tools/collection-validator/README.md) and ask the participant
+to run it on an export they already have. Framing: "this is a throwaway experiment, we want to know
+if it is useless." What we are listening for:
+
+1. Did it find anything you did not already know about?
+2. Of what it found, what would you actually act on, and what is noise?
+3. Was anything it called a problem in fact correct for your material?
+4. Which of your column headings did it fail to recognise?
+5. What do you check by hand today that it did not check at all?
+
+Record the answers verbatim. A participant who runs it on real data and comes back with corrections
+is stronger evidence than any answer to a hypothetical question; a participant who never gets round
+to running it is evidence too.
+
 ---
 
 ## 5. What counts as evidence

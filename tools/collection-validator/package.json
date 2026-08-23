@@ -1,0 +1,21 @@
+{
+  "name": "@open-research-lab/collection-validator",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Experimental prototype: checks a collection data CSV export for common problems. Read-only, offline, no dependencies at runtime.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "validate": "tsx src/cli.ts",
+    "test": "tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.1",
+    "tsx": "4.23.12",
+    "typescript": "5.9.3"
+  }
+}

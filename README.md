@@ -7,6 +7,16 @@ manage, validate, analyze, and share scientific data.
 
 ## Projects
 
+### Collection data check — experimental prototype
+
+A small command-line tool that reads a CSV export from a collection spreadsheet or collection
+management system and reports the problems worth a human look: repeated catalogue numbers, empty
+identifiers, impossible coordinates and dates, missing localities, duplicate and empty rows. It is
+read-only, works entirely offline, and claims no standards conformance.
+
+It exists to test one question with real collections — **is this useful?** — before any product is
+committed to. Small enough to throw away: [tools/collection-validator](tools/collection-validator/README.md)
+
 ### Sample Operations — in design (no code yet)
 
 A local-first desktop tool for small research groups and collections that need to answer two

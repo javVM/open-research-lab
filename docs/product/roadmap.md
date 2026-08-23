@@ -63,7 +63,15 @@ conducted by the maintainer; agents prepare materials and synthesise notes.
 Deliverables: `docs/research/user-interviews.md`; an amended requirements document; a recorded
 GO / NO-GO / re-scope decision against the §6 thresholds.
 
-**This phase gates everything after it.** No product repository, no toolchain, no code.
+**This phase gates everything after it.** No product repository, and no product code.
+
+**One deliberate exception — an interview artefact, not a product.**
+[`tools/collection-validator`](../../tools/collection-validator/README.md) is a small read-only CSV
+checker that exists so interviews can be about behaviour instead of hypotheticals: the participant
+runs it on an export they already have, and we learn whether the problems it finds are problems
+they care about. It has no persistence, no UI, no domain model and no dependency on any Sample
+Operations design, and it is expected to be discarded or rewritten once we know the answer. Its
+reception is evidence for the §6 thresholds, not a commitment to build it out.
 
 **Exit criteria:** decision recorded, with counts against thresholds, disconfirming evidence
 first.
