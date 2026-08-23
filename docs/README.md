@@ -13,6 +13,12 @@
   sources.
 - [Requirements](product/requirements.md) — MVP scope, priorities, domain invariants,
   non-functional targets, acceptance scenarios, open questions.
+- [Market validation](product/market-validation.md) — the three candidate markets compared with
+  sources, scorecards, the beachhead decision, the alternative-product test, and the executive
+  decision. **Start here for the current strategy;** it supersedes parts of the Phase 0 product
+  documents.
+- [User validation](product/user-validation.md) — who to interview, where to find them, the
+  interview guide, and the go/no-go thresholds.
 - [Roadmap](product/roadmap.md) — phases, exit criteria, post-MVP order, deferred items.
 - [Risks](product/risks.md) — product, technical and adoption risks with mitigations.
 
@@ -31,6 +37,8 @@
 - [Domain research](research/domain-research.md) — laboratory versus collection workflows,
   identifiers, standards (Darwin Core, ABCD, MIxS, GGBN, ISBER, SPREC, ARK), storage
   hierarchies, with sources.
+- [Market sources](research/market-sources.md) — every cited source behind the market analysis,
+  with what it does and does not support, plus the known gaps in the evidence.
 
 ## Reports
 
@@ -39,6 +47,11 @@
 
 ---
 
-**Status of everything here:** Phase 0. The product documents are desk research and the
-architecture documents are proposals with rationale. Nothing has been validated with real
-users yet; the validation plan is Phase 2 of the roadmap.
+**Status of everything here:** Phase 1 (market validation) complete; still desk research. The
+architecture documents are proposals with rationale, and all ADRs are `Proposed`. **Nothing has
+been validated with real users**; that is Phase 2 of the [roadmap](product/roadmap.md) and it gates
+all code. `open-research-lab` is the umbrella repository — no product code lives here, and the
+Sample Operations repository does not exist yet.
+
+Where Phase 0 and Phase 1 conflict, Phase 1 wins: the beachhead is small natural-history
+collections, not small research laboratories.

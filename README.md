@@ -15,7 +15,7 @@ questions reliably: **where is this sample?** and **what has happened to it?**
 No server, no account, no network. All data in a single SQLite file you own, exportable to CSV
 at any time — so your records outlive the software.
 
-Design work so far: [discovery report](docs/discovery-report.md) ·
+Design work so far: [market validation](docs/product/market-validation.md) · [discovery report](docs/discovery-report.md) ·
 [documentation index](docs/README.md)
 
 ## Focus areas

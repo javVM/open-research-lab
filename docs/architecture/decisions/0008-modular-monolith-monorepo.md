@@ -1,6 +1,6 @@
 # ADR-0008 — Modular monolith in a product-scoped monorepo
 
-- Status: Proposed
+- Status: Proposed; the repository-boundary part is **superseded** (see Amendment below)
 - Date: 2026-08-23
 
 ## Context
@@ -23,6 +23,17 @@ products/sample-operations/{packages/core, packages/persistence-sqlite,
 apps compose. Dependency direction is enforced by lint rules and package boundaries in CI, not
 by convention alone. No shared cross-product library exists, and none will be created until a
 second product is actually being built and duplication is demonstrated in working code.
+
+## Amendment (Phase 1, 2026-08-23)
+
+The maintainer decided that products live in **separate repositories** and that
+`open-research-lab` stays a documentation and strategy hub. So:
+
+- The modular-monolith decision and the internal layering **stand unchanged**.
+- The *monorepo scoped inside the umbrella repository* part does **not**: the packages above live
+  at the root of a standalone `sample-operations` repository, which will be created only on a GO
+  from user validation ([../../product/roadmap.md](../../product/roadmap.md)).
+- The "no shared cross-product library" rule stands, unchanged and unweakened.
 
 ## Alternatives considered
 

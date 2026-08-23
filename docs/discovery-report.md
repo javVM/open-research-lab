@@ -2,6 +2,12 @@
 
 Date: 2026-08-23. Author: agent session (Devin). Status: for maintainer review.
 
+> **Read with [product/market-validation.md](product/market-validation.md).** This report's
+> recommendation — Sample Operations for small research laboratories — is a Phase 0 *hypothesis*.
+> Phase 1 market validation kept the product and changed the market to small natural-history
+> collections, changed the build order (import/validate/export first), and recorded that the
+> Sample Operations repository is not to be created yet.
+
 This report answers the thirteen questions set for Phase 0. Detail lives in the linked
 documents; this is the summary and the recommendation. No application code was written.
 
