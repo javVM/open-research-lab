@@ -1,128 +1,162 @@
-# Roadmap — Sample Operations
+# Roadmap — Open Research Lab and Sample Operations
 
-Status: Phase 0 (discovery). Last updated: 2026-08-23.
-
-Effort is expressed in **agent sessions** (a focused work session producing a reviewable PR),
-not calendar time. Calendar time depends on review and user-validation availability, which are
-external waits and called out separately.
-
----
-
-## Phase 0 — Discovery (this deliverable) ✔
-
-Repository inspection, domain research, competitive analysis, problem framing, proposed
-domain model and architecture, ADRs, risks. No application code.
-
-**Exit criteria:** documents in `docs/` merged; MVP boundary agreed by the maintainer.
+Status: Phase 1 (market validation). Last updated: 2026-08-23.
+Supersedes the Phase 0 version of this document. Effort is in **agent sessions** (a focused
+session producing a reviewable PR), not calendar time; calendar time is dominated by external
+waits (interviews, review), which are marked as such.
 
 ---
 
-## Phase 1 — Project foundation (1 session)
+## Strategic decisions in force
 
-Scaffolding only, no features:
+Approved by the maintainer after Phase 0:
 
-- npm workspaces monorepo (`packages/core`, `packages/persistence-sqlite`, `apps/desktop`,
-  `apps/ui`), TypeScript `strict` everywhere.
-- Vitest, ESLint, Prettier, `.editorconfig` respected, `CONTRIBUTING.md`, issue templates.
-- GitHub Actions: install → lint → typecheck → test on Linux, plus a matrix build check.
-- One walking-skeleton test proving the toolchain runs.
-- Environment blueprint updated so future sessions start ready.
+- `open-research-lab` is the **umbrella repository**: strategy, research and product
+  documentation. No product code lives here.
+- Each product gets its **own repository**, created when — and not before — it is justified.
+- **The Sample Operations repository is not created yet.** Trigger: a GO decision from user
+  validation ([user-validation.md](user-validation.md) §6).
+- The local-first architecture from Phase 0 remains the current technical **hypothesis**
+  ([../architecture/initial-architecture.md](../architecture/initial-architecture.md)), with all
+  ADRs still marked `Proposed`.
 
-**Exit criteria:** `npm ci && npm run verify` is green in CI on a clean clone.
+Two changes coming out of market validation
+([market-validation.md](market-validation.md)):
 
----
-
-## Phase 2 — User validation (external wait; 1 session to prepare and synthesise)
-
-Five to eight conversations against the open questions in
-[requirements.md §6](requirements.md#6-open-questions-requiring-user-input-phase-2).
-Deliverable: `docs/research/user-interviews.md` plus an amended requirements document.
-
-**This phase gates Phase 4.** Building the UI before knowing whether barcodes and shared
-access are table stakes is the biggest avoidable risk in the plan. Phase 3 can proceed in
-parallel because the physical/custody core is stable regardless of the answers.
-
-**Exit criteria:** the six open questions answered, or explicitly accepted as unanswered risk
-by the maintainer.
+1. **Beachhead is small natural-history collections**, entered through the paleontology
+   collections community — not small research laboratories. This adds catalogue numbers,
+   determination history and a minimal loan record to the MVP, and makes CSV/CMS-export import a
+   first-class concern rather than a convenience.
+2. **The first shippable artefact is the import/validate/export pipeline**, which is useful on its
+   own without adopting anything. The Phase 0 plan put the UI first and migration last; that
+   ordering maximised the time before a user could get any value.
 
 ---
 
-## Phase 3 — Domain and persistence core (2–3 sessions)
+## Phase 0 — Discovery ✔ (complete)
 
-- `packages/core`: containers, positions, items, events, movement rules, all twelve invariants
-  from the requirements, as pure TypeScript with no I/O.
-- `packages/persistence-sqlite`: schema, forward-only migration runner, repositories, unit of
-  work, integrity checks.
-- CSV import/export as an application-layer service with dry-run validation.
-- A thin internal CLI to exercise everything without a UI.
-
-**Exit criteria:** every invariant covered by a test; 50k-item search benchmark under target;
-a 500-row import round-trips through export.
+Repository inspection, domain and competitor research, problem framing, proposed domain model and
+architecture, ten ADRs, testing strategy, risk register. No code.
+Deliverable: [../discovery-report.md](../discovery-report.md).
 
 ---
 
-## Phase 4 — Desktop MVP, v0.1 (3–4 sessions)
+## Phase 1 — Market validation ✔ (this deliverable)
 
-- Electron shell, typed IPC boundary, no Node access from the renderer.
-- Angular UI: container tree, item list with search and filters, item detail with history,
-  create/edit forms, move dialog, import wizard, export.
-- First-run experience: create-or-open database, set operator name, done.
-- Signed-where-possible installers for Windows and macOS, plus Linux AppImage.
-- First-run user guide.
+Three candidate markets researched with primary sources; scorecards; beachhead selected;
+willingness-to-pay and open-source-advantage analysis; the alternative-product test; the interview
+plan and go/no-go thresholds.
+Deliverables: [market-validation.md](market-validation.md),
+[user-validation.md](user-validation.md),
+[../research/market-sources.md](../research/market-sources.md).
 
-**Exit criteria:** all nine acceptance scenarios in the requirements pass end-to-end on
-Windows and macOS; a non-developer completes scenario 1 unaided in under five minutes.
+**Exit criteria:** maintainer accepts (or rejects) the beachhead and the interview plan.
 
 ---
 
-## Phase 5 — First real deployment (1–2 sessions + external wait)
+## Phase 2 — User validation (external wait; ~1 session to prepare, ~1 to synthesise)
 
-One friendly group uses it for their actual samples. Migrate their spreadsheet. Watch them
-work. Fix what breaks. Nothing else ships until this happens.
+Execute [user-validation.md](user-validation.md): 10 conversations (minimum 6), recruited through
+PDWG, NHCOLL-L, the iDigBio collections list and Spanish-language collections. Interviews are
+conducted by the maintainer; agents prepare materials and synthesise notes.
 
-**Exit criteria:** a real group has recorded real samples for two working weeks and would
-complain if the tool were removed.
+Deliverables: `docs/research/user-interviews.md`; an amended requirements document; a recorded
+GO / NO-GO / re-scope decision against the §6 thresholds.
+
+**This phase gates everything after it.** No product repository, no toolchain, no code.
+
+**Exit criteria:** decision recorded, with counts against thresholds, disconfirming evidence
+first.
+
+---
+
+## Phase 3 — Product definition, only on a GO (1 session)
+
+- Create the Sample Operations repository (name may change based on interviews).
+- Requirements rewritten around the interview evidence, with the collections additions:
+  catalogue number distinct from internal identifier, determination history, minimal loan record.
+- ADRs re-examined against what we learned; anything contradicted is superseded in writing, not
+  quietly dropped. The two most likely to fall: single-user (ADR-0010) and barcodes-deferred.
+- Project foundation in the new repository: npm workspaces, TypeScript strict, Vitest, ESLint,
+  Prettier, CI on all three platforms, `CONTRIBUTING.md`, environment blueprint.
+
+**Exit criteria:** `npm ci && npm run verify` green on a clean clone; requirements reflect real
+users.
+
+---
+
+## Phase 4 — Import, validate, export: the first useful slice (2–3 sessions)
+
+The pipeline first, because it is the only part that delivers value before adoption:
+
+- Domain core (`packages/core`): container tree, items, positions, events, all documented
+  invariants, pure and I/O-free.
+- Persistence (`packages/persistence-sqlite`): schema, forward-only migrations, repositories.
+- CSV/spreadsheet import with **dry-run validation and a plain-language error report** (row,
+  column, reason), all-or-nothing application, mapping to user-defined fields.
+- Export that round-trips through the importer.
+- A thin CLI so all of the above is usable and testable without a UI.
+
+**Exit criteria:** a real collection's real spreadsheet (obtained in Phase 2) is validated and
+imported end-to-end, and the owner reads the error report without help.
+
+---
+
+## Phase 5 — Desktop application, v0.1 (3–4 sessions)
+
+Electron shell with a hardened, typed IPC boundary; Angular UI for the container tree, search,
+item detail with custody history, move dialog, import wizard and export; first-run flow;
+installers for Windows and macOS plus a Linux AppImage; a first-run guide.
+
+**Exit criteria:** the acceptance scenarios in [requirements.md](requirements.md) pass on Windows
+and macOS, and a non-developer completes the first-sample scenario unaided in under five minutes.
+
+---
+
+## Phase 6 — First real deployment (1–2 sessions + external wait)
+
+One friendly collection uses it for real material: migrate their spreadsheet, watch them work, fix
+what breaks. Nothing else ships until this happens.
+
+**Exit criteria:** a real collection has used it for two working weeks and would complain if it
+disappeared.
 
 ---
 
 ## Post-MVP, in likely order
 
-Each item ships only if Phase 5 users or Phase 2 interviews demand it.
+Each item ships only if Phase 2 or Phase 6 users ask for it.
 
-| Version | Content | Why here |
-|---|---|---|
-| v0.2 | Barcode/QR scanning, label printing, batch move/edit, box grid visual view, check-out/check-in | The most likely blockers to daily use at volume |
-| v0.3 | Aliquots and derived samples with lineage, attachments, loans and external transfers, reporting | Real scientific workflow beyond location |
-| v0.4 | Darwin Core Archive export (validated against GBIF's validator), MIxS/GGBN field templates, taxonomy and determination history | Makes the tool credible for collections and publication |
-| v0.5 | Configurable per-type field schemas in the UI, saved searches, printable inventories, Spanish localisation | Fit-and-finish for broader adoption |
-| v1.0 | Stability, documented import/export contracts, upgrade guarantees, long-term data-format commitment | The version an institution can adopt |
-
----
+| Version | Content |
+|---|---|
+| v0.2 | Barcode/QR scanning and label printing, batch move/edit, container grid view, check-out/check-in |
+| v0.3 | Loans and outgoing transactions in full, parts of a specimen, derivation lineage, attachments and images, inventory reconciliation/spot-check |
+| v0.4 | Darwin Core Archive export validated against GBIF's validator, determination and taxonomy handling, MIxS/GGBN templates if labs ever become a target |
+| v0.5 | Configurable per-type fields in the UI, saved searches, printable inventories, Spanish localisation |
+| v1.0 | Stability, documented import/export contracts, upgrade and data-format guarantees |
 
 ## Deferred indefinitely (and why)
 
-- **Multi-user local app** — needs authentication, concurrency and conflict resolution; it is
-  the reason every competitor requires a server. If demanded, it becomes a separate
-  self-hosted deployment mode, not a change to the desktop app.
-- **Cloud sync in the open-source app** — contradicts local-first; would be a separate opt-in
-  service.
-- **Second product in the ecosystem** (PaleoMapper, Dataset Validator, Field Tools) — no work
-  starts until Sample Operations has real users. See
-  [vision.md §2](vision.md#2-what-open-research-lab-is-not-going-to-be-yet).
-- **Shared `scientific-core` library** — will be extracted from working code if ever, never
-  designed up front.
-- **Mobile/field capture** — a genuinely different product (offline capture, reconciliation,
-  merge). CSV import serves the field case for now.
-- **Plugin system, API platform, marketplace** — no user has asked; enormous surface area.
-
----
+- **Multi-user local app** — needs authentication, concurrency and conflict resolution; it is why
+  every competitor requires a server. If Phase 2 shows it is mandatory, it becomes a separate
+  self-hosted deployment mode reusing `core`, and ADR-0010 is superseded.
+- **Cloud sync in the open-source product** — contradicts local-first; would be an opt-in service.
+- **Becoming a catalogue/CMS** — taxonomy management, media management, publication portals. We
+  complement Symbiota, Specify and Arctos; competing with them head-on is a fight we lose.
+- **A second product** (PaleoMapper, Dataset Validator as a standalone, field tools) — not until
+  Sample Operations has real users. The one exception the evidence would justify: if Phase 2 says
+  the real pain is publication rather than location, the validator becomes *the* product and
+  Sample Operations is shelved (market-validation §8).
+- **A shared `scientific-core` library** — extracted from working code if ever, never designed up
+  front. The most likely eventual candidate is Darwin Core mapping/validation.
+- **Mobile and field capture** — a different product (offline capture, reconciliation, merge).
 
 ## Sequencing rules
 
-1. No feature work before Phase 1's toolchain is green in CI.
-2. No UI before the domain core enforces its invariants with tests.
-3. No new entity type without an ADR.
-4. No standards-conformance claim (Darwin Core, MIxS, GGBN) without validator output in the
-   repository proving it.
-5. No dependency added for a single convenience function.
-6. Every phase ends with a merged PR and updated documentation; documentation drift is a bug.
+1. No product repository before a GO decision.
+2. No feature work before the toolchain is green in CI.
+3. No UI before the domain core enforces its invariants with tests.
+4. No new entity without an ADR.
+5. No standards-conformance claim without validator output committed to the repository.
+6. Every phase ends with a merged PR and updated documentation; drift is a bug.
+7. If evidence contradicts a decision, supersede the ADR in writing. Never quietly abandon it.

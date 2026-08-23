@@ -4,6 +4,12 @@ Status: Phase 0 (proposal). Last updated: 2026-08-23.
 Decisions here are proposals with rationale; each significant one has an ADR in
 [decisions/](decisions/).
 
+> **Where this code would live:** in a **separate `sample-operations` repository**, not in
+> `open-research-lab`, which is the umbrella documentation and strategy hub. Any `products/...`
+> path below should be read as the root of that future repository. The repository is not created
+> yet — see [../product/roadmap.md](../product/roadmap.md) — and the structure is subject to the
+> requirements changes coming out of user validation.
+
 ---
 
 ## 1. Constraints that drive every decision

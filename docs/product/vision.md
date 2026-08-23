@@ -2,6 +2,17 @@
 
 Status: Phase 0 (discovery). Last updated: 2026-08-23.
 
+## 0. Structure (decided after Phase 0)
+
+`open-research-lab` is the **umbrella repository**: strategy, research and product documentation.
+Products live in their own repositories, created only when justified — the Sample Operations
+repository does not exist yet and will be created on a GO from user validation. See
+[roadmap.md](roadmap.md).
+
+The beachhead market changed in Phase 1: **small natural-history collections**, entered through the
+paleontology collections community, rather than small research laboratories. Reasoning and evidence:
+[market-validation.md](market-validation.md).
+
 ## 1. Open Research Lab
 
 Open Research Lab builds practical open-source software for scientific research, starting

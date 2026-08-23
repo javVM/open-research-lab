@@ -9,13 +9,21 @@ anything. It is binding.
 
 **Open Research Lab** — open-source software for scientific research. Licence: Apache-2.0.
 
-Current state: **Phase 0 complete, no application code exists.** The first product,
-**Sample Operations**, is a local-first desktop tool for tracking where physical samples and
-specimens are and what has happened to them.
+Current state: **Phase 1 (market validation) complete, no application code exists, and none
+should be added here.** This is the **umbrella repository**: strategy, research and product
+documentation. Products live in their own repositories; the `sample-operations` repository does
+not exist yet and must not be created until user validation returns a GO.
+
+The candidate first product, **Sample Operations**, is a local-first desktop tool for tracking
+where physical specimens and samples are and what has happened to them. Its target users are
+**small natural-history collections** (Phase 1 decision; Phase 0 said laboratories).
 
 Start by reading, in this order:
 
 1. [docs/README.md](docs/README.md) — index
+1. [docs/product/market-validation.md](docs/product/market-validation.md) — current strategy;
+   supersedes parts of the Phase 0 product documents
+1. [docs/product/user-validation.md](docs/product/user-validation.md) — the gate before any code
 2. [docs/product/vision.md](docs/product/vision.md)
 3. [docs/product/problem-statement.md](docs/product/problem-statement.md)
 4. [docs/product/requirements.md](docs/product/requirements.md) — the MVP boundary
