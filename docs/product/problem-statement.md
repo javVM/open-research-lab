@@ -1,6 +1,14 @@
 # Problem statement — Sample Operations
 
-Status: Phase 0 (discovery). Last updated: 2026-08-23.
+Status: Phase 0 (discovery), partially superseded. Last updated: 2026-08-23.
+
+> **Superseded in part by [market-validation.md](market-validation.md).** That analysis moved the
+> beachhead from small research laboratories to **small natural-history collections**, entered
+> through the paleontology community. The problem framing below still holds — the failure modes,
+> the "why the spreadsheet persists" argument and the measurable outcomes apply to both markets —
+> but where this document says "lab", read "small collection or lab", and treat §3's persona
+> emphasis as reversed in priority. Risk P1 below was the correct risk: this document's market
+> assumption did not survive research.
 
 ## 1. The problem in one sentence
 

@@ -2,6 +2,12 @@
 
 Status: Phase 0 (discovery). Last updated: 2026-08-23.
 
+> **Priority reversed by [market-validation.md](market-validation.md).** Elena (P3, small
+> collection) is now the **primary** persona, joined by a paleontology collection manager /
+> preparator not yet described here. Marta and Diego (P1, P2 — laboratory) become secondary and are
+> retained as a comparison case in the interview plan. The reason is not that lab pain is smaller,
+> but that lab users are the ones we cannot reach: see market-validation §6 and §7.
+
 **Important caveat:** these personas are constructed from desk research
 ([domain-research.md](../research/domain-research.md)), not from interviews. They are
 hypotheses to test in Phase 2, and they are labelled with what would falsify them.
