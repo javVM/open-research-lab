@@ -266,7 +266,7 @@ Scale 1–5, higher is better for us (so for "Competition" and "Regulatory burde
 | Services opportunity | 2 | 4 | 3 | Migration and setup labour is the community's stated bottleneck in B/C (S2, S3, S19) and is already a priced service (S14: $252/hr). Little equivalent demand in A. |
 | Fit with our technical capability | 5 | 4 | 3 | A one-person TypeScript/SQLite/desktop project. A is squarely in scope. B needs domain learning (Darwin Core, determinations, loans). C needs deeper domain immersion (stratigraphy, prep workflows) that we do not yet have. |
 | Fit with Sample Operations domain | 5 | 4 | 3 | Per §5: the model was designed for A, adapts to B with additions, and strains in C around identifiers and parts. |
-| **Total (75 max)** | **41** | **53** | **46** | |
+| **Total (75 max)** | **46** | **55** | **50** | |
 
 Reading the totals honestly: B wins on *reachability, differentiation and payer evidence*, not on
 pain or product fit. A wins on product fit and loses on everything that determines whether a tiny
