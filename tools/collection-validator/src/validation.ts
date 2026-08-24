@@ -408,29 +408,26 @@ interface DateVerdict {
   readonly detail?: string;
 }
 
-const ISO_DATE = /^(\d{4})-(\d{2})(?:-(\d{2}))?$/;
-const SLASHED = /^(\d{1,4})[/.](\d{1,2})(?:[/.](\d{1,4}))?$/;
+const ISO_DATE = /^(\d{4})-(\d{1,2})(?:-(\d{1,2}))?$/;
+const ISO_INTERVAL = /^(\d{4}(?:-\d{1,2}(?:-\d{1,2})?)?)\/(\d{4}(?:-\d{1,2}(?:-\d{1,2})?)?)$/;
+const SLASHED = /^(\d{1,4})[/.-](\d{1,2})(?:[/.-](\d{1,4}))?$/;
 const YEAR_ONLY = /^\d{4}$/;
 
 export function inspectDate(raw: string, today: Date = new Date()): DateVerdict {
   const value = raw.trim();
-  if (YEAR_ONLY.test(value)) {
-    const year = Number(value);
-    if (year > today.getUTCFullYear()) return { kind: 'future', detail: 'year is in the future' };
+
+  const interval = ISO_INTERVAL.exec(value);
+  if (interval) {
+    const [, start, end] = interval as unknown as [string, string, string];
+    const startVerdict = inspectIsoLike(start, today);
+    if (startVerdict.kind !== 'ok') return startVerdict;
+    const endVerdict = inspectIsoLike(end, today);
+    if (endVerdict.kind !== 'ok') return endVerdict;
     return { kind: 'ok' };
   }
 
-  const iso = ISO_DATE.exec(value);
-  if (iso) {
-    const [, year, month, day] = iso as unknown as [string, string, string, string | undefined];
-    if (!isRealDate(Number(year), Number(month), day === undefined ? 1 : Number(day))) {
-      return { kind: 'impossible', detail: 'that day does not exist' };
-    }
-    if (Date.UTC(Number(year), Number(month) - 1, day === undefined ? 1 : Number(day)) > today.getTime()) {
-      return { kind: 'future', detail: 'the date is in the future' };
-    }
-    return { kind: 'ok' };
-  }
+  const single = inspectIsoLike(value, today);
+  if (single.kind !== 'unrecognised') return single;
 
   const slashed = SLASHED.exec(value);
   if (slashed) {
@@ -473,7 +470,7 @@ export function inspectDate(raw: string, today: Date = new Date()): DateVerdict 
     if (twoDigitYear) {
       return { kind: 'ambiguous', detail: 'the year has two digits, so the century is a guess' };
     }
-    if (possible.length > 1) {
+    if (possible.length > 1 && a !== b) {
       return {
         kind: 'ambiguous',
         detail: 'day and month order cannot be determined from the value alone',
@@ -481,6 +478,28 @@ export function inspectDate(raw: string, today: Date = new Date()): DateVerdict 
     }
     const [day, month] = resolved;
     if (Date.UTC(year, month - 1, day) > today.getTime()) {
+      return { kind: 'future', detail: 'the date is in the future' };
+    }
+    return { kind: 'ok' };
+  }
+
+  return { kind: 'unrecognised' };
+}
+
+function inspectIsoLike(value: string, today: Date): DateVerdict {
+  if (YEAR_ONLY.test(value)) {
+    const year = Number(value);
+    if (year > today.getUTCFullYear()) return { kind: 'future', detail: 'year is in the future' };
+    return { kind: 'ok' };
+  }
+
+  const iso = ISO_DATE.exec(value);
+  if (iso) {
+    const [, year, month, day] = iso as unknown as [string, string, string, string | undefined];
+    if (!isRealDate(Number(year), Number(month), day === undefined ? 1 : Number(day))) {
+      return { kind: 'impossible', detail: 'that day does not exist' };
+    }
+    if (Date.UTC(Number(year), Number(month) - 1, day === undefined ? 1 : Number(day)) > today.getTime()) {
       return { kind: 'future', detail: 'the date is in the future' };
     }
     return { kind: 'ok' };
@@ -532,12 +551,17 @@ function checkDates(table: CsvTable, detection: Detection): Finding[] {
     );
   }
   if (missing.length > 0) {
+    const note =
+      column.alsoMatched.length > 0
+        ? `This refers only to the "${column.header}" column. Other columns that may contain the same date were not checked: ${column.alsoMatched.map((other) => `"${other.header}"`).join(', ')}.`
+        : 'A specimen with no value in this column is harder to place in time; the date may still be recorded in another column.';
     findings.push(
       finding(
         'warning',
         'missing-date',
-        `${missing.length} row${missing.length === 1 ? ' has' : 's have'} no ${column.concept.label} ("${column.header}")`,
+        `${missing.length} row${missing.length === 1 ? ' has' : 's have'} an empty ${column.concept.label} column ("${column.header}")`,
         missing,
+        note,
       ),
     );
   }
@@ -587,13 +611,17 @@ function checkLocality(table: CsvTable, detection: Detection): Finding[] {
     if (cell(row.values, column.index) === '') missing.push(`line ${row.line}`);
   }
   if (missing.length === 0) return [];
+  const note =
+    column.alsoMatched.length > 0
+      ? `This refers only to the "${column.header}" column. Other columns that may contain the same place were not checked: ${column.alsoMatched.map((other) => `"${other.header}"`).join(', ')}.`
+      : 'A specimen with no value in this column is much less useful for research; the place may still be recorded in another column.';
   return [
     finding(
       'warning',
       'missing-locality',
-      `${missing.length} row${missing.length === 1 ? ' has' : 's have'} no ${column.concept.label} ("${column.header}")`,
+      `${missing.length} row${missing.length === 1 ? ' has' : 's have'} an empty ${column.concept.label} column ("${column.header}")`,
       missing,
-      'A specimen with no place recorded anywhere is much less useful for research.',
+      note,
     ),
   ];
 }
@@ -610,6 +638,9 @@ function checkColumnConsistency(table: CsvTable, detection: Detection): Finding[
       .filter((column) => ['latitude', 'longitude', 'eventDate'].includes(column.concept.id))
       .map((column) => column.index),
   );
+  if (detection.identifier !== undefined) {
+    alreadyChecked.add(detection.identifier.index);
+  }
 
   table.header.forEach((header, index) => {
     if (header.trim() === '' || alreadyChecked.has(index)) return;

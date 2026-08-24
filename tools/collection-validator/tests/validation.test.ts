@@ -227,3 +227,98 @@ test('a short column is left alone rather than guessed at', () => {
   const result = validate('inline.csv', table);
   assert.ok(!codes(result).includes('mixed-values-in-column'));
 });
+
+const TODAY = new Date('2026-01-01T00:00:00Z');
+
+test('inspectDate accepts ISO 8601 ranges and unpadded ISO dates', () => {
+  assert.equal(inspectDate('1998-01-01/1998-12-31', TODAY).kind, 'ok');
+  assert.equal(inspectDate('1998/1999', TODAY).kind, 'ok');
+  assert.equal(inspectDate('1998-7/1998-8', TODAY).kind, 'ok');
+  assert.equal(inspectDate('1998-7-14/1998-8-15', TODAY).kind, 'ok');
+  assert.equal(inspectDate('1998-7-14', TODAY).kind, 'ok');
+  assert.equal(inspectDate('1998-1-3', TODAY).kind, 'ok');
+  assert.equal(inspectDate('1998-7', TODAY).kind, 'ok');
+  assert.equal(inspectDate('1998-07-14', TODAY).kind, 'ok');
+});
+
+test('inspectDate accepts dash-separated day-first dates', () => {
+  assert.equal(inspectDate('14-07-1998', TODAY).kind, 'ok');
+  assert.equal(inspectDate('14-7-1998', TODAY).kind, 'ok');
+  assert.equal(inspectDate('14/07/1998', TODAY).kind, 'ok');
+});
+
+test('inspectDate suppresses day/month ambiguity when day equals month', () => {
+  assert.equal(inspectDate('03/03/1998', TODAY).kind, 'ok');
+  assert.equal(inspectDate('12-12-1998', TODAY).kind, 'ok');
+  assert.equal(inspectDate('03/04/1998', TODAY).kind, 'ambiguous');
+});
+
+test('inspectDate still rejects impossible dates and warns for two-digit years', () => {
+  assert.equal(inspectDate('1989-02-31', TODAY).kind, 'impossible');
+  assert.equal(inspectDate('31/02/1998', TODAY).kind, 'impossible');
+  assert.equal(inspectDate('03/04/98', TODAY).kind, 'ambiguous');
+  assert.ok(inspectDate('03/04/98', TODAY).detail?.includes('two digits'));
+  assert.equal(inspectDate('summer 1976', TODAY).kind, 'unrecognised');
+});
+
+test('locality is chosen over verbatimLocality regardless of column order', () => {
+  const forward = parseCsv('CatalogNumber,Locality,VerbatimLocality,EventDate\nA,Granada,"Granada, Spain",1998-07-14\n', ',');
+  const backward = parseCsv('CatalogNumber,VerbatimLocality,Locality,EventDate\nB,"Burgos, Spain",Burgos,1998-07-14\n', ',');
+
+  const forwardResult = validate('inline.csv', forward);
+  const backwardResult = validate('inline.csv', backward);
+
+  assert.equal(forwardResult.detection.columns.find((c) => c.concept.id === 'locality')?.header, 'Locality');
+  assert.equal(backwardResult.detection.columns.find((c) => c.concept.id === 'locality')?.header, 'Locality');
+
+  assert.ok(!codes(forwardResult).includes('missing-locality'));
+  assert.ok(!codes(backwardResult).includes('missing-locality'));
+
+  const forwardAlso = forwardResult.detection.columns.find((c) => c.concept.id === 'locality')?.alsoMatched.map((m) => m.header);
+  const backwardAlso = backwardResult.detection.columns.find((c) => c.concept.id === 'locality')?.alsoMatched.map((m) => m.header);
+  assert.deepEqual(forwardAlso, ['VerbatimLocality']);
+  assert.deepEqual(backwardAlso, ['VerbatimLocality']);
+});
+
+test('eventDate is chosen over verbatimEventDate regardless of column order', () => {
+  const forward = parseCsv('CatalogNumber,Locality,EventDate,VerbatimEventDate\nA,Site,1998-07-14,14 July 1998\n', ',');
+  const backward = parseCsv('CatalogNumber,Locality,VerbatimEventDate,EventDate\nB,Site,14 July 1998,1998-07-14\n', ',');
+
+  assert.equal(validate('inline.csv', forward).detection.columns.find((c) => c.concept.id === 'eventDate')?.header, 'EventDate');
+  assert.equal(validate('inline.csv', backward).detection.columns.find((c) => c.concept.id === 'eventDate')?.header, 'EventDate');
+});
+
+test('the identifier column is not checked for mixed numeric values', () => {
+  const rows = ['CAT-1,Site,123', 'CAT-2,Site,124', 'CAT-3,Site,123bis', 'CAT-4,Site,124-A']
+    .concat(Array.from({ length: 8 }, (_, i) => `CAT-${i + 5},Site,${1000 + i}`))
+    .join('\n');
+  const table = parseCsv(`CatalogNumber,Locality,Length\n${rows}\n`, ',');
+  const result = validate('inline.csv', table);
+  assert.ok(!codes(result).includes('mixed-values-in-column'));
+});
+
+test('completeness warnings name the checked column and the alternatives', () => {
+  const table = parseCsv('CatalogNumber,Locality,VerbatimLocality,EventDate,VerbatimEventDate\nA,,Spain,1998-07-14,\nB,Site,"Site, Spain",,14 July 1998\n', ',');
+  const result = validate('inline.csv', table);
+
+  const missingLocality = found(result, 'missing-locality');
+  assert.ok(missingLocality.message.includes('empty locality column ("Locality")'));
+  assert.ok(missingLocality.note?.includes('VerbatimLocality'));
+
+  const missingDate = found(result, 'missing-date');
+  assert.ok(missingDate.message.includes('empty date collected column ("EventDate")'));
+  assert.ok(missingDate.note?.includes('VerbatimEventDate'));
+});
+
+test('a public-dataset-style file suppresses the documented false positives', () => {
+  const result = check('public-dataset-representative.csv');
+
+  const unrecognised = result.findings.find((f) => f.code === 'unrecognised-date');
+  assert.ok(!unrecognised?.examples.some((e) => ['1998-01-01/1998-12-31', '1998-7-14', '14-07-1998', '03/03/1998'].some((v) => e.includes(v))), `valid date reported as unrecognised: ${unrecognised?.examples.join('; ')}`);
+
+  const ambiguous = result.findings.find((f) => f.code === 'ambiguous-date');
+  assert.ok(!ambiguous?.examples.some((e) => e.includes('03/03/1998')), `day==month reported as ambiguous: ${ambiguous?.examples.join('; ')}`);
+
+  assert.ok(!codes(result).includes('mixed-values-in-column'), `unexpected mixed-values: ${result.findings.map((f) => f.message).join('; ')}`);
+  assert.equal(found(result, 'impossible-date').count, 1);
+});

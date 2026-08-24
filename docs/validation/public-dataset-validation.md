@@ -86,6 +86,11 @@ with the declared field delimiter (tab in 21 cases, comma in 3). No column was r
 was edited, no row was dropped. Nothing else was extracted; extension files (identifications,
 multimedia) were ignored.
 
+**Validator version.** The validator was run at commit `409bfcb` ("Fix false positives in date
+checks and dead heading check"), the head of `devin/1787521136-collection-validator-prototype`
+after PR #3 review fixes. No source file in `tools/collection-validator/src/` changed between that
+commit and the study.
+
 **Products, not touched.** No product code was written. The validator was not modified for this
 study — not even to make a dataset fit. The research scripts live in
 `tools/validation-research/` and are separate from `tools/collection-validator/`.
@@ -295,6 +300,64 @@ large, a measured split rather than an impression.
 | `several-columns-matched` (19 datasets) | **TRUE POSITIVE, and it caught a real defect** | Almost always `verbatimLocality`/`verbatimEventDate`. In IRKU Herbarium the validator *chose* `verbatimLocality` as the locality column because it appears first, and reported 11,386 missing localities from the verbatim field while the interpreted `locality` column existed. Column-order-dependent choice is a defect (§10, FIX). |
 | `blank-column-heading`, `duplicate-column-heading`, `no-identifier-column` | **TRUE POSITIVE about the file** | Only fired on the two headerless cores (§7.3). |
 
+### 8.1 Alias investigation: `leg`, `location`, and identifier variants
+
+The task asked specifically what `leg`, `location`, and various identifier column names mean in
+real collection data. The answer from this sample is constrained by its composition: all 24
+validated datasets are Darwin Core Archives, so their column names are Darwin Core terms, not
+spreadsheet labels. This is itself a finding about the gap between the validator's alias list and
+the data we could obtain.
+
+**`leg` (FACT).** No dataset in the sample contains a column named `leg`. All 24 use the Darwin
+Core term `recordedBy`, which the validator already recognises as an alias for `collector`. The
+`leg` alias (short for *legit*, a botanical convention for the person who collected the specimen)
+is designed for pre-publication spreadsheet exports, not DwC-A files. **INFERENCE:** `leg` is
+likely to appear in herbarium spreadsheet exports from institutions that have not yet adopted
+Darwin Core column names, but this sample cannot confirm it. **OPEN QUESTION:** whether `leg` is
+ever used in a non-botanical context to mean something other than collector. The alias is harmless
+if it never matches; it is wrong only if a zoological or palaeontological dataset uses `leg` for
+anatomical measurements or specimen-part descriptions.
+
+**`location` (FACT).** No dataset in the sample contains a column named `location`. All 24 use
+`locality` (the Darwin Core term), which the validator recognises. The `location` alias is designed
+for spreadsheet exports where the column may be named `Location` or `location` instead of
+`locality`. **FACT:** in every dataset where a locality-type column exists, its values are
+geographic collecting localities (place names, coordinates descriptions, verbatim locality text),
+never physical storage locations. **INFERENCE:** the `location` alias is semantically correct for
+collecting locality in the context of pre-publication spreadsheets, but the validator's label
+("locality") should not be interpreted as storage location. The Sample Operations product
+hypothesis about physical storage location tracking is not testable with this data (§12.3).
+
+**Identifier types beyond `catalogNumber` and `occurrenceID` (FACT).** The validator recognises
+`catalogNumber`, `occurrenceId`, and their aliases (`catalogNo`, `catalogNr`, `specimenNumber`,
+`specimenNo`, `specimenId`, `specimenCode`, `occurrenceID`, `occurrenceKey`, `occID`). It does
+not recognise `accessionNumber`, `recordNumber`, `fieldNumber`, `institutionCode`, or
+`collectionCode`. In the sample:
+
+- `recordNumber` appears in 16 of 24 datasets as a Darwin Core column. It typically holds the
+  collector's own field number, distinct from the institutional catalogue number. The validator
+  ignores it.
+- `institutionCode` and `collectionCode` appear in all 24 datasets. They are categorical columns
+  (e.g. `MNCN`, `MNCN-Malac`), not record identifiers.
+- `accessionNumber` does not appear in any DwC-A file. **INFERENCE:** it may appear in
+  pre-publication spreadsheet exports from museums that use accession-based workflows, but DwC
+  maps accession numbers to `catalogNumber` or `otherCatalogNumbers`.
+- `fieldNumber` appears in 12 datasets. Like `recordNumber`, it holds a collector-assigned number.
+
+**INFERENCE:** the validator's identifier detection is adequate for Darwin Core data (it found the
+identifier column in 22 of 24 datasets). The unrecognised identifier types (`recordNumber`,
+`fieldNumber`, `accessionNumber`) are secondary identifiers, not the primary record key, and
+adding them as aliases for `catalogNumber` would be semantically wrong — they are different
+concepts. **OPEN QUESTION:** whether pre-publication spreadsheets use `accessionNumber` as the
+primary identifier column instead of `catalogNumber`.
+
+**Mixed numeric/alphanumeric catalogue numbers (FACT).** The `mixed-values-in-column` check fired
+on 12 datasets, and inspection shows that in all 12 cases the flagged column is either the
+catalogue number itself or a related identifier. Values like `24793a`, `32489-A`, `B.3`,
+`05536 01` are ordinary suffixes, not type errors. The current "mixed numeric values" warning is
+mostly noise on real identifier columns. This is addressed in the recommendation matrix (§10:
+exclude the identifier column from this check).
+
 **Overall signal-to-noise (FACT):** of 79,065 affected rows/values reported across 24 datasets,
 approximately 40,200 (51%) are values the validator should not have flagged at all, and a further
 ~4,700 are flagged for the right reason with the wrong explanation. Almost all of that noise sits
@@ -450,25 +513,49 @@ evidence. Public datasets cannot close this gap, and no further dataset work wil
 
 **Technical validation: PROCEED WITH CHANGES**, in this order and nothing else:
 
+### FIX NOW
+
 1. Fix the four date false positives (ISO ranges, unpadded ISO, dash-separated day-first, day ==
    month). Each is a small, testable change to `inspectDate`, and together they remove ~87% of the
    noise. Highest value per line of code in the whole backlog.
-2. Report column-level facts once ("`locality` is empty in all 3,356 rows") instead of per row.
-3. Name spreadsheet damage explicitly when a date column contains 4–5-digit numbers or
-   `Mmm-YY` values.
+2. Prefer the primary alias over a `verbatim*` alias when both exist, regardless of column order.
+   This fixes the IRKU Herbarium locality defect (§8).
+3. Exclude the identifier column from the mixed-values check. Suffixes like `24793a` are normal;
+   the warning is 100% noise on catalogue-number columns (§8.1).
 4. Reword the completeness warnings to say where the information actually is
    (`verbatimEventDate`, `year`, `country`) instead of implying it is absent.
-5. Prefer the primary alias over a `verbatim*` alias when both exist, regardless of column order.
-6. Exclude the identifier column from the mixed-values check.
+5. Suppress the ambiguous-date warning when day equals month (`04/04/2014`).
 
-Explicitly **not** recommended: new check categories beyond items 3 above, taxonomic validation,
-coordinate work, any Darwin Core implementation, and anything at all in Sample Operations. The
-prototype stays throwaway.
+### ADD LATER
 
-**The gate does not move.** Items 1–6 are worth doing because they make the artefact honest
-enough to hand to someone, not because the market question has advanced. The next real evidence
-comes from a collection manager running this on a file we have never seen — ideally an
-unpublished one, which is also the only way to answer §12.2.
+6. Report column-level facts once ("`locality` is empty in all 3,356 rows") instead of per row.
+7. Name spreadsheet damage explicitly when a date column contains 4–5-digit numbers or
+   `Mmm-YY` values. The pattern is narrow and the false-positive risk is low.
+
+### DEFER
+
+8. Whole-degree coordinate precision warning — needs a user to say whether it is useful; legitimate
+   for old records.
+9. Placeholder values for null (`s/n`, `?`, `not recorded`) — no stable meaning without the
+   collection's own conventions.
+10. Taxonomic name validity — high value but needs a name backbone (network call or bundled
+    dataset), out of scope by design.
+11. `accessionNumber` as an identifier alias — **OPEN QUESTION**: whether pre-publication
+    spreadsheets use this as the primary identifier. Do not add without evidence from real
+    spreadsheet exports.
+
+### DO NOT BUILD
+
+12. New coordinate checks beyond range and numeric format. Coordinates are well covered by GBIF,
+    Symbiota, Specify and `bdc`, and empirically clean in published data (§9.1).
+13. Taxonomic validation, Darwin Core implementation, any cloud dependency, any feature requiring
+    a network call.
+14. Anything in Sample Operations. The prototype stays throwaway.
+
+**The gate does not move.** The FIX NOW and ADD LATER items are worth doing because they make the
+artefact honest enough to hand to someone, not because the market question has advanced. The next
+real evidence comes from a collection manager running this on a file we have never seen — ideally
+an unpublished one, which is also the only way to answer §12.2.
 
 ---
 

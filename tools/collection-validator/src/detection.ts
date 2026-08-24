@@ -150,6 +150,22 @@ export function detectColumns(header: readonly string[]): Detection {
     header.forEach((name, index) => {
       if (aliasSet.has(normaliseHeader(name))) matches.push({ index, header: name });
     });
+    if (matches.length === 0) continue;
+
+    const primary = normaliseHeader(concept.aliases[0] ?? '');
+    const isVerbatim = (name: string) => normaliseHeader(name).startsWith('verbatim');
+    matches.sort((a, b) => {
+      const aIsPrimary = normaliseHeader(a.header) === primary;
+      const bIsPrimary = normaliseHeader(b.header) === primary;
+      if (aIsPrimary && !bIsPrimary) return -1;
+      if (!aIsPrimary && bIsPrimary) return 1;
+      const aIsVerbatim = isVerbatim(a.header);
+      const bIsVerbatim = isVerbatim(b.header);
+      if (aIsVerbatim && !bIsVerbatim) return 1;
+      if (!aIsVerbatim && bIsVerbatim) return -1;
+      return a.index - b.index;
+    });
+
     const [first, ...rest] = matches;
     if (first === undefined) continue;
 
@@ -161,7 +177,7 @@ export function detectColumns(header: readonly string[]): Detection {
       reason:
         rest.length === 0
           ? `the column heading "${first.header}" is a name we recognise for ${concept.label}`
-          : `the column heading "${first.header}" is a name we recognise for ${concept.label}; it is the first of ${matches.length} columns that matched, so it is the one we checked`,
+          : `the column heading "${first.header}" is a name we recognise for ${concept.label}; it is the preferred match, chosen over ${rest.map((other) => `"${other.header}"`).join(', ')}`,
       alsoMatched: rest,
     });
   }

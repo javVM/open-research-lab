@@ -50,6 +50,26 @@ your material. When in doubt the tool warns rather than accuses.
   database, no storage and no account.
 - It does **not** phone home. There is no network access, no telemetry and no analytics.
 
+## Experimental physical-tracking slice (v0.1)
+
+The `src/track.ts` module is a separate, disposable experiment that lives alongside the CSV checker. It is not the start of a product architecture.
+
+It asks: **can we import only enough of a collection CSV to identify physical objects, then build a storage hierarchy and answer “where is X now?” and “what happened to X?”**
+
+The import philosophy is deliberately asymmetric:
+
+> **Import enough to start physical tracking, not enough to recreate the catalogue.**
+
+A source collection may contain 50+ scientific columns. For this slice, only the following matter:
+
+- a catalogue number / external id (required)
+- an optional label / name
+- an optional verbatim location (stored, not treated as authoritative)
+
+Taxonomy, locality, collector, dates, accession numbers, determinations, Darwin Core and every other column are ignored. The existing catalogue remains the authoritative source for that scientific information. This tool owns only the physical tracking state it records: current location, current status and movement/custody history.
+
+No UI, no database, no shared packages, and no final architecture. If it is useful, it will inform the real product design; if not, it is deleted.
+
 ## Running it
 
 Requires [Node.js](https://nodejs.org) 20.11 or newer. Nothing else.
