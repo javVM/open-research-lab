@@ -1,0 +1,59 @@
+<div
+  class="floor-plan"
+  [attr.aria-label]="text.ariaLabel()"
+  [style.width.px]="bounds().width"
+  [style.height.px]="bounds().height"
+>
+  @for (location of locations; track location.id) {
+    <div
+      class="floor-plan__rect"
+      [attr.data-type]="location.type"
+      [attr.data-location-id]="location.id"
+      [attr.title]="text.dragHint()"
+      [class.floor-plan__rect--selected]="location.id === data.selectedLocationId()"
+      [class.floor-plan__rect--drop-target]="isDropTarget()"
+      [style.left.px]="rectFor(location).x"
+      [style.top.px]="rectFor(location).y"
+      [style.width.px]="rectFor(location).width"
+      [style.height.px]="rectFor(location).height"
+      [style.backgroundColor]="occupancyBackground(location.id)"
+      (pointerdown)="onPointerDown($event, location)"
+      (click)="onClick(location.id)"
+    >
+      <span class="floor-plan__type">{{ locationType.label(location.type) }}</span>
+      <span class="floor-plan__name">{{ location.name }}</span>
+      @if (countAt(location.id) > 0) {
+        <span class="floor-plan__count">{{ text.itemCount(countAt(location.id)) }}</span>
+      }
+
+      @if (previewChildren(location).length > 0) {
+        <div
+          class="floor-plan__preview"
+          [style.left.px]="previewArea(location).x"
+          [style.top.px]="previewArea(location).y"
+          [style.width.px]="previewArea(location).width"
+          [style.height.px]="previewArea(location).height"
+        >
+          @for (child of previewChildren(location); track child.id) {
+            <div
+              class="floor-plan__preview-rect"
+              [attr.title]="child.name"
+              [style.left.px]="previewRectFor(location, child).x"
+              [style.top.px]="previewRectFor(location, child).y"
+              [style.width.px]="previewRectFor(location, child).width"
+              [style.height.px]="previewRectFor(location, child).height"
+              [style.backgroundColor]="occupancyBackground(child.id)"
+            ></div>
+          }
+        </div>
+      }
+
+      <div
+        class="floor-plan__resize-handle"
+        [attr.title]="text.resizeHint()"
+        (pointerdown)="onResizePointerDown($event, location)"
+        (click)="$event.stopPropagation()"
+      ></div>
+    </div>
+  }
+</div>

@@ -1,0 +1,56 @@
+@if (item(); as item) {
+  <div class="item-detail">
+    <h2>{{ item.catalogueNumber }}</h2>
+    @if (item.label) {
+      <p class="item-detail__label">{{ item.label }}</p>
+    }
+
+    <dl>
+      <dt>{{ text.statusFieldLabel() }}</dt>
+      <dd>
+        <span class="status-badge" [attr.data-status]="item.status">{{ text.statusLabel(item.status) }}</span>
+      </dd>
+
+      <dt>{{ text.currentLocationLabel() }}</dt>
+      <dd>
+        @if (path().length > 0) {
+          <ol class="breadcrumb-list">
+            @for (location of path(); track location.id) {
+              <li>{{ location.name }}</li>
+            }
+          </ol>
+        } @else {
+          <span class="empty-state">{{ text.notLocated() }}</span>
+        }
+      </dd>
+    </dl>
+
+    @if (isMoving()) {
+      <button type="button" class="cancel-move" (click)="cancelMove()">{{ text.cancelMoveButton() }}</button>
+    } @else {
+      <button type="button" class="start-move" (click)="startMove()">{{ text.moveButton() }}</button>
+    }
+    @if (isMoving()) {
+      <p class="move-hint">{{ text.moveHint() }}</p>
+    }
+
+    <h3>{{ text.historyTitle() }}</h3>
+    @if (history().length === 0) {
+      <p class="empty-state">{{ text.noHistory() }}</p>
+    } @else {
+      <ul class="history-list">
+        @for (movement of history(); track movement.id) {
+          <li>
+            <div class="history-list__date">{{ movement.occurredAt.slice(0, 10) }}</div>
+            <div>{{ locationLabel(movement.fromLocationId) }} → {{ locationLabel(movement.toLocationId) }}</div>
+            @if (movement.note) {
+              <div class="history-list__note">{{ movement.note }}</div>
+            }
+          </li>
+        }
+      </ul>
+    }
+  </div>
+} @else {
+  <p class="empty-state">{{ text.emptyState() }}</p>
+}

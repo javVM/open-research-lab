@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" target-language="es" datatype="plaintext" original="ng.template">
+    <body>
+      <trans-unit id="app.title">
+        <source>Physical Location Prototype</source>
+        <target>Prototipo de ubicación física</target>
+      </trans-unit>
+      <trans-unit id="app.disclaimer">
+        <source>Synthetic demonstration data — not user-validated. This prototype does not constitute user validation or product approval.</source>
+        <target>Datos de demostración sintéticos — sin validar con usuarios. Este prototipo no constituye una validación de usuario ni la aprobación de un producto.</target>
+      </trans-unit>
+      <trans-unit id="app.resetButton.label">
+        <source>Reset demo data</source>
+        <target>Reiniciar datos de demostración</target>
+      </trans-unit>
+      <trans-unit id="app.resetButton.title">
+        <source>Discard demo edits and regenerate the synthetic dataset</source>
+        <target>Descartar los cambios de la demo y regenerar el conjunto de datos sintético</target>
+      </trans-unit>
+      <trans-unit id="app.pane.locationHierarchy">
+        <source>Location hierarchy</source>
+        <target>Jerarquía de ubicaciones</target>
+      </trans-unit>
+      <trans-unit id="app.pane.selectedLocation">
+        <source>Selected location</source>
+        <target>Ubicación seleccionada</target>
+      </trans-unit>
+      <trans-unit id="app.pane.itemDetail">
+        <source>Item detail</source>
+        <target>Detalle del ítem</target>
+      </trans-unit>
+
+      <trans-unit id="languageSwitcher.ariaLabel">
+        <source>Select language</source>
+        <target>Seleccionar idioma</target>
+      </trans-unit>
+
+      <trans-unit id="searchBar.placeholder">
+        <source>Search collection… (catalogue number or label)</source>
+        <target>Buscar en la colección… (número de catálogo o etiqueta)</target>
+      </trans-unit>
+      <trans-unit id="searchBar.ariaLabel">
+        <source>Search collection</source>
+        <target>Buscar en la colección</target>
+      </trans-unit>
+      <trans-unit id="searchBar.noMatches">
+        <source>No matches</source>
+        <target>Sin resultados</target>
+      </trans-unit>
+      <trans-unit id="searchBar.noCurrentLocation">
+        <source>No current location</source>
+        <target>Sin ubicación actual</target>
+      </trans-unit>
+
+      <trans-unit id="locationTree.ariaLabel">
+        <source>Physical location hierarchy</source>
+        <target>Jerarquía de ubicaciones físicas</target>
+      </trans-unit>
+      <trans-unit id="locationTree.toggle.collapse">
+        <source>Collapse {name}</source>
+        <target>Contraer {name}</target>
+      </trans-unit>
+      <trans-unit id="locationTree.toggle.expand">
+        <source>Expand {name}</source>
+        <target>Expandir {name}</target>
+      </trans-unit>
+
+      <trans-unit id="locationView.breadcrumbAriaLabel">
+        <source>Location breadcrumb</source>
+        <target>Ruta de la ubicación</target>
+      </trans-unit>
+      <trans-unit id="locationView.movingBanner">
+        <source>Moving {catalogueNumber} — select a destination.</source>
+        <target>Moviendo {catalogueNumber} — selecciona un destino.</target>
+      </trans-unit>
+      <trans-unit id="locationView.cancelButton">
+        <source>Cancel</source>
+        <target>Cancelar</target>
+      </trans-unit>
+      <trans-unit id="locationView.selectPrompt">
+        <source>Select a location on the left to see what is stored there.</source>
+        <target>Selecciona una ubicación a la izquierda para ver qué hay almacenado allí.</target>
+      </trans-unit>
+      <trans-unit id="locationView.emptyState">
+        <source>Nothing recorded here yet.</source>
+        <target>Todavía no hay nada registrado aquí.</target>
+      </trans-unit>
+      <trans-unit id="locationView.directItemsIntro">
+        <source>Items stored directly in {name} (no finer position recorded):</source>
+        <target>Ítems almacenados directamente en {name} (sin posición más precisa registrada):</target>
+      </trans-unit>
+      <trans-unit id="locationView.positionEmptyTitle">
+        <source>{name} (empty)</source>
+        <target>{name} (vacío)</target>
+      </trans-unit>
+      <trans-unit id="locationView.itemCount">
+        <source>{count} item(s)</source>
+        <target>{count} ítem(s)</target>
+      </trans-unit>
+      <trans-unit id="locationView.viewMode.map">
+        <source>Map</source>
+        <target>Mapa</target>
+      </trans-unit>
+      <trans-unit id="locationView.viewMode.list">
+        <source>List</source>
+        <target>Lista</target>
+      </trans-unit>
+
+      <trans-unit id="floorPlan.ariaLabel">
+        <source>Floor plan</source>
+        <target>Plano</target>
+      </trans-unit>
+      <trans-unit id="floorPlan.dragHint">
+        <source>Drag to reposition</source>
+        <target>Arrastra para reposicionar</target>
+      </trans-unit>
+      <trans-unit id="floorPlan.resizeHint">
+        <source>Drag to resize</source>
+        <target>Arrastra para redimensionar</target>
+      </trans-unit>
+      <trans-unit id="floorPlan.itemCount">
+        <source>{count} item(s)</source>
+        <target>{count} ítem(s)</target>
+      </trans-unit>
+
+      <trans-unit id="locationType.building">
+        <source>Building</source>
+        <target>Edificio</target>
+      </trans-unit>
+      <trans-unit id="locationType.room">
+        <source>Room</source>
+        <target>Sala</target>
+      </trans-unit>
+      <trans-unit id="locationType.cabinet">
+        <source>Cabinet</source>
+        <target>Armario</target>
+      </trans-unit>
+      <trans-unit id="locationType.drawer">
+        <source>Drawer</source>
+        <target>Cajón</target>
+      </trans-unit>
+      <trans-unit id="locationType.box">
+        <source>Box</source>
+        <target>Caja</target>
+      </trans-unit>
+      <trans-unit id="locationType.tray">
+        <source>Tray</source>
+        <target>Bandeja</target>
+      </trans-unit>
+      <trans-unit id="locationType.position">
+        <source>Position</source>
+        <target>Posición</target>
+      </trans-unit>
+
+      <trans-unit id="itemDetail.emptyState">
+        <source>Select an item to see its details.</source>
+        <target>Selecciona un ítem para ver sus detalles.</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.label">
+        <source>Status</source>
+        <target>Estado</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.currentLocation.label">
+        <source>Current location</source>
+        <target>Ubicación actual</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.notLocated">
+        <source>Not currently located</source>
+        <target>Sin ubicar actualmente</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.moveButton">
+        <source>Move item…</source>
+        <target>Mover ítem…</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.cancelMoveButton">
+        <source>Cancel move</source>
+        <target>Cancelar movimiento</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.moveHint">
+        <source>Click a destination in the location tree, or a card/cell in the centre panel, to confirm — or drag it there directly.</source>
+        <target>Haz clic en un destino en el árbol de ubicaciones, o en una tarjeta/celda del panel central, para confirmar — o arrástralo directamente.</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.historyTitle">
+        <source>History</source>
+        <target>Historial</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.noHistory">
+        <source>No recorded movements.</source>
+        <target>Sin movimientos registrados.</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.unlocated">
+        <source>Unlocated</source>
+        <target>Sin ubicar</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.active">
+        <source>Active</source>
+        <target>Activo</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.checkedOut">
+        <source>Checked out</source>
+        <target>Prestado</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.lost">
+        <source>Lost</source>
+        <target>Perdido</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.archived">
+        <source>Archived</source>
+        <target>Archivado</target>
+      </trans-unit>
+
+      <trans-unit id="confirmMoveModal.ariaLabel">
+        <source>Confirm move</source>
+        <target>Confirmar movimiento</target>
+      </trans-unit>
+      <trans-unit id="confirmMoveModal.prompt">
+        <source>Move {catalogueNumber} to {destination}?</source>
+        <target>¿Mover {catalogueNumber} a {destination}?</target>
+      </trans-unit>
+      <trans-unit id="confirmMoveModal.cancel">
+        <source>Cancel</source>
+        <target>Cancelar</target>
+      </trans-unit>
+      <trans-unit id="confirmMoveModal.confirm">
+        <source>Move here</source>
+        <target>Mover aquí</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

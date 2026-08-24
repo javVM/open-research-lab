@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng.template">
+    <body>
+      <trans-unit id="app.title">
+        <source>Physical Location Prototype</source>
+      </trans-unit>
+      <trans-unit id="app.disclaimer">
+        <source>Synthetic demonstration data — not user-validated. This prototype does not constitute user validation or product approval.</source>
+      </trans-unit>
+      <trans-unit id="app.resetButton.label">
+        <source>Reset demo data</source>
+      </trans-unit>
+      <trans-unit id="app.resetButton.title">
+        <source>Discard demo edits and regenerate the synthetic dataset</source>
+      </trans-unit>
+      <trans-unit id="app.pane.locationHierarchy">
+        <source>Location hierarchy</source>
+      </trans-unit>
+      <trans-unit id="app.pane.selectedLocation">
+        <source>Selected location</source>
+      </trans-unit>
+      <trans-unit id="app.pane.itemDetail">
+        <source>Item detail</source>
+      </trans-unit>
+
+      <trans-unit id="languageSwitcher.ariaLabel">
+        <source>Select language</source>
+      </trans-unit>
+
+      <trans-unit id="searchBar.placeholder">
+        <source>Search collection… (catalogue number or label)</source>
+      </trans-unit>
+      <trans-unit id="searchBar.ariaLabel">
+        <source>Search collection</source>
+      </trans-unit>
+      <trans-unit id="searchBar.noMatches">
+        <source>No matches</source>
+      </trans-unit>
+      <trans-unit id="searchBar.noCurrentLocation">
+        <source>No current location</source>
+      </trans-unit>
+
+      <trans-unit id="locationTree.ariaLabel">
+        <source>Physical location hierarchy</source>
+      </trans-unit>
+      <trans-unit id="locationTree.toggle.collapse">
+        <source>Collapse {name}</source>
+      </trans-unit>
+      <trans-unit id="locationTree.toggle.expand">
+        <source>Expand {name}</source>
+      </trans-unit>
+
+      <trans-unit id="locationView.breadcrumbAriaLabel">
+        <source>Location breadcrumb</source>
+      </trans-unit>
+      <trans-unit id="locationView.movingBanner">
+        <source>Moving {catalogueNumber} — select a destination.</source>
+      </trans-unit>
+      <trans-unit id="locationView.cancelButton">
+        <source>Cancel</source>
+      </trans-unit>
+      <trans-unit id="locationView.selectPrompt">
+        <source>Select a location on the left to see what is stored there.</source>
+      </trans-unit>
+      <trans-unit id="locationView.emptyState">
+        <source>Nothing recorded here yet.</source>
+      </trans-unit>
+      <trans-unit id="locationView.directItemsIntro">
+        <source>Items stored directly in {name} (no finer position recorded):</source>
+      </trans-unit>
+      <trans-unit id="locationView.positionEmptyTitle">
+        <source>{name} (empty)</source>
+      </trans-unit>
+      <trans-unit id="locationView.itemCount">
+        <source>{count} item(s)</source>
+      </trans-unit>
+      <trans-unit id="locationView.viewMode.map">
+        <source>Map</source>
+      </trans-unit>
+      <trans-unit id="locationView.viewMode.list">
+        <source>List</source>
+      </trans-unit>
+
+      <trans-unit id="floorPlan.ariaLabel">
+        <source>Floor plan</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.dragHint">
+        <source>Drag to reposition</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.resizeHint">
+        <source>Drag to resize</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.itemCount">
+        <source>{count} item(s)</source>
+      </trans-unit>
+
+      <trans-unit id="locationType.building">
+        <source>Building</source>
+      </trans-unit>
+      <trans-unit id="locationType.room">
+        <source>Room</source>
+      </trans-unit>
+      <trans-unit id="locationType.cabinet">
+        <source>Cabinet</source>
+      </trans-unit>
+      <trans-unit id="locationType.drawer">
+        <source>Drawer</source>
+      </trans-unit>
+      <trans-unit id="locationType.box">
+        <source>Box</source>
+      </trans-unit>
+      <trans-unit id="locationType.tray">
+        <source>Tray</source>
+      </trans-unit>
+      <trans-unit id="locationType.position">
+        <source>Position</source>
+      </trans-unit>
+
+      <trans-unit id="itemDetail.emptyState">
+        <source>Select an item to see its details.</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.label">
+        <source>Status</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.currentLocation.label">
+        <source>Current location</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.notLocated">
+        <source>Not currently located</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.moveButton">
+        <source>Move item…</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.cancelMoveButton">
+        <source>Cancel move</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.moveHint">
+        <source>Click a destination in the location tree, or a card/cell in the centre panel, to confirm — or drag it there directly.</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.historyTitle">
+        <source>History</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.noHistory">
+        <source>No recorded movements.</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.unlocated">
+        <source>Unlocated</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.active">
+        <source>Active</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.checkedOut">
+        <source>Checked out</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.lost">
+        <source>Lost</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.archived">
+        <source>Archived</source>
+      </trans-unit>
+
+      <trans-unit id="confirmMoveModal.ariaLabel">
+        <source>Confirm move</source>
+      </trans-unit>
+      <trans-unit id="confirmMoveModal.prompt">
+        <source>Move {catalogueNumber} to {destination}?</source>
+      </trans-unit>
+      <trans-unit id="confirmMoveModal.cancel">
+        <source>Cancel</source>
+      </trans-unit>
+      <trans-unit id="confirmMoveModal.confirm">
+        <source>Move here</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

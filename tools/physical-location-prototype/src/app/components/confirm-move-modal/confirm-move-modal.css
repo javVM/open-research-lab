@@ -1,0 +1,51 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--surface, #1b1e26);
+  border: 1px solid var(--border, #3a3f4b);
+  border-radius: 0.6rem;
+  padding: 1.25rem;
+  max-width: 24rem;
+  width: 90%;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+.modal p {
+  margin: 0 0 1rem;
+  line-height: 1.4;
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.modal__cancel,
+.modal__confirm {
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.4rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.modal__cancel {
+  background: none;
+  border: 1px solid var(--border, #3a3f4b);
+  color: inherit;
+}
+
+.modal__confirm {
+  background: var(--accent, #5b8def);
+  border: 1px solid var(--accent, #5b8def);
+  color: #0d1420;
+  font-weight: 600;
+}

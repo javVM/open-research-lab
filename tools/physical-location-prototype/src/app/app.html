@@ -1,0 +1,31 @@
+<div class="app-shell">
+  <header class="app-header">
+    <h1>{{ text.title() }}</h1>
+    <app-search-bar></app-search-bar>
+    <app-language-switcher></app-language-switcher>
+    <button
+      type="button"
+      class="reset-button"
+      (click)="data.resetDemo()"
+      [attr.title]="text.resetButtonTitle()"
+    >
+      {{ text.resetButtonLabel() }}
+    </button>
+  </header>
+
+  <p class="app-disclaimer">{{ text.disclaimer() }}</p>
+
+  <main class="app-body">
+    <section class="pane pane--tree" [attr.aria-label]="text.locationHierarchyAriaLabel()">
+      <app-location-tree></app-location-tree>
+    </section>
+    <section class="pane pane--view" [attr.aria-label]="text.selectedLocationAriaLabel()">
+      <app-location-view></app-location-view>
+    </section>
+    <section class="pane pane--detail" [attr.aria-label]="text.itemDetailAriaLabel()">
+      <app-item-detail></app-item-detail>
+    </section>
+  </main>
+
+  <app-confirm-move-modal></app-confirm-move-modal>
+</div>

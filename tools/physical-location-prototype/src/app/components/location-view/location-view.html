@@ -1,0 +1,136 @@
+<div class="location-view">
+  @if (selectedLocation(); as location) {
+    <nav class="breadcrumb" [attr.aria-label]="text.breadcrumbAriaLabel()">
+      @for (crumb of breadcrumbPath(); track crumb.id; let last = $last) {
+        <button type="button" (click)="data.selectLocation(crumb.id)">{{ crumb.name }}</button>
+        @if (!last) {
+          <span class="breadcrumb__sep">/</span>
+        }
+      }
+    </nav>
+
+    <h2>{{ location.name }}</h2>
+
+    @if (data.movingItem(); as moving) {
+      <div class="move-banner">
+        {{ text.movingBanner(moving.catalogueNumber) }}
+        <button type="button" (click)="data.cancelMove()">{{ text.cancelButton() }}</button>
+      </div>
+    }
+    @if (data.moveError(); as error) {
+      <div class="move-error">{{ error }}</div>
+    }
+
+    @if (canShowMap()) {
+      <div class="view-mode-toggle" role="group">
+        <button
+          type="button"
+          [class.view-mode-toggle__button--active]="showMap()"
+          (click)="setViewMode('map')"
+        >
+          {{ text.viewModeMap() }}
+        </button>
+        <button
+          type="button"
+          [class.view-mode-toggle__button--active]="!showMap()"
+          (click)="setViewMode('list')"
+        >
+          {{ text.viewModeList() }}
+        </button>
+      </div>
+    }
+
+    @if (showMap()) {
+      <app-floor-plan [locations]="children()"></app-floor-plan>
+    } @else if (isPositionGrid()) {
+      <table class="position-grid" cdkDropListGroup>
+        <tbody>
+          @for (row of grid(); track $index) {
+            <tr>
+              @for (cell of row; track cell?.position?.id ?? $index) {
+                <td
+                  class="position-cell"
+                  [class.position-cell--none]="!cell"
+                  [class.position-cell--empty]="cell && !cell.occupant"
+                  [class.position-cell--occupied]="cell && cell.occupant"
+                  [class.position-cell--selected]="cell?.occupant?.id === data.selectedItemId()"
+                  [class.position-cell--drop-target]="isMovingTargetCandidate(cell)"
+                  cdkDropList
+                  [cdkDropListData]="cell?.position?.id ?? null"
+                  [cdkDropListDisabled]="!cell || !!cell.occupant"
+                  (cdkDropListDropped)="onDrop($event)"
+                  (click)="onCellClick(cell)"
+                  [attr.title]="cell ? (cell.occupant ? cell.occupant.catalogueNumber : text.positionEmptyTitle(cell.position.name)) : null"
+                >
+                  @if (cell) {
+                    <div class="position-cell__label">{{ cell.position.name }}</div>
+                    @if (cell.occupant; as occupant) {
+                      <div
+                        class="position-cell__item"
+                        [class.position-cell__item--special]="occupant.status !== 'active'"
+                        cdkDrag
+                        [cdkDragData]="occupant.id"
+                        (click)="onItemClick(occupant.id, $event)"
+                      >
+                        {{ occupant.catalogueNumber }}
+                      </div>
+                    }
+                  }
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <div class="container-grid" cdkDropListGroup>
+        @for (child of children(); track child.id) {
+          <div
+            class="container-card"
+            [attr.data-type]="child.type"
+            [class.container-card--drop-target]="data.movingItemId()"
+            cdkDropList
+            [cdkDropListData]="child.id"
+            (cdkDropListDropped)="onDrop($event)"
+            (click)="onCardClick(child.id)"
+          >
+            <span class="container-card__type">{{ locationType.label(child.type) }}</span>
+            <span class="container-card__name">{{ child.name }}</span>
+            @if (countAt(child.id) > 0) {
+              <span class="container-card__count">{{ text.itemCount(countAt(child.id)) }}</span>
+            }
+          </div>
+        }
+
+        @if (directItems().length > 0) {
+          <div class="direct-items" cdkDropList [cdkDropListData]="location.id" (cdkDropListDropped)="onDrop($event)">
+            <p>{{ text.directItemsIntro(location.name) }}</p>
+            <ul>
+              @for (item of directItems(); track item.id) {
+                <li>
+                  <button
+                    type="button"
+                    class="direct-items__item"
+                    [class.direct-items__item--special]="item.status !== 'active'"
+                    [class.direct-items__item--selected]="item.id === data.selectedItemId()"
+                    cdkDrag
+                    [cdkDragData]="item.id"
+                    (click)="onItemClick(item.id, $event)"
+                  >
+                    {{ item.catalogueNumber }}
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+
+        @if (children().length === 0 && directItems().length === 0) {
+          <p class="empty-state">{{ text.emptyState() }}</p>
+        }
+      </div>
+    }
+  } @else {
+    <p class="empty-state">{{ text.selectPrompt() }}</p>
+  }
+</div>

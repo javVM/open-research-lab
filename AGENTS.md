@@ -15,10 +15,16 @@ Products live in their own repositories; the `sample-operations` repository does
 must not be created until user validation returns a GO.
 
 The permitted throwaway prototypes are the tools explicitly listed under [`tools/`](tools/).
-Currently these are [`tools/collection-validator`](tools/collection-validator/README.md) and
-[`tools/sample-operations-slice`](tools/sample-operations-slice/README.md). Both were built to
-gather evidence during user validation; neither is the seed of a product, and nothing in either may
-be promoted to a shared package or reused as an architecture precedent.
+Currently these are [`tools/collection-validator`](tools/collection-validator/README.md),
+[`tools/sample-operations-slice`](tools/sample-operations-slice/README.md) and
+[`tools/physical-location-prototype`](tools/physical-location-prototype/README.md). All three were
+built to gather evidence during (or ahead of) user validation; none is the seed of a product, none
+constitutes a Phase 2 GO decision, and nothing in any of them may be promoted to a shared package or
+reused as an architecture precedent. `tools/physical-location-prototype` is a disposable UI
+experiment exploring whether a spatial/visual representation of physical storage location is easier
+to understand than a list; its `src/core` is a throwaway simplification of the domain model (it
+collapses `Position` into `Location`), not a preview of `packages/core`, and it uses in-memory/
+`localStorage` persistence rather than SQLite by deliberate choice, documented in its own README.
 
 The candidate first product, **Sample Operations**, is a local-first desktop tool for tracking
 where physical specimens and samples are and what has happened to them. Its target users are
@@ -140,19 +146,24 @@ Full detail in [docs/architecture/testing-strategy.md](docs/architecture/testing
 ## 9. Repository facts (keep current)
 
 - Structure today: `docs/`, plus the `tools/collection-validator` prototype, the
-  `tools/sample-operations-slice` throwaway prototype and the `tools/validation-research`
-  analysis scripts (Python standard library only, no dependencies; research, not product code).
-  Sample Operations code, when it exists, goes in its own repository (ADR-0008, as amended).
-- No repository-wide toolchain and no CI. `tools/collection-validator` and
-  `tools/sample-operations-slice` each have their own self-contained `package.json` (three
-  development dependencies, nothing at runtime) and are not a workspace, a monorepo root, or a
-  precedent for one.
+  `tools/sample-operations-slice` throwaway prototype, the `tools/physical-location-prototype`
+  throwaway UI experiment, and the `tools/validation-research` analysis scripts (Python standard
+  library only, no dependencies; research, not product code). Sample Operations code, when it
+  exists, goes in its own repository (ADR-0008, as amended).
+- No repository-wide toolchain and no CI. `tools/collection-validator`,
+  `tools/sample-operations-slice` and `tools/physical-location-prototype` each have their own
+  self-contained `package.json` and are not a workspace, a monorepo root, or a precedent for one.
+  `tools/physical-location-prototype` is the only one of the three with runtime dependencies
+  (Angular), because it is a UI experiment rather than a headless one. Its Angular version is not
+  a statement about the product's eventual UI framework; see its own README.
 - No pre-commit hooks configured (no `.pre-commit-config.yaml`, no `.husky/`). If you introduce
   a toolchain, wire lint and format into CI first; hooks are optional and must never be skipped
   with `--no-verify` once they exist.
 - Commands, run from `tools/collection-validator`: `npm install`, `npm test`,
   `npm run typecheck`, `npm run validate -- <file.csv>`. Both checks must be green before a PR
-  that touches the prototype. There is no repository-wide command.
+  that touches the prototype. Commands, run from `tools/physical-location-prototype`:
+  `npm install`, `npm test`, `npm run typecheck`, `npm run build`, `npm start`. There is no
+  repository-wide command.
 
 ## 10. When in doubt
 

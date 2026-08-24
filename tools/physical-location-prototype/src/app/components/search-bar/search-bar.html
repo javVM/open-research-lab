@@ -1,0 +1,30 @@
+<div class="search-bar">
+  <input
+    type="search"
+    class="search-bar__input"
+    [placeholder]="text.placeholder()"
+    [ngModel]="query()"
+    (ngModelChange)="query.set($event)"
+    [attr.aria-label]="text.ariaLabel()"
+  />
+  @if (query().trim() !== '') {
+    <ul class="search-bar__results" role="listbox">
+      @if (results().length === 0) {
+        <li class="search-bar__empty">{{ text.noMatches() }}</li>
+      }
+      @for (item of results(); track item.id) {
+        <li>
+          <button type="button" (click)="selectResult(item.id)">
+            <strong>{{ item.catalogueNumber }}</strong>
+            @if (item.label) {
+              <span> — {{ item.label }}</span>
+            }
+            <div class="search-bar__location">
+              {{ item.locationId ? breadcrumbFor(item.locationId) : text.noCurrentLocation() }}
+            </div>
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</div>
