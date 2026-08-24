@@ -138,8 +138,10 @@ Full detail in [docs/architecture/testing-strategy.md](docs/architecture/testing
 
 ## 9. Repository facts (keep current)
 
-- Structure today: `docs/`, plus the `tools/collection-validator` prototype. Sample Operations
-  code, when it exists, goes in its own repository (ADR-0008, as amended).
+- Structure today: `docs/`, plus the `tools/collection-validator` prototype and the
+  `tools/validation-research` analysis scripts (Python standard library only, no dependencies;
+  research, not product code). Sample Operations code, when it exists, goes in its own
+  repository (ADR-0008, as amended).
 - No repository-wide toolchain and no CI. `tools/collection-validator` has its own
   self-contained `package.json` (three development dependencies, nothing at runtime) and is not
   a workspace, a monorepo root, or a precedent for one.

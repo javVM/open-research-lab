@@ -40,6 +40,14 @@
 - [Market sources](research/market-sources.md) — every cited source behind the market analysis,
   with what it does and does not support, plus the known gaps in the evidence.
 
+## Validation
+
+- [Public-dataset validation](validation/public-dataset-validation.md) — the collection-data
+  hygiene hypothesis tested against 24 published collection datasets: what the validator caught,
+  what it got wrong, what it misses, and why this says nothing about demand.
+- [Dataset catalogue](validation/dataset-catalog.csv) — the datasets used, with source, licence,
+  hash and per-dataset counts.
+
 ## Reports
 
 - [Phase 0 discovery report](discovery-report.md) — the consolidated findings and

@@ -1,0 +1,38 @@
+{
+  "comment": [
+    "The sample. Chosen by hand from candidates.tsv (see select_candidates.py) for a spread of",
+    "domain, size, publishing platform, country and publication date. GBIF dataset keys are the",
+    "identifier; everything else in the catalogue is fetched from the registry at run time so the",
+    "sample cannot silently drift from what was actually downloaded."
+  ],
+  "datasets": [
+    { "key": "8909fc7b-c981-44c2-b740-ba3655df3b56", "domain": "herbarium", "platform": "Symbiota (Bryophyte Portal)" },
+    { "key": "f248c45a-97da-4ed2-b89c-b47c9a885f3c", "domain": "herbarium", "platform": "IPT (SiB Colombia)" },
+    { "key": "753cba1c-6bf2-405e-9c46-b3e58f7b8dee", "domain": "herbarium", "platform": "IPT (SANBI)" },
+    { "key": "e96fe4cb-0770-4514-abc2-f0dde2ed52b4", "domain": "herbarium", "platform": "JACQ / BioCASe" },
+    { "key": "a74de5fe-eca8-4618-a1ba-50e9fd2cebfd", "domain": "herbarium", "platform": "Symbiota (Bryophyte Portal)" },
+    { "key": "ea372491-cebb-41e1-9a2b-a5354cc6c126", "domain": "herbarium", "platform": "IPT (GBIF Spain)" },
+    { "key": "155290ea-0ac1-4da6-bb37-f7cde3a7363e", "domain": "herbarium", "platform": "IPT (Moscow State University)" },
+    { "key": "08ccad1b-e79f-4481-94e5-7f47533129ff", "domain": "herbarium", "platform": "IPT (CONABIO SNIB)" },
+
+    { "key": "d9bcb743-50b0-4329-9ac2-6dd0ca90a81c", "domain": "paleontology", "platform": "IPT (S-Net Japan)" },
+    { "key": "b2d306dc-da1d-46e2-9e8b-7f316fc18677", "domain": "paleontology", "platform": "Arctos" },
+    { "key": "4e61cc4a-6bfd-4816-b2b8-b066e21b6235", "domain": "paleontology", "platform": "Arctos" },
+    { "key": "02c8848f-a20e-4436-bc56-d067c7681b04", "domain": "paleontology", "platform": "IPT (CENPAT-CONICET)" },
+    { "key": "1c37eefc-6e7c-49a5-9ea1-f1e9eefb07bc", "domain": "paleontology", "platform": "IPT (GBIF US)" },
+    { "key": "3c001217-eea8-4f59-8b28-885699f8cd6c", "domain": "paleontology", "platform": "IPT (VertNet)" },
+    { "key": "64b21b15-24d9-43a9-87fa-aafab0b80715", "domain": "paleontology", "platform": "IPT (NLBIF)" },
+    { "key": "ddef0a33-0165-4478-9871-1cf55060e36d", "domain": "paleontology", "platform": "IPT (GBIF US)" },
+    { "key": "e5e89b4d-bb7c-4dae-b1b4-924177e95c2b", "domain": "paleontology", "platform": "IPT (Canadian Museum of Nature)" },
+    { "key": "ec3805da-46a8-433b-bebc-20fed11f9e1e", "domain": "paleontology", "platform": "IPT (ANSP, self-hosted)" },
+
+    { "key": "0faf7500-9fcd-11da-a90c-b8a03c50a862", "domain": "general", "platform": "IPT (GBIF Poland)" },
+    { "key": "58ff104b-f10a-496a-bafe-54cc97f4918d", "domain": "general", "platform": "Symbiota (SCAN)" },
+    { "key": "47db596c-20ef-4aff-932b-1a9de3579344", "domain": "general", "platform": "Symbiota (CVColl)" },
+    { "key": "b24d3bd0-e6d9-11dc-8b77-b8a03c50a862", "domain": "general", "platform": "IPT (Belgian Biodiversity Platform)" },
+    { "key": "09ed130d-3052-4e3e-a92c-6660344732ac", "domain": "general", "platform": "Arctos" },
+    { "key": "8386db32-f762-11e1-a439-00145eb45e9a", "domain": "general", "platform": "IPT (GBIF Spain)" },
+    { "key": "6b524ea4-2593-49de-8e38-cbd87965265b", "domain": "general", "platform": "Specify (direct export feed)" },
+    { "key": "f3e441df-2d69-474c-9edd-12c7fe7b0fde", "domain": "general", "platform": "Specify (direct export feed)" }
+  ]
+}
