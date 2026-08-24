@@ -1,17 +1,16 @@
 /**
- * Disposable physical-tracking prototype (v0.1).
+ * Throwaway physical-tracking slice (v0.1).
  *
  * Purpose: can we import only enough of a collection CSV to identify physical
- * objects, then create a storage hierarchy, move objects around, and answer
- * “where is X now?” and “what happened to X?”.
+ * objects, then create a storage hierarchy and answer "where is X now?" and
+ * "what happened to X?".
  *
- * This is intentionally not a product architecture. It is throwaway code that
- * explores the minimal surface area before real users are involved.
+ * This is intentionally not a product and not the final Sample Operations
+ * architecture. It is disposable evidence for a technical hypothesis.
  */
 
 import { randomUUID } from 'node:crypto';
-import { detectDelimiter, parseCsv, type CsvTable } from './csv.ts';
-import { normaliseHeader } from './detection.ts';
+import { detectDelimiter, parseCsv } from './csv.ts';
 
 export type StorageType =
   | 'building'
@@ -83,25 +82,33 @@ const LABEL_ALIASES = new Set([
   'description',
 ]);
 
+/**
+ * Conservative set of physical-storage column names.
+ * `location` is deliberately excluded because it usually means geographic
+ * locality; the CSV validator already surfaced that ambiguity.
+ */
 const LOCATION_ALIASES = new Set([
   'currentlocation',
   'storagelocation',
   'storage',
-  'location',
   'shelf',
   'drawer',
   'tray',
   'cabinet',
   'room',
   'building',
-  'position',
   'rack',
+  'position',
 ]);
 
 export interface ColumnMap {
   externalId: number | null;
   label: number | null;
   location: number | null;
+}
+
+function normaliseHeader(header: string): string {
+  return header.toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
 export function detectTrackingColumns(header: readonly string[]): ColumnMap {
@@ -176,6 +183,16 @@ export function findItemByExternalId(
   return id === undefined ? undefined : store.items.get(id);
 }
 
+interface PendingRow {
+  raw: string;
+  label: string | null;
+  importedLocation: string | null;
+}
+
+/**
+ * Atomic import: every row is validated before the store is mutated.
+ * Any duplicate or missing id aborts the whole import without changes.
+ */
 export function importCatalogueCsv(store: Store, text: string): number {
   const table = parseCsv(text, detectDelimiter(text));
   const columns = detectTrackingColumns(table.header);
@@ -186,10 +203,20 @@ export function importCatalogueCsv(store: Store, text: string): number {
     );
   }
 
-  let count = 0;
+  const pending: PendingRow[] = [];
+  const requested = new Set<string>();
+
   for (const row of table.rows) {
     const raw = (row.values[columns.externalId] ?? '').trim();
-    if (raw === '') continue;
+    if (raw === '') {
+      throw new TrackError(`Row on line ${row.line} has no external id.`);
+    }
+    if (store.externalIdIndex.has(raw) || requested.has(raw)) {
+      throw new TrackError(
+        `Duplicate external id "${raw}" on line ${row.line}.`,
+      );
+    }
+    requested.add(raw);
 
     const label =
       columns.label !== null
@@ -200,11 +227,14 @@ export function importCatalogueCsv(store: Store, text: string): number {
         ? (row.values[columns.location] ?? '').trim() || null
         : null;
 
-    createItem(store, raw, label, importedLocation);
-    count += 1;
+    pending.push({ raw, label, importedLocation });
   }
 
-  return count;
+  for (const entry of pending) {
+    createItem(store, entry.raw, entry.label, entry.importedLocation);
+  }
+
+  return pending.length;
 }
 
 export function moveItem(

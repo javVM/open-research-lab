@@ -1,0 +1,20 @@
+{
+  "name": "@open-research-lab/sample-operations-slice",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Experimental throwaway slice: can a minimal physical-tracking model answer 'where is X?' and 'what happened to X?'. Not a product.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "test": "tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.1",
+    "tsx": "4.23.12",
+    "typescript": "5.9.3"
+  }
+}

@@ -11,11 +11,12 @@ import {
   importCatalogueCsv,
   importState,
   moveItem,
+  TrackError,
   whereIs,
 } from '../src/track.ts';
 
 const fixture = (name: string): string =>
-  fileURLToPath(new URL(`../fixtures/track/${name}`, import.meta.url));
+  fileURLToPath(new URL(`../fixtures/${name}`, import.meta.url));
 
 function readFixture(name: string): string {
   return readFileSync(fixture(name), 'utf8');
@@ -37,7 +38,7 @@ test('the smallest possible start needs only a catalogue number', () => {
   }
 });
 
-test('a public-derived CSV with many irrelevant columns imports only id, label and an optional location', () => {
+test('a public-derived CSV with many irrelevant columns imports only id, label and a physical location', () => {
   const store = createStore();
   importCatalogueCsv(store, readFixture('public-derived.csv'));
 
@@ -48,6 +49,56 @@ test('a public-derived CSV with many irrelevant columns imports only id, label a
   assert.equal(first.label, 'Blue morpho');
   assert.equal(first.importedLocation, 'MNH-ZOO-DR-01');
   assert.equal(first.currentLocationId, null);
+});
+
+test('a geographic Locality column is not treated as a physical location', () => {
+  const store = createStore();
+  importCatalogueCsv(store, 'CatalogNumber,Locality\nX-1,Granada\n');
+
+  assert.equal(store.items.size, 1);
+  const item = findItemByExternalId(store, 'X-1');
+  if (item === undefined) assert.fail('X-1 was not imported');
+  assert.equal(item.importedLocation, null);
+});
+
+test('CurrentLocation and StorageLocation aliases are recognised as physical locations', () => {
+  const store = createStore();
+  importCatalogueCsv(
+    store,
+    'CatalogNumber,CurrentLocation,StorageLocation\nX-1,Room-A,Shelf-1\n',
+  );
+
+  const byCurrent = findItemByExternalId(store, 'X-1');
+  if (byCurrent === undefined) assert.fail('X-1 was not imported');
+  assert.equal(byCurrent.importedLocation, 'Room-A');
+});
+
+test('a duplicate external id in the CSV aborts the import and does not modify the store', () => {
+  const store = createStore();
+
+  assert.throws(
+    () => importCatalogueCsv(store, 'CatalogNumber\nABC-001\nABC-001\n'),
+    (error: unknown) =>
+      error instanceof TrackError &&
+      error.message.includes('Duplicate external id "ABC-001"'),
+  );
+
+  assert.equal(store.items.size, 0);
+  assert.equal(store.externalIdIndex.size, 0);
+});
+
+test('a missing external id aborts the import and does not modify the store', () => {
+  const store = createStore();
+
+  assert.throws(
+    () => importCatalogueCsv(store, 'CatalogNumber\nABC-001\n\n'),
+    (error: unknown) =>
+      error instanceof TrackError &&
+      error.message.includes('Row on line 3 has no external id'),
+  );
+
+  assert.equal(store.items.size, 0);
+  assert.equal(store.externalIdIndex.size, 0);
 });
 
 test('end-to-end physical tracking workflow: create, move, query and round-trip', () => {
