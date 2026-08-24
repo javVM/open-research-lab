@@ -91,12 +91,18 @@
       <trans-unit id="floorPlan.resizeHint">
         <source>Drag to resize</source>
       </trans-unit>
+      <trans-unit id="floorPlan.previewHint">
+        <source>Hover to preview what is inside</source>
+      </trans-unit>
       <trans-unit id="floorPlan.itemCount">
         <source>{count} item(s)</source>
       </trans-unit>
 
       <trans-unit id="locationType.building">
         <source>Building</source>
+      </trans-unit>
+      <trans-unit id="locationType.floor">
+        <source>Floor</source>
       </trans-unit>
       <trans-unit id="locationType.room">
         <source>Room</source>

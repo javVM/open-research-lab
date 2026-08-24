@@ -1,4 +1,4 @@
-import { Component, Input, computed, inject } from '@angular/core';
+import { Component, Input, inject, signal } from '@angular/core';
 import type { Location } from '../../../core/models';
 import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
@@ -53,6 +53,20 @@ export class FloorPlanComponent {
 
   private dragState: DragState | null = null;
   private suppressNextClick = false;
+  /**
+   * Set while a location is being dragged or resized, so its hover preview
+   * can be suppressed — see template. This must be a signal, not a plain
+   * field: it's mutated from `window.addEventListener` callbacks, entirely
+   * outside Angular's own listener wrapping, and this app runs zoneless
+   * change detection — a plain field write there would never mark the view
+   * dirty, so the `[class.floor-plan__rect--interacting]` binding would
+   * silently go stale even across an explicit `detectChanges()`.
+   */
+  private readonly interactingLocationId = signal<string | null>(null);
+
+  isInteracting(locationId: string): boolean {
+    return this.interactingLocationId() === locationId;
+  }
 
   /**
    * A plain method, not `computed()`: `locations` is a regular `@Input`,
@@ -97,8 +111,10 @@ export class FloorPlanComponent {
   /**
    * Direct children of `location` that themselves have floor-plan
    * coordinates (e.g. cabinets within a room, while viewing the room's
-   * building). Shown as a small scaled-down inset so the map gives some
-   * sense of what's inside a container without navigating into it.
+   * building). Revealed as a scaled-down overlay on hover (see
+   * `.floor-plan__preview` in the stylesheet) so the map gives some sense
+   * of what's inside a container without permanently displacing its own
+   * name/count or requiring navigation into it.
    */
   previewChildren(location: Location): Location[] {
     return this.data
@@ -106,16 +122,15 @@ export class FloorPlanComponent {
       .locations.filter((candidate) => candidate.parentId === location.id && typeof candidate.x === 'number');
   }
 
-  /** Reserves the bottom portion of `location`'s own rect for the preview inset. */
+  /** The overlay covers almost the whole rect — it's hidden until hover, so it doesn't need to share space with anything. */
   previewArea(location: Location): Rect {
     const parentRect = this.rectFor(location);
-    const inset = 6;
-    const height = Math.max(0, Math.min(parentRect.height * 0.42, parentRect.height - 36));
+    const inset = 4;
     return {
       x: inset,
-      y: parentRect.height - height - inset,
+      y: inset,
       width: Math.max(0, parentRect.width - inset * 2),
-      height,
+      height: Math.max(0, parentRect.height - inset * 2),
     };
   }
 
@@ -158,6 +173,7 @@ export class FloorPlanComponent {
       startY: location.y ?? 0,
       moved: false,
     };
+    this.interactingLocationId.set(location.id);
     window.addEventListener('pointermove', this.onPointerMove);
     window.addEventListener('pointerup', this.onPointerUp);
   }
@@ -184,6 +200,7 @@ export class FloorPlanComponent {
       this.suppressNextClick = true;
     }
     this.dragState = null;
+    this.interactingLocationId.set(null);
   };
 
   private resizeState: ResizeState | null = null;
@@ -202,6 +219,7 @@ export class FloorPlanComponent {
       startWidth: rect.width,
       startHeight: rect.height,
     };
+    this.interactingLocationId.set(location.id);
     window.addEventListener('pointermove', this.onResizePointerMove);
     window.addEventListener('pointerup', this.onResizePointerUp);
   }
@@ -222,5 +240,6 @@ export class FloorPlanComponent {
     window.removeEventListener('pointermove', this.onResizePointerMove);
     window.removeEventListener('pointerup', this.onResizePointerUp);
     this.resizeState = null;
+    this.interactingLocationId.set(null);
   };
 }

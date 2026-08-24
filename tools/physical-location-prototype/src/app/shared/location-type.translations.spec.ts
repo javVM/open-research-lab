@@ -11,6 +11,7 @@ describe('createLocationTypeTranslations', () => {
   it('returns the fallback label for every location type', () => {
     const text = createLocationTypeTranslations(fakeTranslationService());
     expect(text.label('building')).toBe('Building');
+    expect(text.label('floor')).toBe('Floor');
     expect(text.label('room')).toBe('Room');
     expect(text.label('cabinet')).toBe('Cabinet');
     expect(text.label('drawer')).toBe('Drawer');

@@ -41,13 +41,20 @@ function layoutGrid(index: number, columns: number, cellWidth: number, cellHeigh
   };
 }
 
+const FLOOR_LAYOUT = { columns: 1, cellWidth: 580, cellHeight: 220, gap: 24 };
 const ROOM_LAYOUT = { columns: 2, cellWidth: 260, cellHeight: 180, gap: 24 };
 const CABINET_LAYOUT = { columns: 2, cellWidth: 110, cellHeight: 160, gap: 20 };
 
 const BUILDINGS = [
-  { name: 'Building A', rooms: ['Room 1', 'Room 2'] },
-  { name: 'Building B', rooms: ['Room 3'] },
-  { name: 'Building C', rooms: ['Room 4', 'Room 5'] },
+  {
+    name: 'Building A',
+    floors: [
+      { name: 'Floor 1', rooms: ['Room 1'] },
+      { name: 'Floor 2', rooms: ['Room 2'] },
+    ],
+  },
+  { name: 'Building B', floors: [{ name: 'Floor 1', rooms: ['Room 3'] }] },
+  { name: 'Building C', floors: [{ name: 'Ground Floor', rooms: ['Room 4', 'Room 5'] }] },
 ];
 
 const SPECIMEN_LABELS = [
@@ -84,9 +91,9 @@ function nextId(counter: Counter, prefix: string): string {
 }
 
 /**
- * Generates the synthetic dataset: three buildings, five rooms, ten
- * cabinets, twenty drawers, several grid trays, and 80 items spread
- * across statuses. Entirely synthetic — no real collection data.
+ * Generates the synthetic dataset: three buildings, four floors, five
+ * rooms, ten cabinets, twenty drawers, several grid trays, and 80 items
+ * spread across statuses. Entirely synthetic — no real collection data.
  */
 export function generateSeed(randomSeed = 20260824): Dataset {
   const random = mulberry32(randomSeed);
@@ -115,69 +122,81 @@ export function generateSeed(randomSeed = 20260824): Dataset {
 
   let cabinetNumber = 0;
   let drawerTotal = 0;
-  for (const { name: buildingName, rooms } of BUILDINGS) {
+  for (const building of BUILDINGS) {
     const buildingId = nextId(locationCounter, 'loc');
-    locations.push({ id: buildingId, parentId: null, name: buildingName, type: 'building' });
+    locations.push({ id: buildingId, parentId: null, name: building.name, type: 'building' });
 
-    rooms.forEach((roomName, roomIndex) => {
-      const roomId = nextId(locationCounter, 'loc');
-      const roomRect = layoutGrid(
-        roomIndex,
-        ROOM_LAYOUT.columns,
-        ROOM_LAYOUT.cellWidth,
-        ROOM_LAYOUT.cellHeight,
-        ROOM_LAYOUT.gap,
+    building.floors.forEach((floor, floorIndex) => {
+      const floorId = nextId(locationCounter, 'loc');
+      const floorRect = layoutGrid(
+        floorIndex,
+        FLOOR_LAYOUT.columns,
+        FLOOR_LAYOUT.cellWidth,
+        FLOOR_LAYOUT.cellHeight,
+        FLOOR_LAYOUT.gap,
       );
-      locations.push({ id: roomId, parentId: buildingId, name: roomName, type: 'room', ...roomRect });
+      locations.push({ id: floorId, parentId: buildingId, name: floor.name, type: 'floor', ...floorRect });
 
-      const cabinetsInRoom = 2;
-      for (let c = 0; c < cabinetsInRoom; c += 1) {
-        cabinetNumber += 1;
-        const cabinetId = nextId(locationCounter, 'loc');
-        const cabinetRect = layoutGrid(
-          c,
-          CABINET_LAYOUT.columns,
-          CABINET_LAYOUT.cellWidth,
-          CABINET_LAYOUT.cellHeight,
-          CABINET_LAYOUT.gap,
+      floor.rooms.forEach((roomName, roomIndex) => {
+        const roomId = nextId(locationCounter, 'loc');
+        const roomRect = layoutGrid(
+          roomIndex,
+          ROOM_LAYOUT.columns,
+          ROOM_LAYOUT.cellWidth,
+          ROOM_LAYOUT.cellHeight,
+          ROOM_LAYOUT.gap,
         );
-        locations.push({
-          id: cabinetId,
-          parentId: roomId,
-          name: `Cabinet ${pad(cabinetNumber, 2)}`,
-          type: 'cabinet',
-          ...cabinetRect,
-        });
+        locations.push({ id: roomId, parentId: floorId, name: roomName, type: 'room', ...roomRect });
 
-        const drawersInCabinet = drawerTotal < 16 ? 2 : 4;
-        for (let d = 1; d <= drawersInCabinet && drawerTotal < 20; d += 1) {
-          drawerTotal += 1;
-          const drawerId = nextId(locationCounter, 'loc');
+        const cabinetsInRoom = 2;
+        for (let c = 0; c < cabinetsInRoom; c += 1) {
+          cabinetNumber += 1;
+          const cabinetId = nextId(locationCounter, 'loc');
+          const cabinetRect = layoutGrid(
+            c,
+            CABINET_LAYOUT.columns,
+            CABINET_LAYOUT.cellWidth,
+            CABINET_LAYOUT.cellHeight,
+            CABINET_LAYOUT.gap,
+          );
           locations.push({
-            id: drawerId,
-            parentId: cabinetId,
-            name: `Drawer ${pad(d, 2)}`,
-            type: 'drawer',
+            id: cabinetId,
+            parentId: roomId,
+            name: `Cabinet ${pad(cabinetNumber, 2)}`,
+            type: 'cabinet',
+            ...cabinetRect,
           });
-          drawerIds.push(drawerId);
 
-          if (drawerTotal % 6 === 0) {
-            // Every sixth drawer holds a box containing several trays side
-            // by side, demonstrating that a tray's parent need not be a
-            // drawer directly — this is deliberately exercised, not just
-            // modelled, so the UI has real data to show it.
-            const boxId = nextId(locationCounter, 'loc');
-            locations.push({ id: boxId, parentId: drawerId, name: 'Box 01', type: 'box' });
-            for (let t = 1; t <= 3; t += 1) {
-              addTray(boxId, `Tray ${pad(t, 2)}`);
+          const drawersInCabinet = drawerTotal < 16 ? 2 : 4;
+          for (let d = 1; d <= drawersInCabinet && drawerTotal < 20; d += 1) {
+            drawerTotal += 1;
+            const drawerId = nextId(locationCounter, 'loc');
+            locations.push({
+              id: drawerId,
+              parentId: cabinetId,
+              name: `Drawer ${pad(d, 2)}`,
+              type: 'drawer',
+            });
+            drawerIds.push(drawerId);
+
+            if (drawerTotal % 6 === 0) {
+              // Every sixth drawer holds a box containing several trays side
+              // by side, demonstrating that a tray's parent need not be a
+              // drawer directly — this is deliberately exercised, not just
+              // modelled, so the UI has real data to show it.
+              const boxId = nextId(locationCounter, 'loc');
+              locations.push({ id: boxId, parentId: drawerId, name: 'Box 01', type: 'box' });
+              for (let t = 1; t <= 3; t += 1) {
+                addTray(boxId, `Tray ${pad(t, 2)}`);
+              }
+            } else if (drawerTotal % 3 === 0) {
+              // Roughly every third drawer (excluding the box case above)
+              // gets a single grid tray directly.
+              addTray(drawerId, 'Tray 01');
             }
-          } else if (drawerTotal % 3 === 0) {
-            // Roughly every third drawer (excluding the box case above)
-            // gets a single grid tray directly.
-            addTray(drawerId, 'Tray 01');
           }
         }
-      }
+      });
     });
   }
 

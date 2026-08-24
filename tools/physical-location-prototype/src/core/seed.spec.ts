@@ -18,6 +18,7 @@ describe('generateSeed', () => {
     const dataset = generateSeed();
     const byType = (type: string) => dataset.locations.filter((l) => l.type === type);
     expect(byType('building').length).toBeGreaterThanOrEqual(2);
+    expect(byType('floor').length).toBeGreaterThan(0);
     expect(byType('room').length).toBeGreaterThan(0);
     expect(byType('cabinet').length).toBeGreaterThan(0);
     expect(byType('drawer')).toHaveLength(20);
@@ -34,12 +35,30 @@ describe('generateSeed', () => {
     expect(traysInBox.length).toBeGreaterThan(1);
   });
 
-  it('assigns non-overlapping floor-plan coordinates to every room within a building', () => {
+  it('assigns floor-plan coordinates to every floor within a building', () => {
     const dataset = generateSeed();
     const buildings = dataset.locations.filter((l) => l.type === 'building');
     for (const building of buildings) {
-      const rooms = dataset.locations.filter((l) => l.parentId === building.id);
+      const floors = dataset.locations.filter((l) => l.parentId === building.id);
+      expect(floors.length).toBeGreaterThan(0);
+      for (const floor of floors) {
+        expect(floor.type).toBe('floor');
+        expect(floor.x).toBeDefined();
+        expect(floor.y).toBeDefined();
+        expect(floor.width).toBeGreaterThan(0);
+        expect(floor.height).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it('assigns floor-plan coordinates to every room within its floor', () => {
+    const dataset = generateSeed();
+    const floors = dataset.locations.filter((l) => l.type === 'floor');
+    for (const floor of floors) {
+      const rooms = dataset.locations.filter((l) => l.parentId === floor.id);
+      expect(rooms.length).toBeGreaterThan(0);
       for (const room of rooms) {
+        expect(room.type).toBe('room');
         expect(room.x).toBeDefined();
         expect(room.y).toBeDefined();
         expect(room.width).toBeGreaterThan(0);

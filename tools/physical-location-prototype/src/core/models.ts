@@ -11,6 +11,7 @@
 
 export type LocationType =
   | 'building'
+  | 'floor'
   | 'room'
   | 'cabinet'
   | 'drawer'

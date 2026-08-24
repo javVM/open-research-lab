@@ -119,6 +119,10 @@
         <source>Drag to resize</source>
         <target>Arrastra para redimensionar</target>
       </trans-unit>
+      <trans-unit id="floorPlan.previewHint">
+        <source>Hover to preview what is inside</source>
+        <target>Pasa el ratón para ver qué hay dentro</target>
+      </trans-unit>
       <trans-unit id="floorPlan.itemCount">
         <source>{count} item(s)</source>
         <target>{count} ítem(s)</target>
@@ -127,6 +131,10 @@
       <trans-unit id="locationType.building">
         <source>Building</source>
         <target>Edificio</target>
+      </trans-unit>
+      <trans-unit id="locationType.floor">
+        <source>Floor</source>
+        <target>Planta</target>
       </trans-unit>
       <trans-unit id="locationType.room">
         <source>Room</source>

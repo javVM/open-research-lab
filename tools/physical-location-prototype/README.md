@@ -25,7 +25,7 @@ backend, no network calls other than fetching the two static translation files b
 
 ```bash
 npm install
-npm test           # Jest — 100+ unit/component tests
+npm test           # Jest — 105+ unit/component tests
 npm run typecheck  # tsc --noEmit
 npm run build      # ng build (production)
 npm start          # ng serve, http://localhost:4200
@@ -34,17 +34,18 @@ npm start          # ng serve, http://localhost:4200
 ## Features
 
 - **Location tree / spatial view / item detail** three-pane layout, with search-to-navigate.
-- **Hierarchy**: building → room → cabinet → drawer → (optionally) box → tray → position. A box
-  is a container that can hold several trays side by side — not every drawer has one; see
+- **Hierarchy**: building → floor → room → cabinet → drawer → (optionally) box → tray → position.
+  A box is a container that can hold several trays side by side — not every drawer has one; see
   `src/core/seed.ts` for how often each shape occurs in the demo data.
-- **Floor plan**: selecting a building or a room offers a Map/List toggle. Map mode
-  (`FloorPlanComponent`) shows its children (rooms, or cabinets) as rectangles on a dashed-boundary
-  canvas at their own `x`/`y`/`width`/`height` — draggable to reposition, and resizable from the
-  bottom-right handle; both persist immediately via `DataService`. Each rectangle's background
-  intensity reflects its occupancy relative to its busiest sibling, and a room's rectangle also
-  shows a small scaled-down preview of its own cabinets (so a building map hints at what's inside
-  each room without navigating into it). List mode is the same card grid used for every other
-  location type. The toggle only appears when every child actually has floor-plan coordinates.
+- **Floor plan**: selecting a building, a floor, or a room offers a Map/List toggle. Map mode
+  (`FloorPlanComponent`) shows its children (floors, rooms, or cabinets) as rectangles on a
+  dashed-boundary canvas at their own `x`/`y`/`width`/`height` — draggable to reposition, and
+  resizable from the bottom-right handle; both persist immediately via `DataService`. Each
+  rectangle's background intensity reflects its occupancy relative to its busiest sibling, and
+  hovering a rectangle reveals a scaled-down preview of its own coordinated children (so a
+  building map hints at a floor's rooms, and a floor map at a room's cabinets, without navigating
+  into them). List mode is the same card grid used for every other location type. The toggle only
+  appears when every child actually has floor-plan coordinates.
 - **Move flow**: drag-and-drop within whatever is currently on screen, or click a destination
   anywhere in the app (tree, cards, grid cells, floor-plan rectangles) to open a confirmation
   modal — the latter is the only way to move an item across containers that aren't rendered

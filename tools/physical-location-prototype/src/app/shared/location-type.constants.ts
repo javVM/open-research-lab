@@ -2,6 +2,7 @@ import type { LocationType } from '../../core/models';
 
 export const LOCATION_TYPE_I18N: Record<LocationType, { key: string; fallback: string }> = {
   building: { key: 'locationType.building', fallback: 'Building' },
+  floor: { key: 'locationType.floor', fallback: 'Floor' },
   room: { key: 'locationType.room', fallback: 'Room' },
   cabinet: { key: 'locationType.cabinet', fallback: 'Cabinet' },
   drawer: { key: 'locationType.drawer', fallback: 'Drawer' },

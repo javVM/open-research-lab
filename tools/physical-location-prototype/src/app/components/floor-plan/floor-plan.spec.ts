@@ -137,19 +137,77 @@ describe('FloorPlanComponent', () => {
 
   it('shows a scaled-down preview of a location\'s own coordinated children (e.g. a room\'s cabinets)', () => {
     const data = TestBed.inject(DataService);
-    const buildingWithRoomsAndCabinets = data.dataset().locations.find(
-      (l) => l.type === 'building' && data.dataset().locations.some((r) => r.parentId === l.id),
+    const roomWithCabinets = data.dataset().locations.find(
+      (l) => l.type === 'room' && data.dataset().locations.some((c) => c.parentId === l.id && c.type === 'cabinet'),
     )!;
-    const roomsOfBuilding = data
+    const floorOfRoom = data.dataset().locations.find((l) => l.id === roomWithCabinets.parentId)!;
+    const roomsOfFloor = data
       .dataset()
-      .locations.filter((l) => l.parentId === buildingWithRoomsAndCabinets.id && l.type === 'room');
+      .locations.filter((l) => l.parentId === floorOfRoom.id && l.type === 'room');
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentInstance.locations = roomsOfBuilding;
+    fixture.componentInstance.locations = roomsOfFloor;
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview').length).toBe(roomsOfBuilding.length);
+    expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview').length).toBe(roomsOfFloor.length);
     expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview-rect').length).toBeGreaterThan(0);
+  });
+
+  it('also previews floors when showing a building (three levels of nesting are now possible)', () => {
+    const data = TestBed.inject(DataService);
+    const buildingWithFloors = data.dataset().locations.find(
+      (l) => l.type === 'building' && data.dataset().locations.some((f) => f.parentId === l.id && f.type === 'floor'),
+    )!;
+    const floorsOfBuilding = data
+      .dataset()
+      .locations.filter((l) => l.parentId === buildingWithFloors.id && l.type === 'floor');
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentInstance.locations = floorsOfBuilding;
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview').length).toBe(floorsOfBuilding.length);
+    expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview-rect').length).toBeGreaterThan(0);
+  });
+
+  it('marks a rect as interacting while it is being dragged, and clears it on pointer up', () => {
+    const data = TestBed.inject(DataService);
+    const realRoom = data.dataset().locations.find((l) => l.type === 'room')!;
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentInstance.locations = [realRoom];
+    fixture.detectChanges();
+
+    const rect = fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement;
+    expect(rect.classList.contains('floor-plan__rect--interacting')).toBe(false);
+
+    rect.dispatchEvent(new MouseEvent('pointerdown', { clientX: 0, clientY: 0, button: 0 }));
+    fixture.detectChanges();
+    expect(rect.classList.contains('floor-plan__rect--interacting')).toBe(true);
+
+    window.dispatchEvent(new MouseEvent('pointerup'));
+    fixture.detectChanges();
+    expect(rect.classList.contains('floor-plan__rect--interacting')).toBe(false);
+  });
+
+  it('marks a rect as interacting while it is being resized, and clears it on pointer up', () => {
+    const data = TestBed.inject(DataService);
+    const realRoom = data.dataset().locations.find((l) => l.type === 'room')!;
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentInstance.locations = [realRoom];
+    fixture.detectChanges();
+
+    const rect = fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement;
+    const handle = fixture.nativeElement.querySelector('.floor-plan__resize-handle') as HTMLElement;
+
+    handle.dispatchEvent(new MouseEvent('pointerdown', { clientX: 0, clientY: 0, button: 0, bubbles: true }));
+    fixture.detectChanges();
+    expect(rect.classList.contains('floor-plan__rect--interacting')).toBe(true);
+
+    window.dispatchEvent(new MouseEvent('pointerup'));
+    fixture.detectChanges();
+    expect(rect.classList.contains('floor-plan__rect--interacting')).toBe(false);
   });
 
   it('does not render a preview for locations whose children have no floor-plan coordinates', () => {

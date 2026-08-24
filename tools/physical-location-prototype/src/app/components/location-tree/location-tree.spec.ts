@@ -40,7 +40,9 @@ describe('LocationTreeComponent', () => {
 
     const movingItem = data.dataset().items.find((item) => item.locationId !== null)!;
     const cabinet = data.dataset().locations.find((l) => l.type === 'cabinet')!;
-    data.selectLocation(data.dataset().locations.find((l) => l.id === cabinet.parentId)!.id);
+    // Expand every ancestor (building, floor, room), not just the direct
+    // parent, so the cabinet's row is actually rendered in the tree.
+    data.navigateToLocation(cabinet.id);
     fixture.detectChanges();
 
     data.startMove(movingItem.id);

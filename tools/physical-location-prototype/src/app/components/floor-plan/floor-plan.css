@@ -83,12 +83,43 @@
   border-color: var(--accent, #5b8def);
 }
 
+.floor-plan__preview-indicator {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--text-muted, #9aa1ac);
+  opacity: 0.7;
+}
+
+.floor-plan__rect:hover .floor-plan__preview-indicator {
+  opacity: 0;
+}
+
+/* Hidden until the rect is hovered, so it doesn't permanently compete for
+   space with the rect's own name/type/count — see FloorPlanComponent. */
 .floor-plan__preview {
   position: absolute;
-  border: 1px dashed var(--border, #3a3f4b);
-  border-radius: 0.25rem;
-  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  border-radius: 0.3rem;
+  background: var(--surface, #1b1e26);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  opacity: 0;
   pointer-events: none;
+  transition: opacity 0.12s ease-out;
+}
+
+.floor-plan__rect:hover .floor-plan__preview {
+  opacity: 1;
+}
+
+/* While dragging or resizing, the pointer stays over the rect the whole
+   time, so the hover preview would otherwise stay stuck open — hide it
+   regardless of hover state until the interaction ends. */
+.floor-plan__rect--interacting .floor-plan__preview,
+.floor-plan__rect--interacting:hover .floor-plan__preview {
+  opacity: 0;
 }
 
 .floor-plan__preview-rect {
