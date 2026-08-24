@@ -37,6 +37,17 @@ export interface Location {
   y?: number;
   width?: number;
   height?: number;
+  /**
+   * A user-supplied floor-plan image (data URL, so it round-trips through
+   * the local-first `localStorage` snapshot with no network calls) used as
+   * the background of a `FloorPlanComponent` map when this location's own
+   * children are being shown on it — e.g. a scanned building blueprint
+   * behind its floors. `width`/`height` are the image's natural pixel size,
+   * used to size the map canvas; the image is not calibrated to a real
+   * physical scale, it is purely a visual backdrop that children's existing
+   * `x`/`y`/`width`/`height` get dragged onto.
+   */
+  mapImage?: { dataUrl: string; width: number; height: number };
 }
 
 export type ItemStatus = 'active' | 'checked_out' | 'lost' | 'archived';

@@ -17,5 +17,6 @@ export const LOCATION_VIEW_I18N = {
   positionEmptyTitle: { key: 'locationView.positionEmptyTitle', fallback: '{name} (empty)' },
   itemCount: { key: 'locationView.itemCount', fallback: '{count} item(s)' },
   viewModeMap: { key: 'locationView.viewMode.map', fallback: 'Map' },
+  viewMode3d: { key: 'locationView.viewMode.3d', fallback: '3D' },
   viewModeList: { key: 'locationView.viewMode.list', fallback: 'List' },
 } as const;

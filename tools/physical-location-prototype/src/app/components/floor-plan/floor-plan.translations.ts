@@ -9,5 +9,7 @@ export function createFloorPlanTranslations(i18n: TranslationService) {
     resizeHint: computed(() => i18n.t(T.resizeHint.key, T.resizeHint.fallback)),
     previewHint: computed(() => i18n.t(T.previewHint.key, T.previewHint.fallback)),
     itemCount: (count: number): string => i18n.t(T.itemCount.key, T.itemCount.fallback, { count }),
+    uploadPlan: computed(() => i18n.t(T.uploadPlan.key, T.uploadPlan.fallback)),
+    removePlan: computed(() => i18n.t(T.removePlan.key, T.removePlan.fallback)),
   };
 }

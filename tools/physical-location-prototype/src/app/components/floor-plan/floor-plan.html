@@ -1,8 +1,23 @@
+@if (containerLocationId) {
+  <div class="floor-plan__toolbar">
+    <label class="floor-plan__upload">
+      {{ text.uploadPlan() }}
+      <input type="file" accept="image/*" (change)="onImageSelected($event)" />
+    </label>
+    @if (containerImage(); as image) {
+      <button type="button" class="floor-plan__remove-plan" (click)="clearImage()">{{ text.removePlan() }}</button>
+    }
+  </div>
+}
+
 <div
   class="floor-plan"
   [attr.aria-label]="text.ariaLabel()"
   [style.width.px]="bounds().width"
   [style.height.px]="bounds().height"
+  [style.backgroundImage]="containerImage() ? 'url(' + containerImage()!.dataUrl + ')' : null"
+  [style.backgroundSize]="containerImage() ? containerImage()!.width + 'px ' + containerImage()!.height + 'px' : null"
+  [style.backgroundRepeat]="'no-repeat'"
 >
   @for (location of locations; track location.id) {
     <div

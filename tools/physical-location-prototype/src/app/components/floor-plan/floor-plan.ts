@@ -46,6 +46,8 @@ const MIN_SIZE = 60;
 })
 export class FloorPlanComponent {
   @Input() locations: Location[] = [];
+  /** Id of the location whose children `locations` are — used to look up/store its background plan image. */
+  @Input() containerLocationId: string | null = null;
 
   protected readonly data = inject(DataService);
   protected readonly text = createFloorPlanTranslations(inject(TranslationService));
@@ -75,12 +77,47 @@ export class FloorPlanComponent {
    * or resize moves the bounding box) — it would just go stale.
    */
   bounds(): Rect {
+    const image = this.containerImage();
     if (this.locations.length === 0) {
-      return { x: 0, y: 0, width: 1, height: 1 };
+      return { x: 0, y: 0, width: image?.width ?? 1, height: image?.height ?? 1 };
     }
-    const maxX = Math.max(...this.locations.map((location) => (location.x ?? 0) + (location.width ?? 0)));
-    const maxY = Math.max(...this.locations.map((location) => (location.y ?? 0) + (location.height ?? 0)));
+    const maxX = Math.max(image?.width ?? 0, ...this.locations.map((location) => (location.x ?? 0) + (location.width ?? 0)));
+    const maxY = Math.max(image?.height ?? 0, ...this.locations.map((location) => (location.y ?? 0) + (location.height ?? 0)));
     return { x: 0, y: 0, width: maxX, height: maxY };
+  }
+
+  /** The background plan image set for `containerLocationId`, if any — see `Location.mapImage`. */
+  containerImage(): Location['mapImage'] {
+    if (!this.containerLocationId) {
+      return undefined;
+    }
+    return this.data.dataset().locations.find((candidate) => candidate.id === this.containerLocationId)?.mapImage;
+  }
+
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file || !this.containerLocationId) {
+      return;
+    }
+    const containerLocationId = this.containerLocationId;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      const image = new Image();
+      image.onload = () => {
+        this.data.setLocationMapImage(containerLocationId, dataUrl, image.naturalWidth, image.naturalHeight);
+      };
+      image.src = dataUrl;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  clearImage(): void {
+    if (this.containerLocationId) {
+      this.data.clearLocationMapImage(this.containerLocationId);
+    }
   }
 
   rectFor(location: Location): Rect {

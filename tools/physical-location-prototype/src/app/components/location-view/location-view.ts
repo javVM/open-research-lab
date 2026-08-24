@@ -8,6 +8,7 @@ import { TranslationService } from '../../i18n/translation.service';
 import { createLocationViewTranslations } from './location-view.translations';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
 import { FloorPlanComponent } from '../floor-plan/floor-plan';
+import { FloorPlan3dComponent } from '../floor-plan-3d/floor-plan-3d';
 
 interface GridCell {
   position: Location;
@@ -16,7 +17,7 @@ interface GridCell {
 
 @Component({
   selector: 'app-location-view',
-  imports: [CdkDropList, CdkDrag, CdkDropListGroup, FloorPlanComponent],
+  imports: [CdkDropList, CdkDrag, CdkDropListGroup, FloorPlanComponent, FloorPlan3dComponent],
   templateUrl: './location-view.html',
   styleUrl: './location-view.css',
 })
@@ -25,7 +26,7 @@ export class LocationViewComponent {
   protected readonly text = createLocationViewTranslations(inject(TranslationService));
   protected readonly locationType = createLocationTypeTranslations(inject(TranslationService));
 
-  protected readonly viewMode = signal<'map' | 'list'>('map');
+  protected readonly viewMode = signal<'map' | '3d' | 'list'>('map');
 
   readonly selectedLocation = computed<Location | undefined>(() => {
     const id = this.data.selectedLocationId();
@@ -62,8 +63,9 @@ export class LocationViewComponent {
   );
 
   readonly showMap = computed<boolean>(() => this.canShowMap() && this.viewMode() === 'map');
+  readonly show3d = computed<boolean>(() => this.canShowMap() && this.viewMode() === '3d');
 
-  setViewMode(mode: 'map' | 'list'): void {
+  setViewMode(mode: 'map' | '3d' | 'list'): void {
     this.viewMode.set(mode);
   }
 

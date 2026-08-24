@@ -78,6 +78,9 @@
       <trans-unit id="locationView.viewMode.map">
         <source>Map</source>
       </trans-unit>
+      <trans-unit id="locationView.viewMode.3d">
+        <source>3D</source>
+      </trans-unit>
       <trans-unit id="locationView.viewMode.list">
         <source>List</source>
       </trans-unit>
@@ -96,6 +99,40 @@
       </trans-unit>
       <trans-unit id="floorPlan.itemCount">
         <source>{count} item(s)</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.uploadPlan">
+        <source>Upload floor plan image</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.removePlan">
+        <source>Remove floor plan image</source>
+      </trans-unit>
+
+      <trans-unit id="floorPlan3d.ariaLabel">
+        <source>3D floor plan</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.orbitHint">
+        <source>Drag to orbit, scroll to zoom</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.resetView">
+        <source>Reset view</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.itemCount">
+        <source>{count} item(s)</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.rotateGroupLabel">
+        <source>Rotate view</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.rotateUp">
+        <source>Tilt up</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.rotateDown">
+        <source>Tilt down</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.rotateLeft">
+        <source>Spin left</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.rotateRight">
+        <source>Spin right</source>
       </trans-unit>
 
       <trans-unit id="locationType.building">

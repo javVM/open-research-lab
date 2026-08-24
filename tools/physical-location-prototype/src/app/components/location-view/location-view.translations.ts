@@ -15,6 +15,7 @@ export function createLocationViewTranslations(i18n: TranslationService) {
       i18n.t(T.positionEmptyTitle.key, T.positionEmptyTitle.fallback, { name }),
     itemCount: (count: number): string => i18n.t(T.itemCount.key, T.itemCount.fallback, { count }),
     viewModeMap: computed(() => i18n.t(T.viewModeMap.key, T.viewModeMap.fallback)),
+    viewMode3d: computed(() => i18n.t(T.viewMode3d.key, T.viewMode3d.fallback)),
     viewModeList: computed(() => i18n.t(T.viewModeList.key, T.viewModeList.fallback)),
   };
 }

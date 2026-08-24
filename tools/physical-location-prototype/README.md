@@ -25,7 +25,7 @@ backend, no network calls other than fetching the two static translation files b
 
 ```bash
 npm install
-npm test           # Jest — 105+ unit/component tests
+npm test           # Jest — 115+ unit/component tests
 npm run typecheck  # tsc --noEmit
 npm run build      # ng build (production)
 npm start          # ng serve, http://localhost:4200
@@ -46,6 +46,19 @@ npm start          # ng serve, http://localhost:4200
   building map hints at a floor's rooms, and a floor map at a room's cabinets, without navigating
   into them). List mode is the same card grid used for every other location type. The toggle only
   appears when every child actually has floor-plan coordinates.
+- **3D view**: a third toggle next to Map/List renders the same children as extruded CSS boxes
+  (`FloorPlan3dComponent`) instead of flat rectangles — same `x`/`y`/`width`/`height` data, no
+  separate model. Drag empty space to orbit, scroll to zoom, click "⟲" to reset. A building's
+  floors don't occupy distinct footprints in the 2D map (they're just listed one above another as
+  a layout convenience — see `FLOOR_LAYOUT` in `seed.ts`); in 3D that ordering instead becomes
+  literal vertical stacking, giving a sense of the building as floors. This is a read-only spatial
+  view — dragging/resizing to edit stays the 2D map's job.
+- **Floor plan image import**: while on the Map view, upload an image (stored as a data URL, so it
+  stays local-first through the `localStorage` snapshot) to use as the map's background — e.g. a
+  scanned building blueprint. Existing children keep their own `x`/`y`/`width`/`height` and can be
+  dragged directly onto the image; there is no unit calibration (the layout was already in
+  arbitrary units, so the image is a visual backdrop, not a measured scale). See
+  `Location.mapImage` and `DataService.setLocationMapImage`/`clearLocationMapImage`.
 - **Move flow**: drag-and-drop within whatever is currently on screen, or click a destination
   anywhere in the app (tree, cards, grid cells, floor-plan rectangles) to open a confirmation
   modal — the latter is the only way to move an item across containers that aren't rendered

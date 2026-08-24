@@ -178,4 +178,25 @@ export class DataService {
     );
     this.store.setState({ ...dataset, locations });
   }
+
+  /** Sets the floor-plan backdrop image shown behind `locationId`'s own children on the map. */
+  setLocationMapImage(locationId: string, dataUrl: string, width: number, height: number): void {
+    const dataset = this.dataset();
+    const locations = dataset.locations.map((candidate) =>
+      candidate.id === locationId ? { ...candidate, mapImage: { dataUrl, width, height } } : candidate,
+    );
+    this.store.setState({ ...dataset, locations });
+  }
+
+  clearLocationMapImage(locationId: string): void {
+    const dataset = this.dataset();
+    const locations = dataset.locations.map((candidate) => {
+      if (candidate.id !== locationId) {
+        return candidate;
+      }
+      const { mapImage: _mapImage, ...rest } = candidate;
+      return rest;
+    });
+    this.store.setState({ ...dataset, locations });
+  }
 }

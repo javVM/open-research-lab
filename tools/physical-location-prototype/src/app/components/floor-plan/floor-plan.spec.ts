@@ -218,4 +218,83 @@ describe('FloorPlanComponent', () => {
 
     expect(fixture.nativeElement.querySelector('.floor-plan__preview')).toBeFalsy();
   });
+
+  describe('background plan image', () => {
+    // jsdom does not actually decode images, so `new Image()` never fires
+    // its own `onload` for a data URL — stub it out to behave like a real
+    // image load would, without depending on real image decoding.
+    let OriginalImage: typeof Image;
+
+    beforeEach(() => {
+      OriginalImage = window.Image;
+      class FakeImage {
+        onload: (() => void) | null = null;
+        naturalWidth = 800;
+        naturalHeight = 600;
+        set src(_value: string) {
+          setTimeout(() => this.onload?.());
+        }
+      }
+      (window as unknown as { Image: typeof Image }).Image = FakeImage as unknown as typeof Image;
+    });
+
+    afterEach(() => {
+      window.Image = OriginalImage;
+    });
+
+    it('does not show the upload control when no containerLocationId is set', () => {
+      const fixture = TestBed.createComponent(FloorPlanComponent);
+      fixture.componentInstance.locations = [room('a', 0, 0)];
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelector('.floor-plan__toolbar')).toBeFalsy();
+    });
+
+    it('uploads an image and stores it as mapImage on the container location', async () => {
+      const data = TestBed.inject(DataService);
+      const building = data.dataset().locations.find((l) => l.type === 'building')!;
+
+      const fixture = TestBed.createComponent(FloorPlanComponent);
+      fixture.componentInstance.locations = [room('a', 0, 0)];
+      fixture.componentInstance.containerLocationId = building.id;
+      fixture.detectChanges();
+
+      const file = new File(['fake-image-bytes'], 'plan.png', { type: 'image/png' });
+      const input = fixture.nativeElement.querySelector('input[type="file"]') as HTMLInputElement;
+      Object.defineProperty(input, 'files', { value: [file] });
+      input.dispatchEvent(new Event('change'));
+
+      // Two hops: FileReader's own onload, then the stubbed Image's onload.
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      fixture.detectChanges();
+
+      const updated = data.dataset().locations.find((l) => l.id === building.id)!;
+      expect(updated.mapImage?.width).toBe(800);
+      expect(updated.mapImage?.height).toBe(600);
+      expect(updated.mapImage?.dataUrl).toContain('data:');
+
+      const mapDiv = fixture.nativeElement.querySelector('.floor-plan') as HTMLElement;
+      expect(mapDiv.style.backgroundImage).toContain('data:');
+      expect(fixture.nativeElement.querySelector('.floor-plan__remove-plan')).toBeTruthy();
+    });
+
+    it('clearing the image removes mapImage from the container location', () => {
+      const data = TestBed.inject(DataService);
+      const building = data.dataset().locations.find((l) => l.type === 'building')!;
+      data.setLocationMapImage(building.id, 'data:image/png;base64,abc', 800, 600);
+
+      const fixture = TestBed.createComponent(FloorPlanComponent);
+      fixture.componentInstance.locations = [room('a', 0, 0)];
+      fixture.componentInstance.containerLocationId = building.id;
+      fixture.detectChanges();
+
+      (fixture.nativeElement.querySelector('.floor-plan__remove-plan') as HTMLElement).click();
+      fixture.detectChanges();
+
+      const updated = data.dataset().locations.find((l) => l.id === building.id)!;
+      expect(updated.mapImage).toBeUndefined();
+      expect(fixture.nativeElement.querySelector('.floor-plan__remove-plan')).toBeFalsy();
+    });
+  });
 });

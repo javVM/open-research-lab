@@ -1,0 +1,96 @@
+<div class="floor-plan-3d" [attr.aria-label]="text.ariaLabel()">
+  <button type="button" class="floor-plan-3d__reset" [attr.title]="text.resetView()" (click)="resetView()">
+    ⟲
+  </button>
+  <span class="floor-plan-3d__hint">{{ text.orbitHint() }}</span>
+
+  <div class="floor-plan-3d__dpad" role="group" [attr.aria-label]="text.rotateGroupLabel()">
+    <button type="button" class="floor-plan-3d__dpad-btn floor-plan-3d__dpad-btn--up" [attr.title]="text.rotateUp()" (click)="rotate('up')">▲</button>
+    <button type="button" class="floor-plan-3d__dpad-btn floor-plan-3d__dpad-btn--left" [attr.title]="text.rotateLeft()" (click)="rotate('left')">◀</button>
+    <button type="button" class="floor-plan-3d__dpad-btn floor-plan-3d__dpad-btn--right" [attr.title]="text.rotateRight()" (click)="rotate('right')">▶</button>
+    <button type="button" class="floor-plan-3d__dpad-btn floor-plan-3d__dpad-btn--down" [attr.title]="text.rotateDown()" (click)="rotate('down')">▼</button>
+  </div>
+
+  <div class="floor-plan-3d__scene" (pointerdown)="onOrbitPointerDown($event)" (wheel)="onWheel($event)">
+    <div
+      class="plane"
+      [style.width.px]="bounds().width"
+      [style.height.px]="bounds().height"
+      [style.transform]="planeTransform()"
+    >
+      @for (location of locations; track location.id) {
+        <div
+          class="box3d"
+          [attr.data-type]="location.type"
+          [attr.data-location-id]="location.id"
+          [class.box3d--selected]="location.id === data.selectedLocationId()"
+          [style.left.px]="rectFor(location).x"
+          [style.top.px]="rectFor(location).y"
+          [style.width.px]="rectFor(location).width"
+          [style.height.px]="rectFor(location).height"
+          [style.transform]="'translateZ(' + elevationFor(location) + 'px)'"
+          (click)="onClick(location.id)"
+        >
+          <div class="box3d__face box3d__face--top" [style.transform]="'translateZ(' + wallHeight(location) + 'px)'">
+            <div class="box3d__top-fill" [style.backgroundColor]="occupancyColor(location.id, locations, 0.15)">
+              <span class="box3d__name">{{ location.name }}</span>
+              @if (countAt(location.id) > 0) {
+                <span class="box3d__count">{{ text.itemCount(countAt(location.id)) }}</span>
+              }
+            </div>
+          </div>
+          <div
+            class="box3d__face box3d__face--front"
+            [style.width.px]="rectFor(location).width"
+            [style.height.px]="wallHeight(location)"
+            [style.transform]="sideTransform(location, 'front')"
+            [style.backgroundColor]="occupancyColor(location.id, locations, -0.08)"
+          >
+            @if (uncoordinatedChildren(location).length > 0 && facingSide() === 'front') {
+              <ng-container *ngTemplateOutlet="shelves; context: { $implicit: location }" />
+            }
+          </div>
+          <div
+            class="box3d__face box3d__face--back"
+            [style.width.px]="rectFor(location).width"
+            [style.height.px]="wallHeight(location)"
+            [style.transform]="sideTransform(location, 'back')"
+            [style.backgroundColor]="occupancyColor(location.id, locations, -0.14)"
+          >
+            @if (uncoordinatedChildren(location).length > 0 && facingSide() === 'back') {
+              <ng-container *ngTemplateOutlet="shelves; context: { $implicit: location }" />
+            }
+          </div>
+          <div
+            class="box3d__face box3d__face--left"
+            [style.width.px]="wallHeight(location)"
+            [style.height.px]="rectFor(location).height"
+            [style.transform]="sideTransform(location, 'left')"
+            [style.backgroundColor]="occupancyColor(location.id, locations, -0.11)"
+          ></div>
+          <div
+            class="box3d__face box3d__face--right"
+            [style.width.px]="wallHeight(location)"
+            [style.height.px]="rectFor(location).height"
+            [style.transform]="sideTransform(location, 'right')"
+            [style.backgroundColor]="occupancyColor(location.id, locations, -0.05)"
+          ></div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<ng-template #shelves let-location>
+  <div class="box3d__shelves">
+    @for (child of uncoordinatedChildren(location); track child.id) {
+      <div
+        class="box3d__shelf"
+        [attr.title]="child.name"
+        [style.backgroundColor]="occupancyColor(child.id, uncoordinatedChildren(location))"
+      >
+        <span class="box3d__shelf-handle"></span>
+      </div>
+    }
+  </div>
+</ng-template>

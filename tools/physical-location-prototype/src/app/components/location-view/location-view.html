@@ -32,7 +32,14 @@
         </button>
         <button
           type="button"
-          [class.view-mode-toggle__button--active]="!showMap()"
+          [class.view-mode-toggle__button--active]="show3d()"
+          (click)="setViewMode('3d')"
+        >
+          {{ text.viewMode3d() }}
+        </button>
+        <button
+          type="button"
+          [class.view-mode-toggle__button--active]="!showMap() && !show3d()"
           (click)="setViewMode('list')"
         >
           {{ text.viewModeList() }}
@@ -41,7 +48,9 @@
     }
 
     @if (showMap()) {
-      <app-floor-plan [locations]="children()"></app-floor-plan>
+      <app-floor-plan [locations]="children()" [containerLocationId]="location.id"></app-floor-plan>
+    } @else if (show3d()) {
+      <app-floor-plan-3d [locations]="children()"></app-floor-plan-3d>
     } @else if (isPositionGrid()) {
       <table class="position-grid" cdkDropListGroup>
         <tbody>
