@@ -14,10 +14,11 @@ added here.** This is the **umbrella repository**: strategy, research and produc
 Products live in their own repositories; the `sample-operations` repository does not exist yet and
 must not be created until user validation returns a GO.
 
-The single exception is [`tools/collection-validator`](tools/collection-validator/README.md), a
-throwaway prototype built to gather evidence during user validation: a read-only CSV checker with
-no persistence, no UI and no domain model. Keep it that way — it is not the seed of a product, and
-nothing in it may be promoted to a shared package or reused as an architecture precedent.
+The permitted throwaway prototypes are the tools explicitly listed under [`tools/`](tools/).
+Currently these are [`tools/collection-validator`](tools/collection-validator/README.md) and
+[`tools/sample-operations-slice`](tools/sample-operations-slice/README.md). Both were built to
+gather evidence during user validation; neither is the seed of a product, and nothing in either may
+be promoted to a shared package or reused as an architecture precedent.
 
 The candidate first product, **Sample Operations**, is a local-first desktop tool for tracking
 where physical specimens and samples are and what has happened to them. Its target users are
@@ -138,13 +139,14 @@ Full detail in [docs/architecture/testing-strategy.md](docs/architecture/testing
 
 ## 9. Repository facts (keep current)
 
-- Structure today: `docs/`, plus the `tools/collection-validator` prototype and the
-  `tools/validation-research` analysis scripts (Python standard library only, no dependencies;
-  research, not product code). Sample Operations code, when it exists, goes in its own
-  repository (ADR-0008, as amended).
-- No repository-wide toolchain and no CI. `tools/collection-validator` has its own
-  self-contained `package.json` (three development dependencies, nothing at runtime) and is not
-  a workspace, a monorepo root, or a precedent for one.
+- Structure today: `docs/`, plus the `tools/collection-validator` prototype, the
+  `tools/sample-operations-slice` throwaway prototype and the `tools/validation-research`
+  analysis scripts (Python standard library only, no dependencies; research, not product code).
+  Sample Operations code, when it exists, goes in its own repository (ADR-0008, as amended).
+- No repository-wide toolchain and no CI. `tools/collection-validator` and
+  `tools/sample-operations-slice` each have their own self-contained `package.json` (three
+  development dependencies, nothing at runtime) and are not a workspace, a monorepo root, or a
+  precedent for one.
 - No pre-commit hooks configured (no `.pre-commit-config.yaml`, no `.husky/`). If you introduce
   a toolchain, wire lint and format into CI first; hooks are optional and must never be skipped
   with `--no-verify` once they exist.
