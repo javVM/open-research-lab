@@ -16,7 +16,7 @@
   [style.width.px]="bounds().width"
   [style.height.px]="bounds().height"
   [style.backgroundImage]="containerImage() ? 'url(' + containerImage()!.dataUrl + ')' : null"
-  [style.backgroundSize]="containerImage() ? containerImage()!.width + 'px ' + containerImage()!.height + 'px' : null"
+  [style.backgroundSize]="containerImage() ? (containerImage()!.width * renderScale()) + 'px ' + (containerImage()!.height * renderScale()) + 'px' : null"
   [style.backgroundRepeat]="'no-repeat'"
 >
   @for (location of locations; track location.id) {

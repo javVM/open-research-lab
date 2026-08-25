@@ -187,8 +187,21 @@
     flex-wrap: wrap;
   }
 
+  .floor-plan__viewport {
+    overflow: hidden;
+  }
+
   .floor-plan {
-    padding: 0.5rem;
+    min-width: 0;
+    padding: 0;
+  }
+
+  .floor-plan__rect {
+    cursor: pointer;
+  }
+
+  .floor-plan__resize-handle {
+    display: none;
   }
 
   .floor-plan__name {

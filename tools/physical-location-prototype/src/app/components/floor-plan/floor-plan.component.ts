@@ -1,4 +1,4 @@
-import { Component, Input, inject, signal } from '@angular/core';
+import { Component, Input, ElementRef, OnChanges, SimpleChanges, afterNextRender, inject, signal } from '@angular/core';
 import type { Location } from '../../../core/models';
 import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
@@ -45,7 +45,7 @@ const MIN_SIZE = 60;
   templateUrl: './floor-plan.component.html',
   styleUrl: './floor-plan.component.scss',
 })
-export class FloorPlanComponent {
+export class FloorPlanComponent implements OnChanges {
   @Input() locations: Location[] = [];
   /** Id of the location whose children `locations` are — used to look up/store its background plan image. */
   @Input() containerLocationId: string | null = null;
@@ -53,6 +53,13 @@ export class FloorPlanComponent {
   protected readonly data = inject(DataService);
   protected readonly text = createFloorPlanTranslations(inject(TranslationService));
   protected readonly locationType = createLocationTypeTranslations(inject(TranslationService));
+
+  protected readonly renderScale = signal(1);
+  private readonly el = inject(ElementRef);
+
+  constructor() {
+    afterNextRender(() => this.fitToViewport());
+  }
 
   private dragState: DragState | null = null;
   private suppressNextClick = false;
@@ -77,7 +84,7 @@ export class FloorPlanComponent {
    * first call and never notice later `@Input` changes (e.g. after a drag
    * or resize moves the bounding box) — it would just go stale.
    */
-  bounds(): Rect {
+  private rawBounds(): Rect {
     const image = this.containerImage();
     if (this.locations.length === 0) {
       return { x: 0, y: 0, width: image?.width ?? 1, height: image?.height ?? 1 };
@@ -85,6 +92,32 @@ export class FloorPlanComponent {
     const maxX = Math.max(image?.width ?? 0, ...this.locations.map((location) => (location.x ?? 0) + (location.width ?? 0)));
     const maxY = Math.max(image?.height ?? 0, ...this.locations.map((location) => (location.y ?? 0) + (location.height ?? 0)));
     return { x: 0, y: 0, width: maxX, height: maxY };
+  }
+
+  bounds(): Rect {
+    const s = this.renderScale();
+    const raw = this.rawBounds();
+    return { x: 0, y: 0, width: raw.width * s, height: raw.height * s };
+  }
+
+  private fitToViewport(): void {
+    if (!this.isMobile()) {
+      this.renderScale.set(1);
+      return;
+    }
+    const raw = this.rawBounds();
+    const viewport = this.el.nativeElement.querySelector('.floor-plan__viewport') as HTMLElement | null;
+    const viewportWidth = viewport?.clientWidth ?? this.el.nativeElement.clientWidth;
+    const fit = raw.width > 0 ? (viewportWidth - 16) / raw.width : 1;
+    this.renderScale.set(Math.max(0.25, Math.min(1, fit)));
+  }
+
+  private isMobile(): boolean {
+    return typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
+  }
+
+  ngOnChanges(_changes: SimpleChanges): void {
+    this.fitToViewport();
   }
 
   /** The background plan image set for `containerLocationId`, if any — see `Location.mapImage`. */
@@ -122,11 +155,12 @@ export class FloorPlanComponent {
   }
 
   rectFor(location: Location): Rect {
+    const s = this.renderScale();
     return {
-      x: location.x ?? 0,
-      y: location.y ?? 0,
-      width: location.width ?? 100,
-      height: location.height ?? 100,
+      x: (location.x ?? 0) * s,
+      y: (location.y ?? 0) * s,
+      width: (location.width ?? 100) * s,
+      height: (location.height ?? 100) * s,
     };
   }
 
@@ -199,7 +233,7 @@ export class FloorPlanComponent {
   }
 
   onPointerDown(event: PointerEvent, location: Location): void {
-    if (event.button !== 0) {
+    if (event.button !== 0 || this.isMobile()) {
       return;
     }
     event.preventDefault();
@@ -244,7 +278,7 @@ export class FloorPlanComponent {
   private resizeState: ResizeState | null = null;
 
   onResizePointerDown(event: PointerEvent, location: Location): void {
-    if (event.button !== 0) {
+    if (event.button !== 0 || this.isMobile()) {
       return;
     }
     event.preventDefault();

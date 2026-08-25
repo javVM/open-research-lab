@@ -75,6 +75,17 @@ export class FloorPlan3dComponent {
   protected readonly data = inject(DataService);
   protected readonly text = createFloorPlan3dTranslations(inject(TranslationService));
 
+  constructor() {
+    if (this.isMobile()) {
+      this.scale.set(0.65);
+      this.rotateXDeg.set(45);
+    }
+  }
+
+  private isMobile(): boolean {
+    return typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
+  }
+
   /**
    * Orbit/zoom state, read from the template's `planeTransform()` call.
    * These must be signals, not plain fields: they are mutated from
@@ -122,8 +133,8 @@ export class FloorPlan3dComponent {
 
   resetView(): void {
     this.rotateZDeg.set(-25);
-    this.rotateXDeg.set(55);
-    this.scale.set(1);
+    this.rotateXDeg.set(this.isMobile() ? 45 : 55);
+    this.scale.set(this.isMobile() ? 0.65 : 1);
   }
 
   rectFor(location: Location): Rect {
