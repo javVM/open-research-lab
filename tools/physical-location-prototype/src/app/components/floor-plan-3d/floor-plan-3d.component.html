@@ -11,7 +11,14 @@
     <button type="button" class="floor-plan-3d__dpad-btn floor-plan-3d__dpad-btn--down" [attr.title]="text.rotateDown()" (click)="rotate('down')">▼</button>
   </div>
 
-  <div class="floor-plan-3d__scene" (pointerdown)="onOrbitPointerDown($event)" (wheel)="onWheel($event)">
+  <div
+    class="floor-plan-3d__scene"
+    (pointerdown)="onOrbitPointerDown($event)"
+    (wheel)="onWheel($event)"
+    (touchstart)="onTouchStart($event)"
+    (touchmove)="onTouchMove($event)"
+    (touchend)="onTouchEnd()"
+  >
     <div
       class="plane"
       [style.width.px]="bounds().width"

@@ -88,6 +88,8 @@ export class FloorPlan3dComponent {
 
   private orbitState: OrbitState | null = null;
   private didDragSignificantly = false;
+  private pinchStartDistance: number | null = null;
+  private pinchStartScale = 1;
 
   planeTransform(): string {
     return `scale(${this.scale()}) rotateX(${this.rotateXDeg()}deg) rotateZ(${this.rotateZDeg()}deg)`;
@@ -243,7 +245,7 @@ export class FloorPlan3dComponent {
   }
 
   onOrbitPointerDown(event: PointerEvent): void {
-    if (event.button !== 0) {
+    if (event.button !== 0 || this.orbitState) {
       return;
     }
     this.didDragSignificantly = false;
@@ -259,6 +261,9 @@ export class FloorPlan3dComponent {
   }
 
   private readonly onOrbitPointerMove = (event: PointerEvent): void => {
+    if (this.pinchStartDistance !== null) {
+      return;
+    }
     const state = this.orbitState;
     if (!state) {
       return;
@@ -277,6 +282,27 @@ export class FloorPlan3dComponent {
     window.removeEventListener('pointerup', this.onOrbitPointerUp);
     this.orbitState = null;
   };
+
+  onTouchStart(event: TouchEvent): void {
+    if (event.touches.length === 2) {
+      const [t1, t2] = [event.touches[0], event.touches[1]];
+      this.pinchStartDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+      this.pinchStartScale = this.scale();
+    }
+  }
+
+  onTouchMove(event: TouchEvent): void {
+    if (event.touches.length === 2 && this.pinchStartDistance !== null) {
+      const [t1, t2] = [event.touches[0], event.touches[1]];
+      const distance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+      const next = this.pinchStartScale * (distance / this.pinchStartDistance);
+      this.scale.set(Math.min(MAX_SCALE, Math.max(MIN_SCALE, next)));
+    }
+  }
+
+  onTouchEnd(): void {
+    this.pinchStartDistance = null;
+  }
 
   onWheel(event: WheelEvent): void {
     event.preventDefault();
