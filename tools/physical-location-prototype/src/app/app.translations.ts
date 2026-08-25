@@ -8,6 +8,8 @@ export const resetButtonTitle = $localize `@@app.resetButton.title:Discard demo 
 export const locationHierarchyAriaLabel = $localize `@@app.pane.locationHierarchy:Location hierarchy`;
 export const selectedLocationAriaLabel = $localize `@@app.pane.selectedLocation:Selected location`;
 export const itemDetailAriaLabel = $localize `@@app.pane.itemDetail:Item detail`;
+export const scanButtonLabel = $localize `@@app.scanButton.label:Scan`;
+export const scanButtonTitle = $localize `@@app.scanButton.title:Open the camera scanner`;
 
 export function createAppTranslations(i18n: TranslationService) {
   return {
@@ -18,5 +20,7 @@ export function createAppTranslations(i18n: TranslationService) {
     locationHierarchyAriaLabel: () => i18n.t('app.pane.locationHierarchy', locationHierarchyAriaLabel),
     selectedLocationAriaLabel: () => i18n.t('app.pane.selectedLocation', selectedLocationAriaLabel),
     itemDetailAriaLabel: () => i18n.t('app.pane.itemDetail', itemDetailAriaLabel),
+    scanButtonLabel: () => i18n.t('app.scanButton.label', scanButtonLabel),
+    scanButtonTitle: () => i18n.t('app.scanButton.title', scanButtonTitle),
   };
 }

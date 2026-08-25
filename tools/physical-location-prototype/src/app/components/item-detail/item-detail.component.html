@@ -1,6 +1,9 @@
 @if (item(); as item) {
   <div class="item-detail">
     <h2>{{ item.catalogueNumber }}</h2>
+
+    <app-qr-label [payload]="qrPayload()"></app-qr-label>
+
     @if (item.label) {
       <p class="item-detail__label">{{ item.label }}</p>
     }

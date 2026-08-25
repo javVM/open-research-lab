@@ -2,6 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import type { Item, Location, Movement } from '../../../core/models';
 import { breadcrumb, breadcrumbLabel } from '../../../core/tree';
 import { historyOf } from '../../../core/search';
+import { QrLabelComponent } from '../qr-label/qr-label.component';
 import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createItemDetailTranslations } from './item-detail.translations';
@@ -9,7 +10,7 @@ import { createItemDetailTranslations } from './item-detail.translations';
 @Component({
   standalone: true,
   selector: 'app-item-detail',
-  imports: [],
+  imports: [QrLabelComponent],
   templateUrl: './item-detail.component.html',
   styleUrl: './item-detail.component.scss',
 })
@@ -20,6 +21,11 @@ export class ItemDetailComponent {
   readonly item = computed<Item | undefined>(() => {
     const id = this.data.selectedItemId();
     return id ? this.data.dataset().items.find((candidate) => candidate.id === id) : undefined;
+  });
+
+  readonly qrPayload = computed<string>(() => {
+    const item = this.item();
+    return item ? `item:${item.id}` : '';
   });
 
   readonly path = computed<Location[]>(() => {

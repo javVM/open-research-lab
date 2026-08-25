@@ -1,0 +1,30 @@
+<div class="qr-label">
+  <h3 class="qr-label__heading">{{ text.heading() }}</h3>
+
+  <div class="qr-label__formats" role="group">
+    @for (format of formats; track format) {
+      <button
+        type="button"
+        class="qr-label__format"
+        [class.qr-label__format--active]="selectedFormat() === format"
+        (click)="selectFormat(format)"
+      >
+        {{ formatLabel(format) }}
+      </button>
+    }
+  </div>
+
+  @if (dataUrl(); as url) {
+    <img
+      [src]="url"
+      [alt]="text.qrAlt()"
+      [width]="dimensions()?.width ?? 192"
+      [height]="dimensions()?.height ?? 192"
+    />
+    <code class="qr-label__payload">{{ payload() }}</code>
+  } @else if (rendering()) {
+    <p class="qr-label__status">{{ text.loading() }}</p>
+  } @else {
+    <p class="qr-label__status">{{ text.empty() }}</p>
+  }
+</div>

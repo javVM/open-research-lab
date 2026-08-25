@@ -1,0 +1,100 @@
+import { Component, EventEmitter, OnDestroy, Output, afterNextRender, inject, signal } from '@angular/core';
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
+import { DataService } from '../../data.service';
+import { TranslationService } from '../../i18n/translation.service';
+import { createQrScannerTranslations } from './qr-scanner.translations';
+
+@Component({
+  standalone: true,
+  selector: 'app-qr-scanner',
+  templateUrl: './qr-scanner.component.html',
+  styleUrl: './qr-scanner.component.scss',
+})
+export class QrScannerComponent implements OnDestroy {
+  private readonly data = inject(DataService);
+  protected readonly text = createQrScannerTranslations(inject(TranslationService));
+  private reader: Html5Qrcode | null = null;
+  private started = false;
+  private lastCode = '';
+  private lastTime = 0;
+
+  protected readonly loading = signal(true);
+  protected readonly error = signal<string | null>(null);
+
+  @Output() readonly close = new EventEmitter<void>();
+
+  constructor() {
+    afterNextRender(() => {
+      void this.init();
+    });
+  }
+
+  private async init(): Promise<void> {
+    const reader = new Html5Qrcode('qr-scanner-reader', {
+      verbose: false,
+      formatsToSupport: [
+        Html5QrcodeSupportedFormats.QR_CODE,
+        Html5QrcodeSupportedFormats.DATA_MATRIX,
+        Html5QrcodeSupportedFormats.CODE_128,
+        Html5QrcodeSupportedFormats.CODE_39,
+        Html5QrcodeSupportedFormats.EAN_13,
+      ],
+    });
+    this.reader = reader;
+
+    try {
+      await reader.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: (w, h) => this.qrBox(w, h), aspectRatio: 1 },
+        (decodedText) => this.onScan(decodedText),
+        () => undefined,
+      );
+      this.started = true;
+      this.loading.set(false);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      this.error.set(message);
+      this.loading.set(false);
+      console.error('QR scanner failed to start', err);
+    }
+  }
+
+  private qrBox(viewfinderWidth: number, viewfinderHeight: number) {
+    const min = Math.min(viewfinderWidth, viewfinderHeight);
+    const size = Math.min(250, Math.round(min * 0.6));
+    return { width: size, height: size };
+  }
+
+  private onScan(decodedText: string): void {
+    const code = decodedText.trim();
+    if (!code) {
+      return;
+    }
+    const now = Date.now();
+    if (code === this.lastCode && now - this.lastTime < 1500) {
+      return;
+    }
+    this.lastCode = code;
+    this.lastTime = now;
+    this.data.scanQr(code);
+    this.onClose();
+  }
+
+  onClose(): void {
+    this.close.emit();
+  }
+
+  ngOnDestroy(): void {
+    if (this.reader && this.started) {
+      this.reader
+        .stop()
+        .catch((err) => console.error('QR scanner failed to stop', err))
+        .finally(() => {
+          this.reader?.clear();
+          this.started = false;
+        });
+    } else if (this.reader) {
+      this.reader.clear();
+    }
+  }
+}

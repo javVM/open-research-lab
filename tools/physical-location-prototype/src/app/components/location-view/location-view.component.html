@@ -11,6 +11,8 @@
 
     <h2>{{ location.name }}</h2>
 
+    <app-qr-label [payload]="qrPayload()"></app-qr-label>
+
     @if (data.movingItem(); as moving) {
       <div class="move-banner">
         {{ text.movingBanner(moving.catalogueNumber) }}

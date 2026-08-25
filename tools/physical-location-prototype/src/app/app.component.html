@@ -31,6 +31,14 @@
         <button type="button" (click)="data.cancelQr()">Cancelar</button>
       </div>
     }
+    <button
+      type="button"
+      class="scan-button"
+      (click)="scannerOpen.set(true)"
+      [attr.title]="text.scanButtonTitle()"
+    >
+      {{ text.scanButtonLabel() }}
+    </button>
     <app-language-switcher></app-language-switcher>
     <button
       type="button"
@@ -61,4 +69,8 @@
   </main>
 
   <app-confirm-move-modal></app-confirm-move-modal>
+
+  @if (scannerOpen()) {
+    <app-qr-scanner (close)="scannerOpen.set(false)"></app-qr-scanner>
+  }
 </div>

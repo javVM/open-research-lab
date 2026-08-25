@@ -30,7 +30,8 @@ app-search-bar {
   min-width: 0;
 }
 
-.reset-button {
+.reset-button,
+.scan-button {
   background: none;
   border: 1px solid var(--border, #3a3f4b);
   border-radius: 0.4rem;
@@ -41,7 +42,14 @@ app-search-bar {
   white-space: nowrap;
 }
 
-.reset-button:hover {
+.reset-button:hover,
+.scan-button:hover {
+  border-color: var(--accent, #5b8def);
+}
+
+.scan-button {
+  background: var(--accent, #5b8def);
+  color: #0d1420;
   border-color: var(--accent, #5b8def);
 }
 

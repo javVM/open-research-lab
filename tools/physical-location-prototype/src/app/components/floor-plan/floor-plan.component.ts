@@ -113,7 +113,11 @@ export class FloorPlanComponent implements OnChanges {
   }
 
   private isMobile(): boolean {
-    return typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
+    return (
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(max-width: 767px)').matches
+    );
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
