@@ -1,7 +1,10 @@
-import { translateAll } from '../../i18n/translate-all';
+import { $localize } from '../../i18n/localize';
 import type { TranslationService } from '../../i18n/translation.service';
-import { LANGUAGE_SWITCHER_I18N } from './language-switcher.constants';
+
+export const ariaLabel = $localize `@@languageSwitcher.ariaLabel:Select language`;
 
 export function createLanguageSwitcherTranslations(i18n: TranslationService) {
-  return translateAll(i18n, LANGUAGE_SWITCHER_I18N);
+  return {
+    ariaLabel: () => i18n.t('languageSwitcher.ariaLabel', ariaLabel),
+  };
 }

@@ -1,7 +1,16 @@
-import { translateAll } from '../../i18n/translate-all';
+import { $localize } from '../../i18n/localize';
 import type { TranslationService } from '../../i18n/translation.service';
-import { SEARCH_BAR_I18N } from './search-bar.constants';
+
+export const placeholder = $localize `@@searchBar.placeholder:Search collection… (catalogue number or label)`;
+export const ariaLabel = $localize `@@searchBar.ariaLabel:Search collection`;
+export const noMatches = $localize `@@searchBar.noMatches:No matches`;
+export const noCurrentLocation = $localize `@@searchBar.noCurrentLocation:No current location`;
 
 export function createSearchBarTranslations(i18n: TranslationService) {
-  return translateAll(i18n, SEARCH_BAR_I18N);
+  return {
+    placeholder: () => i18n.t('searchBar.placeholder', placeholder),
+    ariaLabel: () => i18n.t('searchBar.ariaLabel', ariaLabel),
+    noMatches: () => i18n.t('searchBar.noMatches', noMatches),
+    noCurrentLocation: () => i18n.t('searchBar.noCurrentLocation', noCurrentLocation),
+  };
 }
