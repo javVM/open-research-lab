@@ -19,8 +19,8 @@ function mulberry32(seed: number) {
   };
 }
 
-const ROW_LETTERS = ['A', 'B', 'C'];
-const GRID_COLUMNS = 6;
+const ROW_LETTERS = ['A', 'B'];
+const GRID_COLUMNS = 4;
 
 interface Rect {
   x: number;
@@ -41,20 +41,55 @@ function layoutGrid(index: number, columns: number, cellWidth: number, cellHeigh
   };
 }
 
-const FLOOR_LAYOUT = { columns: 1, cellWidth: 580, cellHeight: 220, gap: 24 };
-const ROOM_LAYOUT = { columns: 2, cellWidth: 260, cellHeight: 180, gap: 24 };
-const CABINET_LAYOUT = { columns: 2, cellWidth: 110, cellHeight: 160, gap: 20 };
+const FLOOR_LAYOUT = { columns: 1, cellWidth: 600, cellHeight: 400, gap: 24 };
+const ROOM_LAYOUT = { columns: 3, cellWidth: 184, cellHeight: 184, gap: 16 };
+const CABINET_LAYOUT = { columns: 2, cellWidth: 84, cellHeight: 164, gap: 12 };
+
+const CABINET_SIZES: Rect[] = [
+  { x: 0, y: 0, width: 84, height: 164 },
+  { x: 0, y: 0, width: 72, height: 140 },
+  { x: 0, y: 0, width: 84, height: 120 },
+  { x: 0, y: 0, width: 64, height: 160 },
+  { x: 0, y: 0, width: 80, height: 100 },
+  { x: 0, y: 0, width: 70, height: 164 },
+];
 
 const BUILDINGS = [
   {
     name: 'Building A',
     floors: [
-      { name: 'Floor 1', rooms: ['Room 1'] },
-      { name: 'Floor 2', rooms: ['Room 2'] },
+      { name: 'Ground', rooms: ['Room 101', 'Room 102', 'Room 103'] },
+      { name: 'First', rooms: ['Room 201', 'Room 202'] },
     ],
   },
-  { name: 'Building B', floors: [{ name: 'Floor 1', rooms: ['Room 3'] }] },
-  { name: 'Building C', floors: [{ name: 'Ground Floor', rooms: ['Room 4', 'Room 5'] }] },
+  {
+    name: 'Building B',
+    floors: [
+      { name: 'Ground', rooms: ['Room B11', 'Room B12', 'Room B13'] },
+      { name: 'First', rooms: ['Room B21', 'Room B22'] },
+    ],
+  },
+  {
+    name: 'Building C',
+    floors: [
+      { name: 'Ground', rooms: ['Room C01', 'Room C02', 'Room C03'] },
+      { name: 'First', rooms: ['Room C11', 'Room C12'] },
+    ],
+  },
+  {
+    name: 'Building D',
+    floors: [
+      { name: 'Ground', rooms: ['Room D11', 'Room D12', 'Room D13'] },
+      { name: 'First', rooms: ['Room D21', 'Room D22'] },
+    ],
+  },
+  {
+    name: 'Building E',
+    floors: [
+      { name: 'Ground', rooms: ['Room E01', 'Room E02'] },
+      { name: 'First', rooms: ['Room E11', 'Room E12', 'Room E13'] },
+    ],
+  },
 ];
 
 const SPECIMEN_LABELS = [
@@ -159,16 +194,20 @@ export function generateSeed(randomSeed = 20260824): Dataset {
             CABINET_LAYOUT.cellHeight,
             CABINET_LAYOUT.gap,
           );
+          const cabinetSize = CABINET_SIZES[c % CABINET_SIZES.length];
           locations.push({
             id: cabinetId,
             parentId: roomId,
             name: `Cabinet ${pad(cabinetNumber, 2)}`,
             type: 'cabinet',
-            ...cabinetRect,
+            x: cabinetRect.x,
+            y: cabinetRect.y,
+            width: cabinetSize.width,
+            height: cabinetSize.height,
           });
 
-          const drawersInCabinet = drawerTotal < 16 ? 2 : 4;
-          for (let d = 1; d <= drawersInCabinet && drawerTotal < 20; d += 1) {
+          const drawersInCabinet = 2 + (c % 2);
+          for (let d = 1; d <= drawersInCabinet && drawerTotal < 200; d += 1) {
             drawerTotal += 1;
             const drawerId = nextId(locationCounter, 'loc');
             locations.push({
@@ -179,8 +218,8 @@ export function generateSeed(randomSeed = 20260824): Dataset {
             });
             drawerIds.push(drawerId);
 
-            if (drawerTotal % 6 === 0) {
-              // Every sixth drawer holds a box containing several trays side
+            if (drawerTotal % 4 === 0) {
+              // Every fourth drawer holds a box containing several trays side
               // by side, demonstrating that a tray's parent need not be a
               // drawer directly — this is deliberately exercised, not just
               // modelled, so the UI has real data to show it.
@@ -189,8 +228,8 @@ export function generateSeed(randomSeed = 20260824): Dataset {
               for (let t = 1; t <= 3; t += 1) {
                 addTray(boxId, `Tray ${pad(t, 2)}`);
               }
-            } else if (drawerTotal % 3 === 0) {
-              // Roughly every third drawer (excluding the box case above)
+            } else if (drawerTotal % 2 === 0) {
+              // Roughly every other drawer (excluding the box case above)
               // gets a single grid tray directly.
               addTray(drawerId, 'Tray 01');
             }
@@ -214,7 +253,7 @@ export function generateSeed(randomSeed = 20260824): Dataset {
   const movements: Movement[] = [];
   const movementCounter: Counter = { value: 0 };
 
-  const totalItems = 80;
+  const totalItems = 150;
   const createdAt = '2026-01-15T09:00:00.000Z';
   const occupiedPositions = new Set<string>();
 

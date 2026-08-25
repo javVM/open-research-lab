@@ -150,6 +150,9 @@ export class FloorPlan3dComponent {
   }
 
   wallHeight(location: Location): number {
+    if (location.type === 'floor' && this.isMobile()) {
+      return 100;
+    }
     return WALL_HEIGHT[location.type] ?? DEFAULT_WALL_HEIGHT;
   }
 
@@ -158,7 +161,8 @@ export class FloorPlan3dComponent {
     if (location.type !== 'floor') {
       return 0;
     }
-    return this.floorIndex(location) * FLOOR_STACK_HEIGHT;
+    const stackHeight = this.isMobile() ? 120 : FLOOR_STACK_HEIGHT;
+    return this.floorIndex(location) * stackHeight;
   }
 
   /** A floor's position among its building's floors, ordered by the existing 2D `y` (see `seed.ts`'s `FLOOR_LAYOUT`). */
