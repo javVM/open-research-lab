@@ -93,6 +93,10 @@ export class LocationTreeComponent {
     }
   }
 
+  goHome(): void {
+    this.data.selectedLocationId.set(null);
+  }
+
   childrenOf(node: LocationNode): LocationNode[] {
     return node.children;
   }

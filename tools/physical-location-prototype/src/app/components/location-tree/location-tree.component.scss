@@ -111,6 +111,11 @@
   text-decoration: underline;
 }
 
+.mobile-tree__crumb--home {
+  font-weight: 600;
+  color: var(--accent, #5b8def);
+}
+
 .mobile-tree__crumb--current {
   color: var(--text, #e8eaed);
   font-weight: 600;

@@ -1,6 +1,10 @@
 @if (isMobile()) {
   <nav class="mobile-tree" [attr.aria-label]="text.ariaLabel()">
     <div class="mobile-tree__breadcrumbs">
+      <button type="button" class="mobile-tree__crumb mobile-tree__crumb--home" (click)="goHome()">All</button>
+      @if (breadcrumbs().length > 0) {
+        <span class="mobile-tree__crumb-sep">/</span>
+      }
       @for (crumb of breadcrumbs(); track crumb.id; let last = $last) {
         @if (!last) {
           <button type="button" class="mobile-tree__crumb" (click)="select(crumb.id)">{{ crumb.name }}</button>
