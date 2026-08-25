@@ -5,10 +5,11 @@ import { LANGUAGE_OPTIONS } from './language-switcher.constants';
 import { createLanguageSwitcherTranslations } from './language-switcher.translations';
 
 @Component({
+  standalone: true,
   selector: 'app-language-switcher',
   imports: [],
-  templateUrl: './language-switcher.html',
-  styleUrl: './language-switcher.css',
+  templateUrl: './language-switcher.component.html',
+  styleUrl: './language-switcher.component.scss',
 })
 export class LanguageSwitcherComponent {
   protected readonly i18n = inject(TranslationService);

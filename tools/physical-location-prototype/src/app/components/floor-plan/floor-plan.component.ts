@@ -39,10 +39,11 @@ const MIN_SIZE = 60;
  * the whole set of children, e.g. rooms within a building.
  */
 @Component({
+  standalone: true,
   selector: 'app-floor-plan',
   imports: [],
-  templateUrl: './floor-plan.html',
-  styleUrl: './floor-plan.css',
+  templateUrl: './floor-plan.component.html',
+  styleUrl: './floor-plan.component.scss',
 })
 export class FloorPlanComponent {
   @Input() locations: Location[] = [];

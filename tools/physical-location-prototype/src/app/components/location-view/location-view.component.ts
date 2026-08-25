@@ -7,8 +7,8 @@ import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createLocationViewTranslations } from './location-view.translations';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
-import { FloorPlanComponent } from '../floor-plan/floor-plan';
-import { FloorPlan3dComponent } from '../floor-plan-3d/floor-plan-3d';
+import { FloorPlanComponent } from '../floor-plan/floor-plan.component';
+import { FloorPlan3dComponent } from '../floor-plan-3d/floor-plan-3d.component';
 
 interface GridCell {
   position: Location;
@@ -16,10 +16,11 @@ interface GridCell {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-location-view',
   imports: [CdkDropList, CdkDrag, CdkDropListGroup, FloorPlanComponent, FloorPlan3dComponent],
-  templateUrl: './location-view.html',
-  styleUrl: './location-view.css',
+  templateUrl: './location-view.component.html',
+  styleUrl: './location-view.component.scss',
 })
 export class LocationViewComponent {
   protected readonly data = inject(DataService);

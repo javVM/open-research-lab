@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ConfirmMoveModalComponent } from './confirm-move-modal';
+import { ConfirmMoveModalComponent } from './confirm-move-modal.component';
 import { DataService } from '../../data.service';
 
 describe('ConfirmMoveModalComponent', () => {

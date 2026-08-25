@@ -64,9 +64,10 @@ const FRONT_AZIMUTH = 270;
  */
 @Component({
   selector: 'app-floor-plan-3d',
+  standalone: true,
   imports: [NgTemplateOutlet],
-  templateUrl: './floor-plan-3d.html',
-  styleUrl: './floor-plan-3d.css',
+  templateUrl: './floor-plan-3d.component.html',
+  styleUrl: './floor-plan-3d.component.scss',
 })
 export class FloorPlan3dComponent {
   @Input() locations: Location[] = [];

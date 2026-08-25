@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { SearchBarComponent } from './search-bar';
+import { SearchBarComponent } from './search-bar.component';
 import { DataService } from '../../data.service';
 
 describe('SearchBarComponent', () => {

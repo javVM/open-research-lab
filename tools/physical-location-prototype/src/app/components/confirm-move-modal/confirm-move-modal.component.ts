@@ -4,10 +4,11 @@ import { TranslationService } from '../../i18n/translation.service';
 import { createConfirmMoveModalTranslations } from './confirm-move-modal.translations';
 
 @Component({
+  standalone: true,
   selector: 'app-confirm-move-modal',
   imports: [],
-  templateUrl: './confirm-move-modal.html',
-  styleUrl: './confirm-move-modal.css',
+  templateUrl: './confirm-move-modal.component.html',
+  styleUrl: './confirm-move-modal.component.scss',
 })
 export class ConfirmMoveModalComponent {
   protected readonly data = inject(DataService);

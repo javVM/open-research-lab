@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { TestBed } from '@angular/core/testing';
-import { App } from './app';
+import { App } from './app.component';
 import { TranslationService } from './i18n/translation.service';
 import { XliffTranslationLoader } from './i18n/translation-loader';
 import { parseXliff } from './i18n/xliff';

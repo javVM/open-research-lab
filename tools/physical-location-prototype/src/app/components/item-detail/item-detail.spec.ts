@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ItemDetailComponent } from './item-detail';
+import { ItemDetailComponent } from './item-detail.component';
 import { DataService } from '../../data.service';
 
 describe('ItemDetailComponent', () => {

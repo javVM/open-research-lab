@@ -7,10 +7,11 @@ import { TranslationService } from '../../i18n/translation.service';
 import { createSearchBarTranslations } from './search-bar.translations';
 
 @Component({
+  standalone: true,
   selector: 'app-search-bar',
   imports: [FormsModule],
-  templateUrl: './search-bar.html',
-  styleUrl: './search-bar.css',
+  templateUrl: './search-bar.component.html',
+  styleUrl: './search-bar.component.scss',
 })
 export class SearchBarComponent {
   private readonly data = inject(DataService);

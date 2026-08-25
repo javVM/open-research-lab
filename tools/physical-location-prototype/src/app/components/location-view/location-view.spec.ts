@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { LocationViewComponent } from './location-view';
+import { LocationViewComponent } from './location-view.component';
 import { DataService } from '../../data.service';
 
 describe('LocationViewComponent', () => {

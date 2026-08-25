@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { LanguageSwitcherComponent } from './language-switcher';
+import { LanguageSwitcherComponent } from './language-switcher.component';
 import { TranslationService } from '../../i18n/translation.service';
 
 describe('LanguageSwitcherComponent', () => {

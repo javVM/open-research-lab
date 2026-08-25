@@ -7,10 +7,11 @@ import { createLocationTreeTranslations } from './location-tree.translations';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
 
 @Component({
+  standalone: true,
   selector: 'app-location-tree',
   imports: [NgTemplateOutlet],
-  templateUrl: './location-tree.html',
-  styleUrl: './location-tree.css',
+  templateUrl: './location-tree.component.html',
+  styleUrl: './location-tree.component.scss',
 })
 export class LocationTreeComponent {
   protected readonly data = inject(DataService);

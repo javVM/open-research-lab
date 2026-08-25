@@ -7,10 +7,11 @@ import { TranslationService } from '../../i18n/translation.service';
 import { createItemDetailTranslations } from './item-detail.translations';
 
 @Component({
+  standalone: true,
   selector: 'app-item-detail',
   imports: [],
-  templateUrl: './item-detail.html',
-  styleUrl: './item-detail.css',
+  templateUrl: './item-detail.component.html',
+  styleUrl: './item-detail.component.scss',
 })
 export class ItemDetailComponent {
   protected readonly data = inject(DataService);

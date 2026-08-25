@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { LocationTreeComponent } from './location-tree';
+import { LocationTreeComponent } from './location-tree.component';
 import { DataService } from '../../data.service';
 
 describe('LocationTreeComponent', () => {

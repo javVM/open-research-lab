@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { FloorPlan3dComponent } from './floor-plan-3d';
+import { FloorPlan3dComponent } from './floor-plan-3d.component';
 import { DataService } from '../../data.service';
 import type { Location } from '../../../core/models';
 
