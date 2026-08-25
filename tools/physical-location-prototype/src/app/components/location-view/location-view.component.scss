@@ -1,3 +1,5 @@
+@use '../../mixins' as *;
+
 .location-view {
   height: 100%;
   overflow-y: auto;
@@ -128,6 +130,22 @@ h2 {
   outline-offset: -2px;
 }
 
+.position-cell--qr-hint {
+  animation: qr-flash 0.8s ease-in-out infinite alternate;
+  background: #4a4118;
+  outline: 2px solid #e8c146;
+  outline-offset: -2px;
+}
+
+@keyframes qr-flash {
+  from {
+    background-color: #4a4118;
+  }
+  to {
+    background-color: #7a6b28;
+  }
+}
+
 .position-cell__label {
   font-size: 0.65rem;
   color: var(--text-muted, #9aa1ac);
@@ -230,4 +248,69 @@ h2 {
 .empty-state {
   color: var(--text-muted, #9aa1ac);
   font-style: italic;
+}
+
+@include on-mobile {
+  .location-view {
+    overflow: auto;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+  }
+
+  .move-banner {
+    flex-wrap: wrap;
+  }
+
+  .move-banner button {
+    margin-left: 0;
+  }
+
+  .view-mode-toggle {
+    display: flex;
+    width: 100%;
+  }
+
+  .view-mode-toggle button {
+    flex: 1 1 auto;
+  }
+
+  .position-grid {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .position-cell {
+    width: 4rem;
+    height: 2.6rem;
+    padding: 0.15rem;
+  }
+
+  .position-cell__label {
+    font-size: 0.55rem;
+  }
+
+  .position-cell__item {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.2rem;
+  }
+
+  .container-grid {
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+    gap: 0.5rem;
+  }
+
+  .container-card {
+    padding: 0.5rem;
+  }
+
+  .container-card__name {
+    font-size: 0.9rem;
+  }
+
+  .direct-items__item {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
 }

@@ -64,6 +64,7 @@
                   [class.position-cell--occupied]="cell && cell.occupant"
                   [class.position-cell--selected]="cell?.occupant?.id === data.selectedItemId()"
                   [class.position-cell--drop-target]="isMovingTargetCandidate(cell)"
+                  [class.position-cell--qr-hint]="cell && data.qrHint()?.type === 'checkin' && cell.position.id === data.qrHint()?.targetId"
                   cdkDropList
                   [cdkDropListData]="cell?.position?.id ?? null"
                   [cdkDropListDisabled]="!cell || !!cell.occupant"

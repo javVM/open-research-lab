@@ -2,6 +2,35 @@
   <header class="app-header">
     <h1>{{ text.title() }}</h1>
     <app-search-bar></app-search-bar>
+    <div class="qr-bar">
+      <input
+        type="text"
+        [(ngModel)]="qrCode"
+        (keydown.enter)="scan()"
+        placeholder="item:MNCN-0001 or box:loc-0001"
+        [attr.aria-label]="'Simulate QR scan'"
+      />
+      <button type="button" (click)="scan()">Scan QR</button>
+    </div>
+    @if (data.qrPending(); as pending) {
+      <div class="qr-bar">
+        <input
+          type="text"
+          [(ngModel)]="qrPosition"
+          (keydown.enter)="scanPosition()"
+          [placeholder]="'Posición: ' + pending.targetName"
+          [attr.aria-label]="'Scan position'"
+        />
+        <input
+          type="text"
+          [(ngModel)]="qrTube"
+          (keydown.enter)="scanTube()"
+          [placeholder]="'Tubo: ' + pending.itemCatalogue"
+          [attr.aria-label]="'Scan tube'"
+        />
+        <button type="button" (click)="data.cancelQr()">Cancelar</button>
+      </div>
+    }
     <app-language-switcher></app-language-switcher>
     <button
       type="button"
@@ -12,6 +41,10 @@
       {{ text.resetButtonLabel() }}
     </button>
   </header>
+
+  @if (data.qrHint(); as hint) {
+    <div class="qr-hint" [attr.data-type]="hint.type">{{ hint.message }}</div>
+  }
 
   <p class="app-disclaimer">{{ text.disclaimer() }}</p>
 

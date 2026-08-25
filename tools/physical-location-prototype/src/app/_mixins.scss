@@ -1,0 +1,18 @@
+// Breakpoint mixins for responsive component styles.
+@mixin on-tablet {
+  @media (max-width: 900px) {
+    @content;
+  }
+}
+
+@mixin on-mobile {
+  @media (max-width: 700px) {
+    @content;
+  }
+}
+
+@mixin on-small {
+  @media (max-width: 480px) {
+    @content;
+  }
+}

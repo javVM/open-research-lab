@@ -1,3 +1,5 @@
+@use '../../mixins' as *;
+
 .floor-plan-3d {
   position: relative;
   min-height: 26rem;
@@ -229,4 +231,19 @@
 .box3d__face--back .box3d__shelf-handle {
   top: auto;
   bottom: 2px;
+}
+
+@include on-mobile {
+  .floor-plan-3d {
+    min-height: 16rem;
+    padding-top: 1rem;
+  }
+
+  .floor-plan-3d__scene {
+    height: 16rem;
+  }
+
+  .box3d__name {
+    font-size: 0.65rem;
+  }
 }

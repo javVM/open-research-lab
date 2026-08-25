@@ -1,3 +1,5 @@
+@use '../../mixins' as *;
+
 .item-detail h2 {
   margin: 0;
 }
@@ -105,4 +107,11 @@ h3 {
 .empty-state {
   color: var(--text-muted, #9aa1ac);
   font-style: italic;
+}
+
+@include on-mobile {
+  .start-move,
+  .cancel-move {
+    width: 100%;
+  }
 }
