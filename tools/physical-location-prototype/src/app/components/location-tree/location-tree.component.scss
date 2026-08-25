@@ -71,24 +71,107 @@
   padding: 0.05rem 0.45rem;
 }
 
-.location-tree__select-label {
-  display: block;
-  width: 100%;
+.mobile-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.location-tree__select {
+.mobile-tree__breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
   width: 100%;
-  padding: 0.5rem 0.75rem;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--text-muted, #9aa1ac);
+  scrollbar-width: none;
+}
+
+.mobile-tree__breadcrumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-tree__crumb {
+  background: none;
+  border: none;
+  color: var(--accent, #5b8def);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.mobile-tree__crumb:hover {
+  text-decoration: underline;
+}
+
+.mobile-tree__crumb--current {
+  color: var(--text, #e8eaed);
+  font-weight: 600;
+  cursor: default;
+}
+
+.mobile-tree__crumb-sep {
+  opacity: 0.5;
+}
+
+.mobile-tree__title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.mobile-tree__children {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 0.6rem;
+}
+
+.mobile-tree__child {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  padding: 0.75rem;
   border: 1px solid var(--border, #3a3f4b);
-  border-radius: 0.4rem;
+  border-radius: 0.6rem;
   background: var(--surface, #1b1e26);
   color: inherit;
-  font: inherit;
-  font-size: 0.95rem;
   cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
-.location-tree__select option {
-  background: var(--surface, #1b1e26);
-  color: var(--text, #e8eaed);
+.mobile-tree__child:hover {
+  border-color: var(--accent, #5b8def);
+  background: var(--surface-hover, #262b36);
+}
+
+.mobile-tree__child-type {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted, #9aa1ac);
+  border: 1px solid var(--border, #3a3f4b);
+  border-radius: 0.25rem;
+  padding: 0.05rem 0.35rem;
+}
+
+.mobile-tree__child-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+.mobile-tree__child-count {
+  margin-top: auto;
+  font-size: 0.75rem;
+  color: var(--text-muted, #9aa1ac);
 }

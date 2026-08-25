@@ -1,11 +1,53 @@
 @if (isMobile()) {
-  <label class="location-tree__select-label" [attr.aria-label]="text.ariaLabel()">
-    <select class="location-tree__select" (change)="selectFromSelect($event)" [value]="data.selectedLocationId() ?? ''">
-      @for (option of flatOptions(); track option.id) {
-        <option [value]="option.id">{{ option.label }}</option>
+  <nav class="mobile-tree" [attr.aria-label]="text.ariaLabel()">
+    <div class="mobile-tree__breadcrumbs">
+      @for (crumb of breadcrumbs(); track crumb.id; let last = $last) {
+        @if (!last) {
+          <button type="button" class="mobile-tree__crumb" (click)="select(crumb.id)">{{ crumb.name }}</button>
+          <span class="mobile-tree__crumb-sep">/</span>
+        } @else {
+          <span class="mobile-tree__crumb mobile-tree__crumb--current">{{ crumb.name }}</span>
+        }
       }
-    </select>
-  </label>
+    </div>
+
+    @if (currentNode(); as node) {
+      <h3 class="mobile-tree__title">{{ node.location.name }}</h3>
+      @if (node.children.length > 0) {
+        <div class="mobile-tree__children">
+          @for (child of node.children; track child.location.id) {
+            <button
+              type="button"
+              class="mobile-tree__child"
+              (click)="select(child.location.id)"
+            >
+              <span class="mobile-tree__child-type" [attr.data-type]="child.location.type">{{ locationType.label(child.location.type) }}</span>
+              <span class="mobile-tree__child-name">{{ child.location.name }}</span>
+              @if (countItemsBelow(child) > 0) {
+                <span class="mobile-tree__child-count">{{ countItemsBelow(child) }}</span>
+              }
+            </button>
+          }
+        </div>
+      }
+    } @else {
+      <div class="mobile-tree__children">
+        @for (node of roots(); track node.location.id) {
+          <button
+            type="button"
+            class="mobile-tree__child"
+            (click)="select(node.location.id)"
+          >
+            <span class="mobile-tree__child-type" [attr.data-type]="node.location.type">{{ locationType.label(node.location.type) }}</span>
+            <span class="mobile-tree__child-name">{{ node.location.name }}</span>
+            @if (countItemsBelow(node) > 0) {
+              <span class="mobile-tree__child-count">{{ countItemsBelow(node) }}</span>
+            }
+          </button>
+        }
+      </div>
+    }
+  </nav>
 } @else {
   <div class="location-tree" role="tree" [attr.aria-label]="text.ariaLabel()">
     <ng-container *ngTemplateOutlet="nodeList; context: { $implicit: roots(), depth: 0 }"></ng-container>

@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { buildTree, type LocationNode } from '../../../core/tree';
+import { breadcrumb, buildTree, type LocationNode } from '../../../core/tree';
 import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createLocationTreeTranslations } from './location-tree.translations';
@@ -27,20 +27,28 @@ export class LocationTreeComponent {
 
   protected readonly isMobile = signal(window.matchMedia('(max-width: 700px)').matches);
 
-  protected readonly flatOptions = computed(() => {
-    const options: { id: string; label: string }[] = [];
-    const walk = (nodes: LocationNode[], prefix: string) => {
-      for (const node of nodes) {
-        const label = prefix ? `${prefix} / ${node.location.name}` : node.location.name;
-        options.push({ id: node.location.id, label });
-        if (node.children.length > 0) {
-          walk(node.children, label);
-        }
-      }
-    };
-    walk(this.roots(), '');
-    return options;
+  protected readonly currentNode = computed<LocationNode | null>(() => {
+    const id = this.data.selectedLocationId();
+    return id ? this.findNode(this.roots(), id) : null;
   });
+
+  protected readonly breadcrumbs = computed(() => {
+    const id = this.data.selectedLocationId();
+    return id ? breadcrumb(this.data.dataset().locations, id) : [];
+  });
+
+  private findNode(nodes: LocationNode[], id: string): LocationNode | null {
+    for (const node of nodes) {
+      if (node.location.id === id) {
+        return node;
+      }
+      const child = this.findNode(node.children, id);
+      if (child) {
+        return child;
+      }
+    }
+    return null;
+  }
 
   constructor() {
     const mediaQuery = window.matchMedia('(max-width: 700px)');
@@ -83,5 +91,9 @@ export class LocationTreeComponent {
     if (target.value) {
       this.select(target.value);
     }
+  }
+
+  childrenOf(node: LocationNode): LocationNode[] {
+    return node.children;
   }
 }
