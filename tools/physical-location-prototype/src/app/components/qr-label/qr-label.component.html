@@ -21,6 +21,9 @@
       [width]="dimensions()?.width ?? 192"
       [height]="dimensions()?.height ?? 192"
     />
+    <button type="button" class="qr-label__download" (click)="download()">
+      {{ text.download() }}
+    </button>
     <code class="qr-label__payload">{{ payload() }}</code>
   } @else if (rendering()) {
     <p class="qr-label__status">{{ text.loading() }}</p>

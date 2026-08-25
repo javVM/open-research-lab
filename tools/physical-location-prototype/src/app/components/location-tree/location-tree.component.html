@@ -1,6 +1,16 @@
-<div class="location-tree" role="tree" [attr.aria-label]="text.ariaLabel()">
-  <ng-container *ngTemplateOutlet="nodeList; context: { $implicit: roots(), depth: 0 }"></ng-container>
-</div>
+@if (isMobile()) {
+  <label class="location-tree__select-label" [attr.aria-label]="text.ariaLabel()">
+    <select class="location-tree__select" (change)="selectFromSelect($event)" [value]="data.selectedLocationId() ?? ''">
+      @for (option of flatOptions(); track option.id) {
+        <option [value]="option.id">{{ option.label }}</option>
+      }
+    </select>
+  </label>
+} @else {
+  <div class="location-tree" role="tree" [attr.aria-label]="text.ariaLabel()">
+    <ng-container *ngTemplateOutlet="nodeList; context: { $implicit: roots(), depth: 0 }"></ng-container>
+  </div>
+}
 
 <ng-template #nodeList let-nodes let-depth="depth">
   @for (node of nodes; track node.location.id) {

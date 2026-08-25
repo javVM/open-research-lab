@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import QRCode from 'qrcode';
 import { TranslationService } from '../../i18n/translation.service';
 import { createQrLabelTranslations } from './qr-label.translations';
@@ -20,6 +20,11 @@ export class QrLabelComponent {
   protected readonly rendering = signal(false);
   protected readonly dimensions = signal<{ width: number; height: number } | null>(null);
   protected readonly formats: readonly CodeFormat[] = ['qr', 'datamatrix', 'code128'] as const;
+
+  readonly fileName = computed(() => {
+    const id = this.payload().split(':').pop() ?? 'label';
+    return `label-${id}-${this.selectedFormat()}.png`;
+  });
 
   constructor() {
     effect(() => {
@@ -113,6 +118,27 @@ export class QrLabelComponent {
         return this.text.formatCode128();
       default:
         return this.text.formatQr();
+    }
+  }
+
+  async download(): Promise<void> {
+    const url = this.dataUrl();
+    if (!url) {
+      return;
+    }
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = this.fileName();
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Label download failed', error);
     }
   }
 }

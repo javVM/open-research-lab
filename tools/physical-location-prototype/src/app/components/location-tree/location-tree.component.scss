@@ -70,3 +70,25 @@
   border-radius: 999px;
   padding: 0.05rem 0.45rem;
 }
+
+.location-tree__select-label {
+  display: block;
+  width: 100%;
+}
+
+.location-tree__select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border, #3a3f4b);
+  border-radius: 0.4rem;
+  background: var(--surface, #1b1e26);
+  color: inherit;
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.location-tree__select option {
+  background: var(--surface, #1b1e26);
+  color: var(--text, #e8eaed);
+}

@@ -51,6 +51,22 @@
   background: #fff;
 }
 
+.qr-label__download {
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--accent, #5b8def);
+  border-radius: 0.4rem;
+  background: var(--accent-soft, #23324f);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.qr-label__download:hover {
+  background: var(--accent, #5b8def);
+  color: #0d1420;
+}
+
 .qr-label__payload {
   max-width: 100%;
   overflow: hidden;
