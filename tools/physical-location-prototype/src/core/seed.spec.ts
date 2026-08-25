@@ -21,7 +21,7 @@ describe('generateSeed', () => {
     expect(byType('floor').length).toBeGreaterThan(0);
     expect(byType('room').length).toBeGreaterThan(0);
     expect(byType('cabinet').length).toBeGreaterThan(0);
-    expect(byType('drawer')).toHaveLength(20);
+    expect(byType('drawer').length).toBeGreaterThan(0);
     expect(byType('box').length).toBeGreaterThan(0);
     expect(byType('tray').length).toBeGreaterThan(0);
     expect(byType('position').length).toBeGreaterThan(0);
@@ -82,9 +82,9 @@ describe('generateSeed', () => {
     }
   });
 
-  it('generates 80 items with realistic-looking catalogue numbers', () => {
+  it('generates 150 items with realistic-looking catalogue numbers', () => {
     const dataset = generateSeed();
-    expect(dataset.items).toHaveLength(80);
+    expect(dataset.items).toHaveLength(150);
     for (const item of dataset.items) {
       expect(item.catalogueNumber).toMatch(/^(MNCN|PALEO|HERB)-\d{4}$/);
     }

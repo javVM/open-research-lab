@@ -23,6 +23,18 @@
       <trans-unit id="app.pane.itemDetail">
         <source>Item detail</source>
       </trans-unit>
+      <trans-unit id="app.modeSwitcher.ariaLabel">
+        <source>View mode</source>
+      </trans-unit>
+      <trans-unit id="app.mode.explore">
+        <source>Explore</source>
+      </trans-unit>
+      <trans-unit id="app.mode.scan">
+        <source>Scan</source>
+      </trans-unit>
+      <trans-unit id="app.mode.label">
+        <source>Label</source>
+      </trans-unit>
 
       <trans-unit id="languageSwitcher.ariaLabel">
         <source>Select language</source>
@@ -150,14 +162,93 @@
       <trans-unit id="locationType.drawer">
         <source>Drawer</source>
       </trans-unit>
+      <trans-unit id="locationType.position">
+        <source>Position</source>
+      </trans-unit>
       <trans-unit id="locationType.box">
         <source>Box</source>
       </trans-unit>
       <trans-unit id="locationType.tray">
         <source>Tray</source>
       </trans-unit>
-      <trans-unit id="locationType.position">
+
+      <trans-unit id="qrScanner.title">
+        <source>Scan QR / barcode</source>
+      </trans-unit>
+      <trans-unit id="qrScanner.starting">
+        <source>Starting camera…</source>
+      </trans-unit>
+      <trans-unit id="qrScanner.error">
+        <source>Could not start camera</source>
+      </trans-unit>
+
+      <trans-unit id="qrLabel.heading">
+        <source>Printable label</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.qrAlt">
+        <source>Barcode</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.loading">
+        <source>Generating…</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.empty">
+        <source>Nothing to encode</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.format.qr">
+        <source>QR</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.format.dataMatrix">
+        <source>Data Matrix</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.format.code128">
+        <source>Code 128</source>
+      </trans-unit>
+
+      <trans-unit id="scanView.heading">
+        <source>Scan</source>
+      </trans-unit>
+      <trans-unit id="scanView.manualScanLabel">
+        <source>Simulate scan (desktop)</source>
+      </trans-unit>
+      <trans-unit id="scanView.manualScanPlaceholder">
+        <source>item:MNCN-0001 or box:loc-0001</source>
+      </trans-unit>
+      <trans-unit id="scanView.scanButton">
+        <source>Scan</source>
+      </trans-unit>
+      <trans-unit id="scanView.pendingPositionLabel">
         <source>Position</source>
+      </trans-unit>
+      <trans-unit id="scanView.pendingTubeLabel">
+        <source>Tube</source>
+      </trans-unit>
+      <trans-unit id="scanView.cancelButton">
+        <source>Cancel</source>
+      </trans-unit>
+      <trans-unit id="scanView.recentScansHeading">
+        <source>Recent scans</source>
+      </trans-unit>
+      <trans-unit id="scanView.noRecentScans">
+        <source>No scans yet.</source>
+      </trans-unit>
+      <trans-unit id="scanView.backToExplore">
+        <source>Back to explore</source>
+      </trans-unit>
+
+      <trans-unit id="labelView.heading">
+        <source>Labels</source>
+      </trans-unit>
+      <trans-unit id="labelView.selectPrompt">
+        <source>Select a location or item from the tree to generate its label.</source>
+      </trans-unit>
+      <trans-unit id="labelView.locationSection">
+        <source>Selected location</source>
+      </trans-unit>
+      <trans-unit id="labelView.itemSection">
+        <source>Selected item</source>
+      </trans-unit>
+      <trans-unit id="labelView.backToExplore">
+        <source>Back to explore</source>
       </trans-unit>
 
       <trans-unit id="itemDetail.emptyState">

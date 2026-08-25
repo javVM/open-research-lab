@@ -1,0 +1,34 @@
+<div class="label-view">
+  <header class="label-view__header">
+    <h2 class="label-view__heading">{{ text.heading() }}</h2>
+    <button type="button" class="label-view__back" (click)="backToExplore()">
+      {{ text.backToExplore() }}
+    </button>
+  </header>
+
+  <div class="label-view__body">
+    <section class="label-view__tree" [attr.aria-label]="text.locationSection()">
+      <app-location-tree></app-location-tree>
+    </section>
+
+    <section class="label-view__preview" aria-label="Label preview">
+      @if (data.selectedLocationId(); as locationId) {
+        <div class="label-view__card">
+          <h3>{{ text.locationSection() }}: {{ selectedLocationName() }}</h3>
+          <app-qr-label [payload]="locationPayload()"></app-qr-label>
+        </div>
+      }
+
+      @if (data.selectedItemId(); as itemId) {
+        <div class="label-view__card">
+          <h3>{{ text.itemSection() }}: {{ selectedItemCatalogue() }}</h3>
+          <app-qr-label [payload]="itemPayload()"></app-qr-label>
+        </div>
+      }
+
+      @if (!data.selectedLocationId() && !data.selectedItemId()) {
+        <p class="label-view__prompt">{{ text.selectPrompt() }}</p>
+      }
+    </section>
+  </div>
+</div>

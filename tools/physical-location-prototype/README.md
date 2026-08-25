@@ -1,19 +1,21 @@
 # Physical Location Prototype
 
-**Disposable UI experiment — not a product, not the seed of one, and not a Phase 2 GO decision.**
+**Evolving prototype — not the product yet and not a Phase 2 GO decision.**
 See [`AGENTS.md`](../../AGENTS.md) for the governance rules this repository operates under.
 
 ## What this is
 
-A throwaway Angular app exploring whether a spatial/visual representation of physical storage
-location (building → room → cabinet → drawer → tray → position) is easier to understand than a
-flat list, for the candidate Sample Operations product described in
-[`docs/product/`](../../docs/product/). It has its own synthetic, deterministic demo dataset
-(see `src/core/seed.ts`) and is not user-validated.
+An Angular prototype exploring whether a spatial/visual representation of physical storage location
+(building → room → cabinet → drawer → tray → position) is easier to understand than a flat list,
+for the candidate Sample Operations product described in [`docs/product/`](../../docs/product/). It
+has its own synthetic, deterministic demo dataset (see `src/core/seed.ts`) and is not
+user-validated.
 
-Its `src/core` is a **throwaway simplification** of the domain model — it does not model units,
-provenance, or ULIDs, and its persistence is in-memory + `localStorage`, not SQLite. None of this
-is a preview of `packages/core` or an architecture precedent; see `AGENTS.md` §1.
+It is no longer treated as a disposable throwaway experiment; it is being shaped toward the product
+and will be extracted to the standalone `sample-operations` repository when the maintainer decides
+the time is right. Its `src/core` is still a deliberate simplification of the domain model — it does
+not model units, provenance, or ULIDs, and its persistence is in-memory + `localStorage`, not SQLite.
+None of this is a preview of `packages/core` or an architecture precedent; see `AGENTS.md` §1.
 
 ## Stack
 

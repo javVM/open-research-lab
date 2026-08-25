@@ -1,76 +1,74 @@
 <div class="app-shell">
   <header class="app-header">
     <h1>{{ text.title() }}</h1>
-    <app-search-bar></app-search-bar>
-    <div class="qr-bar">
-      <input
-        type="text"
-        [(ngModel)]="qrCode"
-        (keydown.enter)="scan()"
-        placeholder="item:MNCN-0001 or box:loc-0001"
-        [attr.aria-label]="'Simulate QR scan'"
-      />
-      <button type="button" (click)="scan()">Scan QR</button>
-    </div>
-    @if (data.qrPending(); as pending) {
-      <div class="qr-bar">
-        <input
-          type="text"
-          [(ngModel)]="qrPosition"
-          (keydown.enter)="scanPosition()"
-          [placeholder]="'Posición: ' + pending.targetName"
-          [attr.aria-label]="'Scan position'"
-        />
-        <input
-          type="text"
-          [(ngModel)]="qrTube"
-          (keydown.enter)="scanTube()"
-          [placeholder]="'Tubo: ' + pending.itemCatalogue"
-          [attr.aria-label]="'Scan tube'"
-        />
-        <button type="button" (click)="data.cancelQr()">Cancelar</button>
-      </div>
-    }
-    <button
-      type="button"
-      class="scan-button"
-      (click)="scannerOpen.set(true)"
-      [attr.title]="text.scanButtonTitle()"
-    >
-      {{ text.scanButtonLabel() }}
-    </button>
-    <app-language-switcher></app-language-switcher>
-    <button
-      type="button"
-      class="reset-button"
-      (click)="data.resetDemo()"
-      [attr.title]="text.resetButtonTitle()"
-    >
-      {{ text.resetButtonLabel() }}
-    </button>
-  </header>
 
-  @if (data.qrHint(); as hint) {
-    <div class="qr-hint" [attr.data-type]="hint.type">{{ hint.message }}</div>
-  }
+    <nav class="mode-switcher" role="group" [attr.aria-label]="text.modeSwitcherAriaLabel()">
+      <button
+        type="button"
+        class="mode-switcher__button"
+        [class.mode-switcher__button--active]="data.uiMode() === 'explore'"
+        (click)="data.setUiMode('explore')"
+      >
+        {{ text.modeExplore() }}
+      </button>
+      <button
+        type="button"
+        class="mode-switcher__button"
+        [class.mode-switcher__button--active]="data.uiMode() === 'scan'"
+        (click)="data.setUiMode('scan')"
+      >
+        {{ text.modeScan() }}
+      </button>
+      <button
+        type="button"
+        class="mode-switcher__button"
+        [class.mode-switcher__button--active]="data.uiMode() === 'label'"
+        (click)="data.setUiMode('label')"
+      >
+        {{ text.modeLabel() }}
+      </button>
+    </nav>
+
+    @if (data.uiMode() === 'explore') {
+      <app-search-bar></app-search-bar>
+    }
+
+    <div class="app-header__actions">
+      <app-language-switcher></app-language-switcher>
+      <button
+        type="button"
+        class="reset-button"
+        (click)="data.resetDemo()"
+        [attr.title]="text.resetButtonTitle()"
+      >
+        {{ text.resetButtonLabel() }}
+      </button>
+    </div>
+  </header>
 
   <p class="app-disclaimer">{{ text.disclaimer() }}</p>
 
   <main class="app-body">
-    <section class="pane pane--tree" [attr.aria-label]="text.locationHierarchyAriaLabel()">
-      <app-location-tree></app-location-tree>
-    </section>
-    <section class="pane pane--view" [attr.aria-label]="text.selectedLocationAriaLabel()">
-      <app-location-view></app-location-view>
-    </section>
-    <section class="pane pane--detail" [attr.aria-label]="text.itemDetailAriaLabel()">
-      <app-item-detail></app-item-detail>
-    </section>
+    @switch (data.uiMode()) {
+      @case ('explore') {
+        <section class="pane pane--tree" [attr.aria-label]="text.locationHierarchyAriaLabel()">
+          <app-location-tree></app-location-tree>
+        </section>
+        <section class="pane pane--view" [attr.aria-label]="text.selectedLocationAriaLabel()">
+          <app-location-view></app-location-view>
+        </section>
+        <section class="pane pane--detail" [attr.aria-label]="text.itemDetailAriaLabel()">
+          <app-item-detail></app-item-detail>
+        </section>
+      }
+      @case ('scan') {
+        <app-scan-view class="pane pane--mode"></app-scan-view>
+      }
+      @case ('label') {
+        <app-label-view class="pane pane--mode"></app-label-view>
+      }
+    }
   </main>
 
   <app-confirm-move-modal></app-confirm-move-modal>
-
-  @if (scannerOpen()) {
-    <app-qr-scanner (close)="scannerOpen.set(false)"></app-qr-scanner>
-  }
 </div>

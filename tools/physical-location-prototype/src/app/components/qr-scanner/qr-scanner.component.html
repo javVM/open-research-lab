@@ -1,9 +1,4 @@
-<div class="qr-scanner" role="dialog" aria-modal="true" [attr.aria-label]="text.title()">
-  <header class="qr-scanner__header">
-    <h2>{{ text.title() }}</h2>
-    <button type="button" class="qr-scanner__close" (click)="onClose()">{{ text.closeButton() }}</button>
-  </header>
-
+<div class="qr-scanner" [attr.aria-label]="text.title()">
   <div class="qr-scanner__viewport" id="qr-scanner-reader"></div>
 
   @if (loading()) {

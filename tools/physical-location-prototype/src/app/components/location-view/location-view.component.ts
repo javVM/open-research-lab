@@ -9,7 +9,6 @@ import { createLocationViewTranslations } from './location-view.translations';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
 import { FloorPlanComponent } from '../floor-plan/floor-plan.component';
 import { FloorPlan3dComponent } from '../floor-plan-3d/floor-plan-3d.component';
-import { QrLabelComponent } from '../qr-label/qr-label.component';
 
 interface GridCell {
   position: Location;
@@ -19,7 +18,7 @@ interface GridCell {
 @Component({
   standalone: true,
   selector: 'app-location-view',
-  imports: [CdkDropList, CdkDrag, CdkDropListGroup, FloorPlanComponent, FloorPlan3dComponent, QrLabelComponent],
+  imports: [CdkDropList, CdkDrag, CdkDropListGroup, FloorPlanComponent, FloorPlan3dComponent],
   templateUrl: './location-view.component.html',
   styleUrl: './location-view.component.scss',
 })
@@ -33,11 +32,6 @@ export class LocationViewComponent {
   readonly selectedLocation = computed<Location | undefined>(() => {
     const id = this.data.selectedLocationId();
     return id ? this.data.dataset().locations.find((location) => location.id === id) : undefined;
-  });
-
-  readonly qrPayload = computed<string>(() => {
-    const location = this.selectedLocation();
-    return location ? `box:${location.id}` : '';
   });
 
   readonly breadcrumbPath = computed<Location[]>(() => {

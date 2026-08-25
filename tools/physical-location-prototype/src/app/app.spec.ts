@@ -64,4 +64,31 @@ describe('App', () => {
     const searchInput = compiled.querySelector('.search-bar__input') as HTMLInputElement;
     expect(searchInput.placeholder).toContain('Buscar en la colección');
   });
+
+  it('renders a mode switcher and can switch to the Label mode', async () => {
+    TestBed.resetTestingModule();
+    await TestBed.configureTestingModule({
+      imports: [App],
+      providers: [{ provide: XliffTranslationLoader, useClass: DiskXliffTranslationLoader }],
+    }).compileComponents();
+
+    await TestBed.inject(TranslationService).init();
+
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const buttons = compiled.querySelectorAll('.mode-switcher__button');
+    expect(buttons.length).toBe(3);
+
+    const labelButton = Array.from(buttons).find((button) => button.textContent?.includes('Label'));
+    expect(labelButton).toBeTruthy();
+    labelButton!.dispatchEvent(new Event('click'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('app-label-view')).toBeTruthy();
+    expect(compiled.querySelector('.label-view__heading')?.textContent).toContain('Labels');
+  });
 });

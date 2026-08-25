@@ -39,7 +39,10 @@ export class DataService {
   /** Destination the user has clicked but not yet confirmed, while a move is in progress. */
   readonly pendingMoveTargetId = signal<string | null>(null);
 
-  /** Result of the most recent simulated QR scan (check-in, check-out or box lookup). */
+  /** Current high-level UI mode. This is application chrome, not domain state. */
+  readonly uiMode = signal<'explore' | 'scan' | 'label'>('explore');
+
+  /** Result of the most recent simulated QR scan (check-in, check-out or box navigation). */
   readonly qrHint = signal<QrHint | null>(null);
   /** Active double-scan check-in awaiting position and tube confirmation. */
   readonly qrPending = signal<QrPending | null>(null);
@@ -72,6 +75,10 @@ export class DataService {
       this.expandedIds.set(new Set([firstBuilding.id]));
       this.selectedLocationId.set(firstBuilding.id);
     }
+  }
+
+  setUiMode(mode: 'explore' | 'scan' | 'label'): void {
+    this.uiMode.set(mode);
   }
 
   toggleExpanded(locationId: string): void {
@@ -163,7 +170,7 @@ export class DataService {
     }
     const result = moveItem(this.dataset(), itemId, toLocationId, new Date().toISOString(), 'Moved in prototype UI');
     this.pendingMoveTargetId.set(null);
-    if (!result.ok) {
+    if (result.ok === false) {
       this.moveError.set(result.error);
       return;
     }
@@ -338,7 +345,7 @@ export class DataService {
     const occurredAt = new Date().toISOString();
     const note = `Stored via QR double-scan at ${new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`;
     const result = moveItem(this.dataset(), item.id, targetPositionId, occurredAt, note);
-    if (!result.ok) {
+    if (result.ok === false) {
       this.setQrHint({ type: 'unknown', message: result.error });
       return;
     }
@@ -370,7 +377,7 @@ export class DataService {
     const occurredAt = new Date().toISOString();
     const note = `Extracted by User X at ${new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`;
     const result = moveItem(this.dataset(), item.id, null, occurredAt, note);
-    if (!result.ok) {
+    if (result.ok === false) {
       this.setQrHint({ type: 'unknown', message: result.error });
       return;
     }

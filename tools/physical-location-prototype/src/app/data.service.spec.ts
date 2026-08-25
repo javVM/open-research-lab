@@ -5,7 +5,8 @@ import { ancestorIds } from '../core/tree';
 describe('DataService', () => {
   beforeEach(() => {
     localStorage.clear();
-    TestBed.configureTestingModule({});
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({ providers: [DataService] });
   });
 
   function service(): DataService {
@@ -99,9 +100,12 @@ describe('DataService', () => {
         .dataset()
         .locations.filter((l) => l.type === 'position' && ancestorIds(data.dataset().locations, l.id).includes(cabinetId));
 
-    const sourceCabinet = cabinets.find((c) => positionsUnder(c.id).length > 0)!;
-    const sourcePosition = positionsUnder(sourceCabinet.id)[0];
-    const item = data.dataset().items.find((candidate) => candidate.locationId === sourcePosition.id)!;
+    const positions = data.dataset().locations.filter((l) => l.type === 'position');
+    const item = data.dataset().items.find(
+      (candidate) => candidate.locationId !== null && positions.some((position) => position.id === candidate.locationId),
+    )!;
+    const sourcePosition = positions.find((position) => position.id === item.locationId)!;
+    const sourceCabinet = cabinets.find((cabinet) => ancestorIds(data.dataset().locations, sourcePosition.id).includes(cabinet.id))!;
 
     const targetCabinet = cabinets.find((c) => c.id !== sourceCabinet.id && positionsUnder(c.id).length > 0)!;
     const targetPosition = positionsUnder(targetCabinet.id).find(

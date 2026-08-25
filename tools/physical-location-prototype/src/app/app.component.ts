@@ -1,12 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject } from '@angular/core';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { LocationTreeComponent } from './components/location-tree/location-tree.component';
 import { LocationViewComponent } from './components/location-view/location-view.component';
 import { ItemDetailComponent } from './components/item-detail/item-detail.component';
 import { ConfirmMoveModalComponent } from './components/confirm-move-modal/confirm-move-modal.component';
 import { LanguageSwitcherComponent } from './components/language-switcher/language-switcher.component';
-import { QrScannerComponent } from './components/qr-scanner/qr-scanner.component';
+import { ScanViewComponent } from './components/scan-view/scan-view.component';
+import { LabelViewComponent } from './components/label-view/label-view.component';
 import { DataService } from './data.service';
 import { TranslationService } from './i18n/translation.service';
 import { createAppTranslations } from './app.translations';
@@ -20,8 +20,8 @@ import { createAppTranslations } from './app.translations';
     ItemDetailComponent,
     ConfirmMoveModalComponent,
     LanguageSwitcherComponent,
-    QrScannerComponent,
-    FormsModule,
+    ScanViewComponent,
+    LabelViewComponent,
   ],
   selector: 'app-root',
   styleUrl: './app.component.scss',
@@ -30,32 +30,4 @@ import { createAppTranslations } from './app.translations';
 export class App {
   protected readonly data = inject(DataService);
   protected readonly text = createAppTranslations(inject(TranslationService));
-  protected readonly scannerOpen = signal(false);
-  protected qrCode = '';
-  protected qrPosition = '';
-  protected qrTube = '';
-
-  scan(): void {
-    const code = this.qrCode.trim();
-    if (code) {
-      this.data.scanQr(code);
-    }
-    this.qrCode = '';
-  }
-
-  scanPosition(): void {
-    const code = this.qrPosition.trim();
-    if (code) {
-      this.data.scanPosition(code);
-    }
-    this.qrPosition = '';
-  }
-
-  scanTube(): void {
-    const code = this.qrTube.trim();
-    if (code) {
-      this.data.scanTube(code);
-    }
-    this.qrTube = '';
-  }
 }

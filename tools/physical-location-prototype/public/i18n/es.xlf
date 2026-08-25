@@ -30,6 +30,22 @@
         <source>Item detail</source>
         <target>Detalle del ítem</target>
       </trans-unit>
+      <trans-unit id="app.modeSwitcher.ariaLabel">
+        <source>View mode</source>
+        <target>Modo de vista</target>
+      </trans-unit>
+      <trans-unit id="app.mode.explore">
+        <source>Explore</source>
+        <target>Explorar</target>
+      </trans-unit>
+      <trans-unit id="app.mode.scan">
+        <source>Scan</source>
+        <target>Escanear</target>
+      </trans-unit>
+      <trans-unit id="app.mode.label">
+        <source>Label</source>
+        <target>Etiqueta</target>
+      </trans-unit>
 
       <trans-unit id="languageSwitcher.ariaLabel">
         <source>Select language</source>
@@ -208,6 +224,110 @@
       <trans-unit id="locationType.position">
         <source>Position</source>
         <target>Posición</target>
+      </trans-unit>
+
+      <trans-unit id="qrScanner.title">
+        <source>Scan QR / barcode</source>
+        <target>Escanear QR / código de barras</target>
+      </trans-unit>
+      <trans-unit id="qrScanner.starting">
+        <source>Starting camera…</source>
+        <target>Iniciando cámara…</target>
+      </trans-unit>
+      <trans-unit id="qrScanner.error">
+        <source>Could not start camera</source>
+        <target>No se pudo iniciar la cámara</target>
+      </trans-unit>
+
+      <trans-unit id="qrLabel.heading">
+        <source>Printable label</source>
+        <target>Etiqueta imprimible</target>
+      </trans-unit>
+      <trans-unit id="qrLabel.qrAlt">
+        <source>Barcode</source>
+        <target>Código de barras</target>
+      </trans-unit>
+      <trans-unit id="qrLabel.loading">
+        <source>Generating…</source>
+        <target>Generando…</target>
+      </trans-unit>
+      <trans-unit id="qrLabel.empty">
+        <source>Nothing to encode</source>
+        <target>Nada que codificar</target>
+      </trans-unit>
+      <trans-unit id="qrLabel.format.qr">
+        <source>QR</source>
+        <target>QR</target>
+      </trans-unit>
+      <trans-unit id="qrLabel.format.dataMatrix">
+        <source>Data Matrix</source>
+        <target>Data Matrix</target>
+      </trans-unit>
+      <trans-unit id="qrLabel.format.code128">
+        <source>Code 128</source>
+        <target>Code 128</target>
+      </trans-unit>
+
+      <trans-unit id="scanView.heading">
+        <source>Scan</source>
+        <target>Escanear</target>
+      </trans-unit>
+      <trans-unit id="scanView.manualScanLabel">
+        <source>Simulate scan (desktop)</source>
+        <target>Simular escaneo (escritorio)</target>
+      </trans-unit>
+      <trans-unit id="scanView.manualScanPlaceholder">
+        <source>item:MNCN-0001 or box:loc-0001</source>
+        <target>item:MNCN-0001 o box:loc-0001</target>
+      </trans-unit>
+      <trans-unit id="scanView.scanButton">
+        <source>Scan</source>
+        <target>Escanear</target>
+      </trans-unit>
+      <trans-unit id="scanView.pendingPositionLabel">
+        <source>Position</source>
+        <target>Posición</target>
+      </trans-unit>
+      <trans-unit id="scanView.pendingTubeLabel">
+        <source>Tube</source>
+        <target>Tubo</target>
+      </trans-unit>
+      <trans-unit id="scanView.cancelButton">
+        <source>Cancel</source>
+        <target>Cancelar</target>
+      </trans-unit>
+      <trans-unit id="scanView.recentScansHeading">
+        <source>Recent scans</source>
+        <target>Escaneos recientes</target>
+      </trans-unit>
+      <trans-unit id="scanView.noRecentScans">
+        <source>No scans yet.</source>
+        <target>Todavía no hay escaneos.</target>
+      </trans-unit>
+      <trans-unit id="scanView.backToExplore">
+        <source>Back to explore</source>
+        <target>Volver a explorar</target>
+      </trans-unit>
+
+      <trans-unit id="labelView.heading">
+        <source>Labels</source>
+        <target>Etiquetas</target>
+      </trans-unit>
+      <trans-unit id="labelView.selectPrompt">
+        <source>Select a location or item from the tree to generate its label.</source>
+        <target>Selecciona una ubicación o un ítem del árbol para generar su etiqueta.</target>
+      </trans-unit>
+      <trans-unit id="labelView.locationSection">
+        <source>Selected location</source>
+        <target>Ubicación seleccionada</target>
+      </trans-unit>
+      <trans-unit id="labelView.itemSection">
+        <source>Selected item</source>
+        <target>Ítem seleccionado</target>
+      </trans-unit>
+      <trans-unit id="labelView.backToExplore">
+        <source>Back to explore</source>
+        <target>Volver a explorar</target>
       </trans-unit>
 
       <trans-unit id="itemDetail.emptyState">

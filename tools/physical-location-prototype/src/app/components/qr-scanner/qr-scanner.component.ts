@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, Output, afterNextRender, inject, signal } from '@angular/core';
+import { Component, OnDestroy, afterNextRender, inject, signal } from '@angular/core';
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
@@ -20,8 +20,6 @@ export class QrScannerComponent implements OnDestroy {
 
   protected readonly loading = signal(true);
   protected readonly error = signal<string | null>(null);
-
-  @Output() readonly close = new EventEmitter<void>();
 
   constructor() {
     afterNextRender(() => {
@@ -77,11 +75,6 @@ export class QrScannerComponent implements OnDestroy {
     this.lastCode = code;
     this.lastTime = now;
     this.data.scanQr(code);
-    this.onClose();
-  }
-
-  onClose(): void {
-    this.close.emit();
   }
 
   ngOnDestroy(): void {

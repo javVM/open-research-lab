@@ -1,0 +1,68 @@
+<div class="scan-view">
+  <header class="scan-view__header">
+    <h2>{{ text.heading() }}</h2>
+    <button type="button" class="scan-view__back" (click)="backToExplore()">
+      {{ text.backToExplore() }}
+    </button>
+  </header>
+
+  <div class="scan-view__body">
+    <section class="scan-view__scanner" aria-label="Camera scanner">
+      <app-qr-scanner></app-qr-scanner>
+    </section>
+
+    <aside class="scan-view__panel">
+      @if (data.qrPending(); as pending) {
+        <div class="scan-view__card">
+          <h3>{{ pending.itemCatalogue }}</h3>
+          <p>Target: {{ pending.targetName }}</p>
+
+          @if (pending.step === 'position') {
+            <label>
+              {{ text.pendingPositionLabel() }}
+              <input
+                type="text"
+                [(ngModel)]="positionCode"
+                (keydown.enter)="submitPosition()"
+                [placeholder]="pending.targetName"
+              />
+            </label>
+            <button type="button" (click)="submitPosition()">{{ text.scanButton() }}</button>
+          } @else {
+            <label>
+              {{ text.pendingTubeLabel() }}
+              <input
+                type="text"
+                [(ngModel)]="tubeCode"
+                (keydown.enter)="submitTube()"
+                [placeholder]="pending.itemCatalogue"
+              />
+            </label>
+            <button type="button" (click)="submitTube()">{{ text.scanButton() }}</button>
+          }
+
+          <button type="button" class="scan-view__cancel" (click)="data.cancelQr()">
+            {{ text.cancelButton() }}
+          </button>
+        </div>
+      } @else {
+        <div class="scan-view__card">
+          <label>
+            {{ text.manualScanLabel() }}
+            <input
+              type="text"
+              [(ngModel)]="manualCode"
+              (keydown.enter)="submitManualCode()"
+              [placeholder]="text.manualScanPlaceholder()"
+            />
+          </label>
+          <button type="button" (click)="submitManualCode()">{{ text.scanButton() }}</button>
+        </div>
+      }
+
+      @if (data.qrHint(); as hint) {
+        <div class="scan-view__hint" [attr.data-type]="hint.type">{{ hint.message }}</div>
+      }
+    </aside>
+  </div>
+</div>
