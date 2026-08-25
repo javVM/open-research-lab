@@ -5,7 +5,10 @@
     <app-qr-label [payload]="qrPayload()"></app-qr-label>
 
     @if (item.label) {
-      <p class="item-detail__label">{{ item.label }}</p>
+      <p class="item-detail__name">
+        <span class="item-detail__name-label">{{ text.nameLabel() }}:</span>
+        <span class="item-detail__name-value">{{ item.label }}</span>
+      </p>
     }
 
     <dl>

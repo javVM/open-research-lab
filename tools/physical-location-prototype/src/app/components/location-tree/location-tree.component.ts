@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { breadcrumb, buildTree, type LocationNode } from '../../../core/tree';
+import { buildTree, type LocationNode } from '../../../core/tree';
 import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createLocationTreeTranslations } from './location-tree.translations';
@@ -27,28 +27,30 @@ export class LocationTreeComponent {
 
   protected readonly isMobile = signal(window.matchMedia('(max-width: 700px)').matches);
 
-  protected readonly currentNode = computed<LocationNode | null>(() => {
-    const id = this.data.selectedLocationId();
-    return id ? this.findNode(this.roots(), id) : null;
-  });
+  /** Only the root buildings: used by the mobile-only dropdown. */
+  protected readonly buildings = computed(() =>
+    this.data.dataset().locations
+      .filter((location) => location.parentId === null)
+      .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
+  );
 
-  protected readonly breadcrumbs = computed(() => {
+  /** The id of the building that contains the currently selected location. */
+  protected readonly selectedBuildingId = computed(() => {
     const id = this.data.selectedLocationId();
-    return id ? breadcrumb(this.data.dataset().locations, id) : [];
-  });
-
-  private findNode(nodes: LocationNode[], id: string): LocationNode | null {
-    for (const node of nodes) {
-      if (node.location.id === id) {
-        return node;
-      }
-      const child = this.findNode(node.children, id);
-      if (child) {
-        return child;
-      }
+    if (!id) {
+      return '';
     }
-    return null;
-  }
+    let current = this.data.dataset().locations.find((location) => location.id === id);
+    while (current && current.parentId) {
+      const parentId = current.parentId;
+      const parent = this.data.dataset().locations.find((location) => location.id === parentId);
+      if (!parent) {
+        break;
+      }
+      current = parent;
+    }
+    return current?.id ?? '';
+  });
 
   constructor() {
     const mediaQuery = window.matchMedia('(max-width: 700px)');

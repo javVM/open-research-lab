@@ -79,6 +79,11 @@ export class DataService {
 
   setUiMode(mode: 'explore' | 'scan' | 'label'): void {
     this.uiMode.set(mode);
+    this.selectedLocationId.set(null);
+    this.selectedItemId.set(null);
+    this.movingItemId.set(null);
+    this.moveError.set(null);
+    this.pendingMoveTargetId.set(null);
   }
 
   toggleExpanded(locationId: string): void {
@@ -109,6 +114,12 @@ export class DataService {
     if (item?.locationId) {
       this.navigateToLocation(item.locationId);
     }
+  }
+
+  /** Selects an item for label generation without changing the location selection. */
+  selectItemForLabel(itemId: string): void {
+    this.selectedItemId.set(itemId);
+    this.selectedLocationId.set(null);
   }
 
   /**

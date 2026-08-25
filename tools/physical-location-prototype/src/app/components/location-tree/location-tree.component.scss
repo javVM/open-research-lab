@@ -3,6 +3,23 @@
   height: 100%;
 }
 
+.location-tree__select-label {
+  display: block;
+  width: 100%;
+}
+
+.location-tree__select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border, #3a3f4b);
+  border-radius: 0.4rem;
+  background: var(--surface, #1b1e26);
+  color: var(--text, #e8eaed);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
 .location-tree {
   font-size: 0.9rem;
   user-select: none;
@@ -136,6 +153,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
   gap: 0.6rem;
+  max-height: 16rem;
+  overflow-y: auto;
+  padding-right: 0.25rem;
 }
 
 .mobile-tree__child {

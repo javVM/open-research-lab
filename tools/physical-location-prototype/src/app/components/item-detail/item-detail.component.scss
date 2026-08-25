@@ -2,15 +2,38 @@
 
 .item-detail h2 {
   margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
-.item-detail__label {
+.item-detail__name {
+  margin: 0.25rem 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.item-detail__name-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--text-muted, #9aa1ac);
-  margin-top: 0.15rem;
+}
+
+.item-detail__name-value {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--text, #e8eaed);
 }
 
 dl {
-  margin: 1rem 0;
+  margin: 0.75rem 0;
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0.5rem 1rem;
+  align-items: start;
 }
 
 dt {
@@ -18,19 +41,41 @@ dt {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-muted, #9aa1ac);
-  margin-top: 0.75rem;
+  padding-top: 0.25rem;
 }
 
 dd {
-  margin: 0.2rem 0 0;
+  margin: 0;
+}
+
+@media (min-width: 701px) {
+  dl {
+    display: block;
+  }
+
+  dd {
+    margin-bottom: 0.75rem;
+  }
+
+  dd:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .status-badge {
-  display: inline-block;
-  padding: 0.1rem 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.75rem;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
   background: var(--surface-hover, #262b36);
+}
+
+.status-badge[data-status='active'] {
+  background: #1e3a2f;
+  color: #7ad3a4;
 }
 
 .status-badge[data-status='checked_out'],
@@ -45,16 +90,23 @@ dd {
   margin: 0;
   padding: 0;
   display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.9rem;
 }
 
+.breadcrumb-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
 .breadcrumb-list li:not(:last-child)::after {
-  content: '↓';
-  display: block;
-  color: var(--text-muted, #9aa1ac);
-  font-size: 0.75rem;
+  content: '›';
+  color: var(--accent, #5b8def);
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
 .start-move,
@@ -76,7 +128,7 @@ dd {
 }
 
 h3 {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .history-list {
@@ -85,7 +137,7 @@ h3 {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 
 .history-list li {
@@ -113,5 +165,18 @@ h3 {
   .start-move,
   .cancel-move {
     width: 100%;
+  }
+
+  dl {
+    grid-template-columns: 1fr;
+    gap: 0.35rem 0;
+  }
+
+  dt {
+    padding-top: 0;
+  }
+
+  dd + dt {
+    margin-top: 0.75rem;
   }
 }

@@ -73,6 +73,10 @@
         <source>Physical location hierarchy</source>
         <target>Jerarquía de ubicaciones físicas</target>
       </trans-unit>
+      <trans-unit id="locationTree.selectBuilding">
+        <source>Select building</source>
+        <target>Seleccionar edificio</target>
+      </trans-unit>
       <trans-unit id="locationTree.toggle.collapse">
         <source>Collapse {name}</source>
         <target>Contraer {name}</target>
@@ -333,6 +337,10 @@
       <trans-unit id="itemDetail.emptyState">
         <source>Select an item to see its details.</source>
         <target>Selecciona un ítem para ver sus detalles.</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.name">
+        <source>Name</source>
+        <target>Nombre</target>
       </trans-unit>
       <trans-unit id="itemDetail.status.label">
         <source>Status</source>

@@ -2,6 +2,7 @@ import { $localize } from '../../i18n/localize';
 import type { TranslationService } from '../../i18n/translation.service';
 
 export const emptyState = $localize `@@itemDetail.emptyState:Select an item to see its details.`;
+export const nameLabel = $localize `@@itemDetail.name:Name`;
 export const statusFieldLabel = $localize `@@itemDetail.status.label:Status`;
 export const currentLocationLabel = $localize `@@itemDetail.currentLocation.label:Current location`;
 export const notLocated = $localize `@@itemDetail.notLocated:Not currently located`;
@@ -35,6 +36,7 @@ export const statusLabel = (status: string): string => {
 export function createItemDetailTranslations(i18n: TranslationService) {
   return {
     emptyState: () => i18n.t('itemDetail.emptyState', emptyState),
+    nameLabel: () => i18n.t('itemDetail.name', nameLabel),
     statusFieldLabel: () => i18n.t('itemDetail.status.label', statusFieldLabel),
     currentLocationLabel: () => i18n.t('itemDetail.currentLocation.label', currentLocationLabel),
     notLocated: () => i18n.t('itemDetail.notLocated', notLocated),

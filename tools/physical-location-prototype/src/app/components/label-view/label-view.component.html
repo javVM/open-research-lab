@@ -8,7 +8,11 @@
 
   <div class="label-view__body">
     <section class="label-view__tree" [attr.aria-label]="text.locationSection()">
-      <app-location-tree></app-location-tree>
+      @if (isMobile()) {
+        <app-location-view class="label-view__selector"></app-location-view>
+      } @else {
+        <app-location-tree></app-location-tree>
+      }
     </section>
 
     <section class="label-view__preview" aria-label="Label preview">
