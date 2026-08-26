@@ -9,7 +9,6 @@ import {
   cancelButton,
   recentScansHeading,
   noRecentScans,
-  backToExplore,
 } from './scan-view.constants';
 
 export function createScanViewTranslations(i18n: TranslationService) {
@@ -23,6 +22,5 @@ export function createScanViewTranslations(i18n: TranslationService) {
     cancelButton: () => i18n.t('scanView.cancelButton', cancelButton),
     recentScansHeading: () => i18n.t('scanView.recentScansHeading', recentScansHeading),
     noRecentScans: () => i18n.t('scanView.noRecentScans', noRecentScans),
-    backToExplore: () => i18n.t('scanView.backToExplore', backToExplore),
   };
 }

@@ -11,12 +11,17 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   border: 1px solid var(--border, #3a3f4b);
   border-radius: 0.35rem;
-  padding: 0.25rem 0.7rem;
-  font-size: 0.85rem;
+  padding: 0.45rem;
   cursor: pointer;
   overflow: hidden;
+}
+
+.floor-plan__upload svg {
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 .floor-plan__upload:hover {

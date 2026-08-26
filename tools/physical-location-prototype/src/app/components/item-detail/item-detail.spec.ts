@@ -54,6 +54,10 @@ describe('ItemDetailComponent', () => {
     const fixture = TestBed.createComponent(ItemDetailComponent);
     fixture.detectChanges();
 
+    const infoButton = fixture.nativeElement.querySelector('.history-info') as HTMLElement;
+    infoButton.click();
+    fixture.detectChanges();
+
     const entries = fixture.nativeElement.querySelectorAll('.history-list li');
     expect(entries.length).toBeGreaterThan(0);
     expect(fixture.nativeElement.textContent).toContain('→');

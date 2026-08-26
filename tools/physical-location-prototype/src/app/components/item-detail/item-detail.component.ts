@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import type { Item, Location, Movement } from '../../../core/models';
 import { breadcrumb, breadcrumbLabel } from '../../../core/tree';
 import { historyOf } from '../../../core/search';
@@ -55,5 +55,15 @@ export class ItemDetailComponent {
 
   isMoving(): boolean {
     return this.data.movingItemId() === this.item()?.id;
+  }
+
+  protected readonly showHistory = signal(false);
+
+  openHistory(): void {
+    this.showHistory.set(true);
+  }
+
+  closeHistory(): void {
+    this.showHistory.set(false);
   }
 }

@@ -78,7 +78,4 @@ export class LabelViewComponent {
     return id ? `item:${id}` : '';
   });
 
-  backToExplore(): void {
-    this.data.setUiMode('explore');
-  }
 }

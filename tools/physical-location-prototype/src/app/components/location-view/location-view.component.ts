@@ -30,7 +30,7 @@ export class LocationViewComponent {
   /** When false, the map/3D view is hidden and only the list is shown. */
   readonly allowMap = input<boolean>(true);
 
-  protected readonly viewMode = signal<'map' | '3d' | 'list'>('map');
+  protected readonly viewMode = signal<'map' | '3d' | 'list'>('list');
 
   readonly selectedLocation = computed<Location | undefined>(() => {
     const id = this.data.selectedLocationId();

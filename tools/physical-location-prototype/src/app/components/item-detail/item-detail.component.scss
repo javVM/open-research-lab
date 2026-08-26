@@ -219,3 +219,52 @@ h3 {
     padding-left: 0.75rem;
   }
 }
+
+.history-info {
+  background: none;
+  border: 1px solid var(--border, #3a3f4b);
+  border-radius: 0.35rem;
+  padding: 0.35rem;
+  color: var(--text-muted, #9aa1ac);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.history-info:hover {
+  border-color: var(--accent, #5b8def);
+  color: var(--accent, #5b8def);
+}
+
+.history-info svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.history-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+}
+
+.history-modal {
+  background: var(--surface, #1b1e26);
+  border: 1px solid var(--border, #3a3f4b);
+  border-radius: 0.6rem;
+  padding: 1.25rem;
+  max-width: 24rem;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+.history-modal h3 {
+  margin: 0 0 1rem;
+}

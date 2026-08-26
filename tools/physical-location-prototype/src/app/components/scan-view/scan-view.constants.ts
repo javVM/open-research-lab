@@ -9,4 +9,3 @@ export const pendingTubeLabel = $localize `@@scanView.pendingTubeLabel:Tube`;
 export const cancelButton = $localize `@@scanView.cancelButton:Cancel`;
 export const recentScansHeading = $localize `@@scanView.recentScansHeading:Recent scans`;
 export const noRecentScans = $localize `@@scanView.noRecentScans:No scans yet.`;
-export const backToExplore = $localize `@@scanView.backToExplore:Back to explore`;

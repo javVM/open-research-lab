@@ -8,14 +8,14 @@ describe('LocationViewComponent', () => {
     TestBed.configureTestingModule({});
   });
 
-  it('shows a prompt when nothing is selected', () => {
+  it('shows root buildings when nothing is selected', () => {
     const data = TestBed.inject(DataService);
     data.selectedLocationId.set(null);
 
     const fixture = TestBed.createComponent(LocationViewComponent);
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('Select a location');
+    expect(fixture.nativeElement.querySelectorAll('.container-card').length).toBeGreaterThan(0);
   });
 
   it('renders a position grid for a tray, distinguishing occupied and empty cells', () => {

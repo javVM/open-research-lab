@@ -44,7 +44,4 @@ export class ScanViewComponent {
     }
   }
 
-  backToExplore(): void {
-    this.data.setUiMode('explore');
-  }
 }

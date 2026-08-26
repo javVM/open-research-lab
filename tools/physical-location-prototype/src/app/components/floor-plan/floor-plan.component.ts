@@ -261,7 +261,7 @@ export class FloorPlanComponent implements OnChanges {
     }
     const dx = event.clientX - state.startClientX;
     const dy = event.clientY - state.startClientY;
-    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+    if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
       state.moved = true;
     }
     const nextX = Math.max(0, Math.round(state.startX + dx));

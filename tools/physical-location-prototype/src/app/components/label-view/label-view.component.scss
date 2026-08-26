@@ -26,20 +26,6 @@
   font-weight: 600;
 }
 
-.label-view__back {
-  padding: 0.4rem 0.8rem;
-  border-radius: 0.4rem;
-  border: 1px solid var(--border, #3a3f4b);
-  background: var(--surface, #1b1e26);
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-
-.label-view__back:hover {
-  border-color: var(--accent, #5b8def);
-}
-
 .label-view__body {
   flex: 1;
   display: grid;
