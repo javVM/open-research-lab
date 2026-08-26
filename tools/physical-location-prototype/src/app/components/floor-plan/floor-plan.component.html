@@ -1,4 +1,4 @@
-@if (containerLocationId) {
+@if (containerLocationId()) {
   <div class="floor-plan__toolbar">
     <button
       type="button"
@@ -16,10 +16,10 @@
     </button>
 
     <div class="floor-plan__menu" [class.floor-plan__menu--open]="showUploadMenu()">
-      <label class="floor-plan__menu-item floor-plan__menu-item--upload">
+      <button type="button" mat-button class="floor-plan__menu-item floor-plan__menu-item--upload" (click)="fileInput.click()">
         {{ text.uploadPlan() }}
-        <input type="file" accept="image/*" (change)="onImageSelected($event)" />
-      </label>
+      </button>
+      <input #fileInput class="floor-plan__file-input" type="file" accept="image/*" (change)="onImageSelected($event)" />
       @if (containerImage(); as image) {
         <button type="button" mat-button class="floor-plan__remove-plan" (click)="clearImage()">{{ text.removePlan() }}</button>
       }
@@ -36,7 +36,7 @@
   [style.backgroundSize]="containerImage() ? (containerImage()!.width * renderScale()) + 'px ' + (containerImage()!.height * renderScale()) + 'px' : null"
   [style.backgroundRepeat]="'no-repeat'"
 >
-  @for (location of locations; track location.id) {
+  @for (location of locations(); track location.id) {
     <div
       class="floor-plan__rect"
       [attr.data-type]="location.type"

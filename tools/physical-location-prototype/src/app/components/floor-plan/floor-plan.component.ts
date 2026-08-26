@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, OnChanges, SimpleChanges, afterNextRender, inject, signal } from '@angular/core';
+import { Component, ElementRef, afterNextRender, effect, inject, input, signal, untracked } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import type { Location } from '../../../core/models';
 import { DataService } from '../../data.service';
@@ -47,10 +47,10 @@ const MIN_SIZE = 60;
   templateUrl: './floor-plan.component.html',
   styleUrl: './floor-plan.component.scss',
 })
-export class FloorPlanComponent implements OnChanges {
-  @Input() locations: Location[] = [];
+export class FloorPlanComponent {
+  readonly locations = input<Location[]>([]);
   /** Id of the location whose children `locations` are — used to look up/store its background plan image. */
-  @Input() containerLocationId: string | null = null;
+  readonly containerLocationId = input<string | null>(null);
 
   protected readonly data = inject(DataService);
   protected readonly text = createFloorPlanTranslations(inject(TranslationService));
@@ -84,19 +84,19 @@ export class FloorPlanComponent implements OnChanges {
 
   /** The background plan image set for `containerLocationId`, if any — see `Location.mapImage`. */
   containerImage(): Location['mapImage'] {
-    if (!this.containerLocationId) {
+    if (!this.containerLocationId()) {
       return undefined;
     }
-    return this.data.dataset().locations.find((candidate) => candidate.id === this.containerLocationId)?.mapImage;
+    return this.data.dataset().locations.find((candidate) => candidate.id === this.containerLocationId())?.mapImage;
   }
 
   private rawBounds(): Rect {
     const image = this.containerImage();
-    if (this.locations.length === 0) {
+    if (this.locations().length === 0) {
       return { x: 0, y: 0, width: image?.width ?? 1, height: image?.height ?? 1 };
     }
-    const maxX = Math.max(image?.width ?? 0, ...this.locations.map((location) => (location.x ?? 0) + (location.width ?? 0)));
-    const maxY = Math.max(image?.height ?? 0, ...this.locations.map((location) => (location.y ?? 0) + (location.height ?? 0)));
+    const maxX = Math.max(image?.width ?? 0, ...this.locations().map((location) => (location.x ?? 0) + (location.width ?? 0)));
+    const maxY = Math.max(image?.height ?? 0, ...this.locations().map((location) => (location.y ?? 0) + (location.height ?? 0)));
     return { x: 0, y: 0, width: maxX, height: maxY };
   }
 
@@ -106,9 +106,11 @@ export class FloorPlanComponent implements OnChanges {
     return { x: 0, y: 0, width: raw.width * s, height: raw.height * s };
   }
 
-  ngOnChanges(_changes: SimpleChanges): void {
-    this.fitToViewport();
-  }
+  private readonly refitOnInputChanges = effect(() => {
+    this.locations();
+    this.containerLocationId();
+    untracked(() => this.fitToViewport());
+  });
 
   private fitToViewport(): void {
     if (!this.viewport.isMobile()) {
@@ -129,12 +131,12 @@ export class FloorPlanComponent implements OnChanges {
   onImageSelected(event: Event): void {
     this.showUploadMenu.set(false);
     const input = event.target as HTMLInputElement;
+    const containerLocationId = this.containerLocationId();
     const file = input.files?.[0];
     input.value = '';
-    if (!file || !this.containerLocationId) {
+    if (!file || !containerLocationId) {
       return;
     }
-    const containerLocationId = this.containerLocationId;
     const reader = new FileReader();
     reader.onload = () => {
       const dataUrl = reader.result as string;
@@ -149,8 +151,9 @@ export class FloorPlanComponent implements OnChanges {
 
   clearImage(): void {
     this.showUploadMenu.set(false);
-    if (this.containerLocationId) {
-      this.data.clearLocationMapImage(this.containerLocationId);
+    const containerLocationId = this.containerLocationId();
+    if (containerLocationId) {
+      this.data.clearLocationMapImage(containerLocationId);
     }
   }
 
@@ -170,7 +173,7 @@ export class FloorPlanComponent implements OnChanges {
 
   /** Background colour intensity relative to the busiest location currently shown, for an at-a-glance occupancy read. */
   occupancyBackground(locationId: string): string {
-    const max = Math.max(1, ...this.locations.map((location) => this.countAt(location.id)));
+    const max = Math.max(1, ...this.locations().map((location) => this.countAt(location.id)));
     const ratio = this.countAt(locationId) / max;
     const alpha = 0.12 + ratio * 0.55;
     return `rgba(91, 141, 239, ${alpha.toFixed(2)})`;

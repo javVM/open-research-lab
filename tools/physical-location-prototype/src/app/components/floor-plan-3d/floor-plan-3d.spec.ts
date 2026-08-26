@@ -19,7 +19,7 @@ describe('FloorPlan3dComponent', () => {
 
   it('renders one 3D box per location', () => {
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
-    fixture.componentInstance.locations = [room('a', 0, 0), room('b', 130, 0)];
+    fixture.componentRef.setInput("locations", [room('a', 0, 0), room('b', 130, 0)]);
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelectorAll('.box3d').length).toBe(2);
@@ -30,7 +30,7 @@ describe('FloorPlan3dComponent', () => {
   it('stacks floors vertically by their existing 2D y order, independent of x/y placement', () => {
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
     const floors = [floor('f1', 0), floor('f2', 260)];
-    fixture.componentInstance.locations = floors;
+    fixture.componentRef.setInput("locations", floors);
     fixture.detectChanges();
 
     const boxes = fixture.nativeElement.querySelectorAll('.box3d') as NodeListOf<HTMLElement>;
@@ -44,7 +44,7 @@ describe('FloorPlan3dComponent', () => {
     const floors = [floor('f1', 0), floor('f2', 260)];
 
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
-    fixture.componentInstance.locations = floors;
+    fixture.componentRef.setInput("locations", floors);
     fixture.detectChanges();
 
     const boxes = fixture.nativeElement.querySelectorAll('.box3d') as NodeListOf<HTMLElement>;
@@ -56,7 +56,7 @@ describe('FloorPlan3dComponent', () => {
 
   it('does not stack non-floor locations — they all sit at elevation 0', () => {
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
-    fixture.componentInstance.locations = [room('a', 0, 0), room('b', 130, 0)];
+    fixture.componentRef.setInput("locations", [room('a', 0, 0), room('b', 130, 0)]);
     fixture.detectChanges();
 
     const boxes = fixture.nativeElement.querySelectorAll('.box3d') as NodeListOf<HTMLElement>;
@@ -71,7 +71,7 @@ describe('FloorPlan3dComponent', () => {
     const drawers = data.dataset().locations.filter((l) => l.parentId === cabinet.id && l.type === 'drawer');
 
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
-    fixture.componentInstance.locations = [cabinet];
+    fixture.componentRef.setInput("locations", [cabinet]);
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelectorAll('.box3d__shelf').length).toBe(drawers.length);
@@ -79,7 +79,7 @@ describe('FloorPlan3dComponent', () => {
 
   it('does not render shelf bands for a location whose children already have their own coordinates', () => {
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
-    fixture.componentInstance.locations = [room('a', 0, 0)];
+    fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('.box3d__shelves')).toBeFalsy();
@@ -88,7 +88,7 @@ describe('FloorPlan3dComponent', () => {
   it('clicking a box selects that location when nothing is being moved', () => {
     const data = TestBed.inject(DataService);
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
-    fixture.componentInstance.locations = [room('a', 0, 0)];
+    fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
     fixture.detectChanges();
 
     (fixture.nativeElement.querySelector('.box3d') as HTMLElement).click();
@@ -102,7 +102,7 @@ describe('FloorPlan3dComponent', () => {
     data.startMove(item.id);
 
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
-    fixture.componentInstance.locations = [room('a', 0, 0)];
+    fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
     fixture.detectChanges();
 
     (fixture.nativeElement.querySelector('.box3d') as HTMLElement).click();
@@ -113,7 +113,7 @@ describe('FloorPlan3dComponent', () => {
   it('dragging that starts on top of a box still orbits, and suppresses the click that follows', () => {
     const data = TestBed.inject(DataService);
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
-    fixture.componentInstance.locations = [room('a', 0, 0)];
+    fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
     fixture.detectChanges();
 
     const plane = fixture.nativeElement.querySelector('.plane') as HTMLElement;
@@ -133,7 +133,7 @@ describe('FloorPlan3dComponent', () => {
   it('a press-and-release without meaningful movement on a box still selects it', () => {
     const data = TestBed.inject(DataService);
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
-    fixture.componentInstance.locations = [room('a', 0, 0)];
+    fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
     fixture.detectChanges();
 
     const box = fixture.nativeElement.querySelector('.box3d') as HTMLElement;
@@ -149,7 +149,7 @@ describe('FloorPlan3dComponent', () => {
     const cabinet = data.dataset().locations.find((l) => l.type === 'cabinet')!;
 
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
-    fixture.componentInstance.locations = [cabinet];
+    fixture.componentRef.setInput("locations", [cabinet]);
     fixture.detectChanges();
 
     // Spin the view so the back face faces the camera.
@@ -167,7 +167,7 @@ describe('FloorPlan3dComponent', () => {
     const cabinet = data.dataset().locations.find((l) => l.type === 'cabinet')!;
 
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
-    fixture.componentInstance.locations = [cabinet];
+    fixture.componentRef.setInput("locations", [cabinet]);
     fixture.detectChanges();
 
     const box = fixture.nativeElement.querySelector('.box3d') as HTMLElement;
@@ -185,7 +185,7 @@ describe('FloorPlan3dComponent', () => {
 
   it('dragging on empty space orbits the scene (rotation changes), without affecting any box position', () => {
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
-    fixture.componentInstance.locations = [room('a', 0, 0)];
+    fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
     fixture.detectChanges();
 
     const plane = fixture.nativeElement.querySelector('.plane') as HTMLElement;
@@ -202,7 +202,7 @@ describe('FloorPlan3dComponent', () => {
 
   it('resetView restores the default orbit/zoom transform', () => {
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
-    fixture.componentInstance.locations = [room('a', 0, 0)];
+    fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
     fixture.detectChanges();
 
     const plane = fixture.nativeElement.querySelector('.plane') as HTMLElement;

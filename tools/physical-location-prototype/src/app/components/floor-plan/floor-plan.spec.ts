@@ -15,7 +15,7 @@ describe('FloorPlanComponent', () => {
 
   it('renders one rect per location, positioned at its x/y', () => {
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentInstance.locations = [room('a', 0, 0), room('b', 130, 0)];
+    fixture.componentRef.setInput("locations", [room('a', 0, 0), room('b', 130, 0)]);
     fixture.detectChanges();
 
     const rects = fixture.nativeElement.querySelectorAll('.floor-plan__rect');
@@ -26,7 +26,7 @@ describe('FloorPlanComponent', () => {
   it('clicking a rect selects that location when nothing is being moved', () => {
     const data = TestBed.inject(DataService);
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentInstance.locations = [room('a', 0, 0)];
+    fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
     fixture.detectChanges();
 
     (fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement).click();
@@ -40,7 +40,7 @@ describe('FloorPlanComponent', () => {
     data.startMove(item.id);
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentInstance.locations = [room('a', 0, 0)];
+    fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
     fixture.detectChanges();
 
     (fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement).click();
@@ -55,7 +55,7 @@ describe('FloorPlanComponent', () => {
     const realRoom = data.dataset().locations.find((l) => l.type === 'room')!;
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentInstance.locations = [realRoom];
+    fixture.componentRef.setInput("locations", [realRoom]);
     fixture.detectChanges();
 
     // jsdom has no PointerEvent constructor; MouseEvent carries the same
@@ -83,7 +83,7 @@ describe('FloorPlanComponent', () => {
     data.selectedLocationId.set(null);
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentInstance.locations = [realRoom];
+    fixture.componentRef.setInput("locations", [realRoom]);
     fixture.detectChanges();
 
     const handle = fixture.nativeElement.querySelector('.floor-plan__resize-handle') as HTMLElement;
@@ -105,7 +105,7 @@ describe('FloorPlanComponent', () => {
     const realRoom = data.dataset().locations.find((l) => l.type === 'room')!;
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentInstance.locations = [realRoom];
+    fixture.componentRef.setInput("locations", [realRoom]);
     fixture.detectChanges();
 
     const handle = fixture.nativeElement.querySelector('.floor-plan__resize-handle') as HTMLElement;
@@ -124,7 +124,7 @@ describe('FloorPlanComponent', () => {
     const empty = room('empty', 130, 0);
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentInstance.locations = [busy, empty];
+    fixture.componentRef.setInput("locations", [busy, empty]);
     fixture.detectChanges();
 
     // Both are synthetic locations with no items in the real dataset, so
@@ -146,7 +146,7 @@ describe('FloorPlanComponent', () => {
       .locations.filter((l) => l.parentId === floorOfRoom.id && l.type === 'room');
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentInstance.locations = roomsOfFloor;
+    fixture.componentRef.setInput("locations", roomsOfFloor);
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview').length).toBe(roomsOfFloor.length);
@@ -163,7 +163,7 @@ describe('FloorPlanComponent', () => {
       .locations.filter((l) => l.parentId === buildingWithFloors.id && l.type === 'floor');
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentInstance.locations = floorsOfBuilding;
+    fixture.componentRef.setInput("locations", floorsOfBuilding);
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview').length).toBe(floorsOfBuilding.length);
@@ -175,7 +175,7 @@ describe('FloorPlanComponent', () => {
     const realRoom = data.dataset().locations.find((l) => l.type === 'room')!;
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentInstance.locations = [realRoom];
+    fixture.componentRef.setInput("locations", [realRoom]);
     fixture.detectChanges();
 
     const rect = fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement;
@@ -195,7 +195,7 @@ describe('FloorPlanComponent', () => {
     const realRoom = data.dataset().locations.find((l) => l.type === 'room')!;
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentInstance.locations = [realRoom];
+    fixture.componentRef.setInput("locations", [realRoom]);
     fixture.detectChanges();
 
     const rect = fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement;
@@ -213,7 +213,7 @@ describe('FloorPlanComponent', () => {
   it('does not render a preview for locations whose children have no floor-plan coordinates', () => {
     const fixture = TestBed.createComponent(FloorPlanComponent);
     // A synthetic room fixture with no children in the dataset at all.
-    fixture.componentInstance.locations = [room('lonely', 0, 0)];
+    fixture.componentRef.setInput("locations", [room('lonely', 0, 0)]);
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('.floor-plan__preview')).toBeFalsy();
@@ -244,7 +244,7 @@ describe('FloorPlanComponent', () => {
 
     it('does not show the upload control when no containerLocationId is set', () => {
       const fixture = TestBed.createComponent(FloorPlanComponent);
-      fixture.componentInstance.locations = [room('a', 0, 0)];
+      fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
       fixture.detectChanges();
 
       expect(fixture.nativeElement.querySelector('.floor-plan__toolbar')).toBeFalsy();
@@ -255,8 +255,8 @@ describe('FloorPlanComponent', () => {
       const building = data.dataset().locations.find((l) => l.type === 'building')!;
 
       const fixture = TestBed.createComponent(FloorPlanComponent);
-      fixture.componentInstance.locations = [room('a', 0, 0)];
-      fixture.componentInstance.containerLocationId = building.id;
+      fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
+      fixture.componentRef.setInput("containerLocationId", building.id);
       fixture.detectChanges();
 
       const file = new File(['fake-image-bytes'], 'plan.png', { type: 'image/png' });
@@ -285,8 +285,8 @@ describe('FloorPlanComponent', () => {
       data.setLocationMapImage(building.id, 'data:image/png;base64,abc', 800, 600);
 
       const fixture = TestBed.createComponent(FloorPlanComponent);
-      fixture.componentInstance.locations = [room('a', 0, 0)];
-      fixture.componentInstance.containerLocationId = building.id;
+      fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
+      fixture.componentRef.setInput("containerLocationId", building.id);
       fixture.detectChanges();
 
       (fixture.nativeElement.querySelector('.floor-plan__remove-plan') as HTMLElement).click();

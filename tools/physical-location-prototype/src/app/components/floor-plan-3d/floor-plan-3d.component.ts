@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges, SimpleChanges, inject, signal } from '@angular/core';
+import { Component, effect, inject, input, signal, untracked } from '@angular/core';
 import type { Location } from '../../../core/models';
 import { DataService } from '../../data.service';
+import { ViewportService } from '../../shared/viewport.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createFloorPlan3dTranslations } from './floor-plan-3d.translations';
 
@@ -68,11 +69,12 @@ const FRONT_AZIMUTH = 270;
   templateUrl: './floor-plan-3d.component.html',
   styleUrl: './floor-plan-3d.component.scss',
 })
-export class FloorPlan3dComponent implements OnChanges {
-  @Input() locations: Location[] = [];
+export class FloorPlan3dComponent {
+  readonly locations = input<Location[]>([]);
 
   protected readonly data = inject(DataService);
   protected readonly text = createFloorPlan3dTranslations(inject(TranslationService));
+  private readonly viewport = inject(ViewportService);
 
   private hasSetInitialScale = false;
 
@@ -80,20 +82,13 @@ export class FloorPlan3dComponent implements OnChanges {
     this.resetView();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['locations'] && !this.hasSetInitialScale) {
-      this.resetView();
+  private readonly setInitialView = effect(() => {
+    const locations = this.locations();
+    if (locations.length > 0 && !this.hasSetInitialScale) {
+      untracked(() => this.resetView());
       this.hasSetInitialScale = true;
     }
-  }
-
-  private isMobile(): boolean {
-    return (
-      typeof window !== 'undefined' &&
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(max-width: 767px)').matches
-    );
-  }
+  });
 
   /**
    * Orbit/zoom state, read from the template's `planeTransform()` call.
@@ -121,7 +116,7 @@ export class FloorPlan3dComponent implements OnChanges {
 
   private visualCenterOffset(): number {
     const maxZ = this.maxStackZ();
-    if (this.locations.length === 0 || maxZ === 0) {
+    if (this.locations().length === 0 || maxZ === 0) {
       return 0;
     }
     const rad = (this.rotateXDeg() * Math.PI) / 180;
@@ -144,10 +139,10 @@ export class FloorPlan3dComponent implements OnChanges {
 
   /** Same idea as `FloorPlanComponent.bounds()` — the plane must be big enough for every child's footprint. */
   bounds(): Rect {
-    if (this.locations.length === 0) {
+    if (this.locations().length === 0) {
       return { x: 0, y: 0, width: FLOOR_FOOTPRINT.width, height: FLOOR_FOOTPRINT.height };
     }
-    const rects = this.locations.map((location) => this.rectFor(location));
+    const rects = this.locations().map((location) => this.rectFor(location));
     const maxX = Math.max(...rects.map((rect) => rect.x + rect.width));
     const maxY = Math.max(...rects.map((rect) => rect.y + rect.height));
     return { x: 0, y: 0, width: maxX, height: maxY };
@@ -155,34 +150,34 @@ export class FloorPlan3dComponent implements OnChanges {
 
   resetView(): void {
     this.rotateZDeg.set(-25);
-    this.rotateXDeg.set(this.isMobile() ? 45 : 55);
+    this.rotateXDeg.set(this.viewport.isMobile() ? 45 : 55);
     this.scale.set(this.fitScale());
   }
 
   private maxStackZ(): number {
-    const floors = this.locations.filter((location) => location.type === 'floor');
+    const floors = this.locations().filter((location) => location.type === 'floor');
     if (floors.length === 0) {
       return 0;
     }
     const floorCount = floors.length;
-    const stackHeight = this.isMobile() ? 120 : FLOOR_STACK_HEIGHT;
+    const stackHeight = this.viewport.isMobile() ? 120 : FLOOR_STACK_HEIGHT;
     const topFloor = floors[floorCount - 1];
     return (floorCount - 1) * stackHeight + this.wallHeight(topFloor);
   }
 
   private fitScale(): number {
-    if (this.locations.length === 0 || this.maxStackZ() === 0) {
-      if (!this.isMobile()) {
+    if (this.locations().length === 0 || this.maxStackZ() === 0) {
+      if (!this.viewport.isMobile()) {
         return 1;
       }
       const viewport = Math.min(window.innerWidth, window.innerHeight);
       return Math.min(MAX_SCALE, Math.max(MIN_SCALE, viewport / 480));
     }
-    const rotateX = this.isMobile() ? 45 : 55;
+    const rotateX = this.viewport.isMobile() ? 45 : 55;
     const rad = (rotateX * Math.PI) / 180;
     const cos = Math.cos(rad);
     const sin = Math.sin(rad);
-    const sceneHeight = this.isMobile()
+    const sceneHeight = this.viewport.isMobile()
       ? Math.min(384, Math.max(260, Math.min(window.innerWidth, window.innerHeight) * 0.8))
       : 608;
     const padding = 32;
@@ -205,7 +200,7 @@ export class FloorPlan3dComponent implements OnChanges {
   }
 
   wallHeight(location: Location): number {
-    if (location.type === 'floor' && this.isMobile()) {
+    if (location.type === 'floor' && this.viewport.isMobile()) {
       return 100;
     }
     return WALL_HEIGHT[location.type] ?? DEFAULT_WALL_HEIGHT;
@@ -216,13 +211,13 @@ export class FloorPlan3dComponent implements OnChanges {
     if (location.type !== 'floor') {
       return 0;
     }
-    const stackHeight = this.isMobile() ? 120 : FLOOR_STACK_HEIGHT;
+    const stackHeight = this.viewport.isMobile() ? 120 : FLOOR_STACK_HEIGHT;
     return this.floorIndex(location) * stackHeight;
   }
 
   /** A floor's position among its building's floors, ordered by the existing 2D `y` (see `seed.ts`'s `FLOOR_LAYOUT`). */
   private floorIndex(location: Location): number {
-    const floors = this.locations.filter((candidate) => candidate.type === 'floor');
+    const floors = this.locations().filter((candidate) => candidate.type === 'floor');
     const sorted = [...floors].sort((a, b) => (a.y ?? 0) - (b.y ?? 0));
     return sorted.findIndex((candidate) => candidate.id === location.id);
   }
