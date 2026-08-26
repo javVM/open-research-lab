@@ -12,6 +12,24 @@
   width: 100%;
 }
 
+::ng-deep .location-tree__select-panel {
+  .mat-mdc-select-panel {
+    max-width: calc(100vw - 1.2rem);
+    border-radius: 0.5rem;
+  }
+
+  .mat-mdc-option {
+    min-height: 2.5rem;
+    font-size: 0.95rem;
+
+    .mdc-list-item__primary-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
 .location-tree {
   font-size: 0.9rem;
   user-select: none;

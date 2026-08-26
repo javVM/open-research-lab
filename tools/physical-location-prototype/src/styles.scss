@@ -1,0 +1,55 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$prototype-primary: mat.m2-define-palette(mat.$m2-blue-palette, 500);
+$prototype-accent: mat.m2-define-palette(mat.$m2-blue-palette, A200, A100, A400);
+$prototype-warn: mat.m2-define-palette(mat.$m2-red-palette);
+
+$prototype-theme: mat.m2-define-dark-theme((
+  color: (
+    primary: $prototype-primary,
+    accent: $prototype-accent,
+    warn: $prototype-warn,
+  ),
+  typography: mat.m2-define-typography-config(),
+  density: 0,
+));
+
+@include mat.all-component-themes($prototype-theme);
+
+:root {
+  --surface: #1b1e26;
+  --surface-hover: #262b36;
+  --border: #3a3f4b;
+  --text: #e8eaed;
+  --text-muted: #9aa1ac;
+  --accent: #5b8def;
+  --accent-soft: #23324f;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  background: #14161c;
+  color: var(--text);
+}
+
+button {
+  font-family: inherit;
+}
