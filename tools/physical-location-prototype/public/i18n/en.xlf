@@ -56,6 +56,9 @@
       <trans-unit id="locationTree.ariaLabel">
         <source>Physical location hierarchy</source>
       </trans-unit>
+      <trans-unit id="locationTree.allLabel">
+        <source>All</source>
+      </trans-unit>
       <trans-unit id="locationTree.toggle.collapse">
         <source>Collapse {name}</source>
       </trans-unit>
@@ -66,14 +69,14 @@
       <trans-unit id="locationView.breadcrumbAriaLabel">
         <source>Location breadcrumb</source>
       </trans-unit>
+      <trans-unit id="locationView.rootBreadcrumb">
+        <source>All</source>
+      </trans-unit>
       <trans-unit id="locationView.movingBanner">
         <source>Moving {catalogueNumber} — select a destination.</source>
       </trans-unit>
       <trans-unit id="locationView.cancelButton">
         <source>Cancel</source>
-      </trans-unit>
-      <trans-unit id="locationView.selectPrompt">
-        <source>Select a location on the left to see what is stored there.</source>
       </trans-unit>
       <trans-unit id="locationView.emptyState">
         <source>Nothing recorded here yet.</source>
@@ -202,6 +205,9 @@
       </trans-unit>
       <trans-unit id="qrLabel.format.code128">
         <source>Code 128</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.download">
+        <source>Download PNG</source>
       </trans-unit>
 
       <trans-unit id="scanView.heading">

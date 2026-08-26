@@ -102,9 +102,12 @@ export class DataService {
     this.expandedIds.update((current) => new Set(current).add(locationId));
   }
 
-  selectLocation(locationId: string): void {
+  selectLocation(locationId: string, preserveItem = false): void {
     this.selectedLocationId.set(locationId);
     this.expand(locationId);
+    if (!preserveItem && !this.movingItemId()) {
+      this.selectedItemId.set(null);
+    }
   }
 
   /** Selects an item and navigates the tree/grid to its current location. */
@@ -135,9 +138,9 @@ export class DataService {
     const location = locations.find((candidate) => candidate.id === locationId);
     if (location?.type === 'position' && location.parentId) {
       this.expand(location.parentId);
-      this.selectedLocationId.set(location.parentId);
+      this.selectLocation(location.parentId, true);
     } else {
-      this.selectedLocationId.set(locationId);
+      this.selectLocation(locationId, true);
     }
   }
 

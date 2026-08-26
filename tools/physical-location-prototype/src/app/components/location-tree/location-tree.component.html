@@ -9,6 +9,16 @@
   </label>
 } @else {
   <div class="location-tree" role="tree" [attr.aria-label]="text.ariaLabel()">
+    <div
+      class="tree-row tree-row--all"
+      [class.tree-row--selected]="!data.selectedLocationId()"
+      [style.paddingLeft.px]="8"
+      role="treeitem"
+      [attr.aria-selected]="!data.selectedLocationId()"
+      (click)="goHome()"
+    >
+      <span class="tree-name">{{ text.allLabel() }}</span>
+    </div>
     <ng-container *ngTemplateOutlet="nodeList; context: { $implicit: roots(), depth: 0 }"></ng-container>
   </div>
 }

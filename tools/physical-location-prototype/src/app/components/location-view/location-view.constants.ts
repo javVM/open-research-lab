@@ -5,10 +5,6 @@ export const LOCATION_VIEW_I18N = {
     fallback: 'Moving {catalogueNumber} — select a destination.',
   },
   cancelButton: { key: 'locationView.cancelButton', fallback: 'Cancel' },
-  selectPrompt: {
-    key: 'locationView.selectPrompt',
-    fallback: 'Select a location on the left to see what is stored there.',
-  },
   emptyState: { key: 'locationView.emptyState', fallback: 'Nothing recorded here yet.' },
   directItemsIntro: {
     key: 'locationView.directItemsIntro',

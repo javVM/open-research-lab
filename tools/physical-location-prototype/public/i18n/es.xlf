@@ -77,6 +77,10 @@
         <source>Select building</source>
         <target>Seleccionar edificio</target>
       </trans-unit>
+      <trans-unit id="locationTree.allLabel">
+        <source>All</source>
+        <target>Todos</target>
+      </trans-unit>
       <trans-unit id="locationTree.toggle.collapse">
         <source>Collapse {name}</source>
         <target>Contraer {name}</target>
@@ -90,6 +94,10 @@
         <source>Location breadcrumb</source>
         <target>Ruta de la ubicación</target>
       </trans-unit>
+      <trans-unit id="locationView.rootBreadcrumb">
+        <source>All</source>
+        <target>Todo</target>
+      </trans-unit>
       <trans-unit id="locationView.movingBanner">
         <source>Moving {catalogueNumber} — select a destination.</source>
         <target>Moviendo {catalogueNumber} — selecciona un destino.</target>
@@ -97,10 +105,6 @@
       <trans-unit id="locationView.cancelButton">
         <source>Cancel</source>
         <target>Cancelar</target>
-      </trans-unit>
-      <trans-unit id="locationView.selectPrompt">
-        <source>Select a location on the left to see what is stored there.</source>
-        <target>Selecciona una ubicación a la izquierda para ver qué hay almacenado allí.</target>
       </trans-unit>
       <trans-unit id="locationView.emptyState">
         <source>Nothing recorded here yet.</source>
@@ -270,6 +274,10 @@
       <trans-unit id="qrLabel.format.code128">
         <source>Code 128</source>
         <target>Code 128</target>
+      </trans-unit>
+      <trans-unit id="qrLabel.download">
+        <source>Download PNG</source>
+        <target>Descargar PNG</target>
       </trans-unit>
 
       <trans-unit id="scanView.heading">

@@ -1,4 +1,5 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
+import { ancestorIds } from '../../../core/tree';
 import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { LocationTreeComponent } from '../location-tree/location-tree.component';
@@ -23,6 +24,31 @@ export class LabelViewComponent {
     const mediaQuery = window.matchMedia('(max-width: 700px)');
     mediaQuery.addEventListener('change', (event) => this.isMobile.set(event.matches));
   }
+
+  /** If the user changes location while an item is selected, drop the item unless it belongs there. */
+  private previousItemId: string | null = this.data.selectedItemId();
+  private previousLocationId: string | null = this.data.selectedLocationId();
+  private readonly clearStrayItem = effect(() => {
+    const currentItemId = this.data.selectedItemId();
+    const currentLocationId = this.data.selectedLocationId();
+    if (
+      currentItemId &&
+      !this.data.movingItemId() &&
+      currentItemId === this.previousItemId &&
+      currentLocationId !== this.previousLocationId
+    ) {
+      const item = this.data.dataset().items.find((candidate) => candidate.id === currentItemId);
+      if (item?.locationId) {
+        const ancestors = new Set(ancestorIds(this.data.dataset().locations, item.locationId));
+        ancestors.add(item.locationId);
+        if (!currentLocationId || !ancestors.has(currentLocationId)) {
+          this.data.selectedItemId.set(null);
+        }
+      }
+    }
+    this.previousItemId = currentItemId;
+    this.previousLocationId = currentLocationId;
+  });
 
   readonly selectedLocationName = computed(() => {
     const id = this.data.selectedLocationId();

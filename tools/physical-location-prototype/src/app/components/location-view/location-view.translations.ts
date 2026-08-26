@@ -2,10 +2,10 @@ import { $localize } from '../../i18n/localize';
 import type { TranslationService } from '../../i18n/translation.service';
 
 export const breadcrumbAriaLabel = $localize `@@locationView.breadcrumbAriaLabel:Location breadcrumb`;
+export const rootBreadcrumb = $localize `@@locationView.rootBreadcrumb:All`;
 export const movingBanner = (catalogueNumber: string): string =>
   $localize `@@locationView.movingBanner:Moving ${catalogueNumber} — select a destination.`;
 export const cancelButton = $localize `@@locationView.cancelButton:Cancel`;
-export const selectPrompt = $localize `@@locationView.selectPrompt:Select a location on the left to see what is stored there.`;
 export const emptyState = $localize `@@locationView.emptyState:Nothing recorded here yet.`;
 export const directItemsIntro = (name: string): string =>
   $localize `@@locationView.directItemsIntro:Items stored directly in ${name} (no finer position recorded):`;
@@ -20,10 +20,10 @@ export const viewModeList = $localize `@@locationView.viewMode.list:List`;
 export function createLocationViewTranslations(i18n: TranslationService) {
   return {
     breadcrumbAriaLabel: () => i18n.t('locationView.breadcrumbAriaLabel', breadcrumbAriaLabel),
+    rootBreadcrumb: () => i18n.t('locationView.rootBreadcrumb', rootBreadcrumb),
     movingBanner: (catalogueNumber: string): string =>
       i18n.t('locationView.movingBanner', movingBanner(catalogueNumber), { catalogueNumber }),
     cancelButton: () => i18n.t('locationView.cancelButton', cancelButton),
-    selectPrompt: () => i18n.t('locationView.selectPrompt', selectPrompt),
     emptyState: () => i18n.t('locationView.emptyState', emptyState),
     directItemsIntro: (name: string): string =>
       i18n.t('locationView.directItemsIntro', directItemsIntro(name), { name }),

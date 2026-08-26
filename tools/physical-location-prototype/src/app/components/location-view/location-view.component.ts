@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { CdkDrag, CdkDropList, CdkDropListGroup, type CdkDragDrop } from '@angular/cdk/drag-drop';
 import type { Item, Location } from '../../../core/models';
 import { breadcrumb, childrenOf } from '../../../core/tree';
@@ -27,6 +27,9 @@ export class LocationViewComponent {
   protected readonly text = createLocationViewTranslations(inject(TranslationService));
   protected readonly locationType = createLocationTypeTranslations(inject(TranslationService));
 
+  /** When false, the map/3D view is hidden and only the list is shown. */
+  readonly allowMap = input<boolean>(true);
+
   protected readonly viewMode = signal<'map' | '3d' | 'list'>('map');
 
   readonly selectedLocation = computed<Location | undefined>(() => {
@@ -42,7 +45,12 @@ export class LocationViewComponent {
   /** Direct child locations, shown as cards when the location is not a grid tray. */
   readonly children = computed<Location[]>(() => {
     const location = this.selectedLocation();
-    return location ? childrenOf(this.data.dataset().locations, location.id) : [];
+    if (location) {
+      return childrenOf(this.data.dataset().locations, location.id);
+    }
+    return this.data.dataset().locations
+      .filter((loc) => loc.parentId === null)
+      .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
   });
 
   /** Items stored directly at the selected location (no finer position). */
@@ -60,7 +68,10 @@ export class LocationViewComponent {
    * rooms within a building, and cabinets within a room (see `seed.ts`).
    */
   readonly canShowMap = computed<boolean>(
-    () => this.children().length > 0 && this.children().every((child) => typeof child.x === 'number'),
+    () =>
+      this.children().length > 0 &&
+      this.children().every((child) => typeof child.x === 'number') &&
+      this.allowMap(),
   );
 
   readonly showMap = computed<boolean>(() => this.canShowMap() && this.viewMode() === 'map');
