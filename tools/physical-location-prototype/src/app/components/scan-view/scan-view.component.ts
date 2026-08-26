@@ -1,5 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { QrScannerComponent } from '../qr-scanner/qr-scanner.component';
@@ -8,7 +11,7 @@ import { createScanViewTranslations } from './scan-view.translations';
 @Component({
   standalone: true,
   selector: 'app-scan-view',
-  imports: [FormsModule, QrScannerComponent],
+  imports: [FormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, QrScannerComponent],
   templateUrl: './scan-view.component.html',
   styleUrl: './scan-view.component.scss',
 })

@@ -1,12 +1,12 @@
 <div class="location-view">
   @if (selectedLocation(); as location) {
     <nav class="breadcrumb" [attr.aria-label]="text.breadcrumbAriaLabel()">
-      <button type="button" class="breadcrumb__root" (click)="data.selectedLocationId.set(null)">
+      <button type="button" mat-button class="breadcrumb__root" (click)="data.selectedLocationId.set(null)">
         {{ text.rootBreadcrumb() }}
       </button>
       <span class="breadcrumb__sep">/</span>
       @for (crumb of breadcrumbPath(); track crumb.id; let last = $last) {
-        <button type="button" (click)="data.selectLocation(crumb.id)">{{ crumb.name }}</button>
+        <button type="button" mat-button (click)="data.selectLocation(crumb.id)">{{ crumb.name }}</button>
         @if (!last) {
           <span class="breadcrumb__sep">/</span>
         }
@@ -18,7 +18,7 @@
     @if (data.movingItem(); as moving) {
       <div class="move-banner">
         {{ text.movingBanner(moving.catalogueNumber) }}
-        <button type="button" (click)="data.cancelMove()">{{ text.cancelButton() }}</button>
+        <button type="button" mat-button (click)="data.cancelMove()">{{ text.cancelButton() }}</button>
       </div>
     }
     @if (data.moveError(); as error) {
@@ -29,6 +29,7 @@
       <div class="view-mode-toggle" role="group">
         <button
           type="button"
+          mat-button
           [class.view-mode-toggle__button--active]="!showMap() && !show3d()"
           (click)="setViewMode('list')"
         >
@@ -36,6 +37,7 @@
         </button>
         <button
           type="button"
+          mat-button
           [class.view-mode-toggle__button--active]="showMap()"
           (click)="setViewMode('map')"
         >
@@ -43,6 +45,7 @@
         </button>
         <button
           type="button"
+          mat-button
           [class.view-mode-toggle__button--active]="show3d()"
           (click)="setViewMode('3d')"
         >
@@ -131,6 +134,7 @@
               <li>
                 <button
                   type="button"
+                  mat-button
                   class="direct-items__item"
                   [class.direct-items__item--special]="item.status !== 'active'"
                   [class.direct-items__item--selected]="item.id === data.selectedItemId()"

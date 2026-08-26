@@ -5,6 +5,7 @@
     @for (format of formats; track format) {
       <button
         type="button"
+        mat-button
         class="qr-label__format"
         [class.qr-label__format--active]="selectedFormat() === format"
         (click)="selectFormat(format)"
@@ -21,7 +22,7 @@
       [width]="dimensions()?.width ?? 192"
       [height]="dimensions()?.height ?? 192"
     />
-    <button type="button" class="qr-label__download" (click)="download()">
+    <button type="button" mat-button color="primary" class="qr-label__download" (click)="download()">
       {{ text.download() }}
     </button>
     <code class="qr-label__payload">{{ payload() }}</code>

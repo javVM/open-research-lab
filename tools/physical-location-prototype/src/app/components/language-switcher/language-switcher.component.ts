@@ -1,4 +1,6 @@
 import { Component, inject } from '@angular/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { TranslationService } from '../../i18n/translation.service';
 import type { Locale } from '../../i18n/locale';
 import { LANGUAGE_OPTIONS } from './language-switcher.constants';
@@ -7,7 +9,7 @@ import { createLanguageSwitcherTranslations } from './language-switcher.translat
 @Component({
   standalone: true,
   selector: 'app-language-switcher',
-  imports: [],
+  imports: [MatFormFieldModule, MatSelectModule],
   templateUrl: './language-switcher.component.html',
   styleUrl: './language-switcher.component.scss',
 })
@@ -16,8 +18,7 @@ export class LanguageSwitcherComponent {
   protected readonly text = createLanguageSwitcherTranslations(this.i18n);
   protected readonly options = LANGUAGE_OPTIONS;
 
-  onChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value as Locale;
+  onChange(value: Locale): void {
     this.i18n.setLocale(value);
   }
 }

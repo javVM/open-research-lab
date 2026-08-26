@@ -1,7 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { App } from './app.component';
+import { LanguageSwitcherComponent } from './components/language-switcher/language-switcher.component';
 import { TranslationService } from './i18n/translation.service';
 import { XliffTranslationLoader } from './i18n/translation-loader';
 import { parseXliff } from './i18n/xliff';
@@ -55,9 +57,9 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('Physical Location Prototype');
 
-    const select = compiled.querySelector('.language-switcher') as HTMLSelectElement;
-    select.value = 'es';
-    select.dispatchEvent(new Event('change'));
+    const switcher = fixture.debugElement.query(By.css('app-language-switcher'))!
+      .componentInstance as LanguageSwitcherComponent;
+    switcher.onChange('es');
     fixture.detectChanges();
 
     expect(compiled.querySelector('h1')?.textContent).toContain('Prototipo de ubicación física');

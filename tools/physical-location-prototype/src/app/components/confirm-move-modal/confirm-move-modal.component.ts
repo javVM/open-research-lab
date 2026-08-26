@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createConfirmMoveModalTranslations } from './confirm-move-modal.translations';
@@ -6,7 +7,7 @@ import { createConfirmMoveModalTranslations } from './confirm-move-modal.transla
 @Component({
   standalone: true,
   selector: 'app-confirm-move-modal',
-  imports: [],
+  imports: [MatButtonModule],
   templateUrl: './confirm-move-modal.component.html',
   styleUrl: './confirm-move-modal.component.scss',
 })

@@ -1,5 +1,6 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { CdkDrag, CdkDropList, CdkDropListGroup, type CdkDragDrop } from '@angular/cdk/drag-drop';
+import { MatButtonModule } from '@angular/material/button';
 import type { Item, Location } from '../../../core/models';
 import { breadcrumb, childrenOf } from '../../../core/tree';
 import { itemsAtLocation } from '../../../core/search';
@@ -18,7 +19,7 @@ interface GridCell {
 @Component({
   standalone: true,
   selector: 'app-location-view',
-  imports: [CdkDropList, CdkDrag, CdkDropListGroup, FloorPlanComponent, FloorPlan3dComponent],
+  imports: [CdkDropList, CdkDrag, CdkDropListGroup, MatButtonModule, FloorPlanComponent, FloorPlan3dComponent],
   templateUrl: './location-view.component.html',
   styleUrl: './location-view.component.scss',
 })
@@ -80,6 +81,10 @@ export class LocationViewComponent {
   readonly viewModeIndex = computed<number>(() =>
     this.show3d() ? 2 : this.showMap() ? 1 : 0
   );
+
+  constructor() {
+    this.viewMode.set(this.canShowMap() ? 'map' : 'list');
+  }
 
   setViewMode(mode: 'map' | '3d' | 'list'): void {
     this.viewMode.set(mode);

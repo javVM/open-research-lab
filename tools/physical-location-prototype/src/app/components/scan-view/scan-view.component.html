@@ -15,45 +15,48 @@
           <p>Target: {{ pending.targetName }}</p>
 
           @if (pending.step === 'position') {
-            <label>
-              {{ text.pendingPositionLabel() }}
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>{{ text.pendingPositionLabel() }}</mat-label>
               <input
+                matInput
                 type="text"
                 [(ngModel)]="positionCode"
                 (keydown.enter)="submitPosition()"
                 [placeholder]="pending.targetName"
               />
-            </label>
-            <button type="button" (click)="submitPosition()">{{ text.scanButton() }}</button>
+            </mat-form-field>
+            <button type="button" mat-button (click)="submitPosition()">{{ text.scanButton() }}</button>
           } @else {
-            <label>
-              {{ text.pendingTubeLabel() }}
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>{{ text.pendingTubeLabel() }}</mat-label>
               <input
+                matInput
                 type="text"
                 [(ngModel)]="tubeCode"
                 (keydown.enter)="submitTube()"
                 [placeholder]="pending.itemCatalogue"
               />
-            </label>
-            <button type="button" (click)="submitTube()">{{ text.scanButton() }}</button>
+            </mat-form-field>
+            <button type="button" mat-button (click)="submitTube()">{{ text.scanButton() }}</button>
           }
 
-          <button type="button" class="scan-view__cancel" (click)="data.cancelQr()">
+          <button type="button" mat-button class="scan-view__cancel" (click)="data.cancelQr()">
             {{ text.cancelButton() }}
           </button>
         </div>
       } @else {
         <div class="scan-view__card">
-          <label>
-            {{ text.manualScanLabel() }}
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>{{ text.manualScanLabel() }}</mat-label>
             <input
+              matInput
               type="text"
               [(ngModel)]="manualCode"
               (keydown.enter)="submitManualCode()"
               [placeholder]="text.manualScanPlaceholder()"
             />
-          </label>
-          <button type="button" (click)="submitManualCode()">{{ text.scanButton() }}</button>
+          </mat-form-field>
+          <button type="button" mat-button (click)="submitManualCode()">{{ text.scanButton() }}</button>
         </div>
       }
 

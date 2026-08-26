@@ -21,6 +21,7 @@
         {{ text.currentLocationLabel() }}
         <button
           type="button"
+          mat-icon-button
           class="history-info"
           (click)="openHistory()"
           [attr.aria-label]="text.historyTitle()"
@@ -46,9 +47,9 @@
     </dl>
 
     @if (isMoving()) {
-      <button type="button" class="cancel-move" (click)="cancelMove()">{{ text.cancelMoveButton() }}</button>
+      <button type="button" mat-button class="cancel-move" (click)="cancelMove()">{{ text.cancelMoveButton() }}</button>
     } @else {
-      <button type="button" class="start-move" (click)="startMove()">{{ text.moveButton() }}</button>
+      <button type="button" mat-button class="start-move" (click)="startMove()">{{ text.moveButton() }}</button>
     }
     @if (isMoving()) {
       <p class="move-hint">{{ text.moveHint() }}</p>

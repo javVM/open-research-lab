@@ -1,8 +1,10 @@
 import { Component, Input, ElementRef, OnChanges, SimpleChanges, afterNextRender, inject, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import type { Location } from '../../../core/models';
 import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
+import { ViewportService } from '../../shared/viewport.service';
 import { createFloorPlanTranslations } from './floor-plan.translations';
 
 interface Rect {
@@ -41,7 +43,7 @@ const MIN_SIZE = 60;
 @Component({
   standalone: true,
   selector: 'app-floor-plan',
-  imports: [],
+  imports: [MatButtonModule],
   templateUrl: './floor-plan.component.html',
   styleUrl: './floor-plan.component.scss',
 })
@@ -53,6 +55,7 @@ export class FloorPlanComponent implements OnChanges {
   protected readonly data = inject(DataService);
   protected readonly text = createFloorPlanTranslations(inject(TranslationService));
   protected readonly locationType = createLocationTypeTranslations(inject(TranslationService));
+  protected readonly viewport = inject(ViewportService);
 
   protected readonly renderScale = signal(1);
   protected readonly showUploadMenu = signal(false);
@@ -79,12 +82,14 @@ export class FloorPlanComponent implements OnChanges {
     return this.interactingLocationId() === locationId;
   }
 
-  /**
-   * A plain method, not `computed()`: `locations` is a regular `@Input`,
-   * not a signal, so a `computed()` reading it would memoize after its
-   * first call and never notice later `@Input` changes (e.g. after a drag
-   * or resize moves the bounding box) — it would just go stale.
-   */
+  /** The background plan image set for `containerLocationId`, if any — see `Location.mapImage`. */
+  containerImage(): Location['mapImage'] {
+    if (!this.containerLocationId) {
+      return undefined;
+    }
+    return this.data.dataset().locations.find((candidate) => candidate.id === this.containerLocationId)?.mapImage;
+  }
+
   private rawBounds(): Rect {
     const image = this.containerImage();
     if (this.locations.length === 0) {
@@ -101,8 +106,12 @@ export class FloorPlanComponent implements OnChanges {
     return { x: 0, y: 0, width: raw.width * s, height: raw.height * s };
   }
 
+  ngOnChanges(_changes: SimpleChanges): void {
+    this.fitToViewport();
+  }
+
   private fitToViewport(): void {
-    if (!this.isMobile()) {
+    if (!this.viewport.isMobile()) {
       this.renderScale.set(1);
       return;
     }
@@ -111,26 +120,6 @@ export class FloorPlanComponent implements OnChanges {
     const viewportWidth = viewport?.clientWidth ?? this.el.nativeElement.clientWidth;
     const fit = raw.width > 0 ? (viewportWidth - 16) / raw.width : 1;
     this.renderScale.set(Math.max(0.25, Math.min(1, fit)));
-  }
-
-  private isMobile(): boolean {
-    return (
-      typeof window !== 'undefined' &&
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(max-width: 767px)').matches
-    );
-  }
-
-  ngOnChanges(_changes: SimpleChanges): void {
-    this.fitToViewport();
-  }
-
-  /** The background plan image set for `containerLocationId`, if any — see `Location.mapImage`. */
-  containerImage(): Location['mapImage'] {
-    if (!this.containerLocationId) {
-      return undefined;
-    }
-    return this.data.dataset().locations.find((candidate) => candidate.id === this.containerLocationId)?.mapImage;
   }
 
   toggleUploadMenu(): void {
@@ -244,7 +233,7 @@ export class FloorPlanComponent implements OnChanges {
   }
 
   onPointerDown(event: PointerEvent, location: Location): void {
-    if (event.button !== 0 || this.isMobile()) {
+    if (event.button !== 0 || this.viewport.isMobile()) {
       return;
     }
     event.preventDefault();
@@ -289,7 +278,7 @@ export class FloorPlanComponent implements OnChanges {
   private resizeState: ResizeState | null = null;
 
   onResizePointerDown(event: PointerEvent, location: Location): void {
-    if (event.button !== 0 || this.isMobile()) {
+    if (event.button !== 0 || this.viewport.isMobile()) {
       return;
     }
     event.preventDefault();

@@ -56,7 +56,17 @@
             [style.backgroundColor]="occupancyColor(location.id, locations, -0.08)"
           >
             @if (uncoordinatedChildren(location).length > 0 && facingSide() === 'front') {
-              <ng-container *ngTemplateOutlet="shelves; context: { $implicit: location }" />
+              <div class="box3d__shelves">
+                @for (child of uncoordinatedChildren(location); track child.id) {
+                  <div
+                    class="box3d__shelf"
+                    [attr.title]="child.name"
+                    [style.backgroundColor]="occupancyColor(child.id, uncoordinatedChildren(location))"
+                  >
+                    <span class="box3d__shelf-handle"></span>
+                  </div>
+                }
+              </div>
             }
           </div>
           <div
@@ -67,7 +77,17 @@
             [style.backgroundColor]="occupancyColor(location.id, locations, -0.14)"
           >
             @if (uncoordinatedChildren(location).length > 0 && facingSide() === 'back') {
-              <ng-container *ngTemplateOutlet="shelves; context: { $implicit: location }" />
+              <div class="box3d__shelves">
+                @for (child of uncoordinatedChildren(location); track child.id) {
+                  <div
+                    class="box3d__shelf"
+                    [attr.title]="child.name"
+                    [style.backgroundColor]="occupancyColor(child.id, uncoordinatedChildren(location))"
+                  >
+                    <span class="box3d__shelf-handle"></span>
+                  </div>
+                }
+              </div>
             }
           </div>
           <div
@@ -90,16 +110,3 @@
   </div>
 </div>
 
-<ng-template #shelves let-location>
-  <div class="box3d__shelves">
-    @for (child of uncoordinatedChildren(location); track child.id) {
-      <div
-        class="box3d__shelf"
-        [attr.title]="child.name"
-        [style.backgroundColor]="occupancyColor(child.id, uncoordinatedChildren(location))"
-      >
-        <span class="box3d__shelf-handle"></span>
-      </div>
-    }
-  </div>
-</ng-template>

@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { LocationTreeComponent } from './components/location-tree/location-tree.component';
 import { LocationViewComponent } from './components/location-view/location-view.component';
@@ -14,6 +15,7 @@ import { createAppTranslations } from './app.translations';
 @Component({
   standalone: true,
   imports: [
+    MatButtonModule,
     SearchBarComponent,
     LocationTreeComponent,
     LocationViewComponent,

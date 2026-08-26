@@ -1,4 +1,3 @@
-import { NgTemplateOutlet } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges, inject, signal } from '@angular/core';
 import type { Location } from '../../../core/models';
 import { DataService } from '../../data.service';
@@ -65,7 +64,7 @@ const FRONT_AZIMUTH = 270;
 @Component({
   selector: 'app-floor-plan-3d',
   standalone: true,
-  imports: [NgTemplateOutlet],
+  imports: [],
   templateUrl: './floor-plan-3d.component.html',
   styleUrl: './floor-plan-3d.component.scss',
 })

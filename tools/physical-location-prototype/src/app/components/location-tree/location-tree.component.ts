@@ -1,22 +1,24 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
+import { Component, computed, inject } from '@angular/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { buildTree, type LocationNode } from '../../../core/tree';
 import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
+import { ViewportService } from '../../shared/viewport.service';
 import { createLocationTreeTranslations } from './location-tree.translations';
-import { createLocationTypeTranslations } from '../../shared/location-type.translations';
+import { LocationTreeNodesComponent } from './location-tree-nodes.component';
 
 @Component({
   standalone: true,
   selector: 'app-location-tree',
-  imports: [NgTemplateOutlet],
+  imports: [LocationTreeNodesComponent, MatFormFieldModule, MatSelectModule],
   templateUrl: './location-tree.component.html',
   styleUrl: './location-tree.component.scss',
 })
 export class LocationTreeComponent {
   protected readonly data = inject(DataService);
   protected readonly text = createLocationTreeTranslations(inject(TranslationService));
-  protected readonly locationType = createLocationTypeTranslations(inject(TranslationService));
+  protected readonly viewport = inject(ViewportService);
 
   /**
    * Memoized: only rebuilds the tree when the dataset signal actually
@@ -24,8 +26,6 @@ export class LocationTreeComponent {
    * the single-pass grouping that also makes each rebuild itself cheap).
    */
   protected readonly roots = computed<LocationNode[]>(() => buildTree(this.data.dataset().locations));
-
-  protected readonly isMobile = signal(window.matchMedia('(max-width: 700px)').matches);
 
   /** Only the root buildings: used by the mobile-only dropdown. */
   protected readonly buildings = computed(() =>
@@ -52,30 +52,6 @@ export class LocationTreeComponent {
     return current?.id ?? '';
   });
 
-  constructor() {
-    const mediaQuery = window.matchMedia('(max-width: 700px)');
-    mediaQuery.addEventListener('change', (event) => this.isMobile.set(event.matches));
-  }
-
-  countItemsBelow(node: LocationNode): number {
-    return this.data.locationItemCounts().get(node.location.id) ?? 0;
-  }
-
-  isExpanded(locationId: string): boolean {
-    return this.data.expandedIds().has(locationId);
-  }
-
-  isSelected(locationId: string): boolean {
-    return this.data.selectedLocationId() === locationId;
-  }
-
-  toggleAriaLabel(node: LocationNode): string | null {
-    if (node.children.length === 0) {
-      return null;
-    }
-    return this.text.toggleLabel(node.location.name, this.isExpanded(node.location.id));
-  }
-
   select(locationId: string): void {
     this.data.selectLocation(locationId);
     if (this.data.movingItemId()) {
@@ -83,23 +59,15 @@ export class LocationTreeComponent {
     }
   }
 
-  toggle(locationId: string, event: Event): void {
-    event.stopPropagation();
-    this.data.toggleExpanded(locationId);
-  }
-
-  selectFromSelect(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    if (target.value) {
-      this.select(target.value);
+  selectFromSelect(value: string): void {
+    if (value) {
+      this.select(value);
+    } else {
+      this.goHome();
     }
   }
 
   goHome(): void {
     this.data.selectedLocationId.set(null);
-  }
-
-  childrenOf(node: LocationNode): LocationNode[] {
-    return node.children;
   }
 }

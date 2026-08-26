@@ -1,4 +1,5 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import QRCode from 'qrcode';
 import { TranslationService } from '../../i18n/translation.service';
 import { createQrLabelTranslations } from './qr-label.translations';
@@ -8,6 +9,7 @@ type CodeFormat = 'qr' | 'datamatrix' | 'code128';
 @Component({
   standalone: true,
   selector: 'app-qr-label',
+  imports: [MatButtonModule],
   templateUrl: './qr-label.component.html',
   styleUrl: './qr-label.component.scss',
 })

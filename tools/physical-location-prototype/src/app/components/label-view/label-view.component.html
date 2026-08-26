@@ -5,7 +5,7 @@
 
   <div class="label-view__body">
     <section class="label-view__tree" [attr.aria-label]="text.locationSection()">
-      @if (isMobile()) {
+      @if (viewport.isMobile()) {
         <app-location-view class="label-view__selector" [allowMap]="false"></app-location-view>
       } @else {
         <app-location-tree></app-location-tree>

@@ -1,12 +1,13 @@
-@if (isMobile()) {
-  <label class="location-tree__select-label" [attr.aria-label]="text.ariaLabel()">
-    <select class="location-tree__select" (change)="selectFromSelect($event)" [value]="selectedBuildingId()">
-      <option value="">{{ text.selectBuilding() }}</option>
+@if (viewport.isMobile()) {
+  <mat-form-field class="location-tree__select" appearance="outline" subscriptSizing="dynamic" [attr.aria-label]="text.ariaLabel()">
+    <mat-label>{{ text.selectBuilding() }}</mat-label>
+    <mat-select [value]="selectedBuildingId()" (selectionChange)="selectFromSelect($event.value)">
+      <mat-option value="">{{ text.allLabel() }}</mat-option>
       @for (building of buildings(); track building.id) {
-        <option [value]="building.id">{{ building.name }}</option>
+        <mat-option [value]="building.id">{{ building.name }}</mat-option>
       }
-    </select>
-  </label>
+    </mat-select>
+  </mat-form-field>
 } @else {
   <div class="location-tree" role="tree" [attr.aria-label]="text.ariaLabel()">
     <div
@@ -19,45 +20,6 @@
     >
       <span class="tree-name">{{ text.allLabel() }}</span>
     </div>
-    <ng-container *ngTemplateOutlet="nodeList; context: { $implicit: roots(), depth: 0 }"></ng-container>
+    <app-location-tree-nodes [nodes]="roots()" [depth]="0" />
   </div>
 }
-
-<ng-template #nodeList let-nodes let-depth="depth">
-  @for (node of nodes; track node.location.id) {
-    <div>
-      <div
-        class="tree-row"
-        [class.tree-row--selected]="isSelected(node.location.id)"
-        [style.paddingLeft.px]="depth * 16 + 8"
-        role="treeitem"
-        [attr.aria-selected]="isSelected(node.location.id)"
-        [attr.aria-expanded]="node.children.length > 0 ? isExpanded(node.location.id) : null"
-        [attr.data-location-id]="node.location.id"
-        (click)="select(node.location.id)"
-      >
-        <button
-          type="button"
-          class="tree-toggle"
-          [attr.aria-label]="toggleAriaLabel(node)"
-          (click)="toggle(node.location.id, $event)"
-          [disabled]="node.children.length === 0"
-        >
-          {{ node.children.length > 0 ? (isExpanded(node.location.id) ? '▾' : '▸') : '·' }}
-        </button>
-        <span class="tree-type-badge" [attr.data-type]="node.location.type">{{ locationType.label(node.location.type) }}</span>
-        <span class="tree-name">{{ node.location.name }}</span>
-        @if (countItemsBelow(node) > 0) {
-          <span class="tree-count">{{ countItemsBelow(node) }}</span>
-        }
-      </div>
-      @if (node.children.length > 0 && isExpanded(node.location.id)) {
-        <div role="group">
-          <ng-container
-            *ngTemplateOutlet="nodeList; context: { $implicit: node.children, depth: depth + 1 }"
-          ></ng-container>
-        </div>
-      }
-    </div>
-  }
-</ng-template>

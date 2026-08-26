@@ -2,6 +2,7 @@
   <div class="floor-plan__toolbar">
     <button
       type="button"
+      mat-button
       class="floor-plan__upload"
       (click)="toggleUploadMenu()"
       [attr.aria-expanded]="showUploadMenu()"
@@ -20,7 +21,7 @@
         <input type="file" accept="image/*" (change)="onImageSelected($event)" />
       </label>
       @if (containerImage(); as image) {
-        <button type="button" class="floor-plan__remove-plan" (click)="clearImage()">{{ text.removePlan() }}</button>
+        <button type="button" mat-button class="floor-plan__remove-plan" (click)="clearImage()">{{ text.removePlan() }}</button>
       }
     </div>
   </div>

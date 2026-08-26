@@ -3,6 +3,7 @@ import type { Item, Location, Movement } from '../../../core/models';
 import { breadcrumb, breadcrumbLabel } from '../../../core/tree';
 import { historyOf } from '../../../core/search';
 import { QrLabelComponent } from '../qr-label/qr-label.component';
+import { MatButtonModule } from '@angular/material/button';
 import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createItemDetailTranslations } from './item-detail.translations';
@@ -10,7 +11,7 @@ import { createItemDetailTranslations } from './item-detail.translations';
 @Component({
   standalone: true,
   selector: 'app-item-detail',
-  imports: [QrLabelComponent],
+  imports: [QrLabelComponent, MatButtonModule],
   templateUrl: './item-detail.component.html',
   styleUrl: './item-detail.component.scss',
 })

@@ -10,8 +10,8 @@
       >
         <p>{{ text.prompt(item.catalogueNumber, data.pendingMoveTargetLabel() ?? '') }}</p>
         <div class="modal__actions">
-          <button type="button" class="modal__cancel" (click)="cancel()">{{ text.cancel() }}</button>
-          <button type="button" class="modal__confirm" (click)="confirm()">{{ text.confirm() }}</button>
+          <button type="button" mat-button class="modal__cancel" (click)="cancel()">{{ text.cancel() }}</button>
+          <button type="button" mat-button color="primary" class="modal__confirm" (click)="confirm()">{{ text.confirm() }}</button>
         </div>
       </div>
     </div>
