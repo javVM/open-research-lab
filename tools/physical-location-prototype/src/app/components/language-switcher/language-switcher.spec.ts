@@ -21,7 +21,7 @@ describe('LanguageSwitcherComponent', () => {
     const options = await select.getOptions();
 
     expect(options.length).toBe(2);
-    expect(await Promise.all(options.map((option) => option.getText()))).toEqual(['English', 'Español']);
+    expect(await Promise.all(options.map((option) => option.getText()))).toEqual(['EN', 'ES']);
   });
 
   it('reflects the current locale as the selected value', async () => {
@@ -33,7 +33,7 @@ describe('LanguageSwitcherComponent', () => {
 
     const loader = TestbedHarnessEnvironment.loader(fixture);
     const select = await loader.getHarness(MatSelectHarness);
-    expect(await select.getValueText()).toBe('Español');
+    expect(await select.getValueText()).toBe('ES');
   });
 
   it('changing the select updates TranslationService.locale', async () => {

@@ -10,11 +10,10 @@ export interface LanguageOption {
 }
 
 /**
- * Language names are always shown in their own language, never translated
- * against the currently selected locale — the standard convention for
- * language pickers ("English" / "Español" regardless of UI language).
+ * Language labels are short, fixed codes ("EN" / "ES") so the picker stays
+ * compact in the header and never needs translation.
  */
 export const LANGUAGE_OPTIONS: readonly LanguageOption[] = [
-  { value: 'en', label: 'English' },
-  { value: 'es', label: 'Español' },
+  { value: 'en', label: 'EN' },
+  { value: 'es', label: 'ES' },
 ];
