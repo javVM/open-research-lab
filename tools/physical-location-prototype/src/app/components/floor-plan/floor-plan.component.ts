@@ -55,6 +55,7 @@ export class FloorPlanComponent implements OnChanges {
   protected readonly locationType = createLocationTypeTranslations(inject(TranslationService));
 
   protected readonly renderScale = signal(1);
+  protected readonly showUploadMenu = signal(false);
   private readonly el = inject(ElementRef);
 
   constructor() {
@@ -132,7 +133,12 @@ export class FloorPlanComponent implements OnChanges {
     return this.data.dataset().locations.find((candidate) => candidate.id === this.containerLocationId)?.mapImage;
   }
 
+  toggleUploadMenu(): void {
+    this.showUploadMenu.update((open) => !open);
+  }
+
   onImageSelected(event: Event): void {
+    this.showUploadMenu.set(false);
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     input.value = '';
@@ -153,6 +159,7 @@ export class FloorPlanComponent implements OnChanges {
   }
 
   clearImage(): void {
+    this.showUploadMenu.set(false);
     if (this.containerLocationId) {
       this.data.clearLocationMapImage(this.containerLocationId);
     }

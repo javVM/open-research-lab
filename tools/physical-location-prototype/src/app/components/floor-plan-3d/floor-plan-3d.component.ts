@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, Input, inject, signal } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, inject, signal } from '@angular/core';
 import type { Location } from '../../../core/models';
 import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
@@ -69,16 +69,22 @@ const FRONT_AZIMUTH = 270;
   templateUrl: './floor-plan-3d.component.html',
   styleUrl: './floor-plan-3d.component.scss',
 })
-export class FloorPlan3dComponent {
+export class FloorPlan3dComponent implements OnChanges {
   @Input() locations: Location[] = [];
 
   protected readonly data = inject(DataService);
   protected readonly text = createFloorPlan3dTranslations(inject(TranslationService));
 
+  private hasSetInitialScale = false;
+
   constructor() {
-    if (this.isMobile()) {
-      this.scale.set(0.65);
-      this.rotateXDeg.set(45);
+    this.resetView();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['locations'] && !this.hasSetInitialScale) {
+      this.resetView();
+      this.hasSetInitialScale = true;
     }
   }
 
@@ -107,7 +113,16 @@ export class FloorPlan3dComponent {
   private pinchStartScale = 1;
 
   planeTransform(): string {
-    return `scale(${this.scale()}) rotateX(${this.rotateXDeg()}deg) rotateZ(${this.rotateZDeg()}deg)`;
+    return `translateY(${this.visualCenterOffset()}px) scale(${this.scale()}) rotateX(${this.rotateXDeg()}deg) rotateZ(${this.rotateZDeg()}deg)`;
+  }
+
+  private visualCenterOffset(): number {
+    const maxZ = this.maxStackZ();
+    if (this.locations.length === 0 || maxZ === 0) {
+      return 0;
+    }
+    const rad = (this.rotateXDeg() * Math.PI) / 180;
+    return (maxZ * Math.sin(rad) / 2) * this.scale();
   }
 
   /** Nudges the orbit by a fixed step — an explicit alternative to drag-to-orbit. */
@@ -138,7 +153,34 @@ export class FloorPlan3dComponent {
   resetView(): void {
     this.rotateZDeg.set(-25);
     this.rotateXDeg.set(this.isMobile() ? 45 : 55);
-    this.scale.set(this.isMobile() ? 0.65 : 1);
+    this.scale.set(this.fitScale());
+  }
+
+  private maxStackZ(): number {
+    const floors = this.locations.filter((location) => location.type === 'floor');
+    if (floors.length === 0) {
+      return 0;
+    }
+    const floorCount = floors.length;
+    const stackHeight = this.isMobile() ? 120 : FLOOR_STACK_HEIGHT;
+    const topFloor = floors[floorCount - 1];
+    return (floorCount - 1) * stackHeight + this.wallHeight(topFloor);
+  }
+
+  private fitScale(): number {
+    if (this.locations.length === 0 || this.maxStackZ() === 0) {
+      return this.isMobile() ? 0.65 : 1;
+    }
+    const rotateX = this.isMobile() ? 45 : 55;
+    const rad = (rotateX * Math.PI) / 180;
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+    const sceneHeight = this.isMobile() ? 384 : 608;
+    const padding = 32;
+    const planeHeight = this.bounds().height;
+    const maxZ = this.maxStackZ();
+    const denominator = (planeHeight / 2) * cos + maxZ * sin;
+    return Math.min(MAX_SCALE, Math.max(MIN_SCALE, (sceneHeight / 2 - padding) / denominator));
   }
 
   rectFor(location: Location): Rect {

@@ -220,11 +220,16 @@ h3 {
   }
 }
 
+dt.dt-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
 .history-info {
   background: none;
-  border: 1px solid var(--border, #3a3f4b);
-  border-radius: 0.35rem;
-  padding: 0.35rem;
+  border: none;
+  padding: 0;
   color: var(--text-muted, #9aa1ac);
   cursor: pointer;
   display: inline-flex;
@@ -233,13 +238,12 @@ h3 {
 }
 
 .history-info:hover {
-  border-color: var(--accent, #5b8def);
   color: var(--accent, #5b8def);
 }
 
 .history-info svg {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 0.95rem;
+  height: 0.95rem;
 }
 
 .history-backdrop {

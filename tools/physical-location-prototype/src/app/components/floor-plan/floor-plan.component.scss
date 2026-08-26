@@ -1,6 +1,7 @@
 @use '../../mixins' as *;
 
 .floor-plan__toolbar {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -8,15 +9,14 @@
 }
 
 .floor-plan__upload {
-  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border, #3a3f4b);
-  border-radius: 0.35rem;
-  padding: 0.45rem;
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  color: var(--text-muted, #9aa1ac);
   cursor: pointer;
-  overflow: hidden;
 }
 
 .floor-plan__upload svg {
@@ -25,29 +25,60 @@
 }
 
 .floor-plan__upload:hover {
-  border-color: var(--accent, #5b8def);
+  color: var(--accent, #5b8def);
 }
 
-.floor-plan__upload input[type='file'] {
+.floor-plan__menu {
+  display: none;
   position: absolute;
-  inset: 0;
-  opacity: 0;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  z-index: 10;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 14rem;
+  padding: 0.5rem;
+  background: var(--surface, #1b1e26);
+  border: 1px solid var(--border, #3a3f4b);
+  border-radius: 0.35rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.floor-plan__menu--open {
+  display: flex;
+}
+
+.floor-plan__menu-item {
+  display: flex;
+  align-items: center;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.25rem;
   cursor: pointer;
+  font-size: 0.85rem;
+  color: inherit;
+}
+
+.floor-plan__menu-item:hover {
+  background: var(--surface-hover, #262b36);
+}
+
+.floor-plan__menu-item input[type='file'] {
+  display: none;
 }
 
 .floor-plan__remove-plan {
   background: none;
-  border: 1px solid var(--border, #3a3f4b);
-  border-radius: 0.35rem;
-  padding: 0.25rem 0.7rem;
+  border: none;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.25rem;
   font-size: 0.85rem;
-  color: inherit;
+  color: #f4c7c7;
+  text-align: left;
   cursor: pointer;
 }
 
 .floor-plan__remove-plan:hover {
-  border-color: #b04545;
-  color: #f4c7c7;
+  background: #3d2020;
 }
 
 .floor-plan__viewport {

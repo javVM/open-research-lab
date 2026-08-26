@@ -77,6 +77,10 @@ export class LocationViewComponent {
   readonly showMap = computed<boolean>(() => this.canShowMap() && this.viewMode() === 'map');
   readonly show3d = computed<boolean>(() => this.canShowMap() && this.viewMode() === '3d');
 
+  readonly viewModeIndex = computed<number>(() =>
+    this.show3d() ? 2 : this.showMap() ? 1 : 0
+  );
+
   setViewMode(mode: 'map' | '3d' | 'list'): void {
     this.viewMode.set(mode);
   }

@@ -48,6 +48,10 @@
         >
           {{ text.viewMode3d() }}
         </button>
+        <span
+          class="view-mode-toggle__indicator"
+          [style.transform]="'translateX(' + viewModeIndex() * 100 + '%)'"
+        ></span>
       </div>
     }
 
