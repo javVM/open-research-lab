@@ -136,7 +136,7 @@
 
 @include on-mobile {
   .scan-view__body {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: 1fr auto;
     overflow-y: auto;
   }
@@ -148,5 +148,14 @@
   .scan-view__panel {
     border-left: none;
     border-top: 1px solid var(--border, #3a3f4b);
+    min-width: 0;
+  }
+
+  .scan-view__card {
+    min-width: 0;
+  }
+
+  .scan-view__card mat-form-field {
+    width: 100%;
   }
 }

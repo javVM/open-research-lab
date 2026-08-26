@@ -5,7 +5,10 @@
     <p class="qr-scanner__status">{{ text.starting() }}</p>
   }
 
-  @if (error(); as message) {
-    <p class="qr-scanner__error">{{ text.error() }}: {{ message }}</p>
+  @if (error()) {
+    <div class="qr-scanner__alert" role="alert">
+      <span class="qr-scanner__alert-icon" aria-hidden="true">⚠</span>
+      <span class="qr-scanner__alert-text">{{ text.cameraNotAllowed() }}</span>
+    </div>
   }
 </div>
