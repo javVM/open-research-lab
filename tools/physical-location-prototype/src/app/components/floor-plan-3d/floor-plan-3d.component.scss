@@ -150,7 +150,16 @@
   outline-offset: -2px;
 }
 
+.box3d__label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  width: 100%;
+}
+
 .box3d__name {
+  display: inline-block;
   font-weight: 700;
   font-size: 0.8rem;
   overflow: hidden;
@@ -164,6 +173,7 @@
 }
 
 .box3d__count {
+  display: inline-block;
   font-size: 0.65rem;
   font-weight: 600;
   color: #e4e7ec;
@@ -243,6 +253,10 @@
     top: auto;
     bottom: 0.5rem;
     left: 0.5rem;
+  }
+
+  .floor-plan-3d__dpad {
+    display: none;
   }
 
   .floor-plan-3d__scene {

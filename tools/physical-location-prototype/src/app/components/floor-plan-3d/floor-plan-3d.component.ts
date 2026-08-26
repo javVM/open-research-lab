@@ -116,6 +116,10 @@ export class FloorPlan3dComponent implements OnChanges {
     return `translateY(${this.visualCenterOffset()}px) scale(${this.scale()}) rotateX(${this.rotateXDeg()}deg) rotateZ(${this.rotateZDeg()}deg)`;
   }
 
+  labelTransform(): string {
+    return `rotateZ(${-this.rotateZDeg()}deg)`;
+  }
+
   private visualCenterOffset(): number {
     const maxZ = this.maxStackZ();
     if (this.locations.length === 0 || maxZ === 0) {
@@ -169,13 +173,19 @@ export class FloorPlan3dComponent implements OnChanges {
 
   private fitScale(): number {
     if (this.locations.length === 0 || this.maxStackZ() === 0) {
-      return this.isMobile() ? 0.65 : 1;
+      if (!this.isMobile()) {
+        return 1;
+      }
+      const viewport = Math.min(window.innerWidth, window.innerHeight);
+      return Math.min(MAX_SCALE, Math.max(MIN_SCALE, viewport / 480));
     }
     const rotateX = this.isMobile() ? 45 : 55;
     const rad = (rotateX * Math.PI) / 180;
     const cos = Math.cos(rad);
     const sin = Math.sin(rad);
-    const sceneHeight = this.isMobile() ? 384 : 608;
+    const sceneHeight = this.isMobile()
+      ? Math.min(384, Math.max(260, Math.min(window.innerWidth, window.innerHeight) * 0.8))
+      : 608;
     const padding = 32;
     const planeHeight = this.bounds().height;
     const maxZ = this.maxStackZ();

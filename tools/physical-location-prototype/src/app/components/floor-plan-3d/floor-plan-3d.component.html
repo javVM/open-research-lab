@@ -40,10 +40,12 @@
         >
           <div class="box3d__face box3d__face--top" [style.transform]="'translateZ(' + wallHeight(location) + 'px)'">
             <div class="box3d__top-fill" [style.backgroundColor]="occupancyColor(location.id, locations, 0.15)">
-              <span class="box3d__name">{{ location.name }}</span>
-              @if (countAt(location.id) > 0) {
-                <span class="box3d__count">{{ text.itemCount(countAt(location.id)) }}</span>
-              }
+              <div class="box3d__label" [style.transform]="labelTransform()">
+                <span class="box3d__name">{{ location.name }}</span>
+                @if (countAt(location.id) > 0) {
+                  <span class="box3d__count">{{ text.itemCount(countAt(location.id)) }}</span>
+                }
+              </div>
             </div>
           </div>
           <div
