@@ -1,4 +1,4 @@
-import { Component, ElementRef, afterNextRender, effect, inject, input, signal, untracked } from '@angular/core';
+import { Component, ElementRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import type { Location } from '../../../core/models';
 import { DataService } from '../../data.service';
@@ -60,10 +60,6 @@ export class FloorPlanComponent {
   protected readonly renderScale = signal(1);
   protected readonly showUploadMenu = signal(false);
   private readonly el = inject(ElementRef);
-
-  constructor() {
-    afterNextRender(() => this.fitToViewport());
-  }
 
   private dragState: DragState | null = null;
   private suppressNextClick = false;

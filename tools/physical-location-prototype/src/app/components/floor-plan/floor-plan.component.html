@@ -16,10 +16,10 @@
     </button>
 
     <div class="floor-plan__menu" [class.floor-plan__menu--open]="showUploadMenu()">
-      <button type="button" mat-button class="floor-plan__menu-item floor-plan__menu-item--upload" (click)="fileInput.click()">
+      <button type="button" mat-raised-button color="primary" class="floor-plan__menu-item floor-plan__menu-item--upload" (click)="fileInput.click()">
         {{ text.uploadPlan() }}
       </button>
-      <input #fileInput class="floor-plan__file-input" type="file" accept="image/*" (change)="onImageSelected($event)" />
+      <input #fileInput class="floor-plan__file-input" type="file" accept="image/*" aria-hidden="true" (change)="onImageSelected($event)" />
       @if (containerImage(); as image) {
         <button type="button" mat-button class="floor-plan__remove-plan" (click)="clearImage()">{{ text.removePlan() }}</button>
       }

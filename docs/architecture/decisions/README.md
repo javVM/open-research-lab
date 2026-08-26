@@ -21,3 +21,4 @@ Statuses: `Proposed` (Phase 0 — argued but not yet validated by implementation
 | [0009](0009-recursive-container-tree.md) | Recursive container tree instead of a fixed hierarchy | Proposed |
 | [0010](0010-single-user-mvp.md) | Single-user MVP with no authentication | Proposed |
 | [0011](0011-angular-material-for-ui-components.md) | Angular Material for UI components in the physical-location-prototype | Proposed |
+| [0012](0012-signals-and-bundle-budget-in-prototype.md) | Signal inputs and bundle budget in the physical-location-prototype | Proposed |
