@@ -1,4 +1,6 @@
 <div class="app-shell">
+  <p class="app-disclaimer">{{ text.disclaimer() }}</p>
+
   <header class="app-header">
     <h1>{{ text.title() }}</h1>
 
@@ -44,8 +46,6 @@
       </button>
     </div>
   </header>
-
-  <p class="app-disclaimer">{{ text.disclaimer() }}</p>
 
   <main class="app-body">
     @switch (data.uiMode()) {
