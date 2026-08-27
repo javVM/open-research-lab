@@ -25,6 +25,7 @@
       [style.height.px]="bounds().height"
       [style.transform]="planeTransform()"
     >
+      <div class="floor3d" aria-hidden="true"></div>
       @for (location of locations(); track location.id) {
         <div
           class="box3d"
