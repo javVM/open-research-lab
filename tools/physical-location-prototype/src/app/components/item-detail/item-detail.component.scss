@@ -136,35 +136,6 @@ dd {
   margin-top: 0.35rem;
 }
 
-h3 {
-  margin-top: 1rem;
-}
-
-.history-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.history-list li {
-  border-left: 2px solid var(--border, #3a3f4b);
-  padding-left: 0.6rem;
-}
-
-.history-list__date {
-  font-size: 0.75rem;
-  color: var(--text-muted, #9aa1ac);
-}
-
-.history-list__note {
-  font-size: 0.8rem;
-  color: var(--text-muted, #9aa1ac);
-  font-style: italic;
-}
-
 .empty-state {
   color: var(--text-muted, #9aa1ac);
   font-style: italic;
@@ -209,15 +180,6 @@ h3 {
   dd + dt {
     margin-top: 0.75rem;
   }
-
-  h3 {
-    margin-top: 1.25rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .history-list li {
-    padding-left: 0.75rem;
-  }
 }
 
 dt.dt-with-icon {
@@ -244,31 +206,4 @@ dt.dt-with-icon {
 .history-info svg {
   width: 0.95rem;
   height: 0.95rem;
-}
-
-.history-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  padding: 1rem;
-}
-
-.history-modal {
-  background: var(--surface, #1b1e26);
-  border: 1px solid var(--border, #3a3f4b);
-  border-radius: 0.6rem;
-  padding: 1.25rem;
-  max-width: 24rem;
-  width: 100%;
-  max-height: 80vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-}
-
-.history-modal h3 {
-  margin: 0 0 1rem;
 }

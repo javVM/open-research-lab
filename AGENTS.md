@@ -104,6 +104,11 @@ rules above. When in doubt, the smaller, more boring, better-named option wins.
   inputs, use Angular's signal forms (`form()` from `@angular/forms/signals` + the `formField`
   directive) rather than `[(ngModel)]`. Never mutate a plain string field behind an input.
 - **Components are standalone.** Always. Each declares its own `imports`.
+- **Keep components atomic.** When a coherent, self-contained concern (a dialog, a grid, a
+  sub-view) grows out of a parent component, extract it into its own component instead of letting
+  the parent swell. A component is either presentational (takes inputs and emits outputs) or owns
+  exactly one interaction — not both. Real examples in this prototype: `PositionGridComponent` (a
+  tray's cell grid), `HistoryModalComponent` (an item's movement history dialog).
 - **Use the modern control-flow directives** (`@if`, `@for`, `@switch`, `@defer`) — never
   `*ngIf`/`*ngFor`/`*ngSwitch`.
 - **No deprecated imports, APIs or methods.** If a symbol is marked `@deprecated`, use its

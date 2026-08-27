@@ -114,7 +114,7 @@
         <source>Items stored directly in {name} (no finer position recorded):</source>
         <target>Ítems almacenados directamente en {name} (sin posición más precisa registrada):</target>
       </trans-unit>
-      <trans-unit id="locationView.positionEmptyTitle">
+      <trans-unit id="positionGrid.positionEmptyTitle">
         <source>{name} (empty)</source>
         <target>{name} (vacío)</target>
       </trans-unit>

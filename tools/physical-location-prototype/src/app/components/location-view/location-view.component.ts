@@ -7,25 +7,28 @@ import { itemsAtLocation } from '../../../core/search';
 import { CollectionService } from '../../collection.service';
 import { MoveService } from '../../move.service';
 import { NavigationService } from '../../navigation.service';
-import { ScanService } from '../../scan.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createLocationViewTranslations } from './location-view.translations';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
 import { FloorPlanComponent } from '../floor-plan/floor-plan.component';
 import { FloorPlan3dComponent } from '../floor-plan-3d/floor-plan-3d.component';
+import { PositionGridComponent } from '../position-grid/position-grid.component';
 import { GeometryService } from '../../shared/geometry.service';
 import { ITEM_HOLDING_TYPES, MAPPABLE_TYPES, PARENT_CHILD_TYPES } from '../../shared/hierarchy.constants';
 import { ID_PREFIX, newPrototypeId } from '../../shared/prototype-id';
 
-interface GridCell {
-  position: Location;
-  occupant: Item | null;
-}
-
 @Component({
   standalone: true,
   selector: 'app-location-view',
-  imports: [CdkDropList, CdkDrag, CdkDropListGroup, MatButtonModule, FloorPlanComponent, FloorPlan3dComponent],
+  imports: [
+    CdkDropList,
+    CdkDrag,
+    CdkDropListGroup,
+    MatButtonModule,
+    FloorPlanComponent,
+    FloorPlan3dComponent,
+    PositionGridComponent,
+  ],
   templateUrl: './location-view.component.html',
   styleUrl: './location-view.component.scss',
 })
@@ -33,7 +36,6 @@ export class LocationViewComponent {
   protected readonly collection = inject(CollectionService);
   protected readonly navigation = inject(NavigationService);
   protected readonly move = inject(MoveService);
-  protected readonly scan = inject(ScanService);
   protected readonly text = createLocationViewTranslations(inject(TranslationService));
   protected readonly locationType = createLocationTypeTranslations(inject(TranslationService));
   protected readonly geometry = inject(GeometryService);
@@ -100,51 +102,8 @@ export class LocationViewComponent {
     this.viewMode.set(mode);
   }
 
-  readonly grid = computed<(GridCell | null)[][]>(() => {
-    const positions = this.children().filter((child) => child.type === 'position');
-    if (positions.length === 0) {
-      return [];
-    }
-    const rows = Math.max(...positions.map((position) => position.row ?? 1));
-    const columns = Math.max(...positions.map((position) => position.column ?? 1));
-    const dataset = this.collection.dataset();
-    return Array.from({ length: rows }, (_, rowIndex) =>
-      Array.from({ length: columns }, (_, colIndex) => {
-        const position = positions.find(
-          (candidate) => candidate.row === rowIndex + 1 && candidate.column === colIndex + 1,
-        );
-        if (!position) {
-          return null;
-        }
-        const occupant = dataset.items.find((item) => item.locationId === position.id) ?? null;
-        return { position, occupant };
-      }),
-    );
-  });
-
   countAt(locationId: string): number {
     return this.collection.locationItemCounts().get(locationId) ?? 0;
-  }
-
-  isMovingTargetCandidate(cell: GridCell | null): boolean {
-    return Boolean(this.move.movingItemId()) && Boolean(cell) && !cell?.occupant;
-  }
-
-  onCellClick(cell: GridCell | null): void {
-    if (!cell) {
-      return;
-    }
-    if (this.move.movingItemId()) {
-      if (!cell.occupant) {
-        this.move.requestMove(cell.position.id);
-      }
-      return;
-    }
-    if (cell.occupant) {
-      this.navigation.selectItem(cell.occupant.id);
-      return;
-    }
-    this.addItemToLocation(cell.position.id);
   }
 
   onCardClick(locationId: string): void {

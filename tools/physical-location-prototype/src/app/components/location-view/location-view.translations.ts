@@ -9,8 +9,6 @@ export const cancelButton = $localize `@@locationView.cancelButton:Cancel`;
 export const emptyState = $localize `@@locationView.emptyState:Nothing recorded here yet.`;
 export const directItemsIntro = (name: string): string =>
   $localize `@@locationView.directItemsIntro:Items stored directly in ${name} (no finer position recorded):`;
-export const positionEmptyTitle = (name: string): string =>
-  $localize `@@locationView.positionEmptyTitle:${name} (empty)`;
 export const itemCount = (count: number): string =>
   $localize `@@locationView.itemCount:${count} item(s)`;
 export const addComponent = (type: string): string => $localize `@@locationView.addComponent:Add ${type}`;
@@ -34,8 +32,6 @@ export function createLocationViewTranslations(i18n: TranslationService) {
     emptyState: () => i18n.t('locationView.emptyState', emptyState),
     directItemsIntro: (name: string): string =>
       i18n.t('locationView.directItemsIntro', directItemsIntro(name), { name }),
-    positionEmptyTitle: (name: string): string =>
-      i18n.t('locationView.positionEmptyTitle', positionEmptyTitle(name), { name }),
     itemCount: (count: number): string => i18n.t('locationView.itemCount', itemCount(count), { count }),
     addComponent: (type: string): string => i18n.t('locationView.addComponent', addComponent(type), { type }),
     addComponentPrompt: (type: string): string =>

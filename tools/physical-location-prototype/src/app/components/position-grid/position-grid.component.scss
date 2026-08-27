@@ -1,0 +1,97 @@
+@use '../../mixins' as *;
+
+.position-grid {
+  border-collapse: collapse;
+}
+
+.position-cell {
+  width: 5.5rem;
+  height: 3.6rem;
+  border: 1px solid var(--border, #3a3f4b);
+  vertical-align: top;
+  padding: 0.25rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.position-cell--none {
+  border: none;
+  background: transparent;
+  cursor: default;
+}
+
+.position-cell--empty {
+  background: var(--surface, #1b1e26);
+}
+
+.position-cell--occupied {
+  background: var(--surface-hover, #262b36);
+}
+
+.position-cell--selected {
+  outline: 2px solid var(--accent, #5b8def);
+  outline-offset: -2px;
+}
+
+.position-cell--drop-target {
+  outline: 2px dashed var(--accent, #5b8def);
+  outline-offset: -2px;
+}
+
+.position-cell--qr-hint {
+  animation: qr-flash 0.8s ease-in-out infinite alternate;
+  background: #4a4118;
+  outline: 2px solid #e8c146;
+  outline-offset: -2px;
+}
+
+@keyframes qr-flash {
+  from {
+    background-color: #4a4118;
+  }
+  to {
+    background-color: #7a6b28;
+  }
+}
+
+.position-cell__label {
+  font-size: 0.65rem;
+  color: var(--text-muted, #9aa1ac);
+}
+
+.position-cell__item {
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--accent-soft, #23324f);
+  border-radius: 0.3rem;
+  padding: 0.15rem 0.3rem;
+  cursor: grab;
+}
+
+.position-cell__item--special {
+  background: #4a3420;
+  color: #f0c98a;
+}
+
+@include on-mobile {
+  .position-grid {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .position-cell {
+    width: 5.5rem;
+    height: 3.6rem;
+    padding: 0.25rem;
+  }
+
+  .position-cell__label {
+    font-size: 0.65rem;
+  }
+
+  .position-cell__item {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.3rem;
+  }
+}

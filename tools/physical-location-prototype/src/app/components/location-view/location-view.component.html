@@ -84,46 +84,7 @@
     } @else if (show3d()) {
       <app-floor-plan-3d [locations]="children()"></app-floor-plan-3d>
     } @else if (isPositionGrid()) {
-      <table class="position-grid" cdkDropListGroup>
-        <tbody>
-          @for (row of grid(); track $index) {
-            <tr>
-              @for (cell of row; track cell?.position?.id ?? $index) {
-                <td
-                  class="position-cell"
-                  [class.position-cell--none]="!cell"
-                  [class.position-cell--empty]="cell && !cell.occupant"
-                  [class.position-cell--occupied]="cell && cell.occupant"
-                  [class.position-cell--selected]="cell?.occupant?.id === navigation.selectedItemId()"
-                  [class.position-cell--drop-target]="isMovingTargetCandidate(cell)"
-                  [class.position-cell--qr-hint]="cell && scan.qrHint()?.type === 'checkin' && cell.position.id === scan.qrHint()?.targetId"
-                  cdkDropList
-                  [cdkDropListData]="cell?.position?.id ?? null"
-                  [cdkDropListDisabled]="!cell || !!cell.occupant"
-                  (cdkDropListDropped)="onDrop($event)"
-                  (click)="onCellClick(cell)"
-                  [attr.title]="cell ? (cell.occupant ? cell.occupant.catalogueNumber : text.positionEmptyTitle(cell.position.name)) : null"
-                >
-                  @if (cell) {
-                    <div class="position-cell__label">{{ cell.position.name }}</div>
-                    @if (cell.occupant; as occupant) {
-                      <div
-                        class="position-cell__item"
-                        [class.position-cell__item--special]="occupant.status !== 'active'"
-                        cdkDrag
-                        [cdkDragData]="occupant.id"
-                        (click)="onItemClick(occupant.id, $event)"
-                      >
-                        {{ occupant.catalogueNumber }}
-                      </div>
-                    }
-                  }
-                </td>
-              }
-            </tr>
-          }
-        </tbody>
-      </table>
+      <app-position-grid [positions]="children()" (addItem)="addItemToLocation($event)"></app-position-grid>
     }
   }
 

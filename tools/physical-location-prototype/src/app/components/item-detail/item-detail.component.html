@@ -53,32 +53,13 @@
 
 
     @if (showHistory()) {
-      <div class="history-backdrop" (click)="closeHistory()">
-        <div
-          class="history-modal"
-          role="dialog"
-          aria-modal="true"
-          [attr.aria-label]="text.historyTitle()"
-          (click)="$event.stopPropagation()"
-        >
-          <h3>{{ text.historyTitle() }}</h3>
-          @if (history().length === 0) {
-            <p class="empty-state">{{ text.noHistory() }}</p>
-          } @else {
-            <ul class="history-list">
-              @for (movement of history(); track movement.id) {
-                <li>
-                  <div class="history-list__date">{{ movement.occurredAt.slice(0, 10) }}</div>
-                  <div>{{ locationLabel(movement.fromLocationId) }} → {{ locationLabel(movement.toLocationId) }}</div>
-                  @if (movement.note) {
-                    <div class="history-list__note">{{ movement.note }}</div>
-                  }
-                </li>
-              }
-            </ul>
-          }
-        </div>
-      </div>
+      <app-history-modal
+        [movements]="history()"
+        [title]="text.historyTitle()"
+        [noHistory]="text.noHistory()"
+        [unlocated]="text.unlocated()"
+        (close)="closeHistory()"
+      ></app-history-modal>
     }
   </div>
 } @else if (selectedLocation(); as location) {

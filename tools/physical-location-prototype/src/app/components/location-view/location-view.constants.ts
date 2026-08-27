@@ -10,7 +10,6 @@ export const LOCATION_VIEW_I18N = {
     key: 'locationView.directItemsIntro',
     fallback: 'Items stored directly in {name} (no finer position recorded):',
   },
-  positionEmptyTitle: { key: 'locationView.positionEmptyTitle', fallback: '{name} (empty)' },
   itemCount: { key: 'locationView.itemCount', fallback: '{count} item(s)' },
   addComponent: { key: 'locationView.addComponent', fallback: 'Add {type}' },
   addComponentPrompt: { key: 'locationView.addComponentPrompt', fallback: 'Name for the new {type}:' },

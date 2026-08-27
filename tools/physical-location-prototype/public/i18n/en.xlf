@@ -84,7 +84,7 @@
       <trans-unit id="locationView.directItemsIntro">
         <source>Items stored directly in {name} (no finer position recorded):</source>
       </trans-unit>
-      <trans-unit id="locationView.positionEmptyTitle">
+      <trans-unit id="positionGrid.positionEmptyTitle">
         <source>{name} (empty)</source>
       </trans-unit>
       <trans-unit id="locationView.itemCount">

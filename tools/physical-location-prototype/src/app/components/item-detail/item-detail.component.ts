@@ -1,8 +1,9 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import type { Item, Location, Movement } from '../../../core/models';
-import { breadcrumb, breadcrumbLabel } from '../../../core/tree';
+import { breadcrumb } from '../../../core/tree';
 import { historyOf } from '../../../core/search';
 import { QrLabelComponent } from '../qr-label/qr-label.component';
+import { HistoryModalComponent } from '../history-modal/history-modal.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CollectionService } from '../../collection.service';
@@ -15,7 +16,7 @@ import { createItemDetailTranslations } from './item-detail.translations';
 @Component({
   standalone: true,
   selector: 'app-item-detail',
-  imports: [QrLabelComponent, MatButtonModule, MatIconModule],
+  imports: [QrLabelComponent, HistoryModalComponent, MatButtonModule, MatIconModule],
   templateUrl: './item-detail.component.html',
   styleUrl: './item-detail.component.scss',
 })
@@ -58,10 +59,6 @@ export class ItemDetailComponent {
     const item = this.item();
     return item ? historyOf(this.collection.dataset(), item.id) : [];
   });
-
-  locationLabel(locationId: string | null): string {
-    return locationId ? breadcrumbLabel(this.collection.dataset().locations, locationId) : this.text.unlocated();
-  }
 
   startMove(): void {
     const item = this.item();
