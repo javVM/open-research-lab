@@ -2,7 +2,9 @@ import { Component, computed, inject } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { buildTree, type LocationNode } from '../../../core/tree';
-import { DataService } from '../../data.service';
+import { CollectionService } from '../../collection.service';
+import { MoveService } from '../../move.service';
+import { NavigationService } from '../../navigation.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { ViewportService } from '../../shared/viewport.service';
 import { createLocationTreeTranslations } from './location-tree.translations';
@@ -16,7 +18,9 @@ import { LocationTreeNodesComponent } from './location-tree-nodes.component';
   styleUrl: './location-tree.component.scss',
 })
 export class LocationTreeComponent {
-  protected readonly data = inject(DataService);
+  protected readonly collection = inject(CollectionService);
+  protected readonly navigation = inject(NavigationService);
+  protected readonly move = inject(MoveService);
   protected readonly text = createLocationTreeTranslations(inject(TranslationService));
   protected readonly viewport = inject(ViewportService);
 
@@ -25,25 +29,25 @@ export class LocationTreeComponent {
    * changes, instead of on every change-detection pass (see `buildTree` for
    * the single-pass grouping that also makes each rebuild itself cheap).
    */
-  protected readonly roots = computed<LocationNode[]>(() => buildTree(this.data.dataset().locations));
+  protected readonly roots = computed<LocationNode[]>(() => buildTree(this.collection.dataset().locations));
 
   /** Only the root buildings: used by the mobile-only dropdown. */
   protected readonly buildings = computed(() =>
-    this.data.dataset().locations
+    this.collection.dataset().locations
       .filter((location) => location.parentId === null)
       .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
   );
 
   /** The id of the building that contains the currently selected location. */
   protected readonly selectedBuildingId = computed(() => {
-    const id = this.data.selectedLocationId();
+    const id = this.navigation.selectedLocationId();
     if (!id) {
       return '';
     }
-    let current = this.data.dataset().locations.find((location) => location.id === id);
+    let current = this.collection.dataset().locations.find((location) => location.id === id);
     while (current && current.parentId) {
       const parentId = current.parentId;
-      const parent = this.data.dataset().locations.find((location) => location.id === parentId);
+      const parent = this.collection.dataset().locations.find((location) => location.id === parentId);
       if (!parent) {
         break;
       }
@@ -53,9 +57,9 @@ export class LocationTreeComponent {
   });
 
   select(locationId: string): void {
-    this.data.selectLocation(locationId);
-    if (this.data.movingItemId()) {
-      this.data.requestMove(locationId);
+    this.navigation.selectLocation(locationId);
+    if (this.move.movingItemId()) {
+      this.move.requestMove(locationId);
     }
   }
 
@@ -68,6 +72,6 @@ export class LocationTreeComponent {
   }
 
   goHome(): void {
-    this.data.selectedLocationId.set(null);
+    this.navigation.selectedLocationId.set(null);
   }
 }

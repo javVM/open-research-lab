@@ -1,16 +1,38 @@
 import { Component, effect, inject, input, signal, untracked } from '@angular/core';
 import type { Location } from '../../../core/models';
-import { DataService } from '../../data.service';
+import { CollectionService } from '../../collection.service';
+import { MoveService } from '../../move.service';
+import { NavigationService } from '../../navigation.service';
 import { ViewportService } from '../../shared/viewport.service';
 import { TranslationService } from '../../i18n/translation.service';
+import { GeometryService, type Rect } from '../../shared/geometry.service';
+import { RenderService } from '../../shared/render.service';
+import { OCCUPANCY_PALETTE } from '../../shared/palette.constants';
+import {
+  DEFAULT_WALL_HEIGHT,
+  DESKTOP_INITIAL_ROTATE_X,
+  DESKTOP_SCENE_HEIGHT,
+  DRAG_THRESHOLD,
+  FLOOR_FOOTPRINT,
+  FLOOR_STACK_HEIGHT,
+  FRONT_AZIMUTH,
+  INITIAL_ROTATE_Z,
+  MAX_MOBILE_SCENE_HEIGHT,
+  MAX_SCALE,
+  MAX_TILT,
+  MIN_MOBILE_SCENE_HEIGHT,
+  MIN_SCALE,
+  MIN_TILT,
+  MOBILE_FOOTPRINT_DIVISOR,
+  MOBILE_INITIAL_ROTATE_X,
+  MOBILE_SCENE_HEIGHT_RATIO,
+  MOBILE_STACK_HEIGHT,
+  MOBILE_WALL_HEIGHT,
+  ROTATE_STEP,
+  SCENE_FIT_PADDING,
+  WALL_HEIGHT,
+} from './floor-plan-3d.geometry.constants';
 import { createFloorPlan3dTranslations } from './floor-plan-3d.translations';
-
-interface Rect {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
 
 interface OrbitState {
   startClientX: number;
@@ -19,48 +41,14 @@ interface OrbitState {
   startRotateX: number;
 }
 
-/** Visual wall height per location type, in the same arbitrary layout units as `x`/`y`/`width`/`height`. */
-const WALL_HEIGHT: Partial<Record<Location['type'], number>> = {
-  floor: 200,
-  room: 140,
-  cabinet: 90,
-};
-const DEFAULT_WALL_HEIGHT = 70;
-
-/** Vertical gap between one floor's slab and the next, when stacking a building's floors. */
-const FLOOR_STACK_HEIGHT = 240;
-
-/**
- * Floors don't occupy distinct footprints the way rooms within a floor do —
- * in the 2D map they are simply listed one below another as a layout
- * convenience (see `seed.ts`'s `FLOOR_LAYOUT`). In 3D that ordering instead
- * becomes vertical stacking, so every floor shares one footprint here and is
- * told apart only by `elevationFor`.
- */
-const FLOOR_FOOTPRINT: Rect = { x: 0, y: 0, width: 480, height: 320 };
-
-const MIN_TILT = 20;
-const MAX_TILT = 85;
-const MIN_SCALE = 0.4;
-const MAX_SCALE = 2.2;
-
-/** Pointer movement, in pixels, before a press-and-move counts as an orbit drag rather than a click on a box. */
-const DRAG_THRESHOLD = 4;
-
-/**
- * The 'front' wall's outward-facing azimuth, in degrees within the box's own
- * footprint (arbitrary anchor; 'back' sits 180° opposite it) — used by
- * `facingSide()` to decide whether front or back currently faces the
- * camera as the user orbits.
- */
-const FRONT_AZIMUTH = 270;
-
 /**
  * A read-only, orbitable 3D extrusion of the same `locations` a
  * `FloorPlanComponent` would show flat — same `x`/`y`/`width`/`height` data,
  * rendered as CSS boxes with a per-type wall height instead of flat
  * rectangles. Dragging or resizing stays the 2D map's job; this view is for
  * getting a sense of the space, and for stacked floors within a building.
+ * Dimensions come from `GeometryService`/its 3D constants and colours from
+ * `RenderService`.
  */
 @Component({
   selector: 'app-floor-plan-3d',
@@ -72,9 +60,13 @@ const FRONT_AZIMUTH = 270;
 export class FloorPlan3dComponent {
   readonly locations = input<Location[]>([]);
 
-  protected readonly data = inject(DataService);
+  protected readonly collection = inject(CollectionService);
+  protected readonly navigation = inject(NavigationService);
+  protected readonly move = inject(MoveService);
   protected readonly text = createFloorPlan3dTranslations(inject(TranslationService));
   private readonly viewport = inject(ViewportService);
+  private readonly geometry = inject(GeometryService);
+  private readonly render = inject(RenderService);
 
   private hasSetInitialScale = false;
 
@@ -97,8 +89,8 @@ export class FloorPlan3dComponent {
    * listener wrapping, and this app runs zoneless change detection — see
    * the identical reasoning on `FloorPlanComponent.interactingLocationId`.
    */
-  private readonly rotateZDeg = signal(-25);
-  private readonly rotateXDeg = signal(55);
+  private readonly rotateZDeg = signal(INITIAL_ROTATE_Z);
+  private readonly rotateXDeg = signal(0);
   private readonly scale = signal(1);
 
   private orbitState: OrbitState | null = null;
@@ -125,32 +117,29 @@ export class FloorPlan3dComponent {
 
   /** Nudges the orbit by a fixed step — an explicit alternative to drag-to-orbit. */
   rotate(direction: 'up' | 'down' | 'left' | 'right'): void {
-    const STEP = 15;
     if (direction === 'up') {
-      this.rotateXDeg.set(Math.min(MAX_TILT, this.rotateXDeg() + STEP));
+      this.rotateXDeg.set(Math.min(MAX_TILT, this.rotateXDeg() + ROTATE_STEP));
     } else if (direction === 'down') {
-      this.rotateXDeg.set(Math.max(MIN_TILT, this.rotateXDeg() - STEP));
+      this.rotateXDeg.set(Math.max(MIN_TILT, this.rotateXDeg() - ROTATE_STEP));
     } else if (direction === 'left') {
-      this.rotateZDeg.set(this.rotateZDeg() - STEP);
+      this.rotateZDeg.set(this.rotateZDeg() - ROTATE_STEP);
     } else {
-      this.rotateZDeg.set(this.rotateZDeg() + STEP);
+      this.rotateZDeg.set(this.rotateZDeg() + ROTATE_STEP);
     }
   }
 
-  /** Same idea as `FloorPlanComponent.bounds()` — the plane must be big enough for every child's footprint. */
+  /** The plane must be big enough for every child's footprint. */
   bounds(): Rect {
     if (this.locations().length === 0) {
-      return { x: 0, y: 0, width: FLOOR_FOOTPRINT.width, height: FLOOR_FOOTPRINT.height };
+      return { ...FLOOR_FOOTPRINT };
     }
     const rects = this.locations().map((location) => this.rectFor(location));
-    const maxX = Math.max(...rects.map((rect) => rect.x + rect.width));
-    const maxY = Math.max(...rects.map((rect) => rect.y + rect.height));
-    return { x: 0, y: 0, width: maxX, height: maxY };
+    return this.geometry.bounds(rects);
   }
 
   resetView(): void {
-    this.rotateZDeg.set(-25);
-    this.rotateXDeg.set(this.viewport.isMobile() ? 45 : 55);
+    this.rotateZDeg.set(INITIAL_ROTATE_Z);
+    this.rotateXDeg.set(this.viewport.isMobile() ? MOBILE_INITIAL_ROTATE_X : DESKTOP_INITIAL_ROTATE_X);
     this.scale.set(this.fitScale());
   }
 
@@ -159,10 +148,9 @@ export class FloorPlan3dComponent {
     if (floors.length === 0) {
       return 0;
     }
-    const floorCount = floors.length;
-    const stackHeight = this.viewport.isMobile() ? 120 : FLOOR_STACK_HEIGHT;
-    const topFloor = floors[floorCount - 1];
-    return (floorCount - 1) * stackHeight + this.wallHeight(topFloor);
+    const stackHeight = this.viewport.isMobile() ? MOBILE_STACK_HEIGHT : FLOOR_STACK_HEIGHT;
+    const topFloor = floors[floors.length - 1];
+    return (floors.length - 1) * stackHeight + this.wallHeight(topFloor);
   }
 
   private fitScale(): number {
@@ -171,37 +159,31 @@ export class FloorPlan3dComponent {
         return 1;
       }
       const viewport = Math.min(window.innerWidth, window.innerHeight);
-      return Math.min(MAX_SCALE, Math.max(MIN_SCALE, viewport / 480));
+      return Math.min(MAX_SCALE, Math.max(MIN_SCALE, viewport / MOBILE_FOOTPRINT_DIVISOR));
     }
-    const rotateX = this.viewport.isMobile() ? 45 : 55;
+    const rotateX = this.viewport.isMobile() ? MOBILE_INITIAL_ROTATE_X : DESKTOP_INITIAL_ROTATE_X;
     const rad = (rotateX * Math.PI) / 180;
     const cos = Math.cos(rad);
     const sin = Math.sin(rad);
     const sceneHeight = this.viewport.isMobile()
-      ? Math.min(384, Math.max(260, Math.min(window.innerWidth, window.innerHeight) * 0.8))
-      : 608;
-    const padding = 32;
+      ? Math.min(MAX_MOBILE_SCENE_HEIGHT, Math.max(MIN_MOBILE_SCENE_HEIGHT, Math.min(window.innerWidth, window.innerHeight) * MOBILE_SCENE_HEIGHT_RATIO))
+      : DESKTOP_SCENE_HEIGHT;
     const planeHeight = this.bounds().height;
     const maxZ = this.maxStackZ();
     const denominator = (planeHeight / 2) * cos + maxZ * sin;
-    return Math.min(MAX_SCALE, Math.max(MIN_SCALE, (sceneHeight / 2 - padding) / denominator));
+    return Math.min(MAX_SCALE, Math.max(MIN_SCALE, (sceneHeight / 2 - SCENE_FIT_PADDING) / denominator));
   }
 
   rectFor(location: Location): Rect {
     if (location.type === 'floor') {
-      return FLOOR_FOOTPRINT;
+      return { ...FLOOR_FOOTPRINT };
     }
-    return {
-      x: location.x ?? 0,
-      y: location.y ?? 0,
-      width: location.width ?? 100,
-      height: location.height ?? 100,
-    };
+    return this.geometry.rectFor(location);
   }
 
   wallHeight(location: Location): number {
     if (location.type === 'floor' && this.viewport.isMobile()) {
-      return 100;
+      return MOBILE_WALL_HEIGHT;
     }
     return WALL_HEIGHT[location.type] ?? DEFAULT_WALL_HEIGHT;
   }
@@ -211,7 +193,7 @@ export class FloorPlan3dComponent {
     if (location.type !== 'floor') {
       return 0;
     }
-    const stackHeight = this.viewport.isMobile() ? 120 : FLOOR_STACK_HEIGHT;
+    const stackHeight = this.viewport.isMobile() ? MOBILE_STACK_HEIGHT : FLOOR_STACK_HEIGHT;
     return this.floorIndex(location) * stackHeight;
   }
 
@@ -223,15 +205,13 @@ export class FloorPlan3dComponent {
   }
 
   countAt(locationId: string): number {
-    return this.data.locationItemCounts().get(locationId) ?? 0;
+    return this.collection.locationItemCounts().get(locationId) ?? 0;
   }
 
   /** `siblings` sets the occupancy scale — the busiest of them gets the strongest colour. */
-  occupancyColor(locationId: string, siblings: Location[], alphaBoost = 0): string {
+  occupancyColor(locationId: string, siblings: Location[], boost = 0): string {
     const max = Math.max(1, ...siblings.map((sibling) => this.countAt(sibling.id)));
-    const ratio = this.countAt(locationId) / max;
-    const alpha = 0.18 + ratio * 0.55 + alphaBoost;
-    return `rgba(91, 141, 239, ${Math.min(1, alpha).toFixed(2)})`;
+    return this.render.occupancyColor(this.countAt(locationId), max, OCCUPANCY_PALETTE.map3dBaseAlpha, boost);
   }
 
   /**
@@ -261,7 +241,7 @@ export class FloorPlan3dComponent {
    * `x`/`y`/`width`/`height`.
    */
   uncoordinatedChildren(location: Location): Location[] {
-    return this.data
+    return this.collection
       .dataset()
       .locations.filter((candidate) => candidate.parentId === location.id && typeof candidate.x !== 'number');
   }
@@ -271,12 +251,9 @@ export class FloorPlan3dComponent {
    * centre and then shifted into place with `translate3d`, rather than
    * hinged from an edge — hinging from an edge only produces a correctly
    * placed wall if the pre-rotation offset exactly cancels out, which is
-   * easy to get subtly wrong (and was: it previously produced walls
-   * floating away from the box, giving the crossed/open look). Rotating
-   * around the centre first means the rotation never moves that centre
-   * point, so the required corrective translation is a fixed, simple
-   * function of the wall's own half-thickness — see the derivation in the
-   * PR/commit message, not repeated here per line.
+   * easy to get subtly wrong. Rotating around the centre first means the
+   * rotation never moves that centre point, so the required corrective
+   * translation is a fixed, simple function of the wall's own half-thickness.
    */
   sideTransform(location: Location, side: 'front' | 'back' | 'left' | 'right'): string {
     const rect = this.rectFor(location);
@@ -302,11 +279,11 @@ export class FloorPlan3dComponent {
     if (this.didDragSignificantly) {
       return;
     }
-    if (this.data.movingItemId()) {
-      this.data.requestMove(locationId);
+    if (this.move.movingItemId()) {
+      this.move.requestMove(locationId);
       return;
     }
-    this.data.selectLocation(locationId);
+    this.navigation.selectLocation(locationId);
   }
 
   onOrbitPointerDown(event: PointerEvent): void {

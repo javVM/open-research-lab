@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { LocationViewComponent } from './location-view.component';
-import { DataService } from '../../data.service';
+import { CollectionService } from '../../collection.service';
+import { MoveService } from '../../move.service';
+import { NavigationService } from '../../navigation.service';
 
 describe('LocationViewComponent', () => {
   beforeEach(() => {
@@ -9,8 +11,10 @@ describe('LocationViewComponent', () => {
   });
 
   it('shows root buildings when nothing is selected', () => {
-    const data = TestBed.inject(DataService);
-    data.selectedLocationId.set(null);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    navigation.selectedLocationId.set(null);
 
     const fixture = TestBed.createComponent(LocationViewComponent);
     fixture.detectChanges();
@@ -19,9 +23,11 @@ describe('LocationViewComponent', () => {
   });
 
   it('renders a position grid for a tray, distinguishing occupied and empty cells', () => {
-    const data = TestBed.inject(DataService);
-    const tray = data.dataset().locations.find((l) => l.type === 'tray')!;
-    data.selectLocation(tray.id);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const tray = collection.dataset().locations.find((l) => l.type === 'tray')!;
+    navigation.selectLocation(tray.id);
 
     const fixture = TestBed.createComponent(LocationViewComponent);
     fixture.detectChanges();
@@ -32,11 +38,13 @@ describe('LocationViewComponent', () => {
   });
 
   it('renders container cards for a non-grid, non-map location (a drawer), with child names visible', () => {
-    const data = TestBed.inject(DataService);
-    const drawerWithTray = data.dataset().locations.find(
-      (l) => l.type === 'drawer' && data.dataset().locations.some((c) => c.parentId === l.id && c.type === 'tray'),
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const drawerWithTray = collection.dataset().locations.find(
+      (l) => l.type === 'drawer' && collection.dataset().locations.some((c) => c.parentId === l.id && c.type === 'tray'),
     )!;
-    data.selectLocation(drawerWithTray.id);
+    navigation.selectLocation(drawerWithTray.id);
 
     const fixture = TestBed.createComponent(LocationViewComponent);
     fixture.detectChanges();
@@ -46,9 +54,11 @@ describe('LocationViewComponent', () => {
   });
 
   it('shows a floor plan by default for a building (its rooms have map coordinates)', () => {
-    const data = TestBed.inject(DataService);
-    const building = data.dataset().locations.find((l) => l.type === 'building')!;
-    data.selectLocation(building.id);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const building = collection.dataset().locations.find((l) => l.type === 'building')!;
+    navigation.selectLocation(building.id);
 
     const fixture = TestBed.createComponent(LocationViewComponent);
     fixture.detectChanges();
@@ -58,9 +68,11 @@ describe('LocationViewComponent', () => {
   });
 
   it('toggling to "list" for a building switches from the floor plan to container cards', () => {
-    const data = TestBed.inject(DataService);
-    const building = data.dataset().locations.find((l) => l.type === 'building')!;
-    data.selectLocation(building.id);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const building = collection.dataset().locations.find((l) => l.type === 'building')!;
+    navigation.selectLocation(building.id);
 
     const fixture = TestBed.createComponent(LocationViewComponent);
     fixture.detectChanges();
@@ -76,11 +88,13 @@ describe('LocationViewComponent', () => {
   });
 
   it('does not offer a map toggle for a location whose children have no floor-plan coordinates', () => {
-    const data = TestBed.inject(DataService);
-    const drawerWithTray = data.dataset().locations.find(
-      (l) => l.type === 'drawer' && data.dataset().locations.some((c) => c.parentId === l.id && c.type === 'tray'),
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const drawerWithTray = collection.dataset().locations.find(
+      (l) => l.type === 'drawer' && collection.dataset().locations.some((c) => c.parentId === l.id && c.type === 'tray'),
     )!;
-    data.selectLocation(drawerWithTray.id);
+    navigation.selectLocation(drawerWithTray.id);
 
     const fixture = TestBed.createComponent(LocationViewComponent);
     fixture.detectChanges();
@@ -90,20 +104,22 @@ describe('LocationViewComponent', () => {
   });
 
   it('clicking an empty position while moving requests confirmation instead of moving immediately', () => {
-    const data = TestBed.inject(DataService);
-    const tray = data.dataset().locations.find((l) => {
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const tray = collection.dataset().locations.find((l) => {
       if (l.type !== 'tray') return false;
-      const positions = data.dataset().locations.filter((p) => p.parentId === l.id);
-      const hasOccupied = positions.some((p) => data.dataset().items.some((i) => i.locationId === p.id));
-      const hasEmpty = positions.some((p) => !data.dataset().items.some((i) => i.locationId === p.id));
+      const positions = collection.dataset().locations.filter((p) => p.parentId === l.id);
+      const hasOccupied = positions.some((p) => collection.dataset().items.some((i) => i.locationId === p.id));
+      const hasEmpty = positions.some((p) => !collection.dataset().items.some((i) => i.locationId === p.id));
       return hasOccupied && hasEmpty;
     })!;
-    data.selectLocation(tray.id);
+    navigation.selectLocation(tray.id);
 
-    const movingItem = data.dataset().items.find((item) =>
-      data.dataset().locations.some((p) => p.id === item.locationId && p.parentId === tray.id),
+    const movingItem = collection.dataset().items.find((item) =>
+      collection.dataset().locations.some((p) => p.id === item.locationId && p.parentId === tray.id),
     )!;
-    data.startMove(movingItem.id);
+    move.startMove(movingItem.id);
 
     const fixture = TestBed.createComponent(LocationViewComponent);
     fixture.detectChanges();
@@ -114,16 +130,16 @@ describe('LocationViewComponent', () => {
     fixture.detectChanges();
 
     // Not moved yet: the modal must be confirmed first.
-    expect(data.movingItemId()).toBe(movingItem.id);
-    expect(data.pendingMoveTargetId()).not.toBeNull();
-    const unchanged = data.dataset().items.find((i) => i.id === movingItem.id)!;
+    expect(move.movingItemId()).toBe(movingItem.id);
+    expect(move.pendingMoveTargetId()).not.toBeNull();
+    const unchanged = collection.dataset().items.find((i) => i.id === movingItem.id)!;
     expect(unchanged.locationId).toBe(movingItem.locationId);
 
-    data.confirmPendingMove();
+    move.confirmPendingMove();
 
-    expect(data.movingItemId()).toBeNull();
-    expect(data.pendingMoveTargetId()).toBeNull();
-    const updated = data.dataset().items.find((i) => i.id === movingItem.id)!;
+    expect(move.movingItemId()).toBeNull();
+    expect(move.pendingMoveTargetId()).toBeNull();
+    const updated = collection.dataset().items.find((i) => i.id === movingItem.id)!;
     expect(updated.locationId).not.toBe(movingItem.locationId);
   });
 });

@@ -1,18 +1,21 @@
 import { Component, ElementRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import type { Location, LocationType } from '../../../core/models';
-import { DataService } from '../../data.service';
+import { CollectionService } from '../../collection.service';
+import { MoveService } from '../../move.service';
+import { NavigationService } from '../../navigation.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
 import { ViewportService } from '../../shared/viewport.service';
+import { GeometryService, type Rect } from '../../shared/geometry.service';
+import { RenderService } from '../../shared/render.service';
+import { MIN_COMPONENT_SIZE } from '../../shared/geometry.constants';
+import { defaultChildType } from '../../shared/hierarchy.constants';
+import { OCCUPANCY_PALETTE } from '../../shared/palette.constants';
+import { ID_PREFIX, newPrototypeId } from '../../shared/prototype-id';
+import { registerAppIcons } from '../../shared/icons';
 import { createFloorPlanTranslations } from './floor-plan.translations';
-
-interface Rect {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
 
 interface DragState {
   locationId: string;
@@ -31,19 +34,18 @@ interface ResizeState {
   startHeight: number;
 }
 
-const MIN_SIZE = 60;
-
 /**
  * A free-form 2D map of `locations`, each positioned at its own `x`/`y` and
  * sized by its own `width`/`height` (in arbitrary layout units, treated as
  * pixels here). Every location passed in must have all four set — the
  * caller (`LocationViewComponent`) only renders this when that holds for
- * the whole set of children, e.g. rooms within a building.
+ * the whole set of children, e.g. rooms within a building. Geometry and
+ * occupancy colouring live in `GeometryService` and `RenderService`.
  */
 @Component({
   standalone: true,
   selector: 'app-floor-plan',
-  imports: [MatButtonModule],
+  imports: [MatButtonModule, MatIconModule],
   templateUrl: './floor-plan.component.html',
   styleUrl: './floor-plan.component.scss',
 })
@@ -52,14 +54,22 @@ export class FloorPlanComponent {
   /** Id of the location whose children `locations` are — used to look up/store its background plan image. */
   readonly containerLocationId = input<string | null>(null);
 
-  protected readonly data = inject(DataService);
+  protected readonly collection = inject(CollectionService);
+  protected readonly navigation = inject(NavigationService);
+  protected readonly move = inject(MoveService);
   protected readonly text = createFloorPlanTranslations(inject(TranslationService));
   protected readonly locationType = createLocationTypeTranslations(inject(TranslationService));
   protected readonly viewport = inject(ViewportService);
+  protected readonly geometry = inject(GeometryService);
+  private readonly render = inject(RenderService);
 
   protected readonly renderScale = signal(1);
   protected readonly showUploadMenu = signal(false);
   private readonly el = inject(ElementRef);
+
+  constructor() {
+    registerAppIcons();
+  }
 
   private dragState: DragState | null = null;
   private suppressNextClick = false;
@@ -83,22 +93,13 @@ export class FloorPlanComponent {
     if (!this.containerLocationId()) {
       return undefined;
     }
-    return this.data.dataset().locations.find((candidate) => candidate.id === this.containerLocationId())?.mapImage;
+    return this.collection.dataset().locations.find((candidate) => candidate.id === this.containerLocationId())?.mapImage;
   }
 
-  private rawBounds(): Rect {
-    const image = this.containerImage();
-    if (this.locations().length === 0) {
-      return { x: 0, y: 0, width: image?.width ?? 1, height: image?.height ?? 1 };
-    }
-    const maxX = Math.max(image?.width ?? 0, ...this.locations().map((location) => (location.x ?? 0) + (location.width ?? 0)));
-    const maxY = Math.max(image?.height ?? 0, ...this.locations().map((location) => (location.y ?? 0) + (location.height ?? 0)));
-    return { x: 0, y: 0, width: maxX, height: maxY };
-  }
-
+  /** Scaled overall bounds of the map, matching the current render scale. */
   bounds(): Rect {
     const s = this.renderScale();
-    const raw = this.rawBounds();
+    const raw = this.geometry.bounds(this.locations(), this.containerImage());
     return { x: 0, y: 0, width: raw.width * s, height: raw.height * s };
   }
 
@@ -113,11 +114,10 @@ export class FloorPlanComponent {
       this.renderScale.set(1);
       return;
     }
-    const raw = this.rawBounds();
+    const raw = this.geometry.bounds(this.locations(), this.containerImage());
     const viewport = this.el.nativeElement.querySelector('.floor-plan__viewport') as HTMLElement | null;
     const viewportWidth = viewport?.clientWidth ?? this.el.nativeElement.clientWidth;
-    const fit = raw.width > 0 ? (viewportWidth - 16) / raw.width : 1;
-    this.renderScale.set(Math.max(0.25, Math.min(1, fit)));
+    this.renderScale.set(this.geometry.fitScale(raw.width, viewportWidth));
   }
 
   toggleUploadMenu(): void {
@@ -138,7 +138,7 @@ export class FloorPlanComponent {
       const dataUrl = reader.result as string;
       const image = new Image();
       image.onload = () => {
-        this.data.setLocationMapImage(containerLocationId, dataUrl, image.naturalWidth, image.naturalHeight);
+        this.collection.setLocationMapImage(containerLocationId, dataUrl, image.naturalWidth, image.naturalHeight);
       };
       image.src = dataUrl;
     };
@@ -149,7 +149,7 @@ export class FloorPlanComponent {
     this.showUploadMenu.set(false);
     const containerLocationId = this.containerLocationId();
     if (containerLocationId) {
-      this.data.clearLocationMapImage(containerLocationId);
+      this.collection.clearLocationMapImage(containerLocationId);
     }
   }
 
@@ -159,21 +159,8 @@ export class FloorPlanComponent {
     if (firstChild) {
       return firstChild;
     }
-    const container = this.data.dataset().locations.find((candidate) => candidate.id === this.containerLocationId());
-    if (!container) {
-      return null;
-    }
-    const map: Record<LocationType, LocationType | null> = {
-      building: 'floor',
-      floor: 'room',
-      room: 'cabinet',
-      cabinet: 'drawer',
-      drawer: 'box',
-      box: 'tray',
-      tray: 'position',
-      position: null,
-    };
-    return map[container.type] ?? null;
+    const container = this.collection.dataset().locations.find((candidate) => candidate.id === this.containerLocationId());
+    return container ? defaultChildType(container.type) : null;
   }
 
   addComponent(): void {
@@ -182,8 +169,8 @@ export class FloorPlanComponent {
     if (!containerId || !childType) {
       return;
     }
-    const size = this.defaultSizeFor(childType);
-    const position = this.nextPosition(size);
+    const size = this.geometry.defaultSizeFor(childType);
+    const position = this.geometry.nextPosition(this.locations(), size);
     const name = this.defaultName(childType);
     const label = this.locationType.label(childType);
     const chosen = window.prompt(`Nombre para el nuevo ${label}:`, name);
@@ -192,8 +179,8 @@ export class FloorPlanComponent {
     }
     const trimmed = chosen.trim();
     const finalName = trimmed || name;
-    const id = `loc-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-    this.data.addLocation({
+    const id = newPrototypeId(ID_PREFIX.location);
+    this.collection.addLocation({
       id,
       parentId: containerId,
       name: finalName,
@@ -205,60 +192,29 @@ export class FloorPlanComponent {
     });
   }
 
-  private defaultSizeFor(type: LocationType): { width: number; height: number } {
-    switch (type) {
-      case 'floor':
-        return { width: 600, height: 400 };
-      case 'room':
-        return { width: 184, height: 184 };
-      case 'cabinet':
-        return { width: 84, height: 164 };
-      default:
-        return { width: 100, height: 80 };
-    }
-  }
-
-  private nextPosition(size: { width: number; height: number }): { x: number; y: number } {
-    if (this.locations().length === 0) {
-      return { x: 0, y: 0 };
-    }
-    const maxY = Math.max(...this.locations().map((location) => (location.y ?? 0) + (location.height ?? 0)));
-    return { x: 0, y: maxY + 16 };
-  }
-
   private defaultName(type: LocationType): string {
     const label = this.locationType.label(type);
     const containerId = this.containerLocationId()!;
-    const count = this.data.dataset().locations.filter(
-      (candidate) => candidate.parentId === containerId && candidate.type === type,
-    ).length;
+    const count = this.geometry.siblingCount(this.collection.dataset().locations, containerId, type);
     return `${label} ${count + 1}`;
   }
 
   rectFor(location: Location): Rect {
-    const s = this.renderScale();
-    return {
-      x: (location.x ?? 0) * s,
-      y: (location.y ?? 0) * s,
-      width: (location.width ?? 100) * s,
-      height: (location.height ?? 100) * s,
-    };
+    return this.geometry.rectFor(location, this.renderScale());
   }
 
   countAt(locationId: string): number {
-    return this.data.locationItemCounts().get(locationId) ?? 0;
+    return this.collection.locationItemCounts().get(locationId) ?? 0;
   }
 
   /** Background colour intensity relative to the busiest location currently shown, for an at-a-glance occupancy read. */
   occupancyBackground(locationId: string): string {
     const max = Math.max(1, ...this.locations().map((location) => this.countAt(location.id)));
-    const ratio = this.countAt(locationId) / max;
-    const alpha = 0.12 + ratio * 0.55;
-    return `rgba(91, 141, 239, ${alpha.toFixed(2)})`;
+    return this.render.occupancyColor(this.countAt(locationId), max, OCCUPANCY_PALETTE.mapBaseAlpha);
   }
 
   isDropTarget(): boolean {
-    return Boolean(this.data.movingItemId());
+    return Boolean(this.move.movingItemId());
   }
 
   /**
@@ -270,35 +226,18 @@ export class FloorPlanComponent {
    * name/count or requiring navigation into it.
    */
   previewChildren(location: Location): Location[] {
-    return this.data
+    return this.collection
       .dataset()
       .locations.filter((candidate) => candidate.parentId === location.id && typeof candidate.x === 'number');
   }
 
   /** The overlay covers almost the whole rect — it's hidden until hover, so it doesn't need to share space with anything. */
   previewArea(location: Location): Rect {
-    const parentRect = this.rectFor(location);
-    const inset = 4;
-    return {
-      x: inset,
-      y: inset,
-      width: Math.max(0, parentRect.width - inset * 2),
-      height: Math.max(0, parentRect.height - inset * 2),
-    };
+    return this.geometry.previewArea(this.rectFor(location));
   }
 
   previewRectFor(location: Location, child: Location): Rect {
-    const area = this.previewArea(location);
-    const siblings = this.previewChildren(location);
-    const boundsWidth = Math.max(1, ...siblings.map((s) => (s.x ?? 0) + (s.width ?? 0)));
-    const boundsHeight = Math.max(1, ...siblings.map((s) => (s.y ?? 0) + (s.height ?? 0)));
-    const scale = Math.min(area.width / boundsWidth, area.height / boundsHeight);
-    return {
-      x: area.x + (child.x ?? 0) * scale,
-      y: area.y + (child.y ?? 0) * scale,
-      width: Math.max(3, (child.width ?? 0) * scale),
-      height: Math.max(3, (child.height ?? 0) * scale),
-    };
+    return this.geometry.previewRectFor(this.previewArea(location), this.previewChildren(location), child);
   }
 
   onClick(locationId: string): void {
@@ -306,11 +245,11 @@ export class FloorPlanComponent {
       this.suppressNextClick = false;
       return;
     }
-    if (this.data.movingItemId()) {
-      this.data.requestMove(locationId);
+    if (this.move.movingItemId()) {
+      this.move.requestMove(locationId);
       return;
     }
-    this.data.selectLocation(locationId);
+    this.navigation.selectLocation(locationId);
   }
 
   onPointerDown(event: PointerEvent, location: Location): void {
@@ -343,7 +282,7 @@ export class FloorPlanComponent {
     }
     const nextX = Math.max(0, Math.round(state.startX + dx));
     const nextY = Math.max(0, Math.round(state.startY + dy));
-    this.data.updateLocationPosition(state.locationId, nextX, nextY);
+    this.collection.updateLocationPosition(state.locationId, nextX, nextY);
   };
 
   private readonly onPointerUp = (): void => {
@@ -384,9 +323,9 @@ export class FloorPlanComponent {
     }
     const dx = event.clientX - state.startClientX;
     const dy = event.clientY - state.startClientY;
-    const nextWidth = Math.max(MIN_SIZE, Math.round(state.startWidth + dx));
-    const nextHeight = Math.max(MIN_SIZE, Math.round(state.startHeight + dy));
-    this.data.updateLocationSize(state.locationId, nextWidth, nextHeight);
+    const nextWidth = Math.max(MIN_COMPONENT_SIZE, Math.round(state.startWidth + dx));
+    const nextHeight = Math.max(MIN_COMPONENT_SIZE, Math.round(state.startHeight + dy));
+    this.collection.updateLocationSize(state.locationId, nextWidth, nextHeight);
   };
 
   private readonly onResizePointerUp = (): void => {

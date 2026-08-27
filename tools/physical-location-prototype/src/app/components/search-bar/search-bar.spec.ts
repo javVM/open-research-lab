@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SearchBarComponent } from './search-bar.component';
-import { DataService } from '../../data.service';
+import { CollectionService } from '../../collection.service';
+import { NavigationService } from '../../navigation.service';
 
 describe('SearchBarComponent', () => {
   beforeEach(() => {
@@ -22,8 +23,9 @@ describe('SearchBarComponent', () => {
   });
 
   it('finds an item by catalogue number', () => {
-    const data = TestBed.inject(DataService);
-    const target = data.dataset().items[0];
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const target = collection.dataset().items[0];
 
     const fixture = TestBed.createComponent(SearchBarComponent);
     fixture.detectChanges();
@@ -35,8 +37,9 @@ describe('SearchBarComponent', () => {
   });
 
   it('selecting a result navigates the app to the item and clears the query', () => {
-    const data = TestBed.inject(DataService);
-    const target = data.dataset().items.find((item) => item.locationId !== null)!;
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const target = collection.dataset().items.find((item) => item.locationId !== null)!;
 
     const fixture = TestBed.createComponent(SearchBarComponent);
     fixture.detectChanges();
@@ -46,7 +49,7 @@ describe('SearchBarComponent', () => {
     resultButton.click();
     fixture.detectChanges();
 
-    expect(data.selectedItemId()).toBe(target.id);
+    expect(navigation.selectedItemId()).toBe(target.id);
     expect(fixture.componentInstance.query()).toBe('');
   });
 

@@ -1,12 +1,12 @@
 <div class="location-view">
   @if (selectedLocation(); as location) {
     <nav class="breadcrumb" [attr.aria-label]="text.breadcrumbAriaLabel()">
-      <button type="button" mat-button class="breadcrumb__root" (click)="data.selectedLocationId.set(null)">
+      <button type="button" mat-button class="breadcrumb__root" (click)="navigation.selectedLocationId.set(null)">
         {{ text.rootBreadcrumb() }}
       </button>
       <span class="breadcrumb__sep">/</span>
       @for (crumb of breadcrumbPath(); track crumb.id; let last = $last) {
-        <button type="button" mat-button (click)="data.selectLocation(crumb.id)">{{ crumb.name }}</button>
+        <button type="button" mat-button (click)="navigation.selectLocation(crumb.id)">{{ crumb.name }}</button>
         @if (!last) {
           <span class="breadcrumb__sep">/</span>
         }
@@ -30,22 +30,24 @@
       </div>
     }
 
-    @if (data.movingItem(); as moving) {
+    @if (move.movingItem(); as moving) {
       <div class="move-banner">
         {{ text.movingBanner(moving.catalogueNumber) }}
-        <button type="button" mat-button (click)="data.cancelMove()">{{ text.cancelButton() }}</button>
+        <button type="button" mat-button (click)="move.cancelMove()">{{ text.cancelButton() }}</button>
       </div>
     }
-    @if (data.moveError(); as error) {
+    @if (move.moveError(); as error) {
       <div class="move-error">{{ error }}</div>
     }
 
     @if (canShowMap()) {
-      <div class="view-mode-toggle" role="group">
+      <div class="view-mode-toggle" role="group" [attr.aria-label]="text.viewModeList()">
         <button
           type="button"
           mat-button
+          class="view-mode-toggle__button"
           [class.view-mode-toggle__button--active]="!showMap() && !show3d()"
+          [attr.aria-pressed]="!showMap() && !show3d()"
           (click)="setViewMode('list')"
         >
           {{ text.viewModeList() }}
@@ -53,7 +55,9 @@
         <button
           type="button"
           mat-button
+          class="view-mode-toggle__button"
           [class.view-mode-toggle__button--active]="showMap()"
+          [attr.aria-pressed]="showMap()"
           (click)="setViewMode('map')"
         >
           {{ text.viewModeMap() }}
@@ -61,7 +65,9 @@
         <button
           type="button"
           mat-button
+          class="view-mode-toggle__button"
           [class.view-mode-toggle__button--active]="show3d()"
+          [attr.aria-pressed]="show3d()"
           (click)="setViewMode('3d')"
         >
           {{ text.viewMode3d() }}
@@ -88,9 +94,9 @@
                   [class.position-cell--none]="!cell"
                   [class.position-cell--empty]="cell && !cell.occupant"
                   [class.position-cell--occupied]="cell && cell.occupant"
-                  [class.position-cell--selected]="cell?.occupant?.id === data.selectedItemId()"
+                  [class.position-cell--selected]="cell?.occupant?.id === navigation.selectedItemId()"
                   [class.position-cell--drop-target]="isMovingTargetCandidate(cell)"
-                  [class.position-cell--qr-hint]="cell && data.qrHint()?.type === 'checkin' && cell.position.id === data.qrHint()?.targetId"
+                  [class.position-cell--qr-hint]="cell && scan.qrHint()?.type === 'checkin' && cell.position.id === scan.qrHint()?.targetId"
                   cdkDropList
                   [cdkDropListData]="cell?.position?.id ?? null"
                   [cdkDropListDisabled]="!cell || !!cell.occupant"
@@ -127,7 +133,7 @@
         <div
           class="container-card"
           [attr.data-type]="child.type"
-          [class.container-card--drop-target]="data.movingItemId()"
+          [class.container-card--drop-target]="move.movingItemId()"
           cdkDropList
           [cdkDropListData]="child.id"
           (cdkDropListDropped)="onDrop($event)"
@@ -152,7 +158,7 @@
                   mat-button
                   class="direct-items__item"
                   [class.direct-items__item--special]="item.status !== 'active'"
-                  [class.direct-items__item--selected]="item.id === data.selectedItemId()"
+                  [class.direct-items__item--selected]="item.id === navigation.selectedItemId()"
                   cdkDrag
                   [cdkDragData]="item.id"
                   (click)="onItemClick(item.id, $event)"

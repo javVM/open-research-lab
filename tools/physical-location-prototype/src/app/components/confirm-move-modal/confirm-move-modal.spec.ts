@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ConfirmMoveModalComponent } from './confirm-move-modal.component';
-import { DataService } from '../../data.service';
+import { CollectionService } from '../../collection.service';
+import { MoveService } from '../../move.service';
 
 describe('ConfirmMoveModalComponent', () => {
   beforeEach(() => {
@@ -15,12 +16,13 @@ describe('ConfirmMoveModalComponent', () => {
   });
 
   it('shows the item and destination once a move is requested', () => {
-    const data = TestBed.inject(DataService);
-    const item = data.dataset().items.find((candidate) => candidate.locationId !== null)!;
-    const target = data.dataset().locations.find((l) => l.type === 'cabinet')!;
+    const collection = TestBed.inject(CollectionService);
+    const move = TestBed.inject(MoveService);
+    const item = collection.dataset().items.find((candidate) => candidate.locationId !== null)!;
+    const target = collection.dataset().locations.find((l) => l.type === 'cabinet')!;
 
-    data.startMove(item.id);
-    data.requestMove(target.id);
+    move.startMove(item.id);
+    move.requestMove(target.id);
 
     const fixture = TestBed.createComponent(ConfirmMoveModalComponent);
     fixture.detectChanges();
@@ -32,12 +34,13 @@ describe('ConfirmMoveModalComponent', () => {
   });
 
   it('confirming performs the move and closes the modal', () => {
-    const data = TestBed.inject(DataService);
-    const item = data.dataset().items.find((candidate) => candidate.locationId !== null)!;
-    const target = data.dataset().locations.find((l) => l.type === 'cabinet')!;
+    const collection = TestBed.inject(CollectionService);
+    const move = TestBed.inject(MoveService);
+    const item = collection.dataset().items.find((candidate) => candidate.locationId !== null)!;
+    const target = collection.dataset().locations.find((l) => l.type === 'cabinet')!;
 
-    data.startMove(item.id);
-    data.requestMove(target.id);
+    move.startMove(item.id);
+    move.requestMove(target.id);
 
     const fixture = TestBed.createComponent(ConfirmMoveModalComponent);
     fixture.detectChanges();
@@ -45,19 +48,20 @@ describe('ConfirmMoveModalComponent', () => {
     (fixture.nativeElement.querySelector('.modal__confirm') as HTMLElement).click();
     fixture.detectChanges();
 
-    expect(data.movingItemId()).toBeNull();
-    expect(data.pendingMoveTargetId()).toBeNull();
-    const updated = data.dataset().items.find((candidate) => candidate.id === item.id)!;
+    expect(move.movingItemId()).toBeNull();
+    expect(move.pendingMoveTargetId()).toBeNull();
+    const updated = collection.dataset().items.find((candidate) => candidate.id === item.id)!;
     expect(updated.locationId).toBe(target.id);
   });
 
   it('cancelling closes the modal but leaves the move in progress', () => {
-    const data = TestBed.inject(DataService);
-    const item = data.dataset().items.find((candidate) => candidate.locationId !== null)!;
-    const target = data.dataset().locations.find((l) => l.type === 'cabinet')!;
+    const collection = TestBed.inject(CollectionService);
+    const move = TestBed.inject(MoveService);
+    const item = collection.dataset().items.find((candidate) => candidate.locationId !== null)!;
+    const target = collection.dataset().locations.find((l) => l.type === 'cabinet')!;
 
-    data.startMove(item.id);
-    data.requestMove(target.id);
+    move.startMove(item.id);
+    move.requestMove(target.id);
 
     const fixture = TestBed.createComponent(ConfirmMoveModalComponent);
     fixture.detectChanges();
@@ -65,9 +69,9 @@ describe('ConfirmMoveModalComponent', () => {
     (fixture.nativeElement.querySelector('.modal__cancel') as HTMLElement).click();
     fixture.detectChanges();
 
-    expect(data.pendingMoveTargetId()).toBeNull();
-    expect(data.movingItemId()).toBe(item.id);
-    const unchanged = data.dataset().items.find((candidate) => candidate.id === item.id)!;
+    expect(move.pendingMoveTargetId()).toBeNull();
+    expect(move.movingItemId()).toBe(item.id);
+    const unchanged = collection.dataset().items.find((candidate) => candidate.id === item.id)!;
     expect(unchanged.locationId).not.toBe(target.id);
   });
 });

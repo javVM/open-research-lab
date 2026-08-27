@@ -9,8 +9,9 @@
         type="button"
         mat-button
         class="mode-switcher__button"
-        [class.mode-switcher__button--active]="data.uiMode() === 'explore'"
-        (click)="data.setUiMode('explore')"
+        [class.mode-switcher__button--active]="navigation.uiMode() === 'explore'"
+        [attr.aria-pressed]="navigation.uiMode() === 'explore'"
+        (click)="navigation.setUiMode('explore')"
       >
         {{ text.modeExplore() }}
       </button>
@@ -18,14 +19,15 @@
         type="button"
         mat-button
         class="mode-switcher__button"
-        [class.mode-switcher__button--active]="data.uiMode() === 'scan'"
-        (click)="data.setUiMode('scan')"
+        [class.mode-switcher__button--active]="navigation.uiMode() === 'scan'"
+        [attr.aria-pressed]="navigation.uiMode() === 'scan'"
+        (click)="navigation.setUiMode('scan')"
       >
         {{ text.modeScan() }}
       </button>
     </nav>
 
-    @if (data.uiMode() === 'explore') {
+    @if (navigation.uiMode() === 'explore') {
       <app-search-bar></app-search-bar>
     }
 
@@ -35,20 +37,17 @@
         type="button"
         mat-icon-button
         class="reset-button"
-        (click)="data.resetDemo()"
+        (click)="collection.resetDemo()"
         [attr.title]="text.resetButtonTitle()"
         [attr.aria-label]="text.resetButtonTitle()"
       >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polyline points="23 4 23 10 17 10"></polyline>
-          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-        </svg>
+        <mat-icon svgIcon="reset" aria-hidden="true"></mat-icon>
       </button>
     </div>
   </header>
 
   <main class="app-body">
-    @switch (data.uiMode()) {
+    @switch (navigation.uiMode()) {
       @case ('explore') {
         <section class="pane pane--tree" [attr.aria-label]="text.locationHierarchyAriaLabel()">
           <app-location-tree></app-location-tree>

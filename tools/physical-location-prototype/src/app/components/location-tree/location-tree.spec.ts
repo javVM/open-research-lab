@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { LocationTreeComponent } from './location-tree.component';
-import { DataService } from '../../data.service';
+import { CollectionService } from '../../collection.service';
+import { MoveService } from '../../move.service';
+import { NavigationService } from '../../navigation.service';
 
 describe('LocationTreeComponent', () => {
   beforeEach(() => {
@@ -15,14 +17,16 @@ describe('LocationTreeComponent', () => {
     expect(rows.length).toBeGreaterThan(1);
   });
 
-  it('selecting a row updates DataService.selectedLocationId', () => {
+  it('selecting a row updates NavigationService.selectedLocationId', () => {
     const fixture = TestBed.createComponent(LocationTreeComponent);
     fixture.detectChanges();
-    const data = TestBed.inject(DataService);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
 
-    const room = data.dataset().locations.find((l) => l.type === 'room')!;
+    const room = collection.dataset().locations.find((l) => l.type === 'room')!;
     // Expand its parent building so the room's row is actually rendered.
-    data.selectLocation(data.dataset().locations.find((l) => l.id === room.parentId)!.id);
+    navigation.selectLocation(collection.dataset().locations.find((l) => l.id === room.parentId)!.id);
     fixture.detectChanges();
 
     const row = fixture.nativeElement.querySelector(`[data-location-id="${room.id}"]`) as HTMLElement;
@@ -30,38 +34,42 @@ describe('LocationTreeComponent', () => {
     row.click();
     fixture.detectChanges();
 
-    expect(data.selectedLocationId()).toBe(room.id);
+    expect(navigation.selectedLocationId()).toBe(room.id);
   });
 
   it('clicking a row while a move is in progress requests a move there, pending confirmation', () => {
     const fixture = TestBed.createComponent(LocationTreeComponent);
     fixture.detectChanges();
-    const data = TestBed.inject(DataService);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
 
-    const movingItem = data.dataset().items.find((item) => item.locationId !== null)!;
-    const cabinet = data.dataset().locations.find((l) => l.type === 'cabinet')!;
+    const movingItem = collection.dataset().items.find((item) => item.locationId !== null)!;
+    const cabinet = collection.dataset().locations.find((l) => l.type === 'cabinet')!;
     // Expand every ancestor (building, floor, room), not just the direct
     // parent, so the cabinet's row is actually rendered in the tree.
-    data.navigateToLocation(cabinet.id);
+    navigation.navigateToLocation(cabinet.id);
     fixture.detectChanges();
 
-    data.startMove(movingItem.id);
+    move.startMove(movingItem.id);
     const row = fixture.nativeElement.querySelector(`[data-location-id="${cabinet.id}"]`) as HTMLElement;
     row.click();
     fixture.detectChanges();
 
-    expect(data.pendingMoveTargetId()).toBe(cabinet.id);
-    expect(data.movingItemId()).toBe(movingItem.id);
+    expect(move.pendingMoveTargetId()).toBe(cabinet.id);
+    expect(move.movingItemId()).toBe(movingItem.id);
     // Nothing has actually moved yet.
-    const unchanged = data.dataset().items.find((i) => i.id === movingItem.id)!;
+    const unchanged = collection.dataset().items.find((i) => i.id === movingItem.id)!;
     expect(unchanged.locationId).not.toBe(cabinet.id);
   });
 
   it('shows a translated location-type label, not the raw type string', () => {
     const fixture = TestBed.createComponent(LocationTreeComponent);
     fixture.detectChanges();
-    const data = TestBed.inject(DataService);
-    const building = data.dataset().locations.find((l) => l.type === 'building')!;
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const building = collection.dataset().locations.find((l) => l.type === 'building')!;
 
     const badge = fixture.nativeElement.querySelector(
       `[data-location-id="${building.id}"] .tree-type-badge`,
@@ -72,17 +80,19 @@ describe('LocationTreeComponent', () => {
   it('toggling collapses and expands a node without changing the selection', () => {
     const fixture = TestBed.createComponent(LocationTreeComponent);
     fixture.detectChanges();
-    const data = TestBed.inject(DataService);
-    const building = data.dataset().locations.find((l) => l.type === 'building')!;
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const building = collection.dataset().locations.find((l) => l.type === 'building')!;
 
     const toggle = fixture.nativeElement.querySelector(
       `[data-location-id="${building.id}"] .tree-toggle`,
     ) as HTMLElement;
-    expect(data.expandedIds().has(building.id)).toBe(true);
+    expect(navigation.expandedIds().has(building.id)).toBe(true);
 
     toggle.click();
     fixture.detectChanges();
-    expect(data.expandedIds().has(building.id)).toBe(false);
-    expect(data.selectedLocationId()).toBe(building.id);
+    expect(navigation.expandedIds().has(building.id)).toBe(false);
+    expect(navigation.selectedLocationId()).toBe(building.id);
   });
 });

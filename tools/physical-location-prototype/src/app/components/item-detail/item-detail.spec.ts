@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { ItemDetailComponent } from './item-detail.component';
-import { DataService } from '../../data.service';
+import { CollectionService } from '../../collection.service';
+import { MoveService } from '../../move.service';
+import { NavigationService } from '../../navigation.service';
 
 describe('ItemDetailComponent', () => {
   beforeEach(() => {
@@ -9,17 +11,21 @@ describe('ItemDetailComponent', () => {
   });
 
   it('shows an empty state when no item or location is selected', () => {
-    const data = TestBed.inject(DataService);
-    data.selectedLocationId.set(null);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    navigation.selectedLocationId.set(null);
     const fixture = TestBed.createComponent(ItemDetailComponent);
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toContain('Select an item or location');
   });
 
   it('shows the catalogue number, status and breadcrumb of the selected item', () => {
-    const data = TestBed.inject(DataService);
-    const target = data.dataset().items.find((item) => item.locationId !== null)!;
-    data.selectItem(target.id);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const target = collection.dataset().items.find((item) => item.locationId !== null)!;
+    navigation.selectItem(target.id);
 
     const fixture = TestBed.createComponent(ItemDetailComponent);
     fixture.detectChanges();
@@ -30,9 +36,11 @@ describe('ItemDetailComponent', () => {
   });
 
   it('starting a move shows the cancel button and a hint', () => {
-    const data = TestBed.inject(DataService);
-    const target = data.dataset().items.find((item) => item.locationId !== null)!;
-    data.selectItem(target.id);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const target = collection.dataset().items.find((item) => item.locationId !== null)!;
+    navigation.selectItem(target.id);
 
     const fixture = TestBed.createComponent(ItemDetailComponent);
     fixture.detectChanges();
@@ -41,17 +49,19 @@ describe('ItemDetailComponent', () => {
     startButton.click();
     fixture.detectChanges();
 
-    expect(data.movingItemId()).toBe(target.id);
+    expect(move.movingItemId()).toBe(target.id);
     expect(fixture.nativeElement.querySelector('.cancel-move')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('.move-hint')).toBeTruthy();
   });
 
   it('renders history entries with an arrow between the two locations', () => {
-    const data = TestBed.inject(DataService);
-    const target = data
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const target = collection
       .dataset()
-      .items.find((item) => data.dataset().movements.some((m) => m.itemId === item.id))!;
-    data.selectItem(target.id);
+      .items.find((item) => collection.dataset().movements.some((m) => m.itemId === item.id))!;
+    navigation.selectItem(target.id);
 
     const fixture = TestBed.createComponent(ItemDetailComponent);
     fixture.detectChanges();

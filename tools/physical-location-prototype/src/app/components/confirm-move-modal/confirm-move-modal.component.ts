@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { DataService } from '../../data.service';
+import { MoveService } from '../../move.service';
+import { NavigationService } from '../../navigation.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createConfirmMoveModalTranslations } from './confirm-move-modal.translations';
 
@@ -12,14 +13,18 @@ import { createConfirmMoveModalTranslations } from './confirm-move-modal.transla
   styleUrl: './confirm-move-modal.component.scss',
 })
 export class ConfirmMoveModalComponent {
-  protected readonly data = inject(DataService);
+  protected readonly move = inject(MoveService);
+  private readonly navigation = inject(NavigationService);
   protected readonly text = createConfirmMoveModalTranslations(inject(TranslationService));
 
   confirm(): void {
-    this.data.confirmPendingMove();
+    const targetId = this.move.confirmPendingMove();
+    if (targetId) {
+      this.navigation.navigateToLocation(targetId);
+    }
   }
 
   cancel(): void {
-    this.data.cancelPendingMove();
+    this.move.cancelPendingMove();
   }
 }

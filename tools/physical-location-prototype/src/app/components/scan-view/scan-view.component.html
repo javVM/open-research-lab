@@ -9,7 +9,7 @@
     </section>
 
     <aside class="scan-view__panel">
-      @if (data.qrPending(); as pending) {
+      @if (scan.qrPending(); as pending) {
         <div class="scan-view__card">
           <h3>{{ pending.itemCatalogue }}</h3>
           <p>Target: {{ pending.targetName }}</p>
@@ -20,7 +20,7 @@
               <input
                 matInput
                 type="text"
-                [(ngModel)]="positionCode"
+                [formField]="positionField"
                 (keydown.enter)="submitPosition()"
                 [placeholder]="pending.targetName"
               />
@@ -32,7 +32,7 @@
               <input
                 matInput
                 type="text"
-                [(ngModel)]="tubeCode"
+                [formField]="tubeField"
                 (keydown.enter)="submitTube()"
                 [placeholder]="pending.itemCatalogue"
               />
@@ -40,7 +40,7 @@
             <button type="button" mat-button (click)="submitTube()">{{ text.scanButton() }}</button>
           }
 
-          <button type="button" mat-button class="scan-view__cancel" (click)="data.cancelQr()">
+          <button type="button" mat-button class="scan-view__cancel" (click)="scan.cancelQr()">
             {{ text.cancelButton() }}
           </button>
         </div>
@@ -51,7 +51,7 @@
             <input
               matInput
               type="text"
-              [(ngModel)]="manualCode"
+              [formField]="manualField"
               (keydown.enter)="submitManualCode()"
               [placeholder]="text.manualScanPlaceholder()"
             />
@@ -60,7 +60,7 @@
         </div>
       }
 
-      @if (data.qrHint(); as hint) {
+      @if (scan.qrHint(); as hint) {
         <div class="scan-view__hint" [attr.data-type]="hint.type">{{ hint.message }}</div>
       }
     </aside>

@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { QrScannerComponent } from './qr-scanner.component';
-import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
 
 jest.mock('html5-qrcode', () => ({

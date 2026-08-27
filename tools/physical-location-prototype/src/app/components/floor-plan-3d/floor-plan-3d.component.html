@@ -31,7 +31,7 @@
           class="box3d"
           [attr.data-type]="location.type"
           [attr.data-location-id]="location.id"
-          [class.box3d--selected]="location.id === data.selectedLocationId()"
+          [class.box3d--selected]="location.id === navigation.selectedLocationId()"
           [style.left.px]="rectFor(location).x"
           [style.top.px]="rectFor(location).y"
           [style.width.px]="rectFor(location).width"

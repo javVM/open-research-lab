@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { FloorPlanComponent } from './floor-plan.component';
-import { DataService } from '../../data.service';
+import { CollectionService } from '../../collection.service';
+import { MoveService } from '../../move.service';
+import { NavigationService } from '../../navigation.service';
 import type { Location } from '../../../core/models';
 
 function room(id: string, x: number, y: number): Location {
@@ -24,20 +26,24 @@ describe('FloorPlanComponent', () => {
   });
 
   it('clicking a rect selects that location when nothing is being moved', () => {
-    const data = TestBed.inject(DataService);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
     const fixture = TestBed.createComponent(FloorPlanComponent);
     fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
     fixture.detectChanges();
 
     (fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement).click();
 
-    expect(data.selectedLocationId()).toBe('a');
+    expect(navigation.selectedLocationId()).toBe('a');
   });
 
   it('clicking a rect while moving an item requests a move to that location instead of selecting it', () => {
-    const data = TestBed.inject(DataService);
-    const item = data.dataset().items.find((i) => i.locationId !== null)!;
-    data.startMove(item.id);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const item = collection.dataset().items.find((i) => i.locationId !== null)!;
+    move.startMove(item.id);
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
     fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
@@ -45,14 +51,16 @@ describe('FloorPlanComponent', () => {
 
     (fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement).click();
 
-    expect(data.pendingMoveTargetId()).toBe('a');
+    expect(move.pendingMoveTargetId()).toBe('a');
   });
 
-  it('dragging a rect updates its position via DataService and suppresses the resulting click', () => {
-    const data = TestBed.inject(DataService);
+  it('dragging a rect updates its position via CollectionService and suppresses the resulting click', () => {
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
     // updateLocationPosition only touches locations that exist in the
     // dataset, so drag a real seeded room rather than a synthetic fixture.
-    const realRoom = data.dataset().locations.find((l) => l.type === 'room')!;
+    const realRoom = collection.dataset().locations.find((l) => l.type === 'room')!;
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
     fixture.componentRef.setInput("locations", [realRoom]);
@@ -66,21 +74,23 @@ describe('FloorPlanComponent', () => {
     window.dispatchEvent(new MouseEvent('pointermove', { clientX: 40, clientY: 10 }));
     window.dispatchEvent(new MouseEvent('pointerup'));
 
-    const moved = data.dataset().locations.find((l) => l.id === realRoom.id)!;
+    const moved = collection.dataset().locations.find((l) => l.id === realRoom.id)!;
     expect(moved.x).toBe((realRoom.x ?? 0) + 40);
     expect(moved.y).toBe((realRoom.y ?? 0) + 10);
 
     // The click that follows a real drag (as browsers fire it) must not
     // also select/move — it's the same gesture, not a separate click.
-    data.selectedLocationId.set(null);
+    navigation.selectedLocationId.set(null);
     rect.dispatchEvent(new MouseEvent('click'));
-    expect(data.selectedLocationId()).toBeNull();
+    expect(navigation.selectedLocationId()).toBeNull();
   });
 
-  it('dragging the resize handle grows the rect via DataService.updateLocationSize, without selecting it', () => {
-    const data = TestBed.inject(DataService);
-    const realRoom = data.dataset().locations.find((l) => l.type === 'room')!;
-    data.selectedLocationId.set(null);
+  it('dragging the resize handle grows the rect via CollectionService.updateLocationSize, without selecting it', () => {
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const realRoom = collection.dataset().locations.find((l) => l.type === 'room')!;
+    navigation.selectedLocationId.set(null);
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
     fixture.componentRef.setInput("locations", [realRoom]);
@@ -92,17 +102,19 @@ describe('FloorPlanComponent', () => {
     window.dispatchEvent(new MouseEvent('pointerup'));
     handle.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
-    const resized = data.dataset().locations.find((l) => l.id === realRoom.id)!;
+    const resized = collection.dataset().locations.find((l) => l.id === realRoom.id)!;
     expect(resized.width).toBe((realRoom.width ?? 0) + 30);
     expect(resized.height).toBe((realRoom.height ?? 0) + 20);
     // Resizing must not also select the location — the click on the
     // handle bubbles, but is explicitly stopped before reaching onClick.
-    expect(data.selectedLocationId()).toBeNull();
+    expect(navigation.selectedLocationId()).toBeNull();
   });
 
   it('never resizes below the minimum size, even with a large negative drag', () => {
-    const data = TestBed.inject(DataService);
-    const realRoom = data.dataset().locations.find((l) => l.type === 'room')!;
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const realRoom = collection.dataset().locations.find((l) => l.type === 'room')!;
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
     fixture.componentRef.setInput("locations", [realRoom]);
@@ -113,13 +125,15 @@ describe('FloorPlanComponent', () => {
     window.dispatchEvent(new MouseEvent('pointermove', { clientX: -1000, clientY: -1000 }));
     window.dispatchEvent(new MouseEvent('pointerup'));
 
-    const resized = data.dataset().locations.find((l) => l.id === realRoom.id)!;
+    const resized = collection.dataset().locations.find((l) => l.id === realRoom.id)!;
     expect(resized.width).toBe(60);
     expect(resized.height).toBe(60);
   });
 
   it('colours rects by relative occupancy, giving the busiest one the strongest background', () => {
-    const data = TestBed.inject(DataService);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
     const busy = room('busy', 0, 0);
     const empty = room('empty', 130, 0);
 
@@ -136,12 +150,14 @@ describe('FloorPlanComponent', () => {
   });
 
   it('shows a scaled-down preview of a location\'s own coordinated children (e.g. a room\'s cabinets)', () => {
-    const data = TestBed.inject(DataService);
-    const roomWithCabinets = data.dataset().locations.find(
-      (l) => l.type === 'room' && data.dataset().locations.some((c) => c.parentId === l.id && c.type === 'cabinet'),
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const roomWithCabinets = collection.dataset().locations.find(
+      (l) => l.type === 'room' && collection.dataset().locations.some((c) => c.parentId === l.id && c.type === 'cabinet'),
     )!;
-    const floorOfRoom = data.dataset().locations.find((l) => l.id === roomWithCabinets.parentId)!;
-    const roomsOfFloor = data
+    const floorOfRoom = collection.dataset().locations.find((l) => l.id === roomWithCabinets.parentId)!;
+    const roomsOfFloor = collection
       .dataset()
       .locations.filter((l) => l.parentId === floorOfRoom.id && l.type === 'room');
 
@@ -154,11 +170,13 @@ describe('FloorPlanComponent', () => {
   });
 
   it('also previews floors when showing a building (three levels of nesting are now possible)', () => {
-    const data = TestBed.inject(DataService);
-    const buildingWithFloors = data.dataset().locations.find(
-      (l) => l.type === 'building' && data.dataset().locations.some((f) => f.parentId === l.id && f.type === 'floor'),
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const buildingWithFloors = collection.dataset().locations.find(
+      (l) => l.type === 'building' && collection.dataset().locations.some((f) => f.parentId === l.id && f.type === 'floor'),
     )!;
-    const floorsOfBuilding = data
+    const floorsOfBuilding = collection
       .dataset()
       .locations.filter((l) => l.parentId === buildingWithFloors.id && l.type === 'floor');
 
@@ -171,8 +189,10 @@ describe('FloorPlanComponent', () => {
   });
 
   it('marks a rect as interacting while it is being dragged, and clears it on pointer up', () => {
-    const data = TestBed.inject(DataService);
-    const realRoom = data.dataset().locations.find((l) => l.type === 'room')!;
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const realRoom = collection.dataset().locations.find((l) => l.type === 'room')!;
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
     fixture.componentRef.setInput("locations", [realRoom]);
@@ -191,8 +211,10 @@ describe('FloorPlanComponent', () => {
   });
 
   it('marks a rect as interacting while it is being resized, and clears it on pointer up', () => {
-    const data = TestBed.inject(DataService);
-    const realRoom = data.dataset().locations.find((l) => l.type === 'room')!;
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const realRoom = collection.dataset().locations.find((l) => l.type === 'room')!;
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
     fixture.componentRef.setInput("locations", [realRoom]);
@@ -251,8 +273,10 @@ describe('FloorPlanComponent', () => {
     });
 
     it('uploads an image and stores it as mapImage on the container location', async () => {
-      const data = TestBed.inject(DataService);
-      const building = data.dataset().locations.find((l) => l.type === 'building')!;
+      const collection = TestBed.inject(CollectionService);
+      const navigation = TestBed.inject(NavigationService);
+      const move = TestBed.inject(MoveService);
+      const building = collection.dataset().locations.find((l) => l.type === 'building')!;
 
       const fixture = TestBed.createComponent(FloorPlanComponent);
       fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
@@ -269,7 +293,7 @@ describe('FloorPlanComponent', () => {
       await new Promise((resolve) => setTimeout(resolve, 20));
       fixture.detectChanges();
 
-      const updated = data.dataset().locations.find((l) => l.id === building.id)!;
+      const updated = collection.dataset().locations.find((l) => l.id === building.id)!;
       expect(updated.mapImage?.width).toBe(800);
       expect(updated.mapImage?.height).toBe(600);
       expect(updated.mapImage?.dataUrl).toContain('data:');
@@ -280,9 +304,11 @@ describe('FloorPlanComponent', () => {
     });
 
     it('clearing the image removes mapImage from the container location', () => {
-      const data = TestBed.inject(DataService);
-      const building = data.dataset().locations.find((l) => l.type === 'building')!;
-      data.setLocationMapImage(building.id, 'data:image/png;base64,abc', 800, 600);
+      const collection = TestBed.inject(CollectionService);
+      const navigation = TestBed.inject(NavigationService);
+      const move = TestBed.inject(MoveService);
+      const building = collection.dataset().locations.find((l) => l.type === 'building')!;
+      collection.setLocationMapImage(building.id, 'data:image/png;base64,abc', 800, 600);
 
       const fixture = TestBed.createComponent(FloorPlanComponent);
       fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
@@ -292,7 +318,7 @@ describe('FloorPlanComponent', () => {
       (fixture.nativeElement.querySelector('.floor-plan__remove-plan') as HTMLElement).click();
       fixture.detectChanges();
 
-      const updated = data.dataset().locations.find((l) => l.id === building.id)!;
+      const updated = collection.dataset().locations.find((l) => l.id === building.id)!;
       expect(updated.mapImage).toBeUndefined();
       expect(fixture.nativeElement.querySelector('.floor-plan__remove-plan')).toBeFalsy();
     });

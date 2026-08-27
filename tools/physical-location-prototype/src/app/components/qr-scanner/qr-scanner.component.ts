@@ -1,7 +1,13 @@
 import { Component, OnDestroy, afterNextRender, inject, signal } from '@angular/core';
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
-import { DataService } from '../../data.service';
+import { ScanService } from '../../scan.service';
 import { TranslationService } from '../../i18n/translation.service';
+import {
+  QR_BOX_MAX_SIZE,
+  QR_BOX_VIEWPORT_RATIO,
+  QR_READ_DEBOUNCE_MS,
+  QR_SCANNER_FPS,
+} from './qr-scanner.constants';
 import { createQrScannerTranslations } from './qr-scanner.translations';
 
 @Component({
@@ -11,7 +17,7 @@ import { createQrScannerTranslations } from './qr-scanner.translations';
   styleUrl: './qr-scanner.component.scss',
 })
 export class QrScannerComponent implements OnDestroy {
-  private readonly data = inject(DataService);
+  private readonly scan = inject(ScanService);
   protected readonly text = createQrScannerTranslations(inject(TranslationService));
   private reader: Html5Qrcode | null = null;
   private started = false;
@@ -43,7 +49,7 @@ export class QrScannerComponent implements OnDestroy {
     try {
       await reader.start(
         { facingMode: 'environment' },
-        { fps: 10, qrbox: (w, h) => this.qrBox(w, h), aspectRatio: 1 },
+        { fps: QR_SCANNER_FPS, qrbox: (w, h) => this.qrBox(w, h), aspectRatio: 1 },
         (decodedText) => this.onScan(decodedText),
         () => undefined,
       );
@@ -59,7 +65,7 @@ export class QrScannerComponent implements OnDestroy {
 
   private qrBox(viewfinderWidth: number, viewfinderHeight: number) {
     const min = Math.min(viewfinderWidth, viewfinderHeight);
-    const size = Math.min(250, Math.round(min * 0.6));
+    const size = Math.min(QR_BOX_MAX_SIZE, Math.round(min * QR_BOX_VIEWPORT_RATIO));
     return { width: size, height: size };
   }
 
@@ -69,12 +75,12 @@ export class QrScannerComponent implements OnDestroy {
       return;
     }
     const now = Date.now();
-    if (code === this.lastCode && now - this.lastTime < 1500) {
+    if (code === this.lastCode && now - this.lastTime < QR_READ_DEBOUNCE_MS) {
       return;
     }
     this.lastCode = code;
     this.lastTime = now;
-    this.data.scanQr(code);
+    this.scan.scanQr(code);
   }
 
   ngOnDestroy(): void {

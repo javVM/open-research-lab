@@ -1,13 +1,14 @@
 <div class="qr-label">
   <h3 class="qr-label__heading">{{ text.heading() }}</h3>
 
-  <div class="qr-label__formats" role="group">
+  <div class="qr-label__formats" role="group" [attr.aria-label]="text.heading()">
     @for (format of formats; track format) {
       <button
         type="button"
         mat-button
         class="qr-label__format"
         [class.qr-label__format--active]="selectedFormat() === format"
+        [attr.aria-pressed]="selectedFormat() === format"
         (click)="selectFormat(format)"
       >
         {{ formatLabel(format) }}

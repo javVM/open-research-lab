@@ -1,6 +1,8 @@
 import { Component, forwardRef, inject, input } from '@angular/core';
 import type { LocationNode } from '../../../core/tree';
-import { DataService } from '../../data.service';
+import { CollectionService } from '../../collection.service';
+import { MoveService } from '../../move.service';
+import { NavigationService } from '../../navigation.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createLocationTreeTranslations } from './location-tree.translations';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
@@ -48,7 +50,9 @@ import { createLocationTypeTranslations } from '../../shared/location-type.trans
   styleUrl: './location-tree.component.scss',
 })
 export class LocationTreeNodesComponent {
-  protected readonly data = inject(DataService);
+  protected readonly collection = inject(CollectionService);
+  protected readonly navigation = inject(NavigationService);
+  protected readonly move = inject(MoveService);
   protected readonly text = createLocationTreeTranslations(inject(TranslationService));
   protected readonly locationType = createLocationTypeTranslations(inject(TranslationService));
 
@@ -56,15 +60,15 @@ export class LocationTreeNodesComponent {
   readonly depth = input<number>(0);
 
   countItemsBelow(node: LocationNode): number {
-    return this.data.locationItemCounts().get(node.location.id) ?? 0;
+    return this.collection.locationItemCounts().get(node.location.id) ?? 0;
   }
 
   isExpanded(locationId: string): boolean {
-    return this.data.expandedIds().has(locationId);
+    return this.navigation.expandedIds().has(locationId);
   }
 
   isSelected(locationId: string): boolean {
-    return this.data.selectedLocationId() === locationId;
+    return this.navigation.selectedLocationId() === locationId;
   }
 
   toggleAriaLabel(node: LocationNode): string | null {
@@ -75,14 +79,14 @@ export class LocationTreeNodesComponent {
   }
 
   select(locationId: string): void {
-    this.data.selectLocation(locationId);
-    if (this.data.movingItemId()) {
-      this.data.requestMove(locationId);
+    this.navigation.selectLocation(locationId);
+    if (this.move.movingItemId()) {
+      this.move.requestMove(locationId);
     }
   }
 
   toggle(locationId: string, event: Event): void {
     event.stopPropagation();
-    this.data.toggleExpanded(locationId);
+    this.navigation.toggleExpanded(locationId);
   }
 }

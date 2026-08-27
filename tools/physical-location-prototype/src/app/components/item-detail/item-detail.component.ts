@@ -4,29 +4,39 @@ import { breadcrumb, breadcrumbLabel } from '../../../core/tree';
 import { historyOf } from '../../../core/search';
 import { QrLabelComponent } from '../qr-label/qr-label.component';
 import { MatButtonModule } from '@angular/material/button';
-import { DataService } from '../../data.service';
+import { MatIconModule } from '@angular/material/icon';
+import { CollectionService } from '../../collection.service';
+import { MoveService } from '../../move.service';
+import { NavigationService } from '../../navigation.service';
 import { TranslationService } from '../../i18n/translation.service';
+import { registerAppIcons } from '../../shared/icons';
 import { createItemDetailTranslations } from './item-detail.translations';
 
 @Component({
   standalone: true,
   selector: 'app-item-detail',
-  imports: [QrLabelComponent, MatButtonModule],
+  imports: [QrLabelComponent, MatButtonModule, MatIconModule],
   templateUrl: './item-detail.component.html',
   styleUrl: './item-detail.component.scss',
 })
 export class ItemDetailComponent {
-  protected readonly data = inject(DataService);
+  protected readonly collection = inject(CollectionService);
+  protected readonly navigation = inject(NavigationService);
+  protected readonly move = inject(MoveService);
   protected readonly text = createItemDetailTranslations(inject(TranslationService));
 
+  constructor() {
+    registerAppIcons();
+  }
+
   readonly item = computed<Item | undefined>(() => {
-    const id = this.data.selectedItemId();
-    return id ? this.data.dataset().items.find((candidate) => candidate.id === id) : undefined;
+    const id = this.navigation.selectedItemId();
+    return id ? this.collection.dataset().items.find((candidate) => candidate.id === id) : undefined;
   });
 
   readonly selectedLocation = computed<Location | undefined>(() => {
-    const id = this.data.selectedLocationId();
-    return id ? this.data.dataset().locations.find((candidate) => candidate.id === id) : undefined;
+    const id = this.navigation.selectedLocationId();
+    return id ? this.collection.dataset().locations.find((candidate) => candidate.id === id) : undefined;
   });
 
   readonly qrPayload = computed<string>(() => {
@@ -41,31 +51,31 @@ export class ItemDetailComponent {
 
   readonly path = computed<Location[]>(() => {
     const item = this.item();
-    return item?.locationId ? breadcrumb(this.data.dataset().locations, item.locationId) : [];
+    return item?.locationId ? breadcrumb(this.collection.dataset().locations, item.locationId) : [];
   });
 
   readonly history = computed<Movement[]>(() => {
     const item = this.item();
-    return item ? historyOf(this.data.dataset(), item.id) : [];
+    return item ? historyOf(this.collection.dataset(), item.id) : [];
   });
 
   locationLabel(locationId: string | null): string {
-    return locationId ? breadcrumbLabel(this.data.dataset().locations, locationId) : this.text.unlocated();
+    return locationId ? breadcrumbLabel(this.collection.dataset().locations, locationId) : this.text.unlocated();
   }
 
   startMove(): void {
     const item = this.item();
     if (item) {
-      this.data.startMove(item.id);
+      this.move.startMove(item.id);
     }
   }
 
   cancelMove(): void {
-    this.data.cancelMove();
+    this.move.cancelMove();
   }
 
   isMoving(): boolean {
-    return this.data.movingItemId() === this.item()?.id;
+    return this.move.movingItemId() === this.item()?.id;
   }
 
   protected readonly showHistory = signal(false);

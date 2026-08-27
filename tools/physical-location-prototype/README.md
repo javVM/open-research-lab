@@ -19,9 +19,19 @@ None of this is a preview of `packages/core` or an architecture precedent; see `
 
 ## Stack
 
-Angular 22 (standalone components, signals, zoneless change detection), Angular CDK
+Angular 22 (standalone components, signal forms, zoneless change detection), Angular CDK
 `drag-drop` for moving items between containers, Jest + `jest-preset-angular` for tests. No
 backend, no network calls other than fetching the two static translation files below.
+
+State is split across four small app-level services with acyclic dependencies, rather than one
+catch-all `DataService`: `CollectionService` (the dataset + mutations + `locationItemCounts`),
+`MoveService` (the interactive move flow), `NavigationService` (selection, tree expansion,
+`uiMode`), and `ScanService` (the QR check-in/check-out flow). Shared, framework-light services
+keep the UI conventions in one place: `GeometryService` (floor-plan geometry), `RenderService`
+(occupancy painting), `ViewportService` (breakpoint state). Form inputs use Angular's signal
+forms (`form()` + `formField`) rather than `ngModel`, and icons are `<mat-icon>` backed by the
+locally-registered inline-SVG set in `shared/icons.ts` — the app is local-first, so there is no
+CDN icon font. These rules are codified in `AGENTS.md` §3.1.
 
 ## Commands
 

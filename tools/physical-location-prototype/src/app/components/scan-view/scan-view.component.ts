@@ -1,50 +1,58 @@
-import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { form, FormField, type FieldTree } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { DataService } from '../../data.service';
+import { ScanService } from '../../scan.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { QrScannerComponent } from '../qr-scanner/qr-scanner.component';
 import { createScanViewTranslations } from './scan-view.translations';
 
+/**
+ * Manual code entry for the scan view. Each free-text input is a signal-forms
+ * field: the `signal()` holds the value and `form()` gives the template a
+ * two-way bound field tree, so we never fall back to `[(ngModel)]` or plain
+ * mutable string fields.
+ */
 @Component({
   standalone: true,
   selector: 'app-scan-view',
-  imports: [FormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, QrScannerComponent],
+  imports: [MatButtonModule, MatFormFieldModule, MatInputModule, QrScannerComponent, FormField],
   templateUrl: './scan-view.component.html',
   styleUrl: './scan-view.component.scss',
 })
 export class ScanViewComponent {
-  protected readonly data = inject(DataService);
+  protected readonly scan = inject(ScanService);
   protected readonly text = createScanViewTranslations(inject(TranslationService));
 
-  protected manualCode = '';
-  protected positionCode = '';
-  protected tubeCode = '';
+  protected readonly manualCode = signal('');
+  protected readonly manualField: FieldTree<string> = form(this.manualCode);
+  protected readonly positionCode = signal('');
+  protected readonly positionField: FieldTree<string> = form(this.positionCode);
+  protected readonly tubeCode = signal('');
+  protected readonly tubeField: FieldTree<string> = form(this.tubeCode);
 
   submitManualCode(): void {
-    const code = this.manualCode.trim();
+    const code = this.manualCode().trim();
     if (code) {
-      this.data.scanQr(code);
-      this.manualCode = '';
+      this.scan.scanQr(code);
+      this.manualCode.set('');
     }
   }
 
   submitPosition(): void {
-    const code = this.positionCode.trim();
+    const code = this.positionCode().trim();
     if (code) {
-      this.data.scanPosition(code);
-      this.positionCode = '';
+      this.scan.scanPosition(code);
+      this.positionCode.set('');
     }
   }
 
   submitTube(): void {
-    const code = this.tubeCode.trim();
+    const code = this.tubeCode().trim();
     if (code) {
-      this.data.scanTube(code);
-      this.tubeCode = '';
+      this.scan.scanTube(code);
+      this.tubeCode.set('');
     }
   }
-
 }

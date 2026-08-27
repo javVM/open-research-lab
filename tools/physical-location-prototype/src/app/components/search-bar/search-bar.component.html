@@ -5,8 +5,7 @@
       class="search-bar__input"
       type="search"
       [placeholder]="text.placeholder()"
-      [ngModel]="query()"
-      (ngModelChange)="query.set($event)"
+      [formField]="queryField"
       [attr.aria-label]="text.ariaLabel()"
     />
   </mat-form-field>

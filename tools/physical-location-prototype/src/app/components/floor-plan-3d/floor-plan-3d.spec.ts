@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { FloorPlan3dComponent } from './floor-plan-3d.component';
-import { DataService } from '../../data.service';
+import { CollectionService } from '../../collection.service';
+import { MoveService } from '../../move.service';
+import { NavigationService } from '../../navigation.service';
 import type { Location } from '../../../core/models';
 
 function room(id: string, x: number, y: number): Location {
@@ -40,7 +42,9 @@ describe('FloorPlan3dComponent', () => {
   });
 
   it('clicking each floor selects that specific floor, not always the topmost one', () => {
-    const data = TestBed.inject(DataService);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
     const floors = [floor('f1', 0), floor('f2', 260)];
 
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
@@ -49,9 +53,9 @@ describe('FloorPlan3dComponent', () => {
 
     const boxes = fixture.nativeElement.querySelectorAll('.box3d') as NodeListOf<HTMLElement>;
     (boxes[0] as HTMLElement).click();
-    expect(data.selectedLocationId()).toBe('f1');
+    expect(navigation.selectedLocationId()).toBe('f1');
     (boxes[1] as HTMLElement).click();
-    expect(data.selectedLocationId()).toBe('f2');
+    expect(navigation.selectedLocationId()).toBe('f2');
   });
 
   it('does not stack non-floor locations — they all sit at elevation 0', () => {
@@ -66,9 +70,11 @@ describe('FloorPlan3dComponent', () => {
   });
 
   it('shows a shelf band per drawer on a cabinet\'s front face, since drawers have no coordinates of their own', () => {
-    const data = TestBed.inject(DataService);
-    const cabinet = data.dataset().locations.find((l) => l.type === 'cabinet')!;
-    const drawers = data.dataset().locations.filter((l) => l.parentId === cabinet.id && l.type === 'drawer');
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const cabinet = collection.dataset().locations.find((l) => l.type === 'cabinet')!;
+    const drawers = collection.dataset().locations.filter((l) => l.parentId === cabinet.id && l.type === 'drawer');
 
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
     fixture.componentRef.setInput("locations", [cabinet]);
@@ -86,20 +92,24 @@ describe('FloorPlan3dComponent', () => {
   });
 
   it('clicking a box selects that location when nothing is being moved', () => {
-    const data = TestBed.inject(DataService);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
     fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
     fixture.detectChanges();
 
     (fixture.nativeElement.querySelector('.box3d') as HTMLElement).click();
 
-    expect(data.selectedLocationId()).toBe('a');
+    expect(navigation.selectedLocationId()).toBe('a');
   });
 
   it('clicking a box while moving an item requests a move to that location instead', () => {
-    const data = TestBed.inject(DataService);
-    const item = data.dataset().items.find((i) => i.locationId !== null)!;
-    data.startMove(item.id);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const item = collection.dataset().items.find((i) => i.locationId !== null)!;
+    move.startMove(item.id);
 
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
     fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
@@ -107,11 +117,13 @@ describe('FloorPlan3dComponent', () => {
 
     (fixture.nativeElement.querySelector('.box3d') as HTMLElement).click();
 
-    expect(data.pendingMoveTargetId()).toBe('a');
+    expect(move.pendingMoveTargetId()).toBe('a');
   });
 
   it('dragging that starts on top of a box still orbits, and suppresses the click that follows', () => {
-    const data = TestBed.inject(DataService);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
     fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
     fixture.detectChanges();
@@ -127,11 +139,13 @@ describe('FloorPlan3dComponent', () => {
     box.click();
 
     expect(plane.style.transform).not.toBe(initialTransform);
-    expect(data.selectedLocationId()).not.toBe('a');
+    expect(navigation.selectedLocationId()).not.toBe('a');
   });
 
   it('a press-and-release without meaningful movement on a box still selects it', () => {
-    const data = TestBed.inject(DataService);
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
     fixture.componentRef.setInput("locations", [room('a', 0, 0)]);
     fixture.detectChanges();
@@ -141,12 +155,14 @@ describe('FloorPlan3dComponent', () => {
     window.dispatchEvent(new MouseEvent('pointerup'));
     box.click();
 
-    expect(data.selectedLocationId()).toBe('a');
+    expect(navigation.selectedLocationId()).toBe('a');
   });
 
   it('flips the drawer/shelf overlay horizontally when it is on the back face so handles read correctly', () => {
-    const data = TestBed.inject(DataService);
-    const cabinet = data.dataset().locations.find((l) => l.type === 'cabinet')!;
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const cabinet = collection.dataset().locations.find((l) => l.type === 'cabinet')!;
 
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
     fixture.componentRef.setInput("locations", [cabinet]);
@@ -163,8 +179,10 @@ describe('FloorPlan3dComponent', () => {
   });
 
   it('migrates the drawer/shelf overlay to whichever wall currently faces the camera as the view is rotated', () => {
-    const data = TestBed.inject(DataService);
-    const cabinet = data.dataset().locations.find((l) => l.type === 'cabinet')!;
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const cabinet = collection.dataset().locations.find((l) => l.type === 'cabinet')!;
 
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
     fixture.componentRef.setInput("locations", [cabinet]);

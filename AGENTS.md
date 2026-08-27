@@ -85,6 +85,41 @@ Do not propose a structural change without having read the relevant ADR.
 - **Dependencies:** few, mainstream, justified in the PR description, and preferably published
   at least seven days ago. Never add a dependency for a function you can write in twenty lines.
 
+### 3.1 Angular / UI conventions — the coding bible
+
+These are the working rules for the Angular prototype(s). They apply in addition to the technical
+rules above. When in doubt, the smaller, more boring, better-named option wins.
+
+- **No magic numbers or magic strings.** Every number or string that means something is a named
+  constant. Put constants that are local to one component in that component's `.constants.ts`; put
+  constants shared by two or more components under `shared/`. Group related constants into a
+  clearly named file (e.g. `hierarchy.constants.ts`, `geometry.constants.ts`,
+  `palette.constants.ts`). Prefer a `const` object or union over ad-hoc literals in a method.
+- **Services for grouped functionality.** If several components share a concern, extract a
+  `@Injectable({ providedIn: 'root' })` service and keep the shared logic in it. Real examples in
+  this prototype: `GeometryService` (floor-plan geometry), `RenderService` (occupancy painting),
+  `ViewportService` (breakpoint state). A service owns a single concern; keep methods readable and
+  short — if a method is doing two things or reads like a wall of text, split it.
+- **Signals and signal forms.** Use `signal()`/`computed()` for all component state. For form
+  inputs, use Angular's signal forms (`form()` from `@angular/forms/signals` + the `formField`
+  directive) rather than `[(ngModel)]`. Never mutate a plain string field behind an input.
+- **Components are standalone.** Always. Each declares its own `imports`.
+- **Use the modern control-flow directives** (`@if`, `@for`, `@switch`, `@defer`) — never
+  `*ngIf`/`*ngFor`/`*ngSwitch`.
+- **No deprecated imports, APIs or methods.** If a symbol is marked `@deprecated`, use its
+  replacement. When in doubt, check the type definition before using it.
+- **Accessibility is essential.** Every interactive element has an accessible name (a label,
+  `aria-label`, or `mat-label`), toggle/segmented controls set `aria-pressed`/`aria-expanded` as
+  appropriate, decorative icons are `aria-hidden`, and dialogs/roles are announced
+  (`role="dialog"`, `aria-modal`, `aria-label`). A new control without an accessible name is an
+  incomplete change.
+- **Use the Material components** (`mat-button`, `mat-icon-button`, `mat-select`, `mat-form-field`,
+  `mat-input`). For icons, use `<mat-icon>` backed by the locally-registered icon set in
+  `shared/icons.ts` (the app is local-first, so icons are inline SVGs — never a CDN font).
+- **Tests must pass and each test must earn its place.** Never add a test just to pad a count; a
+  test asserts a behaviour or a documented invariant. Never weaken or delete a meaningful test to
+  make a suite green — a failing meaningful test is a signal to fix the code, not the test.
+
 ## 4. Scientific data rules
 
 - Never store a quantity without its unit.

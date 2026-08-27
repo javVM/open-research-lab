@@ -1,5 +1,5 @@
-@if (data.movingItem(); as item) {
-  @if (data.pendingMoveTargetId(); as targetId) {
+@if (move.movingItem(); as item) {
+  @if (move.pendingMoveTargetId(); as targetId) {
     <div class="modal-backdrop" (click)="cancel()">
       <div
         class="modal"
@@ -8,7 +8,7 @@
         [attr.aria-label]="text.ariaLabel()"
         (click)="$event.stopPropagation()"
       >
-        <p>{{ text.prompt(item.catalogueNumber, data.pendingMoveTargetLabel() ?? '') }}</p>
+        <p>{{ text.prompt(item.catalogueNumber, move.pendingMoveTargetLabel() ?? '') }}</p>
         <div class="modal__actions">
           <button type="button" mat-button class="modal__cancel" (click)="cancel()">{{ text.cancel() }}</button>
           <button type="button" mat-button color="primary" class="modal__confirm" (click)="confirm()">{{ text.confirm() }}</button>

@@ -13,21 +13,21 @@
     </section>
 
     <section class="label-view__preview" aria-label="Label preview">
-      @if (data.selectedLocationId(); as locationId) {
+      @if (navigation.selectedLocationId(); as locationId) {
         <div class="label-view__card">
           <h3>{{ text.locationSection() }}: {{ selectedLocationName() }}</h3>
           <app-qr-label [payload]="locationPayload()"></app-qr-label>
         </div>
       }
 
-      @if (data.selectedItemId(); as itemId) {
+      @if (navigation.selectedItemId(); as itemId) {
         <div class="label-view__card">
           <h3>{{ text.itemSection() }}: {{ selectedItemCatalogue() }}</h3>
           <app-qr-label [payload]="itemPayload()"></app-qr-label>
         </div>
       }
 
-      @if (!data.selectedLocationId() && !data.selectedItemId()) {
+      @if (!navigation.selectedLocationId() && !navigation.selectedItemId()) {
         <p class="label-view__prompt">{{ text.selectPrompt() }}</p>
       }
     </section>
