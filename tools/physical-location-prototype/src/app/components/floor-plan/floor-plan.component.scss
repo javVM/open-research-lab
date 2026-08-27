@@ -28,6 +28,26 @@
   color: var(--accent, #5b8def);
 }
 
+.floor-plan__add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  color: var(--text-muted, #9aa1ac);
+  cursor: pointer;
+}
+
+.floor-plan__add svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.floor-plan__add:hover {
+  color: var(--accent, #5b8def);
+}
+
 .floor-plan__menu {
   display: none;
   position: absolute;

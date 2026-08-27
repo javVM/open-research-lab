@@ -15,6 +15,21 @@
 
     <h2>{{ location.name }}</h2>
 
+    @if (allowedChildTypes().length > 0 || canAddItem()) {
+      <div class="add-actions">
+        @for (childType of allowedChildTypes(); track childType) {
+          <button type="button" mat-button class="add-component" (click)="addComponent(childType)">
+            {{ text.addComponent(locationType.label(childType)) }}
+          </button>
+        }
+        @if (canAddItem()) {
+          <button type="button" mat-button class="add-item" (click)="addItem()">
+            {{ text.addItem() }}
+          </button>
+        }
+      </div>
+    }
+
     @if (data.movingItem(); as moving) {
       <div class="move-banner">
         {{ text.movingBanner(moving.catalogueNumber) }}

@@ -1,5 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
-import type { Dataset, Item, ItemStatus, Location } from '../core/models';
+import type { Dataset, Item, ItemStatus, Location, Movement } from '../core/models';
 import { ancestorIds, breadcrumbLabel, descendantIds } from '../core/tree';
 import { itemCountsByLocation } from '../core/search';
 import { move as moveItem } from '../core/movement';
@@ -504,5 +504,44 @@ export class DataService {
       return rest;
     });
     this.store.setState({ ...dataset, locations });
+  }
+
+  /** Appends a new location to the dataset. */
+  addLocation(location: Location): void {
+    const dataset = this.dataset();
+    this.store.setState({ ...dataset, locations: [...dataset.locations, location] });
+  }
+
+  /** Appends several locations to the dataset in a single update. */
+  addLocations(locations: Location[]): void {
+    const dataset = this.dataset();
+    this.store.setState({ ...dataset, locations: [...dataset.locations, ...locations] });
+  }
+
+  /** Creates a new item at the given location and records an accession movement. */
+  addItem(catalogueNumber: string, locationId: string | null): Item {
+    const dataset = this.dataset();
+    const id = `item-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+    const item: Item = {
+      id,
+      catalogueNumber: catalogueNumber.trim(),
+      locationId,
+      status: 'active',
+    };
+    const items = [...dataset.items, item];
+    let movements = dataset.movements;
+    if (locationId) {
+      const movement: Movement = {
+        id: `mov-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+        itemId: id,
+        fromLocationId: null,
+        toLocationId: locationId,
+        occurredAt: new Date().toISOString(),
+        note: 'Accessioned in prototype UI',
+      };
+      movements = [...movements, movement];
+    }
+    this.store.setState({ ...dataset, items, movements });
+    return item;
   }
 }

@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DataService } from './data.service';
 import { ancestorIds } from '../core/tree';
+import type { Location } from '../core/models';
 
 describe('DataService', () => {
   beforeEach(() => {
@@ -18,6 +19,43 @@ describe('DataService', () => {
     const firstBuilding = data.dataset().locations.find((l) => l.type === 'building')!;
     expect(data.selectedLocationId()).toBe(firstBuilding.id);
     expect(data.expandedIds().has(firstBuilding.id)).toBe(true);
+  });
+
+  it('addLocation appends a new location to the dataset', () => {
+    const data = service();
+    const building = data.dataset().locations.find((l) => l.type === 'building')!;
+    const before = data.dataset().locations.length;
+    const newLocation: Location = {
+      id: 'loc-test-123',
+      parentId: building.id,
+      name: 'Test Room',
+      type: 'room',
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 80,
+    };
+    data.addLocation(newLocation);
+    expect(data.dataset().locations.length).toBe(before + 1);
+    expect(data.dataset().locations).toContainEqual(newLocation);
+  });
+
+  it('addItem creates an active item and records an accession movement', () => {
+    const data = service();
+    const before = data.dataset().items.length;
+    const location = data.dataset().locations.find((l) => l.type === 'position')!;
+
+    const item = data.addItem('NEW-123', location.id);
+
+    expect(data.dataset().items.length).toBe(before + 1);
+    expect(item.catalogueNumber).toBe('NEW-123');
+    expect(item.locationId).toBe(location.id);
+    expect(item.status).toBe('active');
+
+    const lastMovement = data.dataset().movements.at(-1)!;
+    expect(lastMovement.itemId).toBe(item.id);
+    expect(lastMovement.fromLocationId).toBeNull();
+    expect(lastMovement.toLocationId).toBe(location.id);
   });
 
   it('selecting a location expands it and updates selectedLocationId', () => {

@@ -1,6 +1,6 @@
 import { Component, ElementRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import type { Location } from '../../../core/models';
+import type { Location, LocationType } from '../../../core/models';
 import { DataService } from '../../data.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
@@ -151,6 +151,88 @@ export class FloorPlanComponent {
     if (containerLocationId) {
       this.data.clearLocationMapImage(containerLocationId);
     }
+  }
+
+  /** Returns the child type that should be added to the current container, or null if none. */
+  childTypeToAdd(): LocationType | null {
+    const firstChild = this.locations()[0]?.type;
+    if (firstChild) {
+      return firstChild;
+    }
+    const container = this.data.dataset().locations.find((candidate) => candidate.id === this.containerLocationId());
+    if (!container) {
+      return null;
+    }
+    const map: Record<LocationType, LocationType | null> = {
+      building: 'floor',
+      floor: 'room',
+      room: 'cabinet',
+      cabinet: 'drawer',
+      drawer: 'box',
+      box: 'tray',
+      tray: 'position',
+      position: null,
+    };
+    return map[container.type] ?? null;
+  }
+
+  addComponent(): void {
+    const containerId = this.containerLocationId();
+    const childType = this.childTypeToAdd();
+    if (!containerId || !childType) {
+      return;
+    }
+    const size = this.defaultSizeFor(childType);
+    const position = this.nextPosition(size);
+    const name = this.defaultName(childType);
+    const label = this.locationType.label(childType);
+    const chosen = window.prompt(`Nombre para el nuevo ${label}:`, name);
+    if (chosen === null) {
+      return;
+    }
+    const trimmed = chosen.trim();
+    const finalName = trimmed || name;
+    const id = `loc-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+    this.data.addLocation({
+      id,
+      parentId: containerId,
+      name: finalName,
+      type: childType,
+      x: position.x,
+      y: position.y,
+      width: size.width,
+      height: size.height,
+    });
+  }
+
+  private defaultSizeFor(type: LocationType): { width: number; height: number } {
+    switch (type) {
+      case 'floor':
+        return { width: 600, height: 400 };
+      case 'room':
+        return { width: 184, height: 184 };
+      case 'cabinet':
+        return { width: 84, height: 164 };
+      default:
+        return { width: 100, height: 80 };
+    }
+  }
+
+  private nextPosition(size: { width: number; height: number }): { x: number; y: number } {
+    if (this.locations().length === 0) {
+      return { x: 0, y: 0 };
+    }
+    const maxY = Math.max(...this.locations().map((location) => (location.y ?? 0) + (location.height ?? 0)));
+    return { x: 0, y: maxY + 16 };
+  }
+
+  private defaultName(type: LocationType): string {
+    const label = this.locationType.label(type);
+    const containerId = this.containerLocationId()!;
+    const count = this.data.dataset().locations.filter(
+      (candidate) => candidate.parentId === containerId && candidate.type === type,
+    ).length;
+    return `${label} ${count + 1}`;
   }
 
   rectFor(location: Location): Rect {

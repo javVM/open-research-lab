@@ -8,6 +8,7 @@ export const previewHint = $localize `@@floorPlan.previewHint:Hover to preview w
 export const itemCount = (count: number): string => $localize `@@floorPlan.itemCount:${count} item(s)`;
 export const uploadPlan = $localize `@@floorPlan.uploadPlan:Upload floor plan image`;
 export const removePlan = $localize `@@floorPlan.removePlan:Remove floor plan image`;
+export const addComponent = $localize `@@floorPlan.addComponent:Add component`;
 
 export function createFloorPlanTranslations(i18n: TranslationService) {
   return {
@@ -18,5 +19,6 @@ export function createFloorPlanTranslations(i18n: TranslationService) {
     itemCount: (count: number): string => i18n.t('floorPlan.itemCount', itemCount(count), { count }),
     uploadPlan: () => i18n.t('floorPlan.uploadPlan', uploadPlan),
     removePlan: () => i18n.t('floorPlan.removePlan', removePlan),
+    addComponent: () => i18n.t('floorPlan.addComponent', addComponent),
   };
 }

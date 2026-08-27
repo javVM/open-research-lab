@@ -121,6 +121,9 @@
       <trans-unit id="floorPlan.removePlan">
         <source>Remove floor plan image</source>
       </trans-unit>
+      <trans-unit id="floorPlan.addComponent">
+        <source>Add component</source>
+      </trans-unit>
 
       <trans-unit id="floorPlan3d.ariaLabel">
         <source>3D floor plan</source>
@@ -311,6 +314,25 @@
       </trans-unit>
       <trans-unit id="confirmMoveModal.confirm">
         <source>Move here</source>
+      </trans-unit>
+
+      <trans-unit id="locationView.addComponent">
+        <source>Add {type}</source>
+      </trans-unit>
+      <trans-unit id="locationView.addComponentPrompt">
+        <source>Name for the new {type}:</source>
+      </trans-unit>
+      <trans-unit id="locationView.trayRowsPrompt">
+        <source>Number of rows:</source>
+      </trans-unit>
+      <trans-unit id="locationView.trayColumnsPrompt">
+        <source>Number of columns:</source>
+      </trans-unit>
+      <trans-unit id="locationView.addItem">
+        <source>Add item</source>
+      </trans-unit>
+      <trans-unit id="locationView.addItemPrompt">
+        <source>Catalogue number for the new item:</source>
       </trans-unit>
     </body>
   </file>

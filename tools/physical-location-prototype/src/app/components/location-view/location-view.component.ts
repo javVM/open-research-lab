@@ -1,7 +1,7 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { CdkDrag, CdkDropList, CdkDropListGroup, type CdkDragDrop } from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button';
-import type { Item, Location } from '../../../core/models';
+import type { Item, Location, LocationType } from '../../../core/models';
 import { breadcrumb, childrenOf } from '../../../core/tree';
 import { itemsAtLocation } from '../../../core/search';
 import { DataService } from '../../data.service';
@@ -132,7 +132,9 @@ export class LocationViewComponent {
     }
     if (cell.occupant) {
       this.data.selectItem(cell.occupant.id);
+      return;
     }
+    this.addItemToLocation(cell.position.id);
   }
 
   onCardClick(locationId: string): void {
@@ -146,6 +148,157 @@ export class LocationViewComponent {
   onItemClick(itemId: string, event: Event): void {
     event.stopPropagation();
     this.data.selectItem(itemId);
+  }
+
+  /** Child location types the selected location may contain. */
+  readonly allowedChildTypes = computed<LocationType[]>(() => {
+    const container = this.selectedLocation();
+    if (!container) {
+      return [];
+    }
+    const map: Record<LocationType, LocationType[]> = {
+      building: ['floor'],
+      floor: ['room'],
+      room: ['cabinet'],
+      cabinet: ['drawer'],
+      drawer: ['box', 'tray'],
+      box: ['tray'],
+      tray: [],
+      position: [],
+    };
+    return map[container.type] ?? [];
+  });
+
+  /** True when the selected location can directly hold items (not just containers). */
+  readonly canAddItem = computed<boolean>(() => {
+    const container = this.selectedLocation();
+    if (!container) {
+      return false;
+    }
+    return ['drawer', 'box', 'tray', 'position'].includes(container.type);
+  });
+
+  addComponent(childType: LocationType): void {
+    const container = this.selectedLocation();
+    if (!container || !this.allowedChildTypes().includes(childType)) {
+      return;
+    }
+    const label = this.locationType.label(childType);
+    const name = this.defaultName(childType);
+    const chosen = window.prompt(this.text.addComponentPrompt(label), name);
+    if (chosen === null) {
+      return;
+    }
+    const trimmed = chosen.trim();
+    const finalName = trimmed || name;
+    const id = `loc-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+    const child: Location = {
+      id,
+      parentId: container.id,
+      name: finalName,
+      type: childType,
+    };
+
+    if (this.isMappable(childType)) {
+      const size = this.defaultSizeFor(childType);
+      const position = this.nextPosition(childType, size);
+      child.x = position.x;
+      child.y = position.y;
+      child.width = size.width;
+      child.height = size.height;
+    }
+
+    const locations: Location[] = [child];
+
+    if (childType === 'tray') {
+      const rows = this.askNumber(this.text.trayRowsPrompt(), 1);
+      const columns = this.askNumber(this.text.trayColumnsPrompt(), 1);
+      if (rows === null || columns === null) {
+        return;
+      }
+      for (let row = 1; row <= rows; row += 1) {
+        for (let column = 1; column <= columns; column += 1) {
+          const positionId = `loc-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+          locations.push({
+            id: positionId,
+            parentId: id,
+            name: `R${row} C${column}`,
+            type: 'position',
+            row,
+            column,
+          });
+        }
+      }
+    }
+
+    this.data.addLocations(locations);
+  }
+
+  private isMappable(type: LocationType): boolean {
+    return ['floor', 'room', 'cabinet'].includes(type);
+  }
+
+  private defaultSizeFor(type: LocationType): { width: number; height: number } {
+    switch (type) {
+      case 'floor':
+        return { width: 600, height: 400 };
+      case 'room':
+        return { width: 184, height: 184 };
+      case 'cabinet':
+        return { width: 84, height: 164 };
+      default:
+        return { width: 100, height: 80 };
+    }
+  }
+
+  private nextPosition(type: LocationType, size: { width: number; height: number }): { x: number; y: number } {
+    const siblings = this.children().filter((candidate) => candidate.type === type);
+    if (siblings.length === 0) {
+      return { x: 0, y: 0 };
+    }
+    const maxY = Math.max(...siblings.map((candidate) => (candidate.y ?? 0) + (candidate.height ?? 0)));
+    return { x: 0, y: maxY + 16 };
+  }
+
+  private askNumber(message: string, defaultValue: number): number | null {
+    const raw = window.prompt(message, String(defaultValue));
+    if (raw === null) {
+      return null;
+    }
+    const value = parseInt(raw.trim(), 10);
+    if (Number.isNaN(value) || value < 1) {
+      return null;
+    }
+    return value;
+  }
+
+  addItem(): void {
+    const location = this.selectedLocation();
+    if (!location) {
+      return;
+    }
+    this.addItemToLocation(location.id);
+  }
+
+  private defaultName(type: LocationType): string {
+    const label = this.locationType.label(type);
+    const container = this.selectedLocation()!;
+    const count = this.data.dataset().locations.filter(
+      (candidate) => candidate.parentId === container.id && candidate.type === type,
+    ).length;
+    return `${label} ${count + 1}`;
+  }
+
+  addItemToLocation(locationId: string | null): void {
+    const catalogueNumber = window.prompt(this.text.addItemPrompt());
+    if (catalogueNumber === null) {
+      return;
+    }
+    const trimmed = catalogueNumber.trim();
+    if (!trimmed) {
+      return;
+    }
+    this.data.addItem(trimmed, locationId);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- CdkDropList's generic is
