@@ -347,8 +347,8 @@
       </trans-unit>
 
       <trans-unit id="itemDetail.emptyState">
-        <source>Select an item to see its details.</source>
-        <target>Selecciona un ítem para ver sus detalles.</target>
+        <source>Select an item or location to see its details.</source>
+        <target>Selecciona un ítem o ubicación para ver sus detalles.</target>
       </trans-unit>
       <trans-unit id="itemDetail.name">
         <source>Name</source>

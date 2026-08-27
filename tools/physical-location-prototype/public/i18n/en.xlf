@@ -261,7 +261,7 @@
       </trans-unit>
 
       <trans-unit id="itemDetail.emptyState">
-        <source>Select an item to see its details.</source>
+        <source>Select an item or location to see its details.</source>
       </trans-unit>
       <trans-unit id="itemDetail.status.label">
         <source>Status</source>

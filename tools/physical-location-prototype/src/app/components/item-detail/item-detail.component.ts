@@ -24,9 +24,19 @@ export class ItemDetailComponent {
     return id ? this.data.dataset().items.find((candidate) => candidate.id === id) : undefined;
   });
 
+  readonly selectedLocation = computed<Location | undefined>(() => {
+    const id = this.data.selectedLocationId();
+    return id ? this.data.dataset().locations.find((candidate) => candidate.id === id) : undefined;
+  });
+
   readonly qrPayload = computed<string>(() => {
     const item = this.item();
     return item ? `item:${item.id}` : '';
+  });
+
+  readonly locationQrPayload = computed<string>(() => {
+    const location = this.selectedLocation();
+    return location ? `box:${location.id}` : '';
   });
 
   readonly path = computed<Location[]>(() => {

@@ -7,7 +7,6 @@ import { ItemDetailComponent } from './components/item-detail/item-detail.compon
 import { ConfirmMoveModalComponent } from './components/confirm-move-modal/confirm-move-modal.component';
 import { LanguageSwitcherComponent } from './components/language-switcher/language-switcher.component';
 import { ScanViewComponent } from './components/scan-view/scan-view.component';
-import { LabelViewComponent } from './components/label-view/label-view.component';
 import { DataService } from './data.service';
 import { TranslationService } from './i18n/translation.service';
 import { createAppTranslations } from './app.translations';
@@ -23,7 +22,6 @@ import { createAppTranslations } from './app.translations';
     ConfirmMoveModalComponent,
     LanguageSwitcherComponent,
     ScanViewComponent,
-    LabelViewComponent,
   ],
   selector: 'app-root',
   styleUrl: './app.component.scss',

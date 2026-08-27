@@ -1,5 +1,5 @@
 export const ITEM_DETAIL_I18N = {
-  emptyState: { key: 'itemDetail.emptyState', fallback: 'Select an item to see its details.' },
+  emptyState: { key: 'itemDetail.emptyState', fallback: 'Select an item or location to see its details.' },
   statusFieldLabel: { key: 'itemDetail.status.label', fallback: 'Status' },
   currentLocationLabel: { key: 'itemDetail.currentLocation.label', fallback: 'Current location' },
   notLocated: { key: 'itemDetail.notLocated', fallback: 'Not currently located' },

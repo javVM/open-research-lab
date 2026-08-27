@@ -11,7 +11,6 @@ export const itemDetailAriaLabel = $localize `@@app.pane.itemDetail:Item detail`
 export const modeSwitcherAriaLabel = $localize `@@app.modeSwitcher.ariaLabel:View mode`;
 export const modeExplore = $localize `@@app.mode.explore:Explore`;
 export const modeScan = $localize `@@app.mode.scan:Scan`;
-export const modeLabel = $localize `@@app.mode.label:Label`;
 
 export function createAppTranslations(i18n: TranslationService) {
   return {
@@ -25,6 +24,5 @@ export function createAppTranslations(i18n: TranslationService) {
     modeSwitcherAriaLabel: () => i18n.t('app.modeSwitcher.ariaLabel', modeSwitcherAriaLabel),
     modeExplore: () => i18n.t('app.mode.explore', modeExplore),
     modeScan: () => i18n.t('app.mode.scan', modeScan),
-    modeLabel: () => i18n.t('app.mode.label', modeLabel),
   };
 }

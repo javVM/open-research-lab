@@ -1,7 +1,7 @@
 import { $localize } from '../../i18n/localize';
 import type { TranslationService } from '../../i18n/translation.service';
 
-export const emptyState = $localize `@@itemDetail.emptyState:Select an item to see its details.`;
+export const emptyState = $localize `@@itemDetail.emptyState:Select an item or location to see its details.`;
 export const nameLabel = $localize `@@itemDetail.name:Name`;
 export const statusFieldLabel = $localize `@@itemDetail.status.label:Status`;
 export const currentLocationLabel = $localize `@@itemDetail.currentLocation.label:Current location`;

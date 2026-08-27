@@ -40,7 +40,7 @@ export class DataService {
   readonly pendingMoveTargetId = signal<string | null>(null);
 
   /** Current high-level UI mode. This is application chrome, not domain state. */
-  readonly uiMode = signal<'explore' | 'scan' | 'label'>('explore');
+  readonly uiMode = signal<'explore' | 'scan'>('explore');
 
   /** Result of the most recent simulated QR scan (check-in, check-out or box navigation). */
   readonly qrHint = signal<QrHint | null>(null);
@@ -77,7 +77,7 @@ export class DataService {
     }
   }
 
-  setUiMode(mode: 'explore' | 'scan' | 'label'): void {
+  setUiMode(mode: 'explore' | 'scan'): void {
     this.uiMode.set(mode);
     this.selectedLocationId.set(null);
     this.selectedItemId.set(null);

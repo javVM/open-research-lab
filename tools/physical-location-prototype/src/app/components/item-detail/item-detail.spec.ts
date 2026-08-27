@@ -8,10 +8,12 @@ describe('ItemDetailComponent', () => {
     TestBed.configureTestingModule({});
   });
 
-  it('shows an empty state when no item is selected', () => {
+  it('shows an empty state when no item or location is selected', () => {
+    const data = TestBed.inject(DataService);
+    data.selectedLocationId.set(null);
     const fixture = TestBed.createComponent(ItemDetailComponent);
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('Select an item');
+    expect(fixture.nativeElement.textContent).toContain('Select an item or location');
   });
 
   it('shows the catalogue number, status and breadcrumb of the selected item', () => {

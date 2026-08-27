@@ -67,7 +67,7 @@ describe('App', () => {
     expect(searchInput.placeholder).toContain('Buscar en la colección');
   });
 
-  it('renders a mode switcher and can switch to the Label mode', async () => {
+  it('renders a mode switcher with Explore and Scan only', async () => {
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [App],
@@ -81,16 +81,10 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
 
     const buttons = compiled.querySelectorAll('.mode-switcher__button');
-    expect(buttons.length).toBe(3);
+    expect(buttons.length).toBe(2);
 
-    const labelButton = Array.from(buttons).find((button) => button.textContent?.includes('Label'));
-    expect(labelButton).toBeTruthy();
-    labelButton!.dispatchEvent(new Event('click'));
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
-
-    expect(compiled.querySelector('app-label-view')).toBeTruthy();
-    expect(compiled.querySelector('.label-view__heading')?.textContent).toContain('Labels');
+    expect(Array.from(buttons).some((button) => button.textContent?.includes('Label'))).toBe(false);
+    expect(Array.from(buttons).some((button) => button.textContent?.includes('Explore'))).toBe(true);
+    expect(Array.from(buttons).some((button) => button.textContent?.includes('Scan'))).toBe(true);
   });
 });

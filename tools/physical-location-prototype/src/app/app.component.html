@@ -21,15 +21,6 @@
       >
         {{ text.modeScan() }}
       </button>
-      <button
-        type="button"
-        mat-button
-        class="mode-switcher__button"
-        [class.mode-switcher__button--active]="data.uiMode() === 'label'"
-        (click)="data.setUiMode('label')"
-      >
-        {{ text.modeLabel() }}
-      </button>
     </nav>
 
     @if (data.uiMode() === 'explore') {
@@ -71,9 +62,6 @@
       }
       @case ('scan') {
         <app-scan-view class="pane pane--mode"></app-scan-view>
-      }
-      @case ('label') {
-        <app-label-view class="pane pane--mode"></app-label-view>
       }
     }
   </main>
