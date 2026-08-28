@@ -49,11 +49,9 @@ export const MOBILE_INITIAL_ROTATE_X = 45;
 /** Compacted wall/slab heights used on small screens so a stack stays viewable. */
 export const MOBILE_WALL_HEIGHT = 100;
 export const MOBILE_STACK_HEIGHT = 120;
-export const MOBILE_FOOTPRINT_DIVISOR = 480;
 
-/** Scene-height fitting limits used by `fitScale` on mobile. */
-export const MIN_MOBILE_SCENE_HEIGHT = 260;
-export const MAX_MOBILE_SCENE_HEIGHT = 384;
+/** Scene-fitting fallbacks, used before the scene has been laid out for real. */
 export const MOBILE_SCENE_HEIGHT_RATIO = 0.8;
+export const DESKTOP_SCENE_WIDTH = 800;
 export const DESKTOP_SCENE_HEIGHT = 608;
 export const SCENE_FIT_PADDING = 32;

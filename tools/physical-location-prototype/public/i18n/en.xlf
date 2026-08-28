@@ -142,6 +142,12 @@
       <trans-unit id="floorPlan.addComponent">
         <source>Add component</source>
       </trans-unit>
+      <trans-unit id="floorPlan.planLabel">
+        <source>Plan</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.addLabel">
+        <source>Add</source>
+      </trans-unit>
 
       <trans-unit id="floorPlan3d.ariaLabel">
         <source>3D floor plan</source>

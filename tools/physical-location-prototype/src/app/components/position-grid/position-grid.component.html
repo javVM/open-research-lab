@@ -28,7 +28,8 @@
                   [cdkDragData]="occupant.id"
                   (click)="onItemClick(occupant.id, $event)"
                 >
-                  {{ occupant.catalogueNumber }}
+                  <span class="position-cell__dot" [attr.data-status]="occupant.status" aria-hidden="true"></span>
+                  <span class="position-cell__code">{{ occupant.catalogueNumber }}</span>
                 </div>
               }
             }

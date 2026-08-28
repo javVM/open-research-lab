@@ -7,4 +7,6 @@ export const FLOOR_PLAN_I18N = {
   empty: { key: 'floorPlan.empty', fallback: 'Empty' },
   uploadPlan: { key: 'floorPlan.uploadPlan', fallback: 'Upload floor plan image' },
   removePlan: { key: 'floorPlan.removePlan', fallback: 'Remove floor plan image' },
+  planLabel: { key: 'floorPlan.planLabel', fallback: 'Plan' },
+  addLabel: { key: 'floorPlan.addLabel', fallback: 'Add' },
 } as const;

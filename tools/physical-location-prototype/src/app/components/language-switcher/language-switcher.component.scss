@@ -1,2 +1,26 @@
+:host {
+  display: inline-block;
+}
 
+:host ::ng-deep .language-switcher .mat-mdc-text-field-wrapper {
+  border-radius: 999px;
+  background: var(--surface-raised, #20242e);
+  transition: border-color 0.15s ease;
+}
 
+:host ::ng-deep .language-switcher .mat-mdc-form-field-infix {
+  min-height: 2.25rem;
+  padding: 0 0.4rem 0 0.85rem;
+  display: flex;
+  align-items: center;
+}
+
+:host ::ng-deep .language-switcher .mat-mdc-select-arrow-wrapper {
+  margin-right: 0.4rem;
+}
+
+:host ::ng-deep .language-switcher .mat-mdc-select-value-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}

@@ -57,3 +57,33 @@ body {
 button {
   font-family: inherit;
 }
+
+/* Prettier select dropdowns: rounded panel, spaced options, accent on the
+   selected option. The panel renders in an overlay outside any component, so
+   these live globally rather than behind a component's encapsulation. */
+.mat-mdc-select-panel {
+  padding: 0.35rem;
+  border-radius: 0.75rem;
+  background: var(--surface-raised, #20242e);
+  border: 1px solid var(--border, #3a3f4b);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+.mat-mdc-select-panel .mat-mdc-option {
+  border-radius: 0.5rem;
+  min-height: 2.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.15rem;
+}
+
+.mat-mdc-select-panel .mat-mdc-option:last-child {
+  margin-bottom: 0;
+}
+
+.mat-mdc-select-panel .mat-mdc-option.mdc-list-item--selected {
+  background: var(--accent-soft, #23324f);
+}
+
+.mat-mdc-select-panel .mat-mdc-option:hover:not(.mdc-list-item--disabled) {
+  background: var(--surface-hover, #262b36);
+}

@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, signal, untracked } from '@angular/core';
+import { Component, ElementRef, effect, inject, input, signal, untracked, type OnDestroy } from '@angular/core';
 import type { Location } from '../../../core/models';
 import { CollectionService } from '../../collection.service';
 import { MoveService } from '../../move.service';
@@ -12,18 +12,16 @@ import {
   DEFAULT_WALL_HEIGHT,
   DESKTOP_INITIAL_ROTATE_X,
   DESKTOP_SCENE_HEIGHT,
+  DESKTOP_SCENE_WIDTH,
   DRAG_THRESHOLD,
   FLOOR_FOOTPRINT,
   FLOOR_STACK_HEIGHT,
   FRONT_AZIMUTH,
   INITIAL_ROTATE_Z,
-  MAX_MOBILE_SCENE_HEIGHT,
   MAX_SCALE,
   MAX_TILT,
-  MIN_MOBILE_SCENE_HEIGHT,
   MIN_SCALE,
   MIN_TILT,
-  MOBILE_FOOTPRINT_DIVISOR,
   MOBILE_INITIAL_ROTATE_X,
   MOBILE_SCENE_HEIGHT_RATIO,
   MOBILE_STACK_HEIGHT,
@@ -57,7 +55,7 @@ interface OrbitState {
   templateUrl: './floor-plan-3d.component.html',
   styleUrl: './floor-plan-3d.component.scss',
 })
-export class FloorPlan3dComponent {
+export class FloorPlan3dComponent implements OnDestroy {
   readonly locations = input<Location[]>([]);
 
   protected readonly collection = inject(CollectionService);
@@ -67,19 +65,25 @@ export class FloorPlan3dComponent {
   private readonly viewport = inject(ViewportService);
   private readonly geometry = inject(GeometryService);
   private readonly render = inject(RenderService);
-
-  private hasSetInitialScale = false;
+  private readonly el = inject(ElementRef);
 
   constructor() {
     this.resetView();
+    window.addEventListener('resize', this.onWindowResize);
   }
 
-  private readonly setInitialView = effect(() => {
-    const locations = this.locations();
-    if (locations.length > 0 && !this.hasSetInitialScale) {
-      untracked(() => this.resetView());
-      this.hasSetInitialScale = true;
-    }
+  ngOnDestroy(): void {
+    window.removeEventListener('resize', this.onWindowResize);
+  }
+
+  private readonly onWindowResize = (): void => {
+    this.applyFitScale();
+  };
+
+  /** Re-fits the footprint every time the rendered locations change. */
+  private readonly refit = effect(() => {
+    this.locations();
+    untracked(() => this.applyFitScale());
   });
 
   /**
@@ -154,24 +158,40 @@ export class FloorPlan3dComponent {
   }
 
   private fitScale(): number {
-    if (this.locations().length === 0 || this.maxStackZ() === 0) {
-      if (!this.viewport.isMobile()) {
-        return 1;
-      }
-      const viewport = Math.min(window.innerWidth, window.innerHeight);
-      return Math.min(MAX_SCALE, Math.max(MIN_SCALE, viewport / MOBILE_FOOTPRINT_DIVISOR));
+    const bounds = this.bounds();
+    if (bounds.width <= 0 || bounds.height <= 0) {
+      return 1;
     }
-    const rotateX = this.viewport.isMobile() ? MOBILE_INITIAL_ROTATE_X : DESKTOP_INITIAL_ROTATE_X;
-    const rad = (rotateX * Math.PI) / 180;
-    const cos = Math.cos(rad);
-    const sin = Math.sin(rad);
-    const sceneHeight = this.viewport.isMobile()
-      ? Math.min(MAX_MOBILE_SCENE_HEIGHT, Math.max(MIN_MOBILE_SCENE_HEIGHT, Math.min(window.innerWidth, window.innerHeight) * MOBILE_SCENE_HEIGHT_RATIO))
-      : DESKTOP_SCENE_HEIGHT;
-    const planeHeight = this.bounds().height;
-    const maxZ = this.maxStackZ();
-    const denominator = (planeHeight / 2) * cos + maxZ * sin;
-    return Math.min(MAX_SCALE, Math.max(MIN_SCALE, (sceneHeight / 2 - SCENE_FIT_PADDING) / denominator));
+    const scene = this.sceneSize();
+    const tilt = this.viewport.isMobile() ? MOBILE_INITIAL_ROTATE_X : DESKTOP_INITIAL_ROTATE_X;
+    const rad = (tilt * Math.PI) / 180;
+    const projectedHeight = bounds.height * Math.cos(rad) + this.maxStackZ() * Math.sin(rad);
+    const availableWidth = Math.max(1, scene.width - SCENE_FIT_PADDING * 2);
+    const availableHeight = Math.max(1, scene.height - SCENE_FIT_PADDING * 2);
+    const scale = Math.min(availableWidth / bounds.width, availableHeight / projectedHeight);
+    return Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
+  }
+
+  /** The scene's measured box, falling back to the window before it is laid out. */
+  private sceneSize(): { width: number; height: number } {
+    const scene = this.el.nativeElement.querySelector('.floor-plan-3d__scene') as HTMLElement | null;
+    const width = scene?.clientWidth ?? 0;
+    const height = scene?.clientHeight ?? 0;
+    if (width > 0 && height > 0) {
+      return { width, height };
+    }
+    if (this.viewport.isMobile()) {
+      const viewport = Math.min(window.innerWidth, window.innerHeight);
+      return { width: viewport, height: viewport * MOBILE_SCENE_HEIGHT_RATIO };
+    }
+    return { width: DESKTOP_SCENE_WIDTH, height: DESKTOP_SCENE_HEIGHT };
+  }
+
+  private applyFitScale(): void {
+    const scale = this.fitScale();
+    if (Number.isFinite(scale)) {
+      this.scale.set(scale);
+    }
   }
 
   rectFor(location: Location): Rect {

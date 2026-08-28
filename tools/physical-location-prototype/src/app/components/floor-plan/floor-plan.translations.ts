@@ -9,6 +9,8 @@ export const itemCount = (count: number): string => $localize `@@floorPlan.itemC
 export const empty = $localize `@@floorPlan.empty:Empty`;
 export const uploadPlan = $localize `@@floorPlan.uploadPlan:Upload floor plan image`;
 export const removePlan = $localize `@@floorPlan.removePlan:Remove floor plan image`;
+export const planLabel = $localize `@@floorPlan.planLabel:Plan`;
+export const addLabel = $localize `@@floorPlan.addLabel:Add`;
 export const addComponent = $localize `@@floorPlan.addComponent:Add component`;
 
 export function createFloorPlanTranslations(i18n: TranslationService) {
@@ -21,6 +23,8 @@ export function createFloorPlanTranslations(i18n: TranslationService) {
     empty: () => i18n.t('floorPlan.empty', empty),
     uploadPlan: () => i18n.t('floorPlan.uploadPlan', uploadPlan),
     removePlan: () => i18n.t('floorPlan.removePlan', removePlan),
+    planLabel: () => i18n.t('floorPlan.planLabel', planLabel),
+    addLabel: () => i18n.t('floorPlan.addLabel', addLabel),
     addComponent: () => i18n.t('floorPlan.addComponent', addComponent),
   };
 }

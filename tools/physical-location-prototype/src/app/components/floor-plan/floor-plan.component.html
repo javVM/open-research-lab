@@ -9,6 +9,7 @@
       [attr.aria-label]="text.uploadPlan()"
     >
       <mat-icon svgIcon="upload" aria-hidden="true"></mat-icon>
+      <span>{{ text.planLabel() }}</span>
     </button>
 
     <div class="floor-plan__menu" [class.floor-plan__menu--open]="showUploadMenu()">
@@ -29,6 +30,7 @@
       (click)="addComponent()"
     >
       <mat-icon svgIcon="add" aria-hidden="true"></mat-icon>
+      <span>{{ text.addLabel() }}</span>
     </button>
   </div>
 }

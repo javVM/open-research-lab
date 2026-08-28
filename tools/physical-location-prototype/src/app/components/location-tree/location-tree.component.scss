@@ -12,6 +12,15 @@
   width: 100%;
 }
 
+:host ::ng-deep .location-tree__select .mat-mdc-text-field-wrapper {
+  border-radius: 0.75rem;
+  background: var(--surface-raised, #20242e);
+}
+
+:host ::ng-deep .location-tree__select .mat-mdc-form-field-infix {
+  padding: 0.4rem 0.5rem;
+}
+
 ::ng-deep .location-tree__select-panel {
   .mat-mdc-select-panel {
     max-width: calc(100vw - 1.2rem);
