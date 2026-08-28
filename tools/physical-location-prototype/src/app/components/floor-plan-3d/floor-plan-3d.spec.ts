@@ -29,6 +29,37 @@ describe('FloorPlan3dComponent', () => {
     expect(fixture.nativeElement.querySelectorAll('.box3d__face').length).toBe(10);
   });
 
+  it('extrudes a shaped location with one wall per edge and a clipped roof', () => {
+    const shaped: Location = {
+      id: 'l',
+      parentId: 'floor',
+      name: 'L room',
+      type: 'room',
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 80,
+      outline: [
+        { x: 0, y: 0 },
+        { x: 100, y: 0 },
+        { x: 100, y: 30 },
+        { x: 40, y: 30 },
+        { x: 40, y: 80 },
+        { x: 0, y: 80 },
+      ],
+    };
+
+    const fixture = TestBed.createComponent(FloorPlan3dComponent);
+    fixture.componentRef.setInput("locations", [shaped]);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('.box3d__face--wall').length).toBe(6);
+    const roof = fixture.nativeElement.querySelector('.box3d__face--top') as HTMLElement;
+    expect(roof.style.clipPath).toContain('polygon(');
+    // A shaped room has no front/back/left/right faces (nor shelf overlay).
+    expect(fixture.nativeElement.querySelector('.box3d__face--front')).toBeFalsy();
+  });
+
   it('stacks floors vertically by their existing 2D y order, independent of x/y placement', () => {
     const fixture = TestBed.createComponent(FloorPlan3dComponent);
     const floors = [floor('f1', 0), floor('f2', 260)];

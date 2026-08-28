@@ -2,7 +2,6 @@
   <div class="floor-plan__toolbar">
     <button
       type="button"
-      mat-button
       class="floor-plan__upload"
       (click)="toggleUploadMenu()"
       [attr.aria-expanded]="showUploadMenu()"
@@ -32,6 +31,32 @@
       <mat-icon svgIcon="add" aria-hidden="true"></mat-icon>
       <span>{{ text.addLabel() }}</span>
     </button>
+
+    <button
+      type="button"
+      class="floor-plan__shape"
+      [class.floor-plan__shape--active]="shapeMode()"
+      [attr.title]="text.shapeHint()"
+      [attr.aria-label]="text.shapeHint()"
+      [attr.aria-pressed]="shapeMode()"
+      (click)="toggleShapeMode()"
+    >
+      <mat-icon svgIcon="shape" aria-hidden="true"></mat-icon>
+      <span>{{ text.shapeLabel() }}</span>
+    </button>
+
+    @if (shapeMode() && selectedShapeLocation()) {
+      <button
+        type="button"
+        class="floor-plan__reset-shape"
+        [attr.title]="text.resetShapeHint()"
+        [attr.aria-label]="text.resetShapeHint()"
+        (click)="resetShape()"
+      >
+        <mat-icon svgIcon="rect" aria-hidden="true"></mat-icon>
+        <span>{{ text.resetShapeLabel() }}</span>
+      </button>
+    }
   </div>
 }
 
@@ -51,6 +76,7 @@
       [attr.data-location-id]="location.id"
       [attr.title]="text.dragHint()"
       [class.floor-plan__rect--selected]="location.id === navigation.selectedLocationId()"
+      [class.floor-plan__rect--shape-target]="isShapeTarget(location.id)"
       [class.floor-plan__rect--drop-target]="isDropTarget()"
       [class.floor-plan__rect--interacting]="isInteracting(location.id)"
       [class.floor-plan__rect--empty]="countAt(location.id) === 0"
@@ -59,16 +85,26 @@
       [style.width.px]="rectFor(location).width"
       [style.height.px]="rectFor(location).height"
       [style.backgroundColor]="occupancyBackground(location.id)"
+      [style.clipPath]="outlineClipPath(location)"
       (pointerdown)="onPointerDown($event, location)"
       (click)="onClick(location.id)"
     >
-      <span class="floor-plan__type">{{ locationType.label(location.type) }}</span>
-      <span class="floor-plan__name">{{ location.name }}</span>
-      @if (countAt(location.id) > 0) {
-        <span class="floor-plan__count">{{ text.itemCount(countAt(location.id)) }}</span>
-      } @else {
-        <span class="floor-plan__empty">{{ text.empty() }}</span>
-      }
+      <div
+        class="floor-plan__label"
+        [class.floor-plan__label--shaped]="labelAnchor(location) !== null"
+        [style.left.px]="labelAnchor(location)?.x"
+        [style.top.px]="labelAnchor(location)?.y"
+      >
+        <span class="floor-plan__type">{{ locationType.label(location.type) }}</span>
+        <span class="floor-plan__name">{{ location.name }}</span>
+        @if (labelAnchor(location) === null) {
+          @if (countAt(location.id) > 0) {
+            <span class="floor-plan__count">{{ text.itemCount(countAt(location.id)) }}</span>
+          } @else {
+            <span class="floor-plan__empty">{{ text.empty() }}</span>
+          }
+        }
+      </div>
 
       @if (previewChildren(location).length > 0) {
         <span class="floor-plan__preview-indicator" [attr.title]="text.previewHint()">▦</span>
@@ -96,12 +132,33 @@
         </div>
       }
 
-      <div
-        class="floor-plan__resize-handle"
-        [attr.title]="text.resizeHint()"
-        (pointerdown)="onResizePointerDown($event, location)"
-        (click)="$event.stopPropagation()"
-      ></div>
+      @if (!shapeMode()) {
+        <div
+          class="floor-plan__resize-handle"
+          [attr.title]="text.resizeHint()"
+          (pointerdown)="onResizePointerDown($event, location)"
+          (click)="$event.stopPropagation()"
+        ></div>
+      }
     </div>
+  }
+
+  @if (selectedShapeLocation(); as shapeLocation) {
+    @for (point of outlinePoints(shapeLocation); track $index) {
+      <span
+        class="floor-plan__vertex-handle"
+        [style.left.px]="((shapeLocation.x ?? 0) + point.x) * renderScale()"
+        [style.top.px]="((shapeLocation.y ?? 0) + point.y) * renderScale()"
+        (pointerdown)="onVertexPointerDown($event, shapeLocation, $index)"
+      ></span>
+    }
+    @for (point of outlineMidpoints(shapeLocation); track $index) {
+      <span
+        class="floor-plan__edge-handle"
+        [style.left.px]="((shapeLocation.x ?? 0) + point.x) * renderScale()"
+        [style.top.px]="((shapeLocation.y ?? 0) + point.y) * renderScale()"
+        (pointerdown)="onEdgePointerDown($event, shapeLocation, $index)"
+      ></span>
+    }
   }
 </div></div>

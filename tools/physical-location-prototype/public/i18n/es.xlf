@@ -199,6 +199,22 @@
         <source>Add</source>
         <target>Añadir</target>
       </trans-unit>
+      <trans-unit id="floorPlan.shapeLabel">
+        <source>Shape</source>
+        <target>Forma</target>
+      </trans-unit>
+      <trans-unit id="floorPlan.shapeHint">
+        <source>Edit the shape (90° corners only)</source>
+        <target>Editar la forma (solo esquinas de 90°)</target>
+      </trans-unit>
+      <trans-unit id="floorPlan.resetShapeLabel">
+        <source>Reset</source>
+        <target>Restablecer</target>
+      </trans-unit>
+      <trans-unit id="floorPlan.resetShapeHint">
+        <source>Revert to a rectangle</source>
+        <target>Volver a un rectángulo</target>
+      </trans-unit>
 
       <trans-unit id="floorPlan3d.ariaLabel">
         <source>3D floor plan</source>

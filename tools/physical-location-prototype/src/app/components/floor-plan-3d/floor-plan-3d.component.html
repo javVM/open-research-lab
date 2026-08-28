@@ -40,9 +40,9 @@
           [style.transform]="'translateZ(' + elevationFor(location) + 'px)'"
           (click)="onClick(location.id)"
         >
-          <div class="box3d__face box3d__face--top" [style.transform]="'translateZ(' + wallHeight(location) + 'px)'">
+          <div class="box3d__face box3d__face--top" [style.transform]="'translateZ(' + wallHeight(location) + 'px)'" [style.clipPath]="topClipPath(location)">
             <div class="box3d__top-fill" [style.backgroundColor]="occupancyColor(location.id, locations(), 0.15)">
-              <div class="box3d__label" [style.transform]="labelTransform()">
+              <div class="box3d__label" [class.box3d__label--shaped]="hasOutline(location)" [style.transform]="labelTransform(location)">
                 <span class="box3d__name">{{ location.name }}</span>
                 @if (countAt(location.id) > 0) {
                   <span class="box3d__count">{{ text.itemCount(countAt(location.id)) }}</span>
@@ -52,62 +52,75 @@
               </div>
             </div>
           </div>
-          <div
-            class="box3d__face box3d__face--front"
-            [style.width.px]="rectFor(location).width"
-            [style.height.px]="wallHeight(location)"
-            [style.transform]="sideTransform(location, 'front')"
-            [style.backgroundColor]="occupancyColor(location.id, locations(), -0.08)"
-          >
-            @if (uncoordinatedChildren(location).length > 0 && facingSide() === 'front') {
-              <div class="box3d__shelves">
-                @for (child of uncoordinatedChildren(location); track child.id) {
-                  <div
-                    class="box3d__shelf"
-                    [attr.title]="child.name"
-                    [style.backgroundColor]="occupancyColor(child.id, uncoordinatedChildren(location))"
-                  >
-                    <span class="box3d__shelf-handle"></span>
-                  </div>
-                }
-              </div>
+
+          @if (hasOutline(location)) {
+            @for (wall of wallsFor(location); track $index) {
+              <div
+                class="box3d__face box3d__face--wall"
+                [style.width.px]="wall.width"
+                [style.height.px]="wall.height"
+                [style.transform]="wall.transform"
+                [style.backgroundColor]="occupancyColor(location.id, locations(), -0.08)"
+              ></div>
             }
-          </div>
-          <div
-            class="box3d__face box3d__face--back"
-            [style.width.px]="rectFor(location).width"
-            [style.height.px]="wallHeight(location)"
-            [style.transform]="sideTransform(location, 'back')"
-            [style.backgroundColor]="occupancyColor(location.id, locations(), -0.14)"
-          >
-            @if (uncoordinatedChildren(location).length > 0 && facingSide() === 'back') {
-              <div class="box3d__shelves">
-                @for (child of uncoordinatedChildren(location); track child.id) {
-                  <div
-                    class="box3d__shelf"
-                    [attr.title]="child.name"
-                    [style.backgroundColor]="occupancyColor(child.id, uncoordinatedChildren(location))"
-                  >
-                    <span class="box3d__shelf-handle"></span>
-                  </div>
-                }
-              </div>
-            }
-          </div>
-          <div
-            class="box3d__face box3d__face--left"
-            [style.width.px]="wallHeight(location)"
-            [style.height.px]="rectFor(location).height"
-            [style.transform]="sideTransform(location, 'left')"
-            [style.backgroundColor]="occupancyColor(location.id, locations(), -0.11)"
-          ></div>
-          <div
-            class="box3d__face box3d__face--right"
-            [style.width.px]="wallHeight(location)"
-            [style.height.px]="rectFor(location).height"
-            [style.transform]="sideTransform(location, 'right')"
-            [style.backgroundColor]="occupancyColor(location.id, locations(), -0.05)"
-          ></div>
+          } @else {
+            <div
+              class="box3d__face box3d__face--front"
+              [style.width.px]="rectFor(location).width"
+              [style.height.px]="wallHeight(location)"
+              [style.transform]="sideTransform(location, 'front')"
+              [style.backgroundColor]="occupancyColor(location.id, locations(), -0.08)"
+            >
+              @if (uncoordinatedChildren(location).length > 0 && facingSide() === 'front') {
+                <div class="box3d__shelves">
+                  @for (child of uncoordinatedChildren(location); track child.id) {
+                    <div
+                      class="box3d__shelf"
+                      [attr.title]="child.name"
+                      [style.backgroundColor]="occupancyColor(child.id, uncoordinatedChildren(location))"
+                    >
+                      <span class="box3d__shelf-handle"></span>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+            <div
+              class="box3d__face box3d__face--back"
+              [style.width.px]="rectFor(location).width"
+              [style.height.px]="wallHeight(location)"
+              [style.transform]="sideTransform(location, 'back')"
+              [style.backgroundColor]="occupancyColor(location.id, locations(), -0.14)"
+            >
+              @if (uncoordinatedChildren(location).length > 0 && facingSide() === 'back') {
+                <div class="box3d__shelves">
+                  @for (child of uncoordinatedChildren(location); track child.id) {
+                    <div
+                      class="box3d__shelf"
+                      [attr.title]="child.name"
+                      [style.backgroundColor]="occupancyColor(child.id, uncoordinatedChildren(location))"
+                    >
+                      <span class="box3d__shelf-handle"></span>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+            <div
+              class="box3d__face box3d__face--left"
+              [style.width.px]="wallHeight(location)"
+              [style.height.px]="rectFor(location).height"
+              [style.transform]="sideTransform(location, 'left')"
+              [style.backgroundColor]="occupancyColor(location.id, locations(), -0.11)"
+            ></div>
+            <div
+              class="box3d__face box3d__face--right"
+              [style.width.px]="wallHeight(location)"
+              [style.height.px]="rectFor(location).height"
+              [style.transform]="sideTransform(location, 'right')"
+              [style.backgroundColor]="occupancyColor(location.id, locations(), -0.05)"
+            ></div>
+          }
         </div>
       }
     </div>

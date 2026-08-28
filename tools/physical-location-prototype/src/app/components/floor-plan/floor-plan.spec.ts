@@ -185,6 +185,135 @@ describe('FloorPlanComponent', () => {
     expect(rect.classList.contains('floor-plan__rect--empty')).toBe(false);
   });
 
+  it('clips a rect to its orthogonal outline and leaves rectangles unclipped', () => {
+    const shaped: Location = {
+      id: 'l',
+      parentId: 'building',
+      name: 'L room',
+      type: 'room',
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 80,
+      outline: [
+        { x: 0, y: 0 },
+        { x: 100, y: 0 },
+        { x: 100, y: 30 },
+        { x: 40, y: 30 },
+        { x: 40, y: 80 },
+        { x: 0, y: 80 },
+      ],
+    };
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentRef.setInput("locations", [shaped, room('plain', 130, 0)]);
+    fixture.detectChanges();
+
+    const rects = fixture.nativeElement.querySelectorAll('.floor-plan__rect') as NodeListOf<HTMLElement>;
+    expect(rects[0].style.clipPath).toContain('polygon(');
+    expect(rects[1].style.clipPath).toBe('');
+  });
+
+  it('shows vertex and edge handles for a targeted location in shape mode', () => {
+    const shaped: Location = {
+      id: 'l',
+      parentId: 'building',
+      name: 'L room',
+      type: 'room',
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 80,
+      outline: [
+        { x: 0, y: 0 },
+        { x: 100, y: 0 },
+        { x: 100, y: 30 },
+        { x: 40, y: 30 },
+        { x: 40, y: 80 },
+        { x: 0, y: 80 },
+      ],
+    };
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentRef.setInput("locations", [shaped]);
+    fixture.componentInstance.toggleShapeMode();
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement).click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('.floor-plan__vertex-handle').length).toBe(6);
+    expect(fixture.nativeElement.querySelectorAll('.floor-plan__edge-handle').length).toBe(6);
+  });
+
+  it('dragging an edge handle inward notches the shape', () => {
+    const collection = TestBed.inject(CollectionService);
+    const rectangle: Location = {
+      id: 'r',
+      parentId: 'building',
+      name: 'Room',
+      type: 'room',
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 80,
+    };
+    collection.addLocation(rectangle);
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentRef.setInput("locations", [rectangle]);
+    fixture.componentInstance.toggleShapeMode();
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement).click();
+    fixture.detectChanges();
+
+    const handle = fixture.nativeElement.querySelector('.floor-plan__edge-handle') as HTMLElement;
+    handle.dispatchEvent(new MouseEvent('pointerdown', { clientX: 50, clientY: 0, button: 0, bubbles: true }));
+    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 50, clientY: 40 }));
+    window.dispatchEvent(new MouseEvent('pointerup'));
+
+    const updated = collection.dataset().locations.find((candidate) => candidate.id === 'r')!;
+    expect(updated.outline).toBeDefined();
+    expect(updated.outline!.length).toBeGreaterThan(4);
+  });
+
+  it('reverting a targeted shaped location to a rectangle clears its outline', () => {
+    const collection = TestBed.inject(CollectionService);
+    const shaped: Location = {
+      id: 'l',
+      parentId: 'building',
+      name: 'L room',
+      type: 'room',
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 80,
+      outline: [
+        { x: 0, y: 0 },
+        { x: 100, y: 0 },
+        { x: 100, y: 30 },
+        { x: 40, y: 30 },
+        { x: 40, y: 80 },
+        { x: 0, y: 80 },
+      ],
+    };
+    collection.addLocation(shaped);
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentRef.setInput("locations", [shaped]);
+    fixture.componentInstance.toggleShapeMode();
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement).click();
+    fixture.detectChanges();
+
+    fixture.componentInstance.resetShape();
+
+    const updated = collection.dataset().locations.find((candidate) => candidate.id === 'l')!;
+    expect(updated.outline).toBeUndefined();
+  });
+
   it('shows a scaled-down preview of a location\'s own coordinated children (e.g. a room\'s cabinets)', () => {
     const collection = TestBed.inject(CollectionService);
     const navigation = TestBed.inject(NavigationService);

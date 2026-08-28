@@ -159,8 +159,7 @@
 }
 
 .box3d--selected .box3d__top-fill {
-  outline: 2px solid var(--accent, #5b8def);
-  outline-offset: -2px;
+  border: 2px solid var(--accent, #5b8def);
 }
 
 .box3d__label {
@@ -169,6 +168,14 @@
   align-items: center;
   gap: 0.15rem;
   width: 100%;
+}
+
+.box3d__label--shaped {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: max-content;
+  max-width: 90%;
 }
 
 .box3d__name {

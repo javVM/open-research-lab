@@ -9,7 +9,9 @@
 }
 
 .floor-plan__upload,
-.floor-plan__add {
+.floor-plan__add,
+.floor-plan__shape,
+.floor-plan__reset-shape {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -27,16 +29,26 @@
 }
 
 .floor-plan__upload svg,
-.floor-plan__add svg {
+.floor-plan__add svg,
+.floor-plan__shape svg,
+.floor-plan__reset-shape svg {
   width: 1.05rem;
   height: 1.05rem;
 }
 
 .floor-plan__upload:hover,
-.floor-plan__add:hover {
+.floor-plan__add:hover,
+.floor-plan__shape:hover,
+.floor-plan__reset-shape:hover {
   border-color: var(--accent, #5b8def);
   color: var(--accent, #5b8def);
   background: var(--surface-hover, #262b36);
+}
+
+.floor-plan__shape--active {
+  border-color: var(--accent, #5b8def);
+  color: var(--accent, #5b8def);
+  background: var(--accent-soft, #23324f);
 }
 
 .floor-plan__menu {
@@ -119,10 +131,6 @@
 
 .floor-plan__rect {
   position: absolute;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.5rem;
   box-sizing: border-box;
   border: 1px solid var(--border, #3a3f4b);
   border-radius: 0.4rem;
@@ -131,13 +139,44 @@
   user-select: none;
 }
 
+.floor-plan__label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  height: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.floor-plan__label--shaped {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: auto;
+  width: max-content;
+  max-width: 90%;
+  align-items: center;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  padding: 0.25rem;
+}
+
+.floor-plan__label--shaped .floor-plan__name {
+  max-width: 100%;
+}
+
 .floor-plan__rect:hover {
   border-color: var(--accent, #5b8def);
 }
 
 .floor-plan__rect--selected {
   border-color: var(--accent, #5b8def);
-  box-shadow: 0 0 0 1px var(--accent, #5b8def);
+  border-width: 2px;
+}
+
+.floor-plan__rect--shape-target {
+  border-style: dashed;
+  border-color: var(--accent, #5b8def);
 }
 
 .floor-plan__rect--drop-target {
@@ -199,6 +238,36 @@
 .floor-plan__resize-handle:hover {
   opacity: 1;
   border-color: var(--accent, #5b8def);
+}
+
+/* Shape-editing handles, drawn on the canvas (not inside the clipped rect) so
+   clip-path never cuts them off. Vertices slide edges; edge midpoints notch. */
+.floor-plan__vertex-handle,
+.floor-plan__edge-handle {
+  position: absolute;
+  z-index: 5;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  cursor: move;
+  touch-action: none;
+}
+
+.floor-plan__vertex-handle {
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--accent, #5b8def);
+  border: 2px solid #0d1420;
+}
+
+.floor-plan__edge-handle {
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--surface-raised, #20242e);
+  border: 2px solid var(--accent, #5b8def);
+}
+
+.floor-plan__edge-handle:hover {
+  background: var(--accent, #5b8def);
 }
 
 .floor-plan__preview-indicator {

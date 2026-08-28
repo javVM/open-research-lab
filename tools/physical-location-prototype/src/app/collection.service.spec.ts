@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { CollectionService } from './collection.service';
 import type { Location } from '../core/models';
+import { pointInPolygon } from '../core/outline';
 
 describe('CollectionService', () => {
   beforeEach(() => {
@@ -63,5 +64,52 @@ describe('CollectionService', () => {
     expect(updated.y).toBe(250);
     expect(after.items).toEqual(before.items);
     expect(after.movements).toEqual(before.movements);
+  });
+
+  it('reflowChildrenInto pulls a child back inside a shaped parent after a corner is cut', () => {
+    const service = collection();
+    const parent: Location = {
+      id: 'room-l',
+      parentId: null,
+      name: 'L room',
+      type: 'room',
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 80,
+      outline: [
+        { x: 0, y: 0 },
+        { x: 40, y: 0 },
+        { x: 40, y: 30 },
+        { x: 100, y: 30 },
+        { x: 100, y: 80 },
+        { x: 0, y: 80 },
+      ],
+    };
+    const child: Location = {
+      id: 'cab-1',
+      parentId: 'room-l',
+      name: 'Cabinet',
+      type: 'cabinet',
+      x: 60,
+      y: 5,
+      width: 20,
+      height: 20,
+    };
+    service.addLocations([parent, child]);
+
+    service.reflowChildrenInto('room-l');
+
+    const updated = service.dataset().locations.find((l) => l.id === 'cab-1')!;
+    expect(updated.x).not.toBe(60);
+    const corners = [
+      { x: updated.x!, y: updated.y! },
+      { x: updated.x! + 20, y: updated.y! },
+      { x: updated.x! + 20, y: updated.y! + 20 },
+      { x: updated.x!, y: updated.y! + 20 },
+    ];
+    for (const corner of corners) {
+      expect(pointInPolygon(corner, parent.outline!)).toBe(true);
+    }
   });
 });

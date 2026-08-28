@@ -1,6 +1,7 @@
 import { Injectable, computed, signal } from '@angular/core';
-import type { Dataset, Item, Location, Movement } from '../core/models';
+import type { Dataset, Item, Location, Movement, Point } from '../core/models';
 import { itemCountsByLocation } from '../core/search';
+import { nearestInsidePosition, rectInsidePolygon, scaleOutline } from '../core/outline';
 import { createStore, resetDemoData, type DatasetStore } from '../persistence/store';
 import { ID_PREFIX, newPrototypeId } from './shared/prototype-id';
 
@@ -66,9 +67,68 @@ export class CollectionService {
   /** Same layout-metadata caveat as `updateLocationPosition` — resizes a `FloorPlanComponent` rectangle. */
   updateLocationSize(locationId: string, width: number, height: number): void {
     const dataset = this.dataset();
-    const locations = dataset.locations.map((candidate) =>
-      candidate.id === locationId ? { ...candidate, width, height } : candidate,
-    );
+    const locations = dataset.locations.map((candidate) => {
+      if (candidate.id !== locationId) {
+        return candidate;
+      }
+      const outline = scaleOutline(candidate.outline, candidate.width ?? 0, candidate.height ?? 0, width, height);
+      return { ...candidate, width, height, ...(outline ? { outline } : {}) };
+    });
+    this.store.setState({ ...dataset, locations });
+  }
+
+  /**
+   * Replaces a location's orthogonal outline, or reverts it to a plain
+   * rectangle when `outline` is `null`. Layout metadata, like the position
+   * and size setters above — not a historied domain fact.
+   */
+  updateLocationOutline(locationId: string, outline: readonly Point[] | null): void {
+    const dataset = this.dataset();
+    const locations = dataset.locations.map((candidate) => {
+      if (candidate.id !== locationId) {
+        return candidate;
+      }
+      if (outline === null) {
+        const { outline: _outline, ...rest } = candidate;
+        return rest;
+      }
+      return { ...candidate, outline: outline.map((point) => ({ ...point })) };
+    });
+    this.store.setState({ ...dataset, locations });
+  }
+
+  /**
+   * After a location's shape changes, pulls any of its coordinated children
+   * that no longer fit inside the outline back to the nearest position that
+   * does. Only touches direct children with their own `x`/`y` (mappable
+   * children) and only runs when the parent has an outline.
+   */
+  reflowChildrenInto(locationId: string): void {
+    const dataset = this.dataset();
+    const parent = dataset.locations.find((location) => location.id === locationId);
+    if (!parent?.outline || parent.outline.length < 4) {
+      return;
+    }
+    const polygon = parent.outline;
+    const locations = dataset.locations.map((child) => {
+      if (child.parentId !== locationId) {
+        return child;
+      }
+      if (typeof child.x !== 'number' || typeof child.y !== 'number') {
+        return child;
+      }
+      const width = child.width ?? 0;
+      const height = child.height ?? 0;
+      if (width <= 0 || height <= 0) {
+        return child;
+      }
+      const rect = { x: child.x, y: child.y, width, height };
+      if (rectInsidePolygon(rect, polygon)) {
+        return child;
+      }
+      const position = nearestInsidePosition(rect, polygon);
+      return { ...child, x: position.x, y: position.y };
+    });
     this.store.setState({ ...dataset, locations });
   }
 

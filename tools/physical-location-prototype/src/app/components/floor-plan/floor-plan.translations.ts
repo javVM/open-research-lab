@@ -11,6 +11,10 @@ export const uploadPlan = $localize `@@floorPlan.uploadPlan:Upload floor plan im
 export const removePlan = $localize `@@floorPlan.removePlan:Remove floor plan image`;
 export const planLabel = $localize `@@floorPlan.planLabel:Plan`;
 export const addLabel = $localize `@@floorPlan.addLabel:Add`;
+export const shapeLabel = $localize `@@floorPlan.shapeLabel:Shape`;
+export const shapeHint = $localize `@@floorPlan.shapeHint:Edit the shape (90° corners only)`;
+export const resetShapeLabel = $localize `@@floorPlan.resetShapeLabel:Reset`;
+export const resetShapeHint = $localize `@@floorPlan.resetShapeHint:Revert to a rectangle`;
 export const addComponent = $localize `@@floorPlan.addComponent:Add component`;
 
 export function createFloorPlanTranslations(i18n: TranslationService) {
@@ -25,6 +29,10 @@ export function createFloorPlanTranslations(i18n: TranslationService) {
     removePlan: () => i18n.t('floorPlan.removePlan', removePlan),
     planLabel: () => i18n.t('floorPlan.planLabel', planLabel),
     addLabel: () => i18n.t('floorPlan.addLabel', addLabel),
+    shapeLabel: () => i18n.t('floorPlan.shapeLabel', shapeLabel),
+    shapeHint: () => i18n.t('floorPlan.shapeHint', shapeHint),
+    resetShapeLabel: () => i18n.t('floorPlan.resetShapeLabel', resetShapeLabel),
+    resetShapeHint: () => i18n.t('floorPlan.resetShapeHint', resetShapeHint),
     addComponent: () => i18n.t('floorPlan.addComponent', addComponent),
   };
 }

@@ -19,6 +19,12 @@ export type LocationType =
   | 'tray'
   | 'position';
 
+/** A point in 2D space, in a location's local layout coordinates. */
+export interface Point {
+  x: number;
+  y: number;
+}
+
 export interface Location {
   id: string;
   parentId: string | null;
@@ -37,6 +43,13 @@ export interface Location {
   y?: number;
   width?: number;
   height?: number;
+  /**
+   * Optional orthogonal (all-90°-angles) polygon outline, in the location's
+   * local coordinates (0..width, 0..height). When absent the location is a
+   * plain rectangle. The list is a closed, clockwise vertex sequence; see
+   * `core/outline.ts`. Only meaningful for mappable locations.
+   */
+  outline?: readonly Point[];
   /**
    * A user-supplied floor-plan image (data URL, so it round-trips through
    * the local-first `localStorage` snapshot with no network calls) used as

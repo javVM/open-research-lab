@@ -148,6 +148,18 @@
       <trans-unit id="floorPlan.addLabel">
         <source>Add</source>
       </trans-unit>
+      <trans-unit id="floorPlan.shapeLabel">
+        <source>Shape</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.shapeHint">
+        <source>Edit the shape (90° corners only)</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.resetShapeLabel">
+        <source>Reset</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.resetShapeHint">
+        <source>Revert to a rectangle</source>
+      </trans-unit>
 
       <trans-unit id="floorPlan3d.ariaLabel">
         <source>3D floor plan</source>

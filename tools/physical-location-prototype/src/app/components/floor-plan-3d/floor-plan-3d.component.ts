@@ -1,5 +1,6 @@
 import { Component, ElementRef, effect, inject, input, signal, untracked, type OnDestroy } from '@angular/core';
-import type { Location } from '../../../core/models';
+import type { Location, Point } from '../../../core/models';
+import { labelAnchor as polygonLabelAnchor, scaleOutline } from '../../../core/outline';
 import { CollectionService } from '../../collection.service';
 import { MoveService } from '../../move.service';
 import { NavigationService } from '../../navigation.service';
@@ -37,6 +38,13 @@ interface OrbitState {
   startClientY: number;
   startRotateZ: number;
   startRotateX: number;
+}
+
+/** A single vertical wall face of a shaped (non-rectangular) location. */
+interface WallFace {
+  width: number;
+  height: number;
+  transform: string;
 }
 
 /**
@@ -106,8 +114,14 @@ export class FloorPlan3dComponent implements OnDestroy {
     return `translateY(${this.visualCenterOffset()}px) scale(${this.scale()}) rotateX(${this.rotateXDeg()}deg) rotateZ(${this.rotateZDeg()}deg)`;
   }
 
-  labelTransform(): string {
-    return `rotateZ(${-this.rotateZDeg()}deg)`;
+  labelTransform(location: Location): string {
+    const counter = `rotateZ(${-this.rotateZDeg()}deg)`;
+    const points = this.outlinePoints3d(location);
+    if (points.length < 4) {
+      return counter;
+    }
+    const anchor = polygonLabelAnchor(points);
+    return `translate(${anchor.x}px, ${anchor.y}px) translate(-50%, -50%) ${counter}`;
   }
 
   private visualCenterOffset(): number {
@@ -289,6 +303,59 @@ export class FloorPlan3dComponent implements OnDestroy {
       case 'right':
         return `translate3d(${rect.width - half}px, 0px, ${half}px) rotateY(-90deg)`;
     }
+  }
+
+  /**
+   * A shaped location's outline, scaled into the footprint this 3D view uses.
+   * For rooms/cabinets that footprint equals the location's own `width`/`height`
+   * (scale 1); for floors it is the shared `FLOOR_FOOTPRINT`, so the outline is
+   * scaled down to match.
+   */
+  outlinePoints3d(location: Location): Point[] {
+    const rect = this.rectFor(location);
+    return (
+      scaleOutline(location.outline, location.width ?? 0, location.height ?? 0, rect.width, rect.height) ?? []
+    );
+  }
+
+  hasOutline(location: Location): boolean {
+    return this.outlinePoints3d(location).length >= 4;
+  }
+
+  /** `clip-path` polygon for the shaped roof, or null for a plain rectangle. */
+  topClipPath(location: Location): string | null {
+    const points = this.outlinePoints3d(location);
+    if (points.length < 4) {
+      return null;
+    }
+    return `polygon(${points.map((point) => `${point.x}px ${point.y}px`).join(', ')})`;
+  }
+
+  /** One standing wall per outline edge, so a shaped room has walls on every side. */
+  wallsFor(location: Location): WallFace[] {
+    const points = this.outlinePoints3d(location);
+    const height = this.wallHeight(location);
+    return points.map((point, index) => this.wallFaceFor(point, points[(index + 1) % points.length], height));
+  }
+
+  private wallFaceFor(a: Point, b: Point, height: number): WallFace {
+    const half = height / 2;
+    if (a.y === b.y) {
+      const length = Math.abs(b.x - a.x);
+      const midX = (a.x + b.x) / 2;
+      return {
+        width: length,
+        height,
+        transform: `translate3d(${midX - length / 2}px, ${a.y - half}px, ${half}px) rotateX(-90deg)`,
+      };
+    }
+    const length = Math.abs(b.y - a.y);
+    const midY = (a.y + b.y) / 2;
+    return {
+      width: height,
+      height: length,
+      transform: `translate3d(${a.x - half}px, ${midY - length / 2}px, ${half}px) rotateY(90deg)`,
+    };
   }
 
   onClick(locationId: string): void {

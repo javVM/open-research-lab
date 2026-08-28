@@ -1,7 +1,8 @@
 import { Component, ElementRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import type { Location, LocationType } from '../../../core/models';
+import type { Location, LocationType, Point } from '../../../core/models';
+import { edgeMidpoints, inwardNormal, labelAnchor as polygonLabelAnchor, moveVertex, notchEdge, outlineFor } from '../../../core/outline';
 import { CollectionService } from '../../collection.service';
 import { MoveService } from '../../move.service';
 import { NavigationService } from '../../navigation.service';
@@ -16,6 +17,7 @@ import { OCCUPANCY_PALETTE } from '../../shared/palette.constants';
 import { ID_PREFIX, newPrototypeId } from '../../shared/prototype-id';
 import { registerAppIcons } from '../../shared/icons';
 import { createFloorPlanTranslations } from './floor-plan.translations';
+import { MIN_SHAPE_EDGE, NOTCH_MIN_DEPTH, NOTCH_WIDTH_RATIO } from './floor-plan.constants';
 
 interface DragState {
   locationId: string;
@@ -32,6 +34,19 @@ interface ResizeState {
   startClientY: number;
   startWidth: number;
   startHeight: number;
+}
+
+interface ShapeDragState {
+  locationId: string;
+  mode: 'vertex' | 'edge';
+  index: number;
+  startClientX: number;
+  startClientY: number;
+  startOutline: Point[];
+  width: number;
+  height: number;
+  rectLeft: number;
+  rectTop: number;
 }
 
 /**
@@ -65,6 +80,9 @@ export class FloorPlanComponent {
 
   protected readonly renderScale = signal(1);
   protected readonly showUploadMenu = signal(false);
+  protected readonly shapeMode = signal(false);
+  /** The location currently being shaped, set by clicking a rect in shape mode. */
+  private readonly shapeTargetId = signal<string | null>(null);
   private readonly el = inject(ElementRef);
 
   constructor() {
@@ -249,11 +267,15 @@ export class FloorPlanComponent {
       this.move.requestMove(locationId);
       return;
     }
+    if (this.shapeMode()) {
+      this.shapeTargetId.set(locationId);
+      return;
+    }
     this.navigation.selectLocation(locationId);
   }
 
   onPointerDown(event: PointerEvent, location: Location): void {
-    if (event.button !== 0 || this.viewport.isMobile()) {
+    if (event.button !== 0 || this.viewport.isMobile() || this.shapeMode()) {
       return;
     }
     event.preventDefault();
@@ -297,6 +319,8 @@ export class FloorPlanComponent {
 
   private resizeState: ResizeState | null = null;
 
+  private shapeDragState: ShapeDragState | null = null;
+
   onResizePointerDown(event: PointerEvent, location: Location): void {
     if (event.button !== 0 || this.viewport.isMobile()) {
       return;
@@ -331,7 +355,177 @@ export class FloorPlanComponent {
   private readonly onResizePointerUp = (): void => {
     window.removeEventListener('pointermove', this.onResizePointerMove);
     window.removeEventListener('pointerup', this.onResizePointerUp);
+    const locationId = this.resizeState?.locationId;
     this.resizeState = null;
     this.interactingLocationId.set(null);
+    if (locationId) {
+      this.collection.reflowChildrenInto(locationId);
+    }
   };
+
+  toggleShapeMode(): void {
+    this.shapeMode.update((active) => !active);
+    this.shapeTargetId.set(null);
+  }
+
+  resetShape(): void {
+    const locationId = this.shapeTargetId();
+    if (locationId) {
+      this.collection.updateLocationOutline(locationId, null);
+    }
+  }
+
+  isShapeTarget(locationId: string): boolean {
+    return this.shapeMode() && this.shapeTargetId() === locationId;
+  }
+
+  /** The location currently targeted for shaping, when it is a child of this map. */
+  selectedShapeLocation(): Location | null {
+    if (!this.shapeMode()) {
+      return null;
+    }
+    const id = this.shapeTargetId();
+    return id ? (this.locations().find((location) => location.id === id) ?? null) : null;
+  }
+
+  outlinePoints(location: Location): Point[] {
+    return outlineFor(location);
+  }
+
+  outlineMidpoints(location: Location): Point[] {
+    return edgeMidpoints(outlineFor(location));
+  }
+
+  /** `clip-path` polygon for a shaped location, or null for a plain rectangle. */
+  outlineClipPath(location: Location): string | null {
+    const outline = location.outline;
+    if (!outline || outline.length < 4) {
+      return null;
+    }
+    const scale = this.renderScale();
+    const points = outline
+      .map((point) => `${(point.x * scale).toFixed(1)}px ${(point.y * scale).toFixed(1)}px`)
+      .join(', ');
+    return `polygon(${points})`;
+  }
+
+  /** On-render label position for a shaped location, so the name stays inside the outline. */
+  labelAnchor(location: Location): { x: number; y: number } | null {
+    const outline = location.outline;
+    if (!outline || outline.length < 4) {
+      return null;
+    }
+    const anchor = polygonLabelAnchor(outline);
+    const scale = this.renderScale();
+    return { x: anchor.x * scale, y: anchor.y * scale };
+  }
+
+  onVertexPointerDown(event: PointerEvent, location: Location, index: number): void {
+    if (event.button !== 0 || this.viewport.isMobile()) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    this.beginShapeDrag(event, location, 'vertex', index);
+  }
+
+  onEdgePointerDown(event: PointerEvent, location: Location, index: number): void {
+    if (event.button !== 0 || this.viewport.isMobile()) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    this.beginShapeDrag(event, location, 'edge', index);
+  }
+
+  private beginShapeDrag(event: PointerEvent, location: Location, mode: 'vertex' | 'edge', index: number): void {
+    const rect = this.el.nativeElement.querySelector(
+      `.floor-plan__rect[data-location-id="${location.id}"]`,
+    ) as HTMLElement | null;
+    const bounds = rect?.getBoundingClientRect() ?? { left: 0, top: 0 };
+    this.shapeDragState = {
+      locationId: location.id,
+      mode,
+      index,
+      startClientX: event.clientX,
+      startClientY: event.clientY,
+      startOutline: outlineFor(location),
+      width: location.width ?? 0,
+      height: location.height ?? 0,
+      rectLeft: bounds.left,
+      rectTop: bounds.top,
+    };
+    window.addEventListener('pointermove', this.onShapePointerMove);
+    window.addEventListener('pointerup', this.onShapePointerUp);
+  }
+
+  private readonly onShapePointerMove = (event: PointerEvent): void => {
+    const state = this.shapeDragState;
+    if (!state) {
+      return;
+    }
+    if (state.mode === 'vertex') {
+      this.dragVertex(state, event);
+    } else {
+      this.dragEdgeNotch(state, event);
+    }
+  };
+
+  private dragVertex(state: ShapeDragState, event: PointerEvent): void {
+    const point = state.startOutline[state.index];
+    const nx = clampTo(point.x + event.clientX - state.startClientX, 0, state.width);
+    const ny = clampTo(point.y + event.clientY - state.startClientY, 0, state.height);
+    const moved = moveVertex(state.startOutline, state.index, nx, ny);
+    if (minEdgeLength(moved) >= MIN_SHAPE_EDGE) {
+      this.collection.updateLocationOutline(state.locationId, moved);
+    }
+  }
+
+  private dragEdgeNotch(state: ShapeDragState, event: PointerEvent): void {
+    const outline = state.startOutline;
+    const a = outline[state.index];
+    const b = outline[(state.index + 1) % outline.length];
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const length = Math.hypot(dx, dy) || 1;
+    const ux = dx / length;
+    const uy = dy / length;
+    const normal = inwardNormal(outline, state.index);
+
+    const px = event.clientX - state.rectLeft;
+    const py = event.clientY - state.rectTop;
+    const along = clampTo(((px - a.x) * ux + (py - a.y) * uy) / length, 0, 1);
+    const depth = clampTo((px - a.x) * normal.x + (py - a.y) * normal.y, 0, Math.max(state.width, state.height));
+
+    const notched = depth < NOTCH_MIN_DEPTH
+      ? state.startOutline
+      : notchEdge(state.startOutline, state.index, along, NOTCH_WIDTH_RATIO, depth);
+    if (minEdgeLength(notched) >= MIN_SHAPE_EDGE) {
+      this.collection.updateLocationOutline(state.locationId, notched);
+    }
+  }
+
+  private readonly onShapePointerUp = (): void => {
+    window.removeEventListener('pointermove', this.onShapePointerMove);
+    window.removeEventListener('pointerup', this.onShapePointerUp);
+    const locationId = this.shapeDragState?.locationId;
+    this.shapeDragState = null;
+    if (locationId) {
+      this.collection.reflowChildrenInto(locationId);
+    }
+  };
+}
+
+function clampTo(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+function minEdgeLength(points: readonly Point[]): number {
+  let min = Infinity;
+  for (let i = 0; i < points.length; i += 1) {
+    const a = points[i];
+    const b = points[(i + 1) % points.length];
+    min = Math.min(min, Math.hypot(b.x - a.x, b.y - a.y));
+  }
+  return min;
 }

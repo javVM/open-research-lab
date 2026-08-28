@@ -58,6 +58,15 @@ npm start          # ng serve, http://localhost:4200
   building map hints at a floor's rooms, and a floor map at a room's cabinets, without navigating
   into them). List mode is the same card grid used for every other location type. The toggle only
   appears when every child actually has floor-plan coordinates.
+- **Malleable (90°-only) shapes**: mappable locations need not be rectangles. A "Shape" mode in
+  the map toolbar lets you click a location to target it, then drag its vertex handles (slide a
+  corner's two edges) or edge-midpoint handles (cut a rectangular notch — toward a corner for an
+  L, the middle for a U); a "Reset" action reverts to a rectangle. The shape is stored as an
+  orthogonal `outline` polygon (all interior angles 90°, no diagonals or curves) and rendered
+  with `clip-path`; resizing stretches it in proportion. The 3D view extrudes the same outline
+  (clipped roof + one wall per edge). Cutting a corner away re-flows any child (e.g. a cabinet)
+  that no longer fits back inside the parent, and the on-map label re-anchors to stay inside the
+  shape. Editing is desktop-only. See `core/outline.ts` and ADR-0013.
 - **3D view**: a third toggle next to Map/List renders the same children as extruded CSS boxes
   (`FloorPlan3dComponent`) instead of flat rectangles — same `x`/`y`/`width`/`height` data, no
   separate model. Drag empty space to orbit, scroll to zoom, click "⟲" to reset. A building's
