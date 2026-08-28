@@ -94,6 +94,7 @@
         <div
           class="container-card"
           [attr.data-type]="child.type"
+          [class.container-card--empty]="countAt(child.id) === 0"
           [class.container-card--drop-target]="move.movingItemId()"
           cdkDropList
           [cdkDropListData]="child.id"
@@ -104,6 +105,8 @@
           <span class="container-card__name">{{ child.name }}</span>
           @if (countAt(child.id) > 0) {
             <span class="container-card__count">{{ text.itemCount(countAt(child.id)) }}</span>
+          } @else {
+            <span class="container-card__empty">{{ text.emptyBadge() }}</span>
           }
         </div>
       }

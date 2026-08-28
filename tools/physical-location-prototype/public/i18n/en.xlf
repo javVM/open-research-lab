@@ -23,6 +23,15 @@
       <trans-unit id="app.pane.itemDetail">
         <source>Item detail</source>
       </trans-unit>
+      <trans-unit id="app.pane.locationsHeading">
+        <source>Locations</source>
+      </trans-unit>
+      <trans-unit id="app.pane.contentsHeading">
+        <source>Contents</source>
+      </trans-unit>
+      <trans-unit id="app.pane.detailsHeading">
+        <source>Details</source>
+      </trans-unit>
       <trans-unit id="app.modeSwitcher.ariaLabel">
         <source>View mode</source>
       </trans-unit>
@@ -59,6 +68,9 @@
       <trans-unit id="locationTree.allLabel">
         <source>All</source>
       </trans-unit>
+      <trans-unit id="locationTree.emptyLabel">
+        <source>Empty</source>
+      </trans-unit>
       <trans-unit id="locationTree.toggle.collapse">
         <source>Collapse {name}</source>
       </trans-unit>
@@ -90,6 +102,9 @@
       <trans-unit id="locationView.itemCount">
         <source>{count} item(s)</source>
       </trans-unit>
+      <trans-unit id="locationView.emptyBadge">
+        <source>Empty</source>
+      </trans-unit>
       <trans-unit id="locationView.viewMode.map">
         <source>Map</source>
       </trans-unit>
@@ -115,6 +130,9 @@
       <trans-unit id="floorPlan.itemCount">
         <source>{count} item(s)</source>
       </trans-unit>
+      <trans-unit id="floorPlan.empty">
+        <source>Empty</source>
+      </trans-unit>
       <trans-unit id="floorPlan.uploadPlan">
         <source>Upload floor plan image</source>
       </trans-unit>
@@ -136,6 +154,9 @@
       </trans-unit>
       <trans-unit id="floorPlan3d.itemCount">
         <source>{count} item(s)</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.empty">
+        <source>Empty</source>
       </trans-unit>
       <trans-unit id="floorPlan3d.rotateGroupLabel">
         <source>Rotate view</source>

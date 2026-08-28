@@ -32,6 +32,7 @@
           [attr.data-type]="location.type"
           [attr.data-location-id]="location.id"
           [class.box3d--selected]="location.id === navigation.selectedLocationId()"
+          [class.box3d--empty]="countAt(location.id) === 0"
           [style.left.px]="rectFor(location).x"
           [style.top.px]="rectFor(location).y"
           [style.width.px]="rectFor(location).width"
@@ -45,6 +46,8 @@
                 <span class="box3d__name">{{ location.name }}</span>
                 @if (countAt(location.id) > 0) {
                   <span class="box3d__count">{{ text.itemCount(countAt(location.id)) }}</span>
+                } @else {
+                  <span class="box3d__empty">{{ text.empty() }}</span>
                 }
               </div>
             </div>

@@ -20,12 +20,16 @@ $prototype-theme: mat.m2-define-dark-theme((
 
 :root {
   --surface: #1b1e26;
+  --surface-raised: #20242e;
   --surface-hover: #262b36;
   --border: #3a3f4b;
+  --border-strong: #4a5160;
   --text: #e8eaed;
   --text-muted: #9aa1ac;
   --accent: #5b8def;
   --accent-soft: #23324f;
+  --empty: #8b93a1;
+  --empty-soft: #232833;
   color-scheme: dark;
 }
 

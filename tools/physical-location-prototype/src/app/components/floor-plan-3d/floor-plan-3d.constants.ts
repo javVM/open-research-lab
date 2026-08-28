@@ -3,6 +3,7 @@ export const FLOOR_PLAN_3D_I18N = {
   orbitHint: { key: 'floorPlan3d.orbitHint', fallback: 'Drag to orbit, scroll to zoom' },
   resetView: { key: 'floorPlan3d.resetView', fallback: 'Reset view' },
   itemCount: { key: 'floorPlan3d.itemCount', fallback: '{count} item(s)' },
+  empty: { key: 'floorPlan3d.empty', fallback: 'Empty' },
   rotateGroupLabel: { key: 'floorPlan3d.rotateGroupLabel', fallback: 'Rotate view' },
   rotateUp: { key: 'floorPlan3d.rotateUp', fallback: 'Tilt up' },
   rotateDown: { key: 'floorPlan3d.rotateDown', fallback: 'Tilt down' },

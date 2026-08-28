@@ -8,6 +8,16 @@
   width: 100%;
 }
 
+.search-bar__field mat-icon {
+  color: var(--text-muted, #9aa1ac);
+  margin-right: 0.25rem;
+}
+
+.search-bar__field mat-icon svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
 .search-bar__results {
   position: absolute;
   z-index: 20;

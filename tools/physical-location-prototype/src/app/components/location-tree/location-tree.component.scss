@@ -98,6 +98,16 @@
   padding: 0.05rem 0.45rem;
 }
 
+.tree-empty {
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--empty, #8b93a1);
+}
+
+.tree-row--empty .tree-name {
+  color: var(--text-muted, #9aa1ac);
+}
+
 .mobile-tree {
   display: flex;
   flex-direction: column;

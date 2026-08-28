@@ -11,6 +11,7 @@ export const directItemsIntro = (name: string): string =>
   $localize `@@locationView.directItemsIntro:Items stored directly in ${name} (no finer position recorded):`;
 export const itemCount = (count: number): string =>
   $localize `@@locationView.itemCount:${count} item(s)`;
+export const emptyBadge = $localize `@@locationView.emptyBadge:Empty`;
 export const addComponent = (type: string): string => $localize `@@locationView.addComponent:Add ${type}`;
 export const addComponentPrompt = (type: string): string =>
   $localize `@@locationView.addComponentPrompt:Name for the new ${type}:`;
@@ -33,6 +34,7 @@ export function createLocationViewTranslations(i18n: TranslationService) {
     directItemsIntro: (name: string): string =>
       i18n.t('locationView.directItemsIntro', directItemsIntro(name), { name }),
     itemCount: (count: number): string => i18n.t('locationView.itemCount', itemCount(count), { count }),
+    emptyBadge: () => i18n.t('locationView.emptyBadge', emptyBadge),
     addComponent: (type: string): string => i18n.t('locationView.addComponent', addComponent(type), { type }),
     addComponentPrompt: (type: string): string =>
       i18n.t('locationView.addComponentPrompt', addComponentPrompt(type), { type }),

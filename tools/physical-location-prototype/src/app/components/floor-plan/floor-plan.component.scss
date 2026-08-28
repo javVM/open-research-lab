@@ -154,6 +154,16 @@
   border-color: var(--accent, #5b8def);
 }
 
+.floor-plan__rect--empty {
+  border-style: dashed;
+  border-color: var(--border-strong, #4a5160);
+  background-color: var(--empty-soft, #232833) !important;
+}
+
+.floor-plan__rect--empty .floor-plan__name {
+  color: var(--text-muted, #9aa1ac);
+}
+
 .floor-plan__type {
   font-size: 0.7rem;
   text-transform: uppercase;
@@ -172,6 +182,13 @@
   margin-top: auto;
   font-size: 0.75rem;
   color: var(--text-muted, #9aa1ac);
+}
+
+.floor-plan__empty {
+  margin-top: auto;
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--empty, #8b93a1);
 }
 
 .floor-plan__resize-handle {

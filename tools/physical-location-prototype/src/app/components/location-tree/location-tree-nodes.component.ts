@@ -17,6 +17,7 @@ import { createLocationTypeTranslations } from '../../shared/location-type.trans
         <div
           class="tree-row"
           [class.tree-row--selected]="isSelected(node.location.id)"
+          [class.tree-row--empty]="countItemsBelow(node) === 0"
           [style.paddingLeft.px]="depth() * 16 + 8"
           role="treeitem"
           [attr.aria-selected]="isSelected(node.location.id)"
@@ -37,6 +38,8 @@ import { createLocationTypeTranslations } from '../../shared/location-type.trans
           <span class="tree-name">{{ node.location.name }}</span>
           @if (countItemsBelow(node) > 0) {
             <span class="tree-count">{{ countItemsBelow(node) }}</span>
+          } @else {
+            <span class="tree-empty">{{ text.emptyLabel() }}</span>
           }
         </div>
         @if (node.children.length > 0 && isExpanded(node.location.id)) {

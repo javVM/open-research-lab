@@ -149,6 +149,42 @@ describe('FloorPlanComponent', () => {
     expect(rects[0].style.backgroundColor).toContain('rgba(91, 141, 239');
   });
 
+  it('marks empty rects with an empty class', () => {
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentRef.setInput("locations", [room('a', 0, 0), room('b', 130, 0)]);
+    fixture.detectChanges();
+
+    const rects = fixture.nativeElement.querySelectorAll('.floor-plan__rect') as NodeListOf<HTMLElement>;
+    expect(rects.length).toBe(2);
+    for (const rect of Array.from(rects)) {
+      expect(rect.classList.contains('floor-plan__rect--empty')).toBe(true);
+    }
+  });
+
+  it('does not mark an occupied rect as empty', () => {
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+
+    // Give the synthetic room a single stored item so its "items here and
+    // below" count is non-zero, independently of the seeded dataset. It must
+    // exist in the dataset for `itemCountsByLocation` to include it.
+    const location = room('a', 0, 0);
+    collection.addLocation(location);
+    collection.addItem('TEST-0001', location.id);
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentRef.setInput("locations", [location]);
+    fixture.detectChanges();
+
+    const rect = fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement;
+    expect(rect.classList.contains('floor-plan__rect--empty')).toBe(false);
+  });
+
   it('shows a scaled-down preview of a location\'s own coordinated children (e.g. a room\'s cabinets)', () => {
     const collection = TestBed.inject(CollectionService);
     const navigation = TestBed.inject(NavigationService);

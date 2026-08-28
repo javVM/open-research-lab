@@ -30,6 +30,18 @@
         <source>Item detail</source>
         <target>Detalle del ítem</target>
       </trans-unit>
+      <trans-unit id="app.pane.locationsHeading">
+        <source>Locations</source>
+        <target>Ubicaciones</target>
+      </trans-unit>
+      <trans-unit id="app.pane.contentsHeading">
+        <source>Contents</source>
+        <target>Contenido</target>
+      </trans-unit>
+      <trans-unit id="app.pane.detailsHeading">
+        <source>Details</source>
+        <target>Detalles</target>
+      </trans-unit>
       <trans-unit id="app.modeSwitcher.ariaLabel">
         <source>View mode</source>
         <target>Modo de vista</target>
@@ -81,6 +93,10 @@
         <source>All</source>
         <target>Todos</target>
       </trans-unit>
+      <trans-unit id="locationTree.emptyLabel">
+        <source>Empty</source>
+        <target>Vacío</target>
+      </trans-unit>
       <trans-unit id="locationTree.toggle.collapse">
         <source>Collapse {name}</source>
         <target>Contraer {name}</target>
@@ -122,6 +138,10 @@
         <source>{count} item(s)</source>
         <target>{count} ítem(s)</target>
       </trans-unit>
+      <trans-unit id="locationView.emptyBadge">
+        <source>Empty</source>
+        <target>Vacío</target>
+      </trans-unit>
       <trans-unit id="locationView.viewMode.map">
         <source>Map</source>
         <target>Mapa</target>
@@ -155,6 +175,10 @@
         <source>{count} item(s)</source>
         <target>{count} ítem(s)</target>
       </trans-unit>
+      <trans-unit id="floorPlan.empty">
+        <source>Empty</source>
+        <target>Vacío</target>
+      </trans-unit>
       <trans-unit id="floorPlan.uploadPlan">
         <source>Upload floor plan image</source>
         <target>Subir imagen del plano</target>
@@ -183,6 +207,10 @@
       <trans-unit id="floorPlan3d.itemCount">
         <source>{count} item(s)</source>
         <target>{count} ítem(s)</target>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.empty">
+        <source>Empty</source>
+        <target>Vacío</target>
       </trans-unit>
       <trans-unit id="floorPlan3d.rotateGroupLabel">
         <source>Rotate view</source>

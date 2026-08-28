@@ -13,6 +13,9 @@ export const APP_I18N = {
   locationHierarchyAriaLabel: { key: 'app.pane.locationHierarchy', fallback: 'Location hierarchy' },
   selectedLocationAriaLabel: { key: 'app.pane.selectedLocation', fallback: 'Selected location' },
   itemDetailAriaLabel: { key: 'app.pane.itemDetail', fallback: 'Item detail' },
+  locationsHeading: { key: 'app.pane.locationsHeading', fallback: 'Locations' },
+  contentsHeading: { key: 'app.pane.contentsHeading', fallback: 'Contents' },
+  detailsHeading: { key: 'app.pane.detailsHeading', fallback: 'Details' },
   scanButtonLabel: { key: 'app.scanButton.label', fallback: 'Scan' },
   scanButtonTitle: { key: 'app.scanButton.title', fallback: 'Open the camera scanner' },
 } as const;

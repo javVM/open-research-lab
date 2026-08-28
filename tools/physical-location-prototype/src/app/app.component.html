@@ -2,7 +2,10 @@
   <p class="app-disclaimer">{{ text.disclaimer() }}</p>
 
   <header class="app-header">
-    <h1>{{ text.title() }}</h1>
+    <div class="app-brand">
+      <mat-icon svgIcon="brand" aria-hidden="true" class="app-brand__mark"></mat-icon>
+      <h1>{{ text.title() }}</h1>
+    </div>
 
     <nav class="mode-switcher" role="group" [attr.aria-label]="text.modeSwitcherAriaLabel()">
       <button
@@ -13,7 +16,8 @@
         [attr.aria-pressed]="navigation.uiMode() === 'explore'"
         (click)="navigation.setUiMode('explore')"
       >
-        {{ text.modeExplore() }}
+        <mat-icon svgIcon="explore" aria-hidden="true"></mat-icon>
+        <span>{{ text.modeExplore() }}</span>
       </button>
       <button
         type="button"
@@ -23,7 +27,8 @@
         [attr.aria-pressed]="navigation.uiMode() === 'scan'"
         (click)="navigation.setUiMode('scan')"
       >
-        {{ text.modeScan() }}
+        <mat-icon svgIcon="scan" aria-hidden="true"></mat-icon>
+        <span>{{ text.modeScan() }}</span>
       </button>
     </nav>
 
@@ -50,12 +55,15 @@
     @switch (navigation.uiMode()) {
       @case ('explore') {
         <section class="pane pane--tree" [attr.aria-label]="text.locationHierarchyAriaLabel()">
+          <h2 class="pane__heading">{{ text.locationsHeading() }}</h2>
           <app-location-tree></app-location-tree>
         </section>
         <section class="pane pane--view" [attr.aria-label]="text.selectedLocationAriaLabel()">
+          <h2 class="pane__heading">{{ text.contentsHeading() }}</h2>
           <app-location-view></app-location-view>
         </section>
         <section class="pane pane--detail" [attr.aria-label]="text.itemDetailAriaLabel()">
+          <h2 class="pane__heading">{{ text.detailsHeading() }}</h2>
           <app-item-detail></app-item-detail>
         </section>
       }

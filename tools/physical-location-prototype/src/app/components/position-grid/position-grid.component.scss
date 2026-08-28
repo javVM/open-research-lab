@@ -21,7 +21,13 @@
 }
 
 .position-cell--empty {
-  background: var(--surface, #1b1e26);
+  background: var(--empty-soft, #232833);
+  border-style: dashed;
+  border-color: var(--border-strong, #4a5160);
+}
+
+.position-cell--empty .position-cell__label {
+  color: var(--empty, #8b93a1);
 }
 
 .position-cell--occupied {

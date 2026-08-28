@@ -11,6 +11,7 @@ export const LOCATION_VIEW_I18N = {
     fallback: 'Items stored directly in {name} (no finer position recorded):',
   },
   itemCount: { key: 'locationView.itemCount', fallback: '{count} item(s)' },
+  emptyBadge: { key: 'locationView.emptyBadge', fallback: 'Empty' },
   addComponent: { key: 'locationView.addComponent', fallback: 'Add {type}' },
   addComponentPrompt: { key: 'locationView.addComponentPrompt', fallback: 'Name for the new {type}:' },
   trayRowsPrompt: { key: 'locationView.trayRowsPrompt', fallback: 'Number of rows:' },

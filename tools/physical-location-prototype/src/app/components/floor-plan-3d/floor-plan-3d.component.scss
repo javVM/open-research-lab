@@ -190,6 +190,24 @@
     0 0 6px rgba(0, 0, 0, 0.5);
 }
 
+.box3d__empty {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-style: italic;
+  color: var(--empty, #8b93a1);
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.85),
+    0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+.box3d--empty .box3d__top-fill {
+  border: 2px dashed var(--border-strong, #4a5160);
+}
+
+.box3d--empty .box3d__name {
+  color: #c7cdd6;
+}
+
 .box3d__shelves {
   position: absolute;
   inset: 0;
