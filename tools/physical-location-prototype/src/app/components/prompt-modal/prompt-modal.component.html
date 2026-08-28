@@ -1,0 +1,29 @@
+@if (open()) {
+  <div class="modal-backdrop" (click)="cancel()">
+    <div
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="title()"
+      (click)="$event.stopPropagation()"
+      (keydown)="onKeydown($event)"
+    >
+      <h3 class="modal__title">{{ title() }}</h3>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="modal__field">
+        <mat-label>{{ message() }}</mat-label>
+        <input
+          matInput
+          type="text"
+          [formField]="fieldControl"
+          (keydown.enter)="confirm()"
+          [attr.inputmode]="kind() === 'number' ? 'numeric' : null"
+          autofocus
+        />
+      </mat-form-field>
+      <div class="modal__actions">
+        <button type="button" mat-button class="modal__cancel" (click)="cancel()">{{ cancelLabel() }}</button>
+        <button type="button" mat-button color="primary" class="modal__confirm" (click)="confirm()">{{ confirmLabel() }}</button>
+      </div>
+    </div>
+  </div>
+}

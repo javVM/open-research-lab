@@ -14,6 +14,8 @@ import { FloorPlanComponent } from '../floor-plan/floor-plan.component';
 import { FloorPlan3dComponent } from '../floor-plan-3d/floor-plan-3d.component';
 import { PositionGridComponent } from '../position-grid/position-grid.component';
 import { GeometryService } from '../../shared/geometry.service';
+import { PromptModalComponent, type PromptRequest } from '../prompt-modal/prompt-modal.component';
+import { MIN_ROW_COLUMN_COUNT } from '../prompt-modal/prompt-modal.constants';
 import { ITEM_HOLDING_TYPES, MAPPABLE_TYPES, PARENT_CHILD_TYPES } from '../../shared/hierarchy.constants';
 import { ID_PREFIX, newPrototypeId } from '../../shared/prototype-id';
 
@@ -28,6 +30,7 @@ import { ID_PREFIX, newPrototypeId } from '../../shared/prototype-id';
     FloorPlanComponent,
     FloorPlan3dComponent,
     PositionGridComponent,
+    PromptModalComponent,
   ],
   templateUrl: './location-view.component.html',
   styleUrl: './location-view.component.scss',
@@ -49,6 +52,9 @@ export class LocationViewComponent {
     const id = this.navigation.selectedLocationId();
     return id ? this.collection.dataset().locations.find((location) => location.id === id) : undefined;
   });
+
+  protected readonly promptRequest = signal<PromptRequest | null>(null);
+  private pendingPrompt: ((value: string | null) => void) | null = null;
 
   readonly breadcrumbPath = computed<Location[]>(() => {
     const location = this.selectedLocation();
@@ -136,9 +142,13 @@ export class LocationViewComponent {
     if (!container || !this.allowedChildTypes().includes(childType)) {
       return;
     }
+    void this.addComponentAsync(childType, container);
+  }
+
+  private async addComponentAsync(childType: LocationType, container: Location): Promise<void> {
     const label = this.locationType.label(childType);
     const name = this.defaultName(childType);
-    const chosen = window.prompt(this.text.addComponentPrompt(label), name);
+    const chosen = await this.askText(this.text.addComponent(label), this.text.addComponentPrompt(label), name);
     if (chosen === null) {
       return;
     }
@@ -165,9 +175,12 @@ export class LocationViewComponent {
     const locations: Location[] = [child];
 
     if (childType === 'tray') {
-      const rows = this.askNumber(this.text.trayRowsPrompt(), 1);
-      const columns = this.askNumber(this.text.trayColumnsPrompt(), 1);
-      if (rows === null || columns === null) {
+      const rows = await this.askNumber(this.text.trayRowsTitle(), this.text.trayRowsPrompt(), 1);
+      if (rows === null) {
+        return;
+      }
+      const columns = await this.askNumber(this.text.trayColumnsTitle(), this.text.trayColumnsPrompt(), 1);
+      if (columns === null) {
         return;
       }
       for (let row = 1; row <= rows; row += 1) {
@@ -199,16 +212,57 @@ export class LocationViewComponent {
     return `${label} ${count + 1}`;
   }
 
-  private askNumber(message: string, defaultValue: number): number | null {
-    const raw = window.prompt(message, String(defaultValue));
-    if (raw === null) {
-      return null;
-    }
-    const value = parseInt(raw.trim(), 10);
-    if (Number.isNaN(value) || value < 1) {
-      return null;
-    }
-    return value;
+  private askText(title: string, message: string, defaultValue: string): Promise<string | null> {
+    return this.ask({
+      kind: 'text',
+      title,
+      message,
+      defaultValue,
+      confirmLabel: this.text.addButton(),
+      cancelLabel: this.text.cancelButton(),
+    });
+  }
+
+  private askNumber(title: string, message: string, defaultValue: number): Promise<number | null> {
+    return this.ask({
+      kind: 'number',
+      title,
+      message,
+      defaultValue: String(defaultValue),
+      confirmLabel: this.text.confirmButton(),
+      cancelLabel: this.text.cancelButton(),
+    }).then((raw) => {
+      if (raw === null) {
+        return null;
+      }
+      const value = parseInt(raw, 10);
+      if (Number.isNaN(value) || value < MIN_ROW_COLUMN_COUNT) {
+        return null;
+      }
+      return value;
+    });
+  }
+
+  private ask(request: PromptRequest): Promise<string | null> {
+    return new Promise((resolve) => {
+      this.pendingPrompt = resolve;
+      this.promptRequest.set(request);
+    });
+  }
+
+  onPromptConfirmed(value: string): void {
+    this.closePrompt(value);
+  }
+
+  onPromptDismissed(): void {
+    this.closePrompt(null);
+  }
+
+  private closePrompt(value: string | null): void {
+    this.promptRequest.set(null);
+    const resolve = this.pendingPrompt;
+    this.pendingPrompt = null;
+    resolve?.(value);
   }
 
   addItem(): void {
@@ -220,7 +274,11 @@ export class LocationViewComponent {
   }
 
   addItemToLocation(locationId: string | null): void {
-    const catalogueNumber = window.prompt(this.text.addItemPrompt());
+    void this.addItemAsync(locationId);
+  }
+
+  private async addItemAsync(locationId: string | null): Promise<void> {
+    const catalogueNumber = await this.askText(this.text.addItem(), this.text.addItemPrompt(), '');
     if (catalogueNumber === null) {
       return;
     }

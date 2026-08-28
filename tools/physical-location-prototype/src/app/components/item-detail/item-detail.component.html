@@ -65,7 +65,9 @@
 } @else if (selectedLocation(); as location) {
   <div class="item-detail item-detail--location">
     <h2>{{ location.name }}</h2>
-    <app-qr-label [payload]="locationQrPayload()"></app-qr-label>
+    @if (showLocationQr()) {
+      <app-qr-label [payload]="locationQrPayload()"></app-qr-label>
+    }
   </div>
 } @else {
   <p class="empty-state">{{ text.emptyState() }}</p>

@@ -11,6 +11,7 @@ import { MoveService } from '../../move.service';
 import { NavigationService } from '../../navigation.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { registerAppIcons } from '../../shared/icons';
+import { QR_SCANNABLE_LOCATION_TYPES } from '../../shared/hierarchy.constants';
 import { createItemDetailTranslations } from './item-detail.translations';
 
 @Component({
@@ -48,6 +49,12 @@ export class ItemDetailComponent {
   readonly locationQrPayload = computed<string>(() => {
     const location = this.selectedLocation();
     return location ? `box:${location.id}` : '';
+  });
+
+  /** Whether the selected location is a physical container worth a QR sticker. */
+  readonly showLocationQr = computed<boolean>(() => {
+    const location = this.selectedLocation();
+    return location !== undefined && QR_SCANNABLE_LOCATION_TYPES.includes(location.type);
   });
 
   readonly path = computed<Location[]>(() => {

@@ -11,6 +11,7 @@ import { createLocationTypeTranslations } from '../../shared/location-type.trans
 import { ViewportService } from '../../shared/viewport.service';
 import { GeometryService, type Rect } from '../../shared/geometry.service';
 import { RenderService } from '../../shared/render.service';
+import { PromptModalComponent, type PromptRequest } from '../prompt-modal/prompt-modal.component';
 import { MIN_COMPONENT_SIZE } from '../../shared/geometry.constants';
 import { defaultChildType } from '../../shared/hierarchy.constants';
 import { OCCUPANCY_PALETTE } from '../../shared/palette.constants';
@@ -60,7 +61,7 @@ interface ShapeDragState {
 @Component({
   standalone: true,
   selector: 'app-floor-plan',
-  imports: [MatButtonModule, MatIconModule],
+  imports: [MatButtonModule, MatIconModule, PromptModalComponent],
   templateUrl: './floor-plan.component.html',
   styleUrl: './floor-plan.component.scss',
 })
@@ -190,8 +191,18 @@ export class FloorPlanComponent {
     const size = this.geometry.defaultSizeFor(childType);
     const position = this.geometry.nextPosition(this.locations(), size);
     const name = this.defaultName(childType);
+    void this.addComponentAsync(containerId, childType, size, position, name);
+  }
+
+  private async addComponentAsync(
+    containerId: string,
+    childType: LocationType,
+    size: { width: number; height: number },
+    position: Point,
+    name: string,
+  ): Promise<void> {
     const label = this.locationType.label(childType);
-    const chosen = window.prompt(`Nombre para el nuevo ${label}:`, name);
+    const chosen = await this.askText(this.text.addComponentTitle(label), this.text.addComponentPrompt(label), name);
     if (chosen === null) {
       return;
     }
@@ -215,6 +226,38 @@ export class FloorPlanComponent {
     const containerId = this.containerLocationId()!;
     const count = this.geometry.siblingCount(this.collection.dataset().locations, containerId, type);
     return `${label} ${count + 1}`;
+  }
+
+  protected readonly promptRequest = signal<PromptRequest | null>(null);
+  private pendingPrompt: ((value: string | null) => void) | null = null;
+
+  private askText(title: string, message: string, defaultValue: string): Promise<string | null> {
+    return new Promise((resolve) => {
+      this.pendingPrompt = resolve;
+      this.promptRequest.set({
+        kind: 'text',
+        title,
+        message,
+        defaultValue,
+        confirmLabel: this.text.addButton(),
+        cancelLabel: this.text.cancelButton(),
+      });
+    });
+  }
+
+  onPromptConfirmed(value: string): void {
+    this.closePrompt(value);
+  }
+
+  onPromptDismissed(): void {
+    this.closePrompt(null);
+  }
+
+  private closePrompt(value: string | null): void {
+    this.promptRequest.set(null);
+    const resolve = this.pendingPrompt;
+    this.pendingPrompt = null;
+    resolve?.(value);
   }
 
   rectFor(location: Location): Rect {

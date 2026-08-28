@@ -13,6 +13,11 @@ export const FLOOR_PLAN_I18N = {
   shapeHint: { key: 'floorPlan.shapeHint', fallback: 'Edit the shape (90° corners only)' },
   resetShapeLabel: { key: 'floorPlan.resetShapeLabel', fallback: 'Reset' },
   resetShapeHint: { key: 'floorPlan.resetShapeHint', fallback: 'Revert to a rectangle' },
+  addComponent: { key: 'floorPlan.addComponent', fallback: 'Add component' },
+  addComponentTitle: { key: 'floorPlan.addComponentTitle', fallback: 'Add {type}' },
+  addComponentPrompt: { key: 'floorPlan.addComponentPrompt', fallback: 'Name for the new {type}:' },
+  addButton: { key: 'floorPlan.addButton', fallback: 'Add' },
+  cancelButton: { key: 'floorPlan.cancelButton', fallback: 'Cancel' },
 } as const;
 
 /** Diameter, in pixels, of the draggable shape-editing handles on the map. */

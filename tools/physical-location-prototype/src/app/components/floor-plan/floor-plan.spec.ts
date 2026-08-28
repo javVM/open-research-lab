@@ -353,6 +353,35 @@ describe('FloorPlanComponent', () => {
     expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview-rect').length).toBeGreaterThan(0);
   });
 
+  it('adds a component through the styled modal, not a browser prompt', async () => {
+    const collection = TestBed.inject(CollectionService);
+    const building = collection.dataset().locations.find((l) => l.type === 'building')!;
+    const floors = collection.dataset().locations.filter((l) => l.parentId === building.id);
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentRef.setInput('locations', floors);
+    fixture.componentRef.setInput('containerLocationId', building.id);
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('.floor-plan__add') as HTMLElement).click();
+    fixture.detectChanges();
+
+    const backdrop = fixture.nativeElement.querySelector('app-prompt-modal .modal-backdrop');
+    expect(backdrop).toBeTruthy();
+
+    const input = fixture.nativeElement.querySelector('app-prompt-modal input') as HTMLInputElement;
+    input.value = 'New Floor';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('app-prompt-modal .modal__confirm') as HTMLElement).click();
+    await fixture.whenStable();
+
+    expect(
+      collection.dataset().locations.some((l) => l.parentId === building.id && l.name === 'New Floor'),
+    ).toBe(true);
+  });
+
   it('marks a rect as interacting while it is being dragged, and clears it on pointer up', () => {
     const collection = TestBed.inject(CollectionService);
     const navigation = TestBed.inject(NavigationService);

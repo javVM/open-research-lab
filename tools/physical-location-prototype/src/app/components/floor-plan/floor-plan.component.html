@@ -162,3 +162,9 @@
     }
   }
 </div></div>
+
+<app-prompt-modal
+  [request]="promptRequest()"
+  (confirmed)="onPromptConfirmed($event)"
+  (dismissed)="onPromptDismissed()"
+></app-prompt-modal>

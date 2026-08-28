@@ -54,6 +54,30 @@ describe('ItemDetailComponent', () => {
     expect(fixture.nativeElement.querySelector('.move-hint')).toBeTruthy();
   });
 
+  it('shows no QR for a selected building or room, only for physical containers', () => {
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+
+    const building = collection.dataset().locations.find((l) => l.type === 'building')!;
+    navigation.selectLocation(building.id);
+    let fixture = TestBed.createComponent(ItemDetailComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-qr-label')).toBeNull();
+
+    const room = collection.dataset().locations.find((l) => l.type === 'room')!;
+    navigation.selectLocation(room.id);
+    fixture = TestBed.createComponent(ItemDetailComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-qr-label')).toBeNull();
+
+    const tray = collection.dataset().locations.find((l) => l.type === 'tray')!;
+    navigation.selectLocation(tray.id);
+    fixture = TestBed.createComponent(ItemDetailComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-qr-label')).toBeTruthy();
+  });
+
   it('renders history entries with an arrow between the two locations', () => {
     const collection = TestBed.inject(CollectionService);
     const navigation = TestBed.inject(NavigationService);

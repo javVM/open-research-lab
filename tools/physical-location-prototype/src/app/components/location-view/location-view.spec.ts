@@ -103,6 +103,37 @@ describe('LocationViewComponent', () => {
     expect(fixture.nativeElement.querySelector('app-floor-plan')).toBeFalsy();
   });
 
+  it('adding an item goes through the styled modal, not a browser prompt', async () => {
+    const collection = TestBed.inject(CollectionService);
+    const navigation = TestBed.inject(NavigationService);
+    const move = TestBed.inject(MoveService);
+    const tray = collection.dataset().locations.find((l) => l.type === 'tray')!;
+    navigation.selectLocation(tray.id);
+
+    const fixture = TestBed.createComponent(LocationViewComponent);
+    fixture.detectChanges();
+
+    const addItemButton = Array.from(fixture.nativeElement.querySelectorAll('.add-item')).find(
+      (button) => (button as HTMLElement).textContent?.trim() === 'Add item',
+    ) as HTMLElement;
+    expect(addItemButton).toBeTruthy();
+    addItemButton.click();
+    fixture.detectChanges();
+
+    const backdrop = fixture.nativeElement.querySelector('app-prompt-modal .modal-backdrop');
+    expect(backdrop).toBeTruthy();
+
+    const input = fixture.nativeElement.querySelector('app-prompt-modal input') as HTMLInputElement;
+    input.value = 'NEW-777';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('app-prompt-modal .modal__confirm') as HTMLElement).click();
+    await fixture.whenStable();
+
+    expect(collection.dataset().items.some((item) => item.catalogueNumber === 'NEW-777')).toBe(true);
+  });
+
   it('clicking an empty position while moving requests confirmation instead of moving immediately', () => {
     const collection = TestBed.inject(CollectionService);
     const navigation = TestBed.inject(NavigationService);

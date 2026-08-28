@@ -29,6 +29,14 @@ export const MAPPABLE_TYPES: readonly LocationType[] = ['floor', 'room', 'cabine
  */
 export const ITEM_HOLDING_TYPES: readonly LocationType[] = ['drawer', 'box', 'tray', 'position'];
 
+/**
+ * Location types worth labelling with a scannable QR code: the physical
+ * item-holding containers a user actually scans during the workflow
+ * (drawer, box, tray, position). Architectural/spatial levels (building,
+ * floor, room, cabinet) do not get a QR sticker.
+ */
+export const QR_SCANNABLE_LOCATION_TYPES: readonly LocationType[] = ['drawer', 'box', 'tray', 'position'];
+
 /** Convenience accessor: the single child type a container takes, if any. */
 export function defaultChildType(containerType: LocationType): LocationType | null {
   return PARENT_CHILD_TYPES[containerType][0] ?? null;

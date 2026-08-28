@@ -15,10 +15,14 @@ export const emptyBadge = $localize `@@locationView.emptyBadge:Empty`;
 export const addComponent = (type: string): string => $localize `@@locationView.addComponent:Add ${type}`;
 export const addComponentPrompt = (type: string): string =>
   $localize `@@locationView.addComponentPrompt:Name for the new ${type}:`;
+export const trayRowsTitle = $localize `@@locationView.trayRowsTitle:Tray rows`;
 export const trayRowsPrompt = $localize `@@locationView.trayRowsPrompt:Number of rows:`;
+export const trayColumnsTitle = $localize `@@locationView.trayColumnsTitle:Tray columns`;
 export const trayColumnsPrompt = $localize `@@locationView.trayColumnsPrompt:Number of columns:`;
 export const addItem = $localize `@@locationView.addItem:Add item`;
 export const addItemPrompt = $localize `@@locationView.addItemPrompt:Catalogue number for the new item:`;
+export const addButton = $localize `@@locationView.addButton:Add`;
+export const confirmButton = $localize `@@locationView.confirmButton:OK`;
 export const viewModeMap = $localize `@@locationView.viewMode.map:Map`;
 export const viewMode3d = $localize `@@locationView.viewMode.3d:3D`;
 export const viewModeList = $localize `@@locationView.viewMode.list:List`;
@@ -38,10 +42,14 @@ export function createLocationViewTranslations(i18n: TranslationService) {
     addComponent: (type: string): string => i18n.t('locationView.addComponent', addComponent(type), { type }),
     addComponentPrompt: (type: string): string =>
       i18n.t('locationView.addComponentPrompt', addComponentPrompt(type), { type }),
+    trayRowsTitle: () => i18n.t('locationView.trayRowsTitle', trayRowsTitle),
     trayRowsPrompt: () => i18n.t('locationView.trayRowsPrompt', trayRowsPrompt),
+    trayColumnsTitle: () => i18n.t('locationView.trayColumnsTitle', trayColumnsTitle),
     trayColumnsPrompt: () => i18n.t('locationView.trayColumnsPrompt', trayColumnsPrompt),
     addItem: () => i18n.t('locationView.addItem', addItem),
     addItemPrompt: () => i18n.t('locationView.addItemPrompt', addItemPrompt),
+    addButton: () => i18n.t('locationView.addButton', addButton),
+    confirmButton: () => i18n.t('locationView.confirmButton', confirmButton),
     viewModeMap: () => i18n.t('locationView.viewMode.map', viewModeMap),
     viewMode3d: () => i18n.t('locationView.viewMode.3d', viewMode3d),
     viewModeList: () => i18n.t('locationView.viewMode.list', viewModeList),

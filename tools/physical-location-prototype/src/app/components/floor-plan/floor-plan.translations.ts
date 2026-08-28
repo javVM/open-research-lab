@@ -16,6 +16,12 @@ export const shapeHint = $localize `@@floorPlan.shapeHint:Edit the shape (90° c
 export const resetShapeLabel = $localize `@@floorPlan.resetShapeLabel:Reset`;
 export const resetShapeHint = $localize `@@floorPlan.resetShapeHint:Revert to a rectangle`;
 export const addComponent = $localize `@@floorPlan.addComponent:Add component`;
+export const addComponentTitle = (type: string): string =>
+  $localize `@@floorPlan.addComponentTitle:Add ${type}`;
+export const addComponentPrompt = (type: string): string =>
+  $localize `@@floorPlan.addComponentPrompt:Name for the new ${type}:`;
+export const addButton = $localize `@@floorPlan.addButton:Add`;
+export const cancelButton = $localize `@@floorPlan.cancelButton:Cancel`;
 
 export function createFloorPlanTranslations(i18n: TranslationService) {
   return {
@@ -34,5 +40,11 @@ export function createFloorPlanTranslations(i18n: TranslationService) {
     resetShapeLabel: () => i18n.t('floorPlan.resetShapeLabel', resetShapeLabel),
     resetShapeHint: () => i18n.t('floorPlan.resetShapeHint', resetShapeHint),
     addComponent: () => i18n.t('floorPlan.addComponent', addComponent),
+    addComponentTitle: (type: string): string =>
+      i18n.t('floorPlan.addComponentTitle', addComponentTitle(type), { type }),
+    addComponentPrompt: (type: string): string =>
+      i18n.t('floorPlan.addComponentPrompt', addComponentPrompt(type), { type }),
+    addButton: () => i18n.t('floorPlan.addButton', addButton),
+    cancelButton: () => i18n.t('floorPlan.cancelButton', cancelButton),
   };
 }
