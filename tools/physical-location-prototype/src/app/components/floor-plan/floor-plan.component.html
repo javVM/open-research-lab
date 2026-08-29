@@ -34,16 +34,31 @@
 
     <button
       type="button"
-      class="floor-plan__shape"
-      [class.floor-plan__shape--active]="shapeMode()"
-      [attr.title]="text.shapeHint()"
-      [attr.aria-label]="text.shapeHint()"
-      [attr.aria-pressed]="shapeMode()"
-      (click)="toggleShapeMode()"
+      class="floor-plan__layout"
+      [class.floor-plan__layout--active]="layoutMode()"
+      [attr.title]="text.layoutHint()"
+      [attr.aria-label]="text.layoutHint()"
+      [attr.aria-pressed]="layoutMode()"
+      (click)="toggleLayoutMode()"
     >
-      <mat-icon svgIcon="shape" aria-hidden="true"></mat-icon>
-      <span>{{ text.shapeLabel() }}</span>
+      <mat-icon svgIcon="move" aria-hidden="true"></mat-icon>
+      <span>{{ text.layoutLabel() }}</span>
     </button>
+
+    @if (!viewport.isMobile()) {
+      <button
+        type="button"
+        class="floor-plan__shape"
+        [class.floor-plan__shape--active]="shapeMode()"
+        [attr.title]="text.shapeHint()"
+        [attr.aria-label]="text.shapeHint()"
+        [attr.aria-pressed]="shapeMode()"
+        (click)="toggleShapeMode()"
+      >
+        <mat-icon svgIcon="shape" aria-hidden="true"></mat-icon>
+        <span>{{ text.shapeLabel() }}</span>
+      </button>
+    }
 
     @if (shapeMode() && selectedShapeLocation()) {
       <button
@@ -57,6 +72,12 @@
         <span>{{ text.resetShapeLabel() }}</span>
       </button>
     }
+
+    <span class="floor-plan__zoom-group" role="group" aria-label="Zoom">
+      <button type="button" class="floor-plan__zoom-btn" (click)="zoomOut()" aria-label="Alejar"><mat-icon svgIcon="zoomOut" aria-hidden="true"></mat-icon></button>
+      <button type="button" class="floor-plan__zoom-btn" (click)="zoomFit()" aria-label="Ajustar"><mat-icon svgIcon="zoomFit" aria-hidden="true"></mat-icon></button>
+      <button type="button" class="floor-plan__zoom-btn" (click)="zoomIn()" aria-label="Acercar"><mat-icon svgIcon="zoomIn" aria-hidden="true"></mat-icon></button>
+    </span>
   </div>
 }
 
@@ -66,9 +87,12 @@
   [style.width.px]="bounds().width"
   [style.height.px]="bounds().height"
   [style.backgroundImage]="containerImage() ? 'url(' + containerImage()!.dataUrl + ')' : null"
-  [style.backgroundSize]="containerImage() ? (containerImage()!.width * renderScale()) + 'px ' + (containerImage()!.height * renderScale()) + 'px' : null"
+  [style.backgroundSize]="containerImage() ? '100% 100%' : null"
   [style.backgroundRepeat]="'no-repeat'"
 >
+  @if (containerFootprint()) {
+    <div class="floor-plan__footprint" aria-hidden="true"></div>
+  }
   @for (location of locations(); track location.id) {
     <div
       class="floor-plan__rect"
@@ -79,21 +103,32 @@
       [class.floor-plan__rect--shape-target]="isShapeTarget(location.id)"
       [class.floor-plan__rect--drop-target]="isDropTarget()"
       [class.floor-plan__rect--interacting]="isInteracting(location.id)"
+      [class.floor-plan__rect--shaped]="!!outlinePointsString(location)"
       [class.floor-plan__rect--empty]="countAt(location.id) === 0"
-      [style.left.px]="rectFor(location).x"
-      [style.top.px]="rectFor(location).y"
-      [style.width.px]="rectFor(location).width"
-      [style.height.px]="rectFor(location).height"
-      [style.backgroundColor]="occupancyBackground(location.id)"
-      [style.clipPath]="outlineClipPath(location)"
+      [style.left.%]="rectPercent(location).x"
+      [style.top.%]="rectPercent(location).y"
+      [style.width.%]="rectPercent(location).width"
+      [style.height.%]="rectPercent(location).height"
       (pointerdown)="onPointerDown($event, location)"
       (click)="onClick(location.id)"
     >
+      @if (outlinePointsString(location); as pts) {
+        <svg class="floor-plan__outline" [attr.viewBox]="'0 0 ' + (location.width ?? 0) + ' ' + (location.height ?? 0)" preserveAspectRatio="none" aria-hidden="true">
+          <polygon [attr.points]="pts" [attr.fill]="occupancyBackground(location.id)" />
+          <polygon [attr.points]="pts" fill="none" class="floor-plan__outline-stroke" />
+        </svg>
+      } @else {
+        <div
+          class="floor-plan__rect-bg"
+          [style.backgroundColor]="occupancyBackground(location.id)"
+          aria-hidden="true"
+        ></div>
+      }
       <div
         class="floor-plan__label"
         [class.floor-plan__label--shaped]="labelAnchor(location) !== null"
-        [style.left.px]="labelAnchor(location)?.x"
-        [style.top.px]="labelAnchor(location)?.y"
+        [style.left.%]="labelAnchor(location)?.x"
+        [style.top.%]="labelAnchor(location)?.y"
       >
         <span class="floor-plan__type">{{ locationType.label(location.type) }}</span>
         <span class="floor-plan__name">{{ location.name }}</span>
@@ -106,39 +141,35 @@
         }
       </div>
 
-      @if (previewChildren(location).length > 0) {
+      @if (!layoutMode() && !shapeMode() && previewChildren(location).length > 0) {
         <span class="floor-plan__preview-indicator" [attr.title]="text.previewHint()">▦</span>
       }
 
-      @if (previewChildren(location).length > 0) {
-        <div
-          class="floor-plan__preview"
-          [style.left.px]="previewArea(location).x"
-          [style.top.px]="previewArea(location).y"
-          [style.width.px]="previewArea(location).width"
-          [style.height.px]="previewArea(location).height"
-        >
+      @if (!layoutMode() && !shapeMode() && previewChildren(location).length > 0) {
+        <div class="floor-plan__preview">
           @for (child of previewChildren(location); track child.id) {
             <div
               class="floor-plan__preview-rect"
               [attr.title]="child.name"
-              [style.left.px]="previewRectFor(location, child).x"
-              [style.top.px]="previewRectFor(location, child).y"
-              [style.width.px]="previewRectFor(location, child).width"
-              [style.height.px]="previewRectFor(location, child).height"
+              [style.left.%]="previewRectPercent(location, child).x"
+              [style.top.%]="previewRectPercent(location, child).y"
+              [style.width.%]="previewRectPercent(location, child).width"
+              [style.height.%]="previewRectPercent(location, child).height"
               [style.backgroundColor]="occupancyBackground(child.id)"
             ></div>
           }
         </div>
       }
 
-      @if (!shapeMode()) {
-        <div
-          class="floor-plan__resize-handle"
-          [attr.title]="text.resizeHint()"
-          (pointerdown)="onResizePointerDown($event, location)"
-          (click)="$event.stopPropagation()"
-        ></div>
+      @if (layoutMode()) {
+        <div class="floor-plan__resize-handle floor-plan__resize-handle--n" [attr.title]="text.resizeHint()" [attr.aria-label]="text.resizeHint()" (pointerdown)="onResizePointerDown($event, location, 'n')" (click)="$event.stopPropagation()"></div>
+        <div class="floor-plan__resize-handle floor-plan__resize-handle--s" [attr.title]="text.resizeHint()" [attr.aria-label]="text.resizeHint()" (pointerdown)="onResizePointerDown($event, location, 's')" (click)="$event.stopPropagation()"></div>
+        <div class="floor-plan__resize-handle floor-plan__resize-handle--e" [attr.title]="text.resizeHint()" [attr.aria-label]="text.resizeHint()" (pointerdown)="onResizePointerDown($event, location, 'e')" (click)="$event.stopPropagation()"></div>
+        <div class="floor-plan__resize-handle floor-plan__resize-handle--w" [attr.title]="text.resizeHint()" [attr.aria-label]="text.resizeHint()" (pointerdown)="onResizePointerDown($event, location, 'w')" (click)="$event.stopPropagation()"></div>
+        <div class="floor-plan__resize-handle floor-plan__resize-handle--ne" [attr.title]="text.resizeHint()" [attr.aria-label]="text.resizeHint()" (pointerdown)="onResizePointerDown($event, location, 'ne')" (click)="$event.stopPropagation()"></div>
+        <div class="floor-plan__resize-handle floor-plan__resize-handle--nw" [attr.title]="text.resizeHint()" [attr.aria-label]="text.resizeHint()" (pointerdown)="onResizePointerDown($event, location, 'nw')" (click)="$event.stopPropagation()"></div>
+        <div class="floor-plan__resize-handle floor-plan__resize-handle--se" [attr.title]="text.resizeHint()" [attr.aria-label]="text.resizeHint()" (pointerdown)="onResizePointerDown($event, location, 'se')" (click)="$event.stopPropagation()"></div>
+        <div class="floor-plan__resize-handle floor-plan__resize-handle--sw" [attr.title]="text.resizeHint()" [attr.aria-label]="text.resizeHint()" (pointerdown)="onResizePointerDown($event, location, 'sw')" (click)="$event.stopPropagation()"></div>
       }
     </div>
   }
@@ -147,16 +178,16 @@
     @for (point of outlinePoints(shapeLocation); track $index) {
       <span
         class="floor-plan__vertex-handle"
-        [style.left.px]="((shapeLocation.x ?? 0) + point.x) * renderScale()"
-        [style.top.px]="((shapeLocation.y ?? 0) + point.y) * renderScale()"
+        [style.left.%]="shapeHandlePercent(shapeLocation, point).x"
+        [style.top.%]="shapeHandlePercent(shapeLocation, point).y"
         (pointerdown)="onVertexPointerDown($event, shapeLocation, $index)"
       ></span>
     }
     @for (point of outlineMidpoints(shapeLocation); track $index) {
       <span
         class="floor-plan__edge-handle"
-        [style.left.px]="((shapeLocation.x ?? 0) + point.x) * renderScale()"
-        [style.top.px]="((shapeLocation.y ?? 0) + point.y) * renderScale()"
+        [style.left.%]="shapeHandlePercent(shapeLocation, point).x"
+        [style.top.%]="shapeHandlePercent(shapeLocation, point).y"
         (pointerdown)="onEdgePointerDown($event, shapeLocation, $index)"
       ></span>
     }

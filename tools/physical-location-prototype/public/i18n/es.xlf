@@ -199,6 +199,14 @@
         <source>Add</source>
         <target>Añadir</target>
       </trans-unit>
+      <trans-unit id="floorPlan.layoutLabel">
+        <source>Move</source>
+        <target>Mover</target>
+      </trans-unit>
+      <trans-unit id="floorPlan.layoutHint">
+        <source>Move and resize</source>
+        <target>Mover y redimensionar</target>
+      </trans-unit>
       <trans-unit id="floorPlan.shapeLabel">
         <source>Shape</source>
         <target>Forma</target>

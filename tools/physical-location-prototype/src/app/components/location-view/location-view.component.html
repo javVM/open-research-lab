@@ -82,7 +82,7 @@
     @if (showMap()) {
       <app-floor-plan [locations]="children()" [containerLocationId]="location.id"></app-floor-plan>
     } @else if (show3d()) {
-      <app-floor-plan-3d [locations]="children()"></app-floor-plan-3d>
+      <app-floor-plan-3d [locations]="children()" [containerLocationId]="location.id"></app-floor-plan-3d>
     } @else if (isPositionGrid()) {
       <app-position-grid [positions]="children()" (addItem)="addItemToLocation($event)"></app-position-grid>
     }

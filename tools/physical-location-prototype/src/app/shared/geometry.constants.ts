@@ -16,7 +16,7 @@ export const DEFAULT_COMPONENT_SIZE: Readonly<Record<LocationType, { width: numb
 export const FALLBACK_RECT_SIZE = 100;
 
 /** Smallest a rect may be dragged/resized to (in layout units). */
-export const MIN_COMPONENT_SIZE = 60;
+export const MIN_COMPONENT_SIZE = 32;
 
 /** Vertical gap between a newly added component and the one above it. */
 export const COMPONENT_GAP = 16;
@@ -24,9 +24,9 @@ export const COMPONENT_GAP = 16;
 /** Gap between the map's content and the viewport edge when auto-fitting on small screens. */
 export const VIEWPORT_PADDING = 16;
 
-/** Clamp for the mobile auto-fit scale. */
+/** Clamp for the auto-fit scale. Allows zooming small rooms to fill the viewport. */
 export const MIN_RENDER_SCALE = 0.25;
-export const MAX_RENDER_SCALE = 1;
+export const MAX_RENDER_SCALE = 3;
 
 /** Inset of a hover preview overlay inside its parent rect. */
 export const PREVIEW_INSET = 4;

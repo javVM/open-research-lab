@@ -74,15 +74,37 @@ export class GeometryService {
   }
 
   /**
-   * Where a newly added component should go: stacked below the current bottom
-   * sibling, or at the origin when nothing shares the container yet.
+   * Where a newly added component should go: first free spot inside the parent
+   * footprint (or stacked below when no footprint is known), never outside the
+   * designated space.
    */
-  nextPosition(siblings: readonly Location[], size: { width: number; height: number }): { x: number; y: number } {
-    if (siblings.length === 0) {
-      return { ...FIRST_COMPONENT_POSITION };
+  nextPosition(
+    siblings: readonly Location[],
+    size: { width: number; height: number },
+    parent?: { width: number; height: number } | null,
+  ): { x: number; y: number } {
+    if (!parent || parent.width <= 0 || parent.height <= 0) {
+      if (siblings.length === 0) {
+        return { ...FIRST_COMPONENT_POSITION };
+      }
+      const maxBottom = Math.max(...siblings.map((sibling) => (sibling.y ?? 0) + (sibling.height ?? 0)));
+      return { x: 0, y: maxBottom + COMPONENT_GAP };
     }
-    const maxBottom = Math.max(...siblings.map((sibling) => (sibling.y ?? 0) + (sibling.height ?? 0)));
-    return { x: 0, y: maxBottom + COMPONENT_GAP };
+    const maxX = Math.max(0, parent.width - size.width);
+    const maxY = Math.max(0, parent.height - size.height);
+    const step = COMPONENT_GAP;
+    for (let y = 0; y <= maxY; y += step + size.height || step) {
+      for (let x = 0; x <= maxX; x += step + size.width || step) {
+        const candidate = { x, y, width: size.width, height: size.height };
+        const overlaps = siblings.some((s) => rectsOverlap(candidate, s));
+        if (!overlaps) {
+          return { x, y };
+        }
+        if (x + step + size.width > maxX) break;
+      }
+    }
+    // Fallback: origin clamped inside
+    return { x: 0, y: 0 };
   }
 
   /** How many siblings of `type` already live directly inside `parentId`. */
@@ -117,4 +139,16 @@ export class GeometryService {
       height: Math.max(MIN_PREVIEW_SIZE, (child.height ?? 0) * scale),
     };
   }
+}
+
+function rectsOverlap(a: Rect, b: { x?: number; y?: number; width?: number; height?: number }): boolean {
+  const ax = a.x ?? 0;
+  const ay = a.y ?? 0;
+  const aw = a.width ?? 0;
+  const ah = a.height ?? 0;
+  const bx = b.x ?? 0;
+  const by = b.y ?? 0;
+  const bw = b.width ?? 0;
+  const bh = b.height ?? 0;
+  return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by;
 }

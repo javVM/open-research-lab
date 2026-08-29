@@ -65,6 +65,8 @@ interface WallFace {
 })
 export class FloorPlan3dComponent implements OnDestroy {
   readonly locations = input<Location[]>([]);
+  /** Id of the location whose children `locations` are — its footprint drives the scene. */
+  readonly containerLocationId = input<string | null>(null);
 
   protected readonly collection = inject(CollectionService);
   protected readonly navigation = inject(NavigationService);
@@ -151,8 +153,25 @@ export class FloorPlan3dComponent implements OnDestroy {
     if (this.locations().length === 0) {
       return { ...FLOOR_FOOTPRINT };
     }
-    const rects = this.locations().map((location) => this.rectFor(location));
-    return this.geometry.bounds(rects);
+    return this.containerFootprint() ?? this.geometry.bounds(this.locations().map((location) => this.rectFor(location)));
+  }
+
+  /**
+   * The selected parent's footprint when it has explicit dimensions, so the
+   * scene's base plane represents the parent's space. Null for a parent with
+   * none (e.g. a building, whose "space" is just its stacked floors).
+   */
+  private containerFootprint(): Rect | null {
+    if (!this.containerLocationId()) {
+      return null;
+    }
+    const parent = this.collection
+      .dataset()
+      .locations.find((candidate) => candidate.id === this.containerLocationId());
+    if (!parent || typeof parent.width !== 'number' || typeof parent.height !== 'number') {
+      return null;
+    }
+    return { x: 0, y: 0, width: parent.width, height: parent.height };
   }
 
   resetView(): void {

@@ -72,6 +72,36 @@ describe('FloorPlan3dComponent', () => {
     expect(elevations[1]).not.toBe(elevations[0]);
   });
 
+  it('uses the parent floor footprint as the base plane without rescaling the rooms', () => {
+    const collection = TestBed.inject(CollectionService);
+    const floor = collection.dataset().locations.find((l) => l.type === 'floor')!;
+    const oversized: Location = {
+      id: 'big',
+      parentId: floor.id,
+      name: 'Big',
+      type: 'room',
+      x: 0,
+      y: 0,
+      width: 900,
+      height: 600,
+    };
+
+    const fixture = TestBed.createComponent(FloorPlan3dComponent);
+    fixture.componentRef.setInput('locations', [oversized]);
+    fixture.componentRef.setInput('containerLocationId', floor.id);
+    fixture.detectChanges();
+
+    // Rooms keep their natural size.
+    const rect = fixture.componentInstance.rectFor(oversized);
+    expect(rect.width).toBe(900);
+    expect(rect.height).toBe(600);
+
+    // The base plane represents the parent's footprint.
+    const bounds = fixture.componentInstance.bounds();
+    expect(bounds.width).toBe(floor.width!);
+    expect(bounds.height).toBe(floor.height!);
+  });
+
   it('clicking each floor selects that specific floor, not always the topmost one', () => {
     const collection = TestBed.inject(CollectionService);
     const navigation = TestBed.inject(NavigationService);

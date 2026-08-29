@@ -22,7 +22,7 @@ describe('FloorPlanComponent', () => {
 
     const rects = fixture.nativeElement.querySelectorAll('.floor-plan__rect');
     expect(rects.length).toBe(2);
-    expect((rects[1] as HTMLElement).style.left).toBe('130px');
+    expect((rects[1] as HTMLElement).style.left).toContain('%');
   });
 
   it('clicking a rect selects that location when nothing is being moved', () => {
@@ -65,6 +65,8 @@ describe('FloorPlanComponent', () => {
     const fixture = TestBed.createComponent(FloorPlanComponent);
     fixture.componentRef.setInput("locations", [realRoom]);
     fixture.detectChanges();
+    fixture.componentInstance.toggleLayoutMode();
+    fixture.detectChanges();
 
     // jsdom has no PointerEvent constructor; MouseEvent carries the same
     // clientX/clientY/button fields the handler reads, and Angular's
@@ -95,8 +97,10 @@ describe('FloorPlanComponent', () => {
     const fixture = TestBed.createComponent(FloorPlanComponent);
     fixture.componentRef.setInput("locations", [realRoom]);
     fixture.detectChanges();
+    fixture.componentInstance.toggleLayoutMode();
+    fixture.detectChanges();
 
-    const handle = fixture.nativeElement.querySelector('.floor-plan__resize-handle') as HTMLElement;
+    const handle = fixture.nativeElement.querySelector('.floor-plan__resize-handle--se') as HTMLElement;
     handle.dispatchEvent(new MouseEvent('pointerdown', { clientX: 0, clientY: 0, button: 0, bubbles: true }));
     window.dispatchEvent(new MouseEvent('pointermove', { clientX: 30, clientY: 20 }));
     window.dispatchEvent(new MouseEvent('pointerup'));
@@ -119,15 +123,17 @@ describe('FloorPlanComponent', () => {
     const fixture = TestBed.createComponent(FloorPlanComponent);
     fixture.componentRef.setInput("locations", [realRoom]);
     fixture.detectChanges();
+    fixture.componentInstance.toggleLayoutMode();
+    fixture.detectChanges();
 
-    const handle = fixture.nativeElement.querySelector('.floor-plan__resize-handle') as HTMLElement;
+    const handle = fixture.nativeElement.querySelector('.floor-plan__resize-handle--se') as HTMLElement;
     handle.dispatchEvent(new MouseEvent('pointerdown', { clientX: 0, clientY: 0, button: 0, bubbles: true }));
     window.dispatchEvent(new MouseEvent('pointermove', { clientX: -1000, clientY: -1000 }));
     window.dispatchEvent(new MouseEvent('pointerup'));
 
     const resized = collection.dataset().locations.find((l) => l.id === realRoom.id)!;
-    expect(resized.width).toBe(60);
-    expect(resized.height).toBe(60);
+    expect(resized.width).toBe(32);
+    expect(resized.height).toBe(32);
   });
 
   it('colours rects by relative occupancy, giving the busiest one the strongest background', () => {
@@ -144,7 +150,7 @@ describe('FloorPlanComponent', () => {
     // Both are synthetic locations with no items in the real dataset, so
     // without any occupancy difference the two backgrounds must be equal
     // and reflect the shared (zero) ratio, proving the calculation runs.
-    const rects = fixture.nativeElement.querySelectorAll('.floor-plan__rect') as NodeListOf<HTMLElement>;
+    const rects = fixture.nativeElement.querySelectorAll('.floor-plan__rect-bg') as NodeListOf<HTMLElement>;
     expect(rects[0].style.backgroundColor).toBe(rects[1].style.backgroundColor);
     expect(rects[0].style.backgroundColor).toContain('rgba(91, 141, 239');
   });
@@ -185,7 +191,7 @@ describe('FloorPlanComponent', () => {
     expect(rect.classList.contains('floor-plan__rect--empty')).toBe(false);
   });
 
-  it('clips a rect to its orthogonal outline and leaves rectangles unclipped', () => {
+  it('draws a shaped location as an SVG polygon and a plain rectangle as a solid background', () => {
     const shaped: Location = {
       id: 'l',
       parentId: 'building',
@@ -209,9 +215,14 @@ describe('FloorPlanComponent', () => {
     fixture.componentRef.setInput("locations", [shaped, room('plain', 130, 0)]);
     fixture.detectChanges();
 
-    const rects = fixture.nativeElement.querySelectorAll('.floor-plan__rect') as NodeListOf<HTMLElement>;
-    expect(rects[0].style.clipPath).toContain('polygon(');
-    expect(rects[1].style.clipPath).toBe('');
+    const shapedRect = fixture.nativeElement.querySelector('.floor-plan__rect--shaped') as HTMLElement;
+    expect(shapedRect).toBeTruthy();
+    expect(shapedRect.querySelector('.floor-plan__outline polygon')).toBeTruthy();
+
+    const plainRect = fixture.nativeElement.querySelector('.floor-plan__rect:not(.floor-plan__rect--shaped)') as HTMLElement;
+    expect(plainRect).toBeTruthy();
+    expect(plainRect.querySelector('.floor-plan__rect-bg')).toBeTruthy();
+    expect(plainRect.querySelector('.floor-plan__outline')).toBeNull();
   });
 
   it('shows vertex and edge handles for a targeted location in shape mode', () => {
@@ -382,6 +393,56 @@ describe('FloorPlanComponent', () => {
     ).toBe(true);
   });
 
+  it('shows the parent footprint as the map background and keeps children at natural size', () => {
+    const collection = TestBed.inject(CollectionService);
+    const room = collection.dataset().locations.find((l) => l.type === 'room')!;
+    const oversized: Location = {
+      id: 'big',
+      parentId: room.id,
+      name: 'Big',
+      type: 'cabinet',
+      x: 0,
+      y: 0,
+      width: 500,
+      height: 400,
+    };
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentRef.setInput('locations', [oversized]);
+    fixture.componentRef.setInput('containerLocationId', room.id);
+    fixture.detectChanges();
+
+    // Children keep their natural size — no aggressive rescaling.
+    const rect = fixture.componentInstance.rectFor(oversized);
+    expect(rect.width).toBe(500);
+    expect(rect.height).toBe(400);
+
+    // The map draws the parent's footprint as a reference background (now 100% inset).
+    const footprint = fixture.nativeElement.querySelector('.floor-plan__footprint') as HTMLElement;
+    expect(footprint).toBeTruthy();
+
+    // Canvas is exactly parent footprint (100%) — bounds equals parent even if child overflows.
+    const bounds = fixture.componentInstance.bounds();
+    expect(bounds.width).toBe(room.width!);
+    expect(bounds.height).toBe(room.height!);
+  });
+
+  it('does not draw a footprint background when the parent has no dimensions (e.g. a building)', () => {
+    const collection = TestBed.inject(CollectionService);
+    const building = collection.dataset().locations.find((l) => l.type === 'building')!;
+    const floors = collection.dataset().locations.filter((l) => l.parentId === building.id);
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentRef.setInput('locations', floors);
+    fixture.componentRef.setInput('containerLocationId', building.id);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.floor-plan__footprint')).toBeNull();
+    const rect = fixture.componentInstance.rectFor(floors[0]);
+    expect(rect.width).toBe(floors[0].width!);
+    expect(rect.height).toBe(floors[0].height!);
+  });
+
   it('marks a rect as interacting while it is being dragged, and clears it on pointer up', () => {
     const collection = TestBed.inject(CollectionService);
     const navigation = TestBed.inject(NavigationService);
@@ -389,7 +450,9 @@ describe('FloorPlanComponent', () => {
     const realRoom = collection.dataset().locations.find((l) => l.type === 'room')!;
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentRef.setInput("locations", [realRoom]);
+    fixture.componentRef.setInput('locations', [realRoom]);
+    fixture.detectChanges();
+    fixture.componentInstance.toggleLayoutMode();
     fixture.detectChanges();
 
     const rect = fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement;
@@ -413,9 +476,11 @@ describe('FloorPlanComponent', () => {
     const fixture = TestBed.createComponent(FloorPlanComponent);
     fixture.componentRef.setInput("locations", [realRoom]);
     fixture.detectChanges();
+    fixture.componentInstance.toggleLayoutMode();
+    fixture.detectChanges();
 
     const rect = fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement;
-    const handle = fixture.nativeElement.querySelector('.floor-plan__resize-handle') as HTMLElement;
+    const handle = fixture.nativeElement.querySelector('.floor-plan__resize-handle--se') as HTMLElement;
 
     handle.dispatchEvent(new MouseEvent('pointerdown', { clientX: 0, clientY: 0, button: 0, bubbles: true }));
     fixture.detectChanges();

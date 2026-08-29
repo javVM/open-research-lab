@@ -148,6 +148,12 @@
       <trans-unit id="floorPlan.addLabel">
         <source>Add</source>
       </trans-unit>
+      <trans-unit id="floorPlan.layoutLabel">
+        <source>Move</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.layoutHint">
+        <source>Move and resize</source>
+      </trans-unit>
       <trans-unit id="floorPlan.shapeLabel">
         <source>Shape</source>
       </trans-unit>
