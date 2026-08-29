@@ -5,8 +5,16 @@
     [value]="i18n.locale()"
     (selectionChange)="onChange($event.value)"
   >
+    <mat-select-trigger>
+      <span class="language-switcher__trigger">
+        <mat-icon svgIcon="translate" aria-hidden="true" class="language-switcher__trigger-icon"></mat-icon>
+        <span class="language-switcher__value">{{ i18n.locale().toUpperCase() }}</span>
+      </span>
+    </mat-select-trigger>
     @for (option of options; track option.value) {
-      <mat-option [value]="option.value">{{ option.label }}</mat-option>
+      <mat-option [value]="option.value">
+        <span class="language-option__code">{{ option.label }}</span>
+      </mat-option>
     }
   </mat-select>
 </mat-form-field>
