@@ -32,7 +32,7 @@
           [attr.data-type]="location.type"
           [attr.data-location-id]="location.id"
           [class.box3d--selected]="location.id === navigation.selectedLocationId()"
-          [class.box3d--empty]="countAt(location.id) === 0"
+          [class.box3d--empty]="itemCountAt(location.id) === 0"
           [style.left.px]="rectFor(location).x"
           [style.top.px]="rectFor(location).y"
           [style.width.px]="rectFor(location).width"
@@ -44,8 +44,8 @@
             <div class="box3d__top-fill" [style.backgroundColor]="occupancyColor(location.id, locations(), 0.15)">
               <div class="box3d__label" [class.box3d__label--shaped]="hasOutline(location)" [style.transform]="labelTransform(location)">
                 <span class="box3d__name">{{ location.name }}</span>
-                @if (countAt(location.id) > 0) {
-                  <span class="box3d__count">{{ text.itemCount(countAt(location.id)) }}</span>
+                @if (itemCountAt(location.id) > 0) {
+                  <span class="box3d__count">{{ text.itemCount(itemCountAt(location.id)) }}</span>
                 } @else {
                   <span class="box3d__empty">{{ text.empty() }}</span>
                 }
@@ -71,13 +71,13 @@
               [style.transform]="sideTransform(location, 'front')"
               [style.backgroundColor]="occupancyColor(location.id, locations(), -0.08)"
             >
-              @if (uncoordinatedChildren(location).length > 0 && facingSide() === 'front') {
+              @if (childrenWithoutCoordinates(location).length > 0 && visibleDrawerSide() === 'front') {
                 <div class="box3d__shelves">
-                  @for (child of uncoordinatedChildren(location); track child.id) {
+                  @for (child of childrenWithoutCoordinates(location); track child.id) {
                     <div
                       class="box3d__shelf"
                       [attr.title]="child.name"
-                      [style.backgroundColor]="occupancyColor(child.id, uncoordinatedChildren(location))"
+                      [style.backgroundColor]="occupancyColor(child.id, childrenWithoutCoordinates(location))"
                     >
                       <span class="box3d__shelf-handle"></span>
                     </div>
@@ -92,13 +92,13 @@
               [style.transform]="sideTransform(location, 'back')"
               [style.backgroundColor]="occupancyColor(location.id, locations(), -0.14)"
             >
-              @if (uncoordinatedChildren(location).length > 0 && facingSide() === 'back') {
+              @if (childrenWithoutCoordinates(location).length > 0 && visibleDrawerSide() === 'back') {
                 <div class="box3d__shelves">
-                  @for (child of uncoordinatedChildren(location); track child.id) {
+                  @for (child of childrenWithoutCoordinates(location); track child.id) {
                     <div
                       class="box3d__shelf"
                       [attr.title]="child.name"
-                      [style.backgroundColor]="occupancyColor(child.id, uncoordinatedChildren(location))"
+                      [style.backgroundColor]="occupancyColor(child.id, childrenWithoutCoordinates(location))"
                     >
                       <span class="box3d__shelf-handle"></span>
                     </div>

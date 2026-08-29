@@ -104,7 +104,7 @@
       [class.floor-plan__rect--drop-target]="isDropTarget()"
       [class.floor-plan__rect--interacting]="isInteracting(location.id)"
       [class.floor-plan__rect--shaped]="!!outlinePointsString(location)"
-      [class.floor-plan__rect--empty]="countAt(location.id) === 0"
+      [class.floor-plan__rect--empty]="itemCountAt(location.id) === 0"
       [style.left.%]="rectPercent(location).x"
       [style.top.%]="rectPercent(location).y"
       [style.width.%]="rectPercent(location).width"
@@ -133,8 +133,8 @@
         <span class="floor-plan__type">{{ locationType.label(location.type) }}</span>
         <span class="floor-plan__name">{{ location.name }}</span>
         @if (labelAnchor(location) === null) {
-          @if (countAt(location.id) > 0) {
-            <span class="floor-plan__count">{{ text.itemCount(countAt(location.id)) }}</span>
+          @if (itemCountAt(location.id) > 0) {
+            <span class="floor-plan__count">{{ text.itemCount(itemCountAt(location.id)) }}</span>
           } @else {
             <span class="floor-plan__empty">{{ text.empty() }}</span>
           }

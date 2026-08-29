@@ -48,8 +48,8 @@
           type="button"
           mat-button
           class="view-mode-toggle__button"
-          [class.view-mode-toggle__button--active]="!showMap() && !show3d()"
-          [attr.aria-pressed]="!showMap() && !show3d()"
+          [class.view-mode-toggle__button--active]="!isMapView() && !is3dView()"
+          [attr.aria-pressed]="!isMapView() && !is3dView()"
           (click)="setViewMode('list')"
         >
           {{ text.viewModeList() }}
@@ -58,8 +58,8 @@
           type="button"
           mat-button
           class="view-mode-toggle__button"
-          [class.view-mode-toggle__button--active]="showMap()"
-          [attr.aria-pressed]="showMap()"
+          [class.view-mode-toggle__button--active]="isMapView()"
+          [attr.aria-pressed]="isMapView()"
           (click)="setViewMode('map')"
         >
           {{ text.viewModeMap() }}
@@ -68,8 +68,8 @@
           type="button"
           mat-button
           class="view-mode-toggle__button"
-          [class.view-mode-toggle__button--active]="show3d()"
-          [attr.aria-pressed]="show3d()"
+          [class.view-mode-toggle__button--active]="is3dView()"
+          [attr.aria-pressed]="is3dView()"
           (click)="setViewMode('3d')"
         >
           {{ text.viewMode3d() }}
@@ -81,22 +81,22 @@
       </div>
     }
 
-    @if (showMap()) {
+    @if (isMapView()) {
       <app-floor-plan [locations]="children()" [containerLocationId]="location.id"></app-floor-plan>
-    } @else if (show3d()) {
+    } @else if (is3dView()) {
       <app-floor-plan-3d [locations]="children()" [containerLocationId]="location.id"></app-floor-plan-3d>
-    } @else if (isPositionGrid()) {
+    } @else if (isTrayGrid()) {
       <app-position-grid [positions]="children()" (addItem)="addItemToLocation($event)"></app-position-grid>
     }
   }
 
-  @if (!showMap() && !show3d() && !isPositionGrid()) {
+  @if (!isMapView() && !is3dView() && !isTrayGrid()) {
     <div class="container-grid" cdkDropListGroup>
       @for (child of children(); track child.id) {
         <div
           class="container-card"
           [attr.data-type]="child.type"
-          [class.container-card--empty]="countAt(child.id) === 0"
+          [class.container-card--empty]="itemCountAt(child.id) === 0"
           [class.container-card--drop-target]="move.movingItemId()"
           cdkDropList
           [cdkDropListData]="child.id"
@@ -105,8 +105,8 @@
         >
           <span class="container-card__type">{{ locationType.label(child.type) }}</span>
           <span class="container-card__name">{{ child.name }}</span>
-          @if (countAt(child.id) > 0) {
-            <span class="container-card__count">{{ text.itemCount(countAt(child.id)) }}</span>
+          @if (itemCountAt(child.id) > 0) {
+            <span class="container-card__count">{{ text.itemCount(itemCountAt(child.id)) }}</span>
           } @else {
             <span class="container-card__empty">{{ text.emptyBadge() }}</span>
           }

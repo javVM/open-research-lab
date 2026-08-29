@@ -81,7 +81,7 @@ export class LocationViewComponent {
     return location ? itemsAtLocation(this.collection.dataset(), location.id) : [];
   });
 
-  readonly isPositionGrid = computed<boolean>(() =>
+  readonly isTrayGrid = computed<boolean>(() =>
     this.children().some((child) => child.type === 'position'),
   );
 
@@ -96,11 +96,11 @@ export class LocationViewComponent {
       this.allowMap(),
   );
 
-  readonly showMap = computed<boolean>(() => this.canShowMap() && this.viewMode() === 'map');
-  readonly show3d = computed<boolean>(() => this.canShowMap() && this.viewMode() === '3d');
+  readonly isMapView = computed<boolean>(() => this.canShowMap() && this.viewMode() === 'map');
+  readonly is3dView = computed<boolean>(() => this.canShowMap() && this.viewMode() === '3d');
 
   readonly viewModeIndex = computed<number>(() =>
-    this.show3d() ? 2 : this.showMap() ? 1 : 0
+    this.is3dView() ? 2 : this.isMapView() ? 1 : 0
   );
 
   constructor() {
@@ -112,7 +112,7 @@ export class LocationViewComponent {
     this.viewMode.set(mode);
   }
 
-  countAt(locationId: string): number {
+  itemCountAt(locationId: string): number {
     return this.collection.locationItemCounts().get(locationId) ?? 0;
   }
 

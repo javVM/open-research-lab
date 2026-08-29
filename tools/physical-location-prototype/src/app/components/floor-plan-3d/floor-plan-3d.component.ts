@@ -113,7 +113,7 @@ export class FloorPlan3dComponent implements OnDestroy {
   private pinchStartScale = 1;
 
   planeTransform(): string {
-    return `translateY(${this.visualCenterOffset()}px) scale(${this.scale()}) rotateX(${this.rotateXDeg()}deg) rotateZ(${this.rotateZDeg()}deg)`;
+    return `translateY(${this.perspectiveVerticalCorrection()}px) scale(${this.scale()}) rotateX(${this.rotateXDeg()}deg) rotateZ(${this.rotateZDeg()}deg)`;
   }
 
   labelTransform(location: Location): string {
@@ -126,7 +126,7 @@ export class FloorPlan3dComponent implements OnDestroy {
     return `translate(${anchor.x}px, ${anchor.y}px) translate(-50%, -50%) ${counter}`;
   }
 
-  private visualCenterOffset(): number {
+  private perspectiveVerticalCorrection(): number {
     const maxZ = this.maxStackZ();
     if (this.locations().length === 0 || maxZ === 0) {
       return 0;
@@ -264,25 +264,25 @@ export class FloorPlan3dComponent implements OnDestroy {
     return sorted.findIndex((candidate) => candidate.id === location.id);
   }
 
-  countAt(locationId: string): number {
+  itemCountAt(locationId: string): number {
     return this.collection.locationItemCounts().get(locationId) ?? 0;
   }
 
   /** `siblings` sets the occupancy scale — the busiest of them gets the strongest colour. */
   occupancyColor(locationId: string, siblings: Location[], boost = 0): string {
-    const max = Math.max(1, ...siblings.map((sibling) => this.countAt(sibling.id)));
-    return this.render.occupancyColor(this.countAt(locationId), max, OCCUPANCY_PALETTE.map3dBaseAlpha, boost);
+    const max = Math.max(1, ...siblings.map((sibling) => this.itemCountAt(sibling.id)));
+    return this.render.occupancyColor(this.itemCountAt(locationId), max, OCCUPANCY_PALETTE.map3dBaseAlpha, boost);
   }
 
   /**
    * Whether 'front' or 'back' currently faces the camera, so the
-   * drawer/shelf overlay (see `uncoordinatedChildren`) migrates to stay
+   * drawer/shelf overlay (see `childrenWithoutCoordinates`) migrates to stay
    * visible as the user orbits. Deliberately never 'left'/'right': a real
    * cabinet's drawers always open from the same physical side, never from
    * its sides, so the overlay should only ever toggle between the two ends
    * a drawer front could plausibly be on.
    */
-  facingSide(): 'front' | 'back' {
+  visibleDrawerSide(): 'front' | 'back' {
     const cameraAzimuth = ((-this.rotateZDeg() % 360) + 360) % 360;
     const rawDiff = Math.abs(cameraAzimuth - FRONT_AZIMUTH);
     const diffToFront = Math.min(rawDiff, 360 - rawDiff);
@@ -296,11 +296,11 @@ export class FloorPlan3dComponent implements OnDestroy {
    * Direct children with no floor-plan coordinates of their own (e.g. a
    * cabinet's drawers) can't be drawn as separately positioned boxes — shown
    * instead as evenly spaced shelf bands across whichever wall currently
-   * faces the camera (see `facingSide`), so a cabinet's drawers are still
+   * faces the camera (see `visibleDrawerSide`), so a cabinet's drawers are still
    * visible even though `seed.ts` never gives drawers an
    * `x`/`y`/`width`/`height`.
    */
-  uncoordinatedChildren(location: Location): Location[] {
+  childrenWithoutCoordinates(location: Location): Location[] {
     return this.collection
       .dataset()
       .locations.filter((candidate) => candidate.parentId === location.id && typeof candidate.x !== 'number');

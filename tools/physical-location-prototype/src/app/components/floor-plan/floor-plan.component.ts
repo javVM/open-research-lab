@@ -344,14 +344,14 @@ export class FloorPlanComponent implements AfterViewInit, OnDestroy {
     };
   }
 
-  countAt(locationId: string): number {
+  itemCountAt(locationId: string): number {
     return this.collection.locationItemCounts().get(locationId) ?? 0;
   }
 
   /** Background colour intensity relative to the busiest location currently shown, for an at-a-glance occupancy read. */
   occupancyBackground(locationId: string): string {
-    const max = Math.max(1, ...this.locations().map((location) => this.countAt(location.id)));
-    return this.render.occupancyColor(this.countAt(locationId), max, OCCUPANCY_PALETTE.mapBaseAlpha);
+    const max = Math.max(1, ...this.locations().map((location) => this.itemCountAt(location.id)));
+    return this.render.occupancyColor(this.itemCountAt(locationId), max, OCCUPANCY_PALETTE.mapBaseAlpha);
   }
 
   isDropTarget(): boolean {

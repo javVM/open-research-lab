@@ -54,7 +54,7 @@
   <main class="app-body">
     @switch (navigation.uiMode()) {
       @case ('explore') {
-        <section class="pane pane--tree" [attr.aria-label]="text.locationHierarchyAriaLabel()">
+        <section class="pane pane--building-picker" [attr.aria-label]="text.locationHierarchyAriaLabel()">
           <h2 class="pane__heading">{{ text.locationsHeading() }}</h2>
           <app-location-tree></app-location-tree>
         </section>
