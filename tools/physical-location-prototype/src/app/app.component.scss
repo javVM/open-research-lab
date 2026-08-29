@@ -191,7 +191,10 @@ app-search-bar {
 @include on-mobile {
   .app-shell {
     height: auto;
+    min-height: 100dvh;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
 
   .app-header {
@@ -327,10 +330,10 @@ app-search-bar {
   }
 
   .app-body {
-    flex: 0 1 auto;
+    flex: 1 1 auto;
     grid-template-columns: 1fr;
     grid-auto-rows: min-content;
-    overflow-y: auto;
+    overflow-y: visible;
   }
 
   .pane {
@@ -425,6 +428,8 @@ app-search-bar {
   background: var(--surface, #1b1e26);
   border-top: 1px solid var(--border, #3a3f4b);
   letter-spacing: 0.01em;
+  flex-shrink: 0;
+  margin-top: auto;
 
   &__text {
     opacity: 0.9;
