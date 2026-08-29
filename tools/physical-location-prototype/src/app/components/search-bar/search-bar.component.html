@@ -17,14 +17,16 @@
       }
       @for (item of results(); track item.id) {
         <li>
-          <button type="button" mat-button (click)="selectResult(item.id)">
-            <strong>{{ item.catalogueNumber }}</strong>
-            @if (item.label) {
-              <span> — {{ item.label }}</span>
-            }
-            <div class="search-bar__location">
+          <button type="button" class="search-bar__result" (click)="selectResult(item.id)">
+            <span class="search-bar__result-top">
+              <span class="search-bar__code">{{ item.catalogueNumber }}</span>
+              @if (item.label) {
+                <span class="search-bar__label">{{ item.label }}</span>
+              }
+            </span>
+            <span class="search-bar__location">
               {{ item.locationId ? breadcrumbFor(item.locationId) : text.noCurrentLocation() }}
-            </div>
+            </span>
           </button>
         </li>
       }
