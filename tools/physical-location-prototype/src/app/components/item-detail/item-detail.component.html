@@ -4,32 +4,32 @@
 
     <app-qr-label [payload]="qrPayload()"></app-qr-label>
 
-    @if (item.label) {
-      <p class="item-detail__name">
-        <span class="item-detail__name-label">{{ text.nameLabel() }}:</span>
-        <span class="item-detail__name-value">{{ item.label }}</span>
-      </p>
-    }
+    <div class="item-fields">
+      @if (item.label) {
+        <div class="item-field">
+          <span class="item-field__label">{{ text.nameLabel() }}</span>
+          <span class="item-field__value">{{ item.label }}</span>
+        </div>
+      }
 
-    <dl>
-      <dt>{{ text.statusFieldLabel() }}</dt>
-      <dd>
+      <div class="item-field">
+        <span class="item-field__label">{{ text.statusFieldLabel() }}</span>
         <span class="status-badge" [attr.data-status]="item.status">{{ text.statusLabel(item.status) }}</span>
-      </dd>
+      </div>
 
-      <dt class="dt-with-icon">
-        {{ text.currentLocationLabel() }}
-        <button
-          type="button"
-          mat-icon-button
-          class="history-info"
-          (click)="openHistory()"
-          [attr.aria-label]="text.historyTitle()"
-        >
-          <mat-icon svgIcon="info" aria-hidden="true"></mat-icon>
-        </button>
-      </dt>
-      <dd>
+      <div class="item-field">
+        <span class="item-field__label dt-with-icon">
+          {{ text.currentLocationLabel() }}
+          <button
+            type="button"
+            mat-icon-button
+            class="history-info"
+            (click)="openHistory()"
+            [attr.aria-label]="text.historyTitle()"
+          >
+            <mat-icon svgIcon="info" aria-hidden="true"></mat-icon>
+          </button>
+        </span>
         @if (path().length > 0) {
           <ol class="breadcrumb-list">
             @for (location of path(); track location.id) {
@@ -39,8 +39,8 @@
         } @else {
           <span class="empty-state">{{ text.notLocated() }}</span>
         }
-      </dd>
-    </dl>
+      </div>
+    </div>
 
     @if (isMoving()) {
       <button type="button" mat-button class="cancel-move" (click)="cancelMove()">{{ text.cancelMoveButton() }}</button>

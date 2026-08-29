@@ -1,4 +1,4 @@
-<table class="position-grid" cdkDropListGroup>
+<table class="position-grid" cdkDropListGroup [style.--rows]="grid().length || 1">
   <tbody>
     @for (row of grid(); track $index) {
       <tr>
