@@ -321,9 +321,20 @@ h2 {
     max-width: 100%;
   }
   .breadcrumb {
-    position: sticky; top:0; z-index:1; background:#14161c; padding:.35rem 0; margin:0 -.6rem .35rem; padding-left:.6rem; padding-right:.6rem; border-bottom:1px solid var(--border,#3a3f4b); font-size:.8rem;
+    position: sticky; top:0; z-index:1; background:#14161c;
+    padding:.35rem .6rem; margin:0 -.6rem .9rem; 
+    border-bottom:1px solid rgba(58,63,75,.6);
+    border-top:none;
+    font-size:.78rem; gap:.35rem;
+    box-shadow: none;
   }
-  .breadcrumb button { padding:.35rem .5rem; }
+  .breadcrumb button {
+    padding:.28rem .55rem; background:transparent; border:1px solid transparent; border-radius:999px;
+    font-size:.77rem; font-weight:500; color:var(--text-muted,#9aa1ac);
+  }
+  .breadcrumb button:hover { background:var(--surface-raised,#20242e); border-color:var(--border,#3a3f4b); color:var(--text,#e8eaed); }
+  .breadcrumb button:last-of-type { color:var(--text,#e8eaed); font-weight:700; background:var(--accent-soft,#23324f); border-color:rgba(91,141,239,.45); }
+  .breadcrumb__sep { opacity:.28; margin:0 .05rem; }
 
   .location-view > app-floor-plan,
   .location-view > app-floor-plan-3d,
@@ -341,7 +352,10 @@ h2 {
   }
 
   h2 {
-    font-size: 1.1rem;
+    font-size: 1.28rem;
+    margin: 0 0 0.8rem;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
   }
 
   .move-banner {

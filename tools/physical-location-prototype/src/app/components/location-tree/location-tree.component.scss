@@ -259,10 +259,21 @@
   background: var(--surface-raised, #20242e);
   border: 1px solid var(--border, #3a3f4b);
   border-radius: 0.6rem;
+  margin-bottom: 0.6rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.quick-jump__scroll {
+  display: flex;
+  gap: 0.35rem;
   overflow-x: auto;
   scrollbar-width: none;
-  margin-bottom: 0.6rem;
+  flex: 1;
+  min-width: 0;
 }
+
+.quick-jump__scroll::-webkit-scrollbar { display: none; }
 
 .quick-jump::-webkit-scrollbar { display: none; }
 
@@ -272,6 +283,7 @@
   overflow-x: auto;
   scrollbar-width: none;
   flex: 1;
+  padding-right: 0.5rem;
 }
 
 .quick-jump__chips::-webkit-scrollbar { display: none; }
@@ -293,6 +305,8 @@
 .quick-jump__chip--more {
   background: var(--accent-soft, #23324f);
   border-color: var(--accent, #5b8def);
+  flex-shrink: 0;
+  z-index: 1;
 }
 
 .quick-jump-backdrop {

@@ -1,9 +1,11 @@
 @if (viewport.isMobile()) {
   <div class="quick-jump quick-jump--ubicaciones" aria-label="Ir a">
     <button type="button" class="quick-jump__chip quick-jump__chip--more" (click)="quickJump.sheetOpen.set(true)" aria-label="Ir a cualquier sitio">⌕ Ir a…</button>
-    @for (room of quickRooms(); track room.id) {
-      <button type="button" class="quick-jump__chip" (click)="select(room.id)" [attr.title]="pathFor(room)">{{ room.name }}</button>
-    }
+    <div class="quick-jump__scroll">
+      @for (room of quickRooms(); track room.id) {
+        <button type="button" class="quick-jump__chip" (click)="select(room.id)" [attr.title]="pathFor(room)">{{ room.name }}</button>
+      }
+    </div>
   </div>
 } @else {
   <div class="location-tree" role="tree" [attr.aria-label]="text.ariaLabel()">
