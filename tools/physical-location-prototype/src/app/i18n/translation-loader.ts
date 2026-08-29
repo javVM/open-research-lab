@@ -10,7 +10,7 @@ import { parseXliff } from './xliff';
 @Injectable({ providedIn: 'root' })
 export class XliffTranslationLoader {
   async load(locale: Locale): Promise<Record<string, string>> {
-    const response = await fetch(`i18n/${locale}.xlf`);
+    const response = await fetch(`i18n/${locale}.xlf`, { cache: 'no-store' });
     if (!response.ok) {
       throw new Error(`Failed to load translations for locale "${locale}" (HTTP ${response.status})`);
     }

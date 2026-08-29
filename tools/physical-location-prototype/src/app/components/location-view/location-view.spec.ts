@@ -113,8 +113,8 @@ describe('LocationViewComponent', () => {
     const fixture = TestBed.createComponent(LocationViewComponent);
     fixture.detectChanges();
 
-    const addItemButton = Array.from(fixture.nativeElement.querySelectorAll('.add-item')).find(
-      (button) => (button as HTMLElement).textContent?.trim() === 'Add item',
+    const addItemButton = Array.from(fixture.nativeElement.querySelectorAll('.add-item')).find((button) =>
+      (button as HTMLElement).textContent?.includes('Add item'),
     ) as HTMLElement;
     expect(addItemButton).toBeTruthy();
     addItemButton.click();

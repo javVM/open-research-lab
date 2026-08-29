@@ -1,5 +1,6 @@
 <mat-form-field class="language-switcher" appearance="outline" subscriptSizing="dynamic">
   <mat-select
+    panelClass="language-switcher-panel"
     [aria-label]="text.ariaLabel()"
     [value]="i18n.locale()"
     (selectionChange)="onChange($event.value)"

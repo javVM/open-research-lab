@@ -1,6 +1,7 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { CdkDrag, CdkDropList, CdkDropListGroup, type CdkDragDrop } from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import type { Item, Location, LocationType } from '../../../core/models';
 import { breadcrumb, childrenOf } from '../../../core/tree';
 import { itemsAtLocation } from '../../../core/search';
@@ -18,6 +19,7 @@ import { PromptModalComponent, type PromptRequest } from '../prompt-modal/prompt
 import { MIN_ROW_COLUMN_COUNT } from '../prompt-modal/prompt-modal.constants';
 import { ITEM_HOLDING_TYPES, MAPPABLE_TYPES, PARENT_CHILD_TYPES } from '../../shared/hierarchy.constants';
 import { ID_PREFIX, newPrototypeId } from '../../shared/prototype-id';
+import { registerAppIcons } from '../../shared/icons';
 
 @Component({
   standalone: true,
@@ -27,6 +29,7 @@ import { ID_PREFIX, newPrototypeId } from '../../shared/prototype-id';
     CdkDrag,
     CdkDropListGroup,
     MatButtonModule,
+    MatIconModule,
     FloorPlanComponent,
     FloorPlan3dComponent,
     PositionGridComponent,
@@ -101,6 +104,7 @@ export class LocationViewComponent {
   );
 
   constructor() {
+    registerAppIcons();
     this.viewMode.set(this.canShowMap() ? 'map' : 'list');
   }
 

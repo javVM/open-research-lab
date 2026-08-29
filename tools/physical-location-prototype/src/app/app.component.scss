@@ -100,19 +100,20 @@ app-search-bar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: none;
+  width: 2.25rem;
+  height: 2.25rem;
   border: 1px solid var(--border, #3a3f4b);
-  border-radius: 0.4rem;
-  padding: 0.4rem;
-  width: 2.2rem;
-  height: 2.2rem;
-  color: inherit;
+  border-radius: 999px;
+  background: var(--surface-raised, #20242e);
+  color: var(--text-muted, #9aa1ac);
   cursor: pointer;
-  font: inherit;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
 }
 
 .reset-button:hover {
   border-color: var(--accent, #5b8def);
+  color: var(--accent, #5b8def);
+  background: var(--surface-hover, #262b36);
 }
 
 .reset-button svg {
@@ -234,58 +235,12 @@ app-search-bar {
   }
 
   .reset-button {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background: var(--surface-hover, #262b36);
-    border: 1px solid var(--border, #3a3f4b);
+    width: 2.2rem;
+    height: 2.2rem;
   }
 
   app-language-switcher {
-    width: 4.2rem;
-  }
-
-  ::ng-deep .language-switcher {
-    width: 100%;
-
-    .mat-mdc-text-field-wrapper {
-      height: 2.2rem;
-    }
-
-    .mat-mdc-form-field-infix {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 2.2rem;
-      height: 2.2rem;
-      padding: 0;
-    }
-
-    .mat-mdc-select {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      padding: 0;
-    }
-
-    .mat-mdc-select-value {
-      display: flex;
-      align-items: center;
-      line-height: 1;
-    }
-
-    .mat-mdc-select-arrow-wrapper {
-      display: flex;
-      align-items: center;
-      transform: none;
-      height: auto;
-    }
-
-    .mat-mdc-select-value-text {
-      font-size: 0.85rem;
-      line-height: 1;
-    }
+    width: 3.8rem;
   }
 
   app-search-bar {

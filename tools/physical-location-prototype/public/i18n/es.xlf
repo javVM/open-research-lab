@@ -223,6 +223,22 @@
         <source>Revert to a rectangle</source>
         <target>Volver a un rectángulo</target>
       </trans-unit>
+      <trans-unit id="floorPlan.addComponentTitle">
+        <source>Add {type}</source>
+        <target>Añadir {type}</target>
+      </trans-unit>
+      <trans-unit id="floorPlan.addComponentPrompt">
+        <source>Name for the new {type}:</source>
+        <target>Nombre para el nuevo {type}:</target>
+      </trans-unit>
+      <trans-unit id="floorPlan.addButton">
+        <source>Add</source>
+        <target>Añadir</target>
+      </trans-unit>
+      <trans-unit id="floorPlan.cancelButton">
+        <source>Cancel</source>
+        <target>Cancelar</target>
+      </trans-unit>
 
       <trans-unit id="floorPlan3d.ariaLabel">
         <source>3D floor plan</source>
@@ -507,6 +523,14 @@
       <trans-unit id="locationView.addItemPrompt">
         <source>Catalogue number for the new item:</source>
         <target>Número de catálogo del nuevo ítem:</target>
+      </trans-unit>
+      <trans-unit id="locationView.addButton">
+        <source>Add</source>
+        <target>Añadir</target>
+      </trans-unit>
+      <trans-unit id="locationView.confirmButton">
+        <source>OK</source>
+        <target>Aceptar</target>
       </trans-unit>
     </body>
   </file>

@@ -18,12 +18,14 @@
     @if (allowedChildTypes().length > 0 || canAddItem()) {
       <div class="add-actions">
         @for (childType of allowedChildTypes(); track childType) {
-          <button type="button" mat-button class="add-component" (click)="addComponent(childType)">
+          <button type="button" mat-flat-button color="primary" class="add-component" (click)="addComponent(childType)">
+            <mat-icon svgIcon="add" aria-hidden="true"></mat-icon>
             {{ text.addComponent(locationType.label(childType)) }}
           </button>
         }
         @if (canAddItem()) {
-          <button type="button" mat-button class="add-item" (click)="addItem()">
+          <button type="button" mat-stroked-button class="add-item" (click)="addItem()">
+            <mat-icon svgIcon="add" aria-hidden="true"></mat-icon>
             {{ text.addItem() }}
           </button>
         }
