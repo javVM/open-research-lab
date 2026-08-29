@@ -1,0 +1,20 @@
+<div class="quick-sheet">
+  <div class="quick-sheet__search">
+    <span class="quick-sheet__search-icon" aria-hidden="true">⌕</span>
+    <input class="quick-sheet__input" type="search" placeholder="Edificio, sala, armario, bandeja…" [value]="query()" (input)="query.set($any($event.target).value)" aria-label="Buscar destino" autofocus />
+    @if (query()) { <button type="button" class="quick-sheet__clear" (click)="query.set('')" aria-label="Limpiar">×</button> }
+  </div>
+  <div class="quick-sheet__results">
+    @if (!hasResults()) { <p class="quick-sheet__empty">Sin coincidencias</p> }
+    @for (group of groups(); track group.label) {
+      <section class="quick-sheet__group">
+        <h3 class="quick-sheet__group-title">{{ group.label }}</h3>
+        <ul class="quick-sheet__list">
+          @for (loc of group.items; track loc.id) {
+            <li><button type="button" class="quick-sheet__item" (click)="select(loc.id)"><span class="quick-sheet__item-name">{{ loc.name }}</span><span class="quick-sheet__item-path">{{ pathFor(loc) }}</span>@if (itemCountAt(loc.id) > 0) { <span class="quick-sheet__item-count">{{ itemCountAt(loc.id) }} ítems</span> }</button></li>
+          }
+        </ul>
+      </section>
+    }
+  </div>
+</div>

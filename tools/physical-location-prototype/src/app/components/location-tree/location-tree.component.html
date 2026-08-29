@@ -1,13 +1,10 @@
 @if (viewport.isMobile()) {
-  <mat-form-field class="location-tree__select" appearance="outline" subscriptSizing="dynamic" [attr.aria-label]="text.ariaLabel()">
-    <mat-label>{{ text.selectBuilding() }}</mat-label>
-    <mat-select [value]="selectedBuildingId()" (selectionChange)="selectFromSelect($event.value)" panelClass="location-tree__select-panel">
-      <mat-option value="">{{ text.allLabel() }}</mat-option>
-      @for (building of buildings(); track building.id) {
-        <mat-option [value]="building.id">{{ building.name }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
+  <div class="quick-jump quick-jump--ubicaciones" aria-label="Ir a">
+    <button type="button" class="quick-jump__chip quick-jump__chip--more" (click)="quickJump.sheetOpen.set(true)" aria-label="Ir a cualquier sitio">⌕ Ir a…</button>
+    @for (room of quickRooms(); track room.id) {
+      <button type="button" class="quick-jump__chip" (click)="select(room.id)" [attr.title]="pathFor(room)">{{ room.name }}</button>
+    }
+  </div>
 } @else {
   <div class="location-tree" role="tree" [attr.aria-label]="text.ariaLabel()">
     <div

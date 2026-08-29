@@ -17,6 +17,7 @@ import { PositionGridComponent } from '../position-grid/position-grid.component'
 import { GeometryService } from '../../shared/geometry.service';
 import { PromptModalComponent, type PromptRequest } from '../prompt-modal/prompt-modal.component';
 import { MIN_ROW_COLUMN_COUNT } from '../prompt-modal/prompt-modal.constants';
+import { QuickJumpService } from '../../shared/quick-jump.service';
 import { ITEM_HOLDING_TYPES, MAPPABLE_TYPES, PARENT_CHILD_TYPES } from '../../shared/hierarchy.constants';
 import { ID_PREFIX, newPrototypeId } from '../../shared/prototype-id';
 import { registerAppIcons } from '../../shared/icons';
@@ -45,6 +46,7 @@ export class LocationViewComponent {
   protected readonly text = createLocationViewTranslations(inject(TranslationService));
   protected readonly locationType = createLocationTypeTranslations(inject(TranslationService));
   protected readonly geometry = inject(GeometryService);
+  private readonly quickJump = inject(QuickJumpService);
 
   /** When false, the map/3D view is hidden and only the list is shown. */
   readonly allowMap = input<boolean>(true);
@@ -121,6 +123,7 @@ export class LocationViewComponent {
       this.move.requestMove(locationId);
       return;
     }
+    this.quickJump.push(locationId);
     this.navigation.selectLocation(locationId);
   }
 

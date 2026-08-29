@@ -10,6 +10,8 @@ import { LanguageSwitcherComponent } from './components/language-switcher/langua
 import { ScanViewComponent } from './components/scan-view/scan-view.component';
 import { CollectionService } from './collection.service';
 import { NavigationService } from './navigation.service';
+import { QuickJumpService } from './shared/quick-jump.service';
+import { QuickJumpSheetComponent } from './components/quick-jump-sheet/quick-jump-sheet.component';
 import { TranslationService } from './i18n/translation.service';
 import { registerAppIcons } from './shared/icons';
 import { createAppTranslations } from './app.translations';
@@ -26,6 +28,7 @@ import { createAppTranslations } from './app.translations';
     ConfirmMoveModalComponent,
     LanguageSwitcherComponent,
     ScanViewComponent,
+    QuickJumpSheetComponent,
   ],
   selector: 'app-root',
   styleUrl: './app.component.scss',
@@ -35,6 +38,7 @@ export class App {
   protected readonly navigation = inject(NavigationService);
   protected readonly collection = inject(CollectionService);
   protected readonly text = createAppTranslations(inject(TranslationService));
+  protected readonly quickJump = inject(QuickJumpService);
 
   constructor() {
     registerAppIcons();

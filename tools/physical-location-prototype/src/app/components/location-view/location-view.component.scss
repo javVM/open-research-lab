@@ -29,31 +29,39 @@
 
 .breadcrumb {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 0.35rem;
   font-size: 0.85rem;
   color: var(--text-muted, #9aa1ac);
   margin-bottom: 0.35rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
 }
+
+.breadcrumb::-webkit-scrollbar { display: none; }
 
 .breadcrumb button {
   background: none;
   border: none;
   color: inherit;
   cursor: pointer;
-  padding: 0;
+  padding: 0.2rem 0.35rem;
   font: inherit;
+  border-radius: 0.35rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .breadcrumb button:hover {
   color: var(--accent, #5b8def);
-  text-decoration: underline;
+  background: var(--surface-hover, #262b36);
+  text-decoration: none;
 }
 
-.breadcrumb__sep {
-  opacity: 0.5;
-}
+.breadcrumb__sep { opacity: 0.5; flex-shrink: 0; }
 
 h2 {
   margin: 0 0 0.6rem;
@@ -140,9 +148,19 @@ h2 {
 }
 
 .add-actions .add-component,
-.add-actions .add-item {
-  border-radius: 999px;
-}
+.add-actions .add-item { border-radius: 999px; }
+
+.quick-jump { display:flex; align-items:center; gap:.5rem; margin-bottom:.6rem; padding:.45rem .6rem; background:var(--surface-raised,#20242e); border:1px solid var(--border,#3a3f4b); border-radius:.6rem; overflow-x:auto; scrollbar-width:none; }
+.quick-jump::-webkit-scrollbar{display:none}
+.quick-jump__chips{display:flex;flex-wrap:nowrap;gap:.35rem;overflow-x:auto;scrollbar-width:none}
+.quick-jump__chips::-webkit-scrollbar{display:none}
+.quick-jump__chip{flex-shrink:0;padding:.3rem .7rem;border-radius:999px;border:1px solid var(--border,#3a3f4b);background:var(--surface,#1b1e26);color:var(--text,#e8eaed);font:inherit;font-size:.78rem;font-weight:500;cursor:pointer;white-space:nowrap;transition:border-color .15s ease,background-color .15s ease}
+.quick-jump__chip:hover{border-color:var(--accent,#5b8def);background:var(--surface-hover,#262b36)}
+.quick-jump__chip--more{background:var(--accent-soft,#23324f);border-color:var(--accent,#5b8def)}
+.quick-jump-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40}
+.quick-jump-sheet{position:fixed;left:0;right:0;bottom:0;max-height:78dvh;background:var(--surface,#1b1e26);border-top:1px solid var(--border,#3a3f4b);border-radius:1rem 1rem 0 0;z-index:41;display:flex;flex-direction:column;overflow:hidden;padding:.75rem 1rem 1rem}
+.quick-jump-sheet__header{display:flex;align-items:center;justify-content:space-between;padding-bottom:.6rem;border-bottom:1px solid var(--border,#3a3f4b);margin-bottom:.6rem;flex:none}
+.quick-jump-sheet__header h3{margin:0;font-size:1rem}
 
 /* Container card view */
 
@@ -302,6 +320,10 @@ h2 {
     overflow-y: visible;
     max-width: 100%;
   }
+  .breadcrumb {
+    position: sticky; top:0; z-index:1; background:#14161c; padding:.35rem 0; margin:0 -.6rem .35rem; padding-left:.6rem; padding-right:.6rem; border-bottom:1px solid var(--border,#3a3f4b); font-size:.8rem;
+  }
+  .breadcrumb button { padding:.35rem .5rem; }
 
   .location-view > app-floor-plan,
   .location-view > app-floor-plan-3d,
@@ -339,18 +361,12 @@ h2 {
     flex: 1 1 auto;
   }
 
-  .container-grid {
-    grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
-    gap: 0.4rem;
-  }
-
-  .container-card {
-    padding: 0.5rem;
-  }
-
-  .container-card__name {
-    font-size: 0.9rem;
-  }
+  .container-grid { display:flex; flex-direction:column; gap:.45rem; }
+  .container-card { display:flex; flex-direction:row; align-items:center; gap:.6rem; padding:.7rem .75rem; min-height:3.5rem; max-height:none; }
+  .container-card::after { content:'›'; order:3; margin-left:.5rem; font-size:1.3rem; line-height:1; color:var(--text-muted,#9aa1ac); opacity:.7; flex-shrink:0; }
+  .container-card__type { order:2; font-size:.6rem; flex-shrink:0; }
+  .container-card__name { order:1; font-size:.95rem; flex:1; min-width:0; }
+  .container-card__count,.container-card__empty { order:2; font-size:.75rem; margin-left:.35rem; flex-shrink:0; }
 
   .direct-items ul {
     grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));

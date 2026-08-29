@@ -74,4 +74,15 @@
   </main>
 
   <app-confirm-move-modal></app-confirm-move-modal>
+
+  @if (quickJump.sheetOpen()) {
+    <div class="quick-jump-backdrop" (click)="quickJump.sheetOpen.set(false)"></div>
+    <div class="quick-jump-sheet" role="dialog" aria-modal="true" aria-label="Ir a cualquier sitio">
+      <div class="quick-jump-sheet__header">
+        <h3>Ir a cualquier sitio</h3>
+        <button type="button" mat-icon-button (click)="quickJump.sheetOpen.set(false)" aria-label="Cerrar">×</button>
+      </div>
+      <app-quick-jump-sheet></app-quick-jump-sheet>
+    </div>
+  }
 </div>
