@@ -298,8 +298,9 @@ h2 {
 @include on-mobile {
   .location-view {
     display: block;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: clip;
+    overflow-y: visible;
+    max-width: 100%;
   }
 
   .location-view > app-floor-plan,
@@ -308,7 +309,13 @@ h2 {
   .location-view > .container-grid {
     flex: none;
     min-height: 0;
-    overflow: visible;
+    overflow-x: clip;
+    overflow-y: visible;
+    max-width: 100%;
+  }
+
+  .location-view > app-floor-plan-3d {
+    width: 100%;
   }
 
   h2 {

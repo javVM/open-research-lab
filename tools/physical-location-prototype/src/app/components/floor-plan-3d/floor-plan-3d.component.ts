@@ -201,7 +201,14 @@ export class FloorPlan3dComponent implements OnDestroy {
     const projectedHeight = bounds.height * Math.cos(rad) + this.maxStackZ() * Math.sin(rad);
     const availableWidth = Math.max(1, scene.width - SCENE_FIT_PADDING * 2);
     const availableHeight = Math.max(1, scene.height - SCENE_FIT_PADDING * 2);
-    const scale = Math.min(availableWidth / bounds.width, availableHeight / projectedHeight);
+    let scale = Math.min(availableWidth / bounds.width, availableHeight / projectedHeight);
+    scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
+    // En móvil la caja con perspective + paredes sobresale visualmente más allá
+    // de su layout box y pisaba el pane inferior; reducimos margen para que
+    // quepa sin tener que inflar el contenedor a 40rem.
+    if (this.viewport.isMobile()) {
+      scale *= 0.68;
+    }
     return Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
   }
 
