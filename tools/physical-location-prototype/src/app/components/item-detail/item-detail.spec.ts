@@ -54,7 +54,7 @@ describe('ItemDetailComponent', () => {
     expect(fixture.nativeElement.querySelector('.move-hint')).toBeTruthy();
   });
 
-  it('shows no QR for a selected building or room, only for physical containers', () => {
+  it('shows no QR for a building, but shows QR for rooms, cabinets and trays', () => {
     const collection = TestBed.inject(CollectionService);
     const navigation = TestBed.inject(NavigationService);
     const move = TestBed.inject(MoveService);
@@ -69,7 +69,13 @@ describe('ItemDetailComponent', () => {
     navigation.selectLocation(room.id);
     fixture = TestBed.createComponent(ItemDetailComponent);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('app-qr-label')).toBeNull();
+    expect(fixture.nativeElement.querySelector('app-qr-label')).toBeTruthy();
+
+    const cabinet = collection.dataset().locations.find((l) => l.type === 'cabinet')!;
+    navigation.selectLocation(cabinet.id);
+    fixture = TestBed.createComponent(ItemDetailComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-qr-label')).toBeTruthy();
 
     const tray = collection.dataset().locations.find((l) => l.type === 'tray')!;
     navigation.selectLocation(tray.id);

@@ -31,11 +31,17 @@ export const ITEM_HOLDING_TYPES: readonly LocationType[] = ['drawer', 'box', 'tr
 
 /**
  * Location types worth labelling with a scannable QR code: the physical
- * item-holding containers a user actually scans during the workflow
- * (drawer, box, tray, position). Architectural/spatial levels (building,
- * floor, room, cabinet) do not get a QR sticker.
+ * containers a user actually scans during the workflow. Includes rooms and
+ * cabinets (salas y armarios) which also carry Data Matrix / QR labels.
  */
-export const QR_SCANNABLE_LOCATION_TYPES: readonly LocationType[] = ['drawer', 'box', 'tray', 'position'];
+export const QR_SCANNABLE_LOCATION_TYPES: readonly LocationType[] = [
+  'room',
+  'cabinet',
+  'drawer',
+  'box',
+  'tray',
+  'position',
+];
 
 /** Convenience accessor: the single child type a container takes, if any. */
 export function defaultChildType(containerType: LocationType): LocationType | null {

@@ -176,7 +176,9 @@
 
 @media (max-width: 600px) {
   :host {
-    width: 4.2rem;
+    width: auto;
+    min-width: 4.5rem;
+    max-width: 5.5rem;
   }
 
   .language-switcher__trigger {
@@ -191,5 +193,10 @@
   .language-switcher__trigger-icon svg {
     width: 0.85rem;
     height: 0.85rem;
+  }
+
+  ::ng-deep .language-switcher-panel {
+    min-width: 7.5rem !important;
+    max-width: calc(100vw - 1rem) !important;
   }
 }
