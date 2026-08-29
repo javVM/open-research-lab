@@ -10,6 +10,9 @@ export const expandLabel = (name: string): string =>
 export const collapseLabel = (name: string): string =>
   $localize `@@locationTree.toggle.collapse:Collapse ${name}`;
 
+export const quickJumpLabel = $localize `@@locationTree.quickJump.label:Go to…`;
+export const quickJumpAriaLabel = $localize `@@locationTree.quickJump.ariaLabel:Go to anywhere`;
+
 export const toggleLabel = (name: string, expanded: boolean): string =>
   expanded ? collapseLabel(name) : expandLabel(name);
 
@@ -19,6 +22,8 @@ export function createLocationTreeTranslations(i18n: TranslationService) {
     allLabel: () => i18n.t('locationTree.allLabel', allLabel),
     emptyLabel: () => i18n.t('locationTree.emptyLabel', emptyLabel),
     selectBuilding: () => i18n.t('locationTree.selectBuilding', selectBuilding),
+    quickJumpLabel: () => i18n.t('locationTree.quickJump.label', quickJumpLabel),
+    quickJumpAriaLabel: () => i18n.t('locationTree.quickJump.ariaLabel', quickJumpAriaLabel),
     toggleLabel: (name: string, expanded: boolean): string =>
       expanded
         ? i18n.t('locationTree.toggle.collapse', collapseLabel(name), { name })

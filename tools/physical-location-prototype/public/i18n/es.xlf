@@ -105,6 +105,14 @@
         <source>Expand {name}</source>
         <target>Expandir {name}</target>
       </trans-unit>
+      <trans-unit id="locationTree.quickJump.label">
+        <source>Go to…</source>
+        <target>Ir a…</target>
+      </trans-unit>
+      <trans-unit id="locationTree.quickJump.ariaLabel">
+        <source>Go to anywhere</source>
+        <target>Ir a cualquier sitio</target>
+      </trans-unit>
 
       <trans-unit id="locationView.breadcrumbAriaLabel">
         <source>Location breadcrumb</source>
@@ -531,6 +539,42 @@
       <trans-unit id="locationView.confirmButton">
         <source>OK</source>
         <target>Aceptar</target>
+      </trans-unit>
+      <trans-unit id="app.quickJump.sheetTitle">
+        <source>Go to anywhere</source>
+        <target>Ir a cualquier sitio</target>
+      </trans-unit>
+      <trans-unit id="app.quickJump.closeLabel">
+        <source>Close</source>
+        <target>Cerrar</target>
+      </trans-unit>
+      <trans-unit id="app.footer.madeBy">
+        <source>Made by</source>
+        <target>Hecho por</target>
+      </trans-unit>
+      <trans-unit id="quickJumpSheet.searchPlaceholder">
+        <source>Building, room, cabinet, tray…</source>
+        <target>Edificio, sala, armario, bandeja…</target>
+      </trans-unit>
+      <trans-unit id="quickJumpSheet.searchAriaLabel">
+        <source>Search destination</source>
+        <target>Buscar destino</target>
+      </trans-unit>
+      <trans-unit id="quickJumpSheet.clearLabel">
+        <source>Clear</source>
+        <target>Limpiar</target>
+      </trans-unit>
+      <trans-unit id="quickJumpSheet.empty">
+        <source>No matches</source>
+        <target>Sin coincidencias</target>
+      </trans-unit>
+      <trans-unit id="quickJumpSheet.recents">
+        <source>Recent</source>
+        <target>Recientes</target>
+      </trans-unit>
+      <trans-unit id="quickJumpSheet.itemsCount">
+        <source>{count} items</source>
+        <target>{count} ítems</target>
       </trans-unit>
     </body>
   </file>

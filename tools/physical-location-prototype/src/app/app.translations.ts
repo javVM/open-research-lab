@@ -14,6 +14,9 @@ export const detailsHeading = $localize `@@app.pane.detailsHeading:Details`;
 export const modeSwitcherAriaLabel = $localize `@@app.modeSwitcher.ariaLabel:View mode`;
 export const modeExplore = $localize `@@app.mode.explore:Explore`;
 export const modeScan = $localize `@@app.mode.scan:Scan`;
+export const quickJumpSheetTitle = $localize `@@app.quickJump.sheetTitle:Go to anywhere`;
+export const quickJumpSheetCloseLabel = $localize `@@app.quickJump.closeLabel:Close`;
+export const footerMadeBy = $localize `@@app.footer.madeBy:Made by`;
 
 export function createAppTranslations(i18n: TranslationService) {
   return {
@@ -30,5 +33,8 @@ export function createAppTranslations(i18n: TranslationService) {
     modeSwitcherAriaLabel: () => i18n.t('app.modeSwitcher.ariaLabel', modeSwitcherAriaLabel),
     modeExplore: () => i18n.t('app.mode.explore', modeExplore),
     modeScan: () => i18n.t('app.mode.scan', modeScan),
+    quickJumpSheetTitle: () => i18n.t('app.quickJump.sheetTitle', quickJumpSheetTitle),
+    quickJumpSheetCloseLabel: () => i18n.t('app.quickJump.closeLabel', quickJumpSheetCloseLabel),
+    footerMadeBy: () => i18n.t('app.footer.madeBy', footerMadeBy),
   };
 }

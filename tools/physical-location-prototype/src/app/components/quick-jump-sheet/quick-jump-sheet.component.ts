@@ -5,6 +5,7 @@ import { QuickJumpService } from '../../shared/quick-jump.service';
 import { breadcrumb } from '../../../core/tree';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
 import { TranslationService } from '../../i18n/translation.service';
+import { createQuickJumpSheetTranslations } from './quick-jump-sheet.translations';
 import type { Location } from '../../../core/models';
 
 interface Group { label: string; items: Location[]; }
@@ -20,6 +21,7 @@ export class QuickJumpSheetComponent {
   private readonly navigation = inject(NavigationService);
   private readonly quickJump = inject(QuickJumpService);
   private readonly locationType = createLocationTypeTranslations(inject(TranslationService));
+  protected readonly text = createQuickJumpSheetTranslations(inject(TranslationService));
   readonly query = signal('');
   readonly groups = computed<Group[]>(() => {
     const needle = this.query().trim().toLowerCase();
@@ -27,7 +29,7 @@ export class QuickJumpSheetComponent {
     if (!needle) {
       const recentIds = this.quickJump.recents();
       const recents = recentIds.map((id) => all.find((l) => l.id === id)).filter(Boolean) as Location[];
-      if (recents.length > 0) return [{ label: 'Recientes', items: recents.slice(0, 6) }];
+      if (recents.length > 0) return [{ label: this.text.recents(), items: recents.slice(0, 6) }];
       const buildings = all.filter((l) => l.type === 'building').slice(0, 4);
       const rooms = all.filter((l) => l.type === 'room').slice(0, 6);
       const out: Group[] = [];

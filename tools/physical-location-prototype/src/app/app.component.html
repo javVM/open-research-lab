@@ -77,12 +77,20 @@
 
   @if (quickJump.sheetOpen()) {
     <div class="quick-jump-backdrop" (click)="quickJump.sheetOpen.set(false)"></div>
-    <div class="quick-jump-sheet" role="dialog" aria-modal="true" aria-label="Ir a cualquier sitio">
+    <div class="quick-jump-sheet" role="dialog" aria-modal="true" [attr.aria-label]="text.quickJumpSheetTitle()">
       <div class="quick-jump-sheet__header">
-        <h3>Ir a cualquier sitio</h3>
-        <button type="button" mat-icon-button (click)="quickJump.sheetOpen.set(false)" aria-label="Cerrar">×</button>
+        <h3>{{ text.quickJumpSheetTitle() }}</h3>
+        <button type="button" mat-icon-button (click)="quickJump.sheetOpen.set(false)" [attr.aria-label]="text.quickJumpSheetCloseLabel()">×</button>
       </div>
       <app-quick-jump-sheet></app-quick-jump-sheet>
     </div>
   }
+
+  <footer class="app-footer">
+    <span class="app-footer__text">{{ text.footerMadeBy() }}</span>
+    <a class="app-footer__link" href="https://github.com/javVM/" target="_blank" rel="noopener noreferrer" aria-label="GitHub javVM">
+      <mat-icon svgIcon="github" aria-hidden="true"></mat-icon>
+      <span>javVM</span>
+    </a>
+  </footer>
 </div>

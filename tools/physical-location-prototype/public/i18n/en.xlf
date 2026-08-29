@@ -77,6 +77,12 @@
       <trans-unit id="locationTree.toggle.expand">
         <source>Expand {name}</source>
       </trans-unit>
+      <trans-unit id="locationTree.quickJump.label">
+        <source>Go to…</source>
+      </trans-unit>
+      <trans-unit id="locationTree.quickJump.ariaLabel">
+        <source>Go to anywhere</source>
+      </trans-unit>
 
       <trans-unit id="locationView.breadcrumbAriaLabel">
         <source>Location breadcrumb</source>
@@ -378,6 +384,33 @@
       </trans-unit>
       <trans-unit id="locationView.addItemPrompt">
         <source>Catalogue number for the new item:</source>
+      </trans-unit>
+      <trans-unit id="app.quickJump.sheetTitle">
+        <source>Go to anywhere</source>
+      </trans-unit>
+      <trans-unit id="app.quickJump.closeLabel">
+        <source>Close</source>
+      </trans-unit>
+      <trans-unit id="app.footer.madeBy">
+        <source>Made by</source>
+      </trans-unit>
+      <trans-unit id="quickJumpSheet.searchPlaceholder">
+        <source>Building, room, cabinet, tray…</source>
+      </trans-unit>
+      <trans-unit id="quickJumpSheet.searchAriaLabel">
+        <source>Search destination</source>
+      </trans-unit>
+      <trans-unit id="quickJumpSheet.clearLabel">
+        <source>Clear</source>
+      </trans-unit>
+      <trans-unit id="quickJumpSheet.empty">
+        <source>No matches</source>
+      </trans-unit>
+      <trans-unit id="quickJumpSheet.recents">
+        <source>Recent</source>
+      </trans-unit>
+      <trans-unit id="quickJumpSheet.itemsCount">
+        <source>{count} items</source>
       </trans-unit>
     </body>
   </file>
