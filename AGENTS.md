@@ -121,6 +121,7 @@ rules above. When in doubt, the smaller, more boring, better-named option wins.
 - **Use the Material components** (`mat-button`, `mat-icon-button`, `mat-select`, `mat-form-field`,
   `mat-input`). For icons, use `<mat-icon>` backed by the locally-registered icon set in
   `shared/icons.ts` (the app is local-first, so icons are inline SVGs — never a CDN font).
+- **Names must be clear and descriptive.** Variables, methods, CSS classes and component selectors must describe what they are or do, not how they are implemented. Prefer `isTrayGrid` over `isPositionGrid`, `itemCountAt()` over `countAt()`, `childrenWithoutCoordinates()` over `uncoordinatedChildren()`, `visibleDrawerSide()` over `facingSide()`, `pane--building-picker` over `pane--tree` when the mobile variant is a building picker. If a name is unclear on first read, rename it — clarity is a feature.
 - **Tests must pass and each test must earn its place.** Never add a test just to pad a count; a
   test asserts a behaviour or a documented invariant. Never weaken or delete a meaningful test to
   make a suite green — a failing meaningful test is a signal to fix the code, not the test.
