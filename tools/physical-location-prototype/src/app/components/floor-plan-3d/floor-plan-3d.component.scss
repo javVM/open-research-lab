@@ -8,9 +8,63 @@
   flex-direction: column;
   padding-top: 1.5rem;
   overflow: hidden;
-  border: 1px dashed var(--border, #3a3f4b);
+  border: 1px solid var(--border, #c7c4d8);
   border-radius: 0.5rem;
-  background: #11141b;
+  background: var(--surface, #ffffff);
+  background-image:
+    linear-gradient(#dce2f3 1px, transparent 1px),
+    linear-gradient(90deg, #dce2f3 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.floor-plan-3d__tools {
+  position: absolute;
+  top: 16px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #c7c4d8);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 4px 20px -2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.floor-plan-3d__tools--left {
+  left: 16px;
+}
+
+.floor-plan-3d__tools-sep {
+  width: 20px;
+  height: 1px;
+  background: var(--border, #c7c4d8);
+  margin: 2px auto;
+  flex-shrink: 0;
+}
+
+.floor-plan-3d__tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text, #151c27);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.floor-plan-3d__tool:hover {
+  background: rgba(79, 70, 229, 0.08);
+  color: var(--accent, #4f46e5);
+}
+
+.floor-plan-3d__tool svg {
+  width: 20px;
+  height: 20px;
 }
 
 .floor-plan-3d__reset {
@@ -20,13 +74,20 @@
   z-index: 2;
   width: 2rem;
   height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
-  border: 1px solid var(--border, #3a3f4b);
-  background: var(--surface, #1b1e26);
-  color: inherit;
+  border: 1px solid var(--border, #c7c4d8);
+  background: var(--surface, #ffffff);
+  color: var(--text-muted, #464555);
   cursor: pointer;
-  font-size: 1rem;
-  line-height: 1;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.floor-plan-3d__reset mat-icon svg {
+  width: 1rem;
+  height: 1rem;
 }
 
 .floor-plan-3d__reset:hover {
@@ -81,12 +142,18 @@
 
 .floor-plan-3d__hint {
   position: absolute;
-  top: 0.75rem;
-  left: 0.9rem;
+  bottom: 0.6rem;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 2;
   font-size: 0.75rem;
   color: var(--text-muted, #9aa1ac);
   pointer-events: none;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #c7c4d8);
+  border-radius: 999px;
+  padding: 4px 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
 .floor-plan-3d__scene {
@@ -116,7 +183,9 @@
   inset: 0;
   transform: translateZ(0);
   pointer-events: none;
-  background: #2a2d35;
+  background: var(--surface-container-low, #f0f3ff);
+  border: 1px solid var(--border, #c7c4d8);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
 }
 
 .box3d {
@@ -296,7 +365,8 @@
   .floor-plan-3d__hint {
     top: auto;
     bottom: 0.5rem;
-    left: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .floor-plan-3d__dpad {

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, effect, inject, input, signal, untracked } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, Output, effect, inject, input, signal, untracked } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import type { Location, LocationType, Point } from '../../../core/models';
@@ -73,6 +73,7 @@ export class FloorPlanComponent implements AfterViewInit, OnDestroy {
   readonly locations = input<Location[]>([]);
   /** Id of the location whose children `locations` are — used to look up/store its background plan image. */
   readonly containerLocationId = input<string | null>(null);
+  @Output() readonly toggle3d = new EventEmitter<void>();
 
   protected readonly collection = inject(CollectionService);
   protected readonly navigation = inject(NavigationService);
@@ -86,6 +87,8 @@ export class FloorPlanComponent implements AfterViewInit, OnDestroy {
   protected readonly renderScale = signal(1);
   protected readonly showUploadMenu = signal(false);
   protected readonly layoutMode = signal(false);
+  protected readonly moveMode = signal(false);
+  protected readonly resizeMode = signal(false);
   protected readonly shapeMode = signal(false);
   /** The location currently being shaped, set by clicking a rect in shape mode. */
   private readonly shapeTargetId = signal<string | null>(null);
@@ -408,14 +411,18 @@ export class FloorPlanComponent implements AfterViewInit, OnDestroy {
       this.shapeTargetId.set(locationId);
       return;
     }
-    if (this.layoutMode()) {
+    if (this.moveMode() || this.resizeMode() || this.layoutMode()) {
       return;
     }
     this.navigation.selectLocation(locationId);
   }
 
   onPointerDown(event: PointerEvent, location: Location): void {
-    if (event.button !== 0 || this.viewport.isMobile() || !this.layoutMode()) {
+    if (event.button !== 0 || this.viewport.isMobile() || (!this.moveMode() && !this.layoutMode())) {
+      return;
+    }
+    // resize alone must not allow dragging
+    if (this.resizeMode() && !this.moveMode() && !this.layoutMode()) {
       return;
     }
     event.preventDefault();
@@ -473,7 +480,7 @@ export class FloorPlanComponent implements AfterViewInit, OnDestroy {
   onResizePointerDown(event: PointerEvent, location: Location, axis: ResizeAxis = 'se'): void {
     // normalize legacy aliases
     const norm: ResizeAxis = axis === 'x' ? 'e' : axis === 'y' ? 's' : axis === 'xy' ? 'se' : axis;
-    if (event.button !== 0 || this.viewport.isMobile() || !this.layoutMode()) {
+    if (event.button !== 0 || this.viewport.isMobile() || (!this.resizeMode() && !this.layoutMode())) {
       return;
     }
     event.preventDefault();
@@ -549,6 +556,31 @@ export class FloorPlanComponent implements AfterViewInit, OnDestroy {
   toggleLayoutMode(): void {
     const next = !this.layoutMode();
     this.layoutMode.set(next);
+    // legacy: enable both move and resize for tests that use layoutMode
+    this.moveMode.set(next);
+    this.resizeMode.set(next);
+    if (next) {
+      this.shapeMode.set(false);
+      this.shapeTargetId.set(null);
+    }
+  }
+
+  toggleMoveMode(): void {
+    const next = !this.moveMode();
+    this.moveMode.set(next);
+    this.resizeMode.set(false);
+    this.layoutMode.set(false);
+    if (next) {
+      this.shapeMode.set(false);
+      this.shapeTargetId.set(null);
+    }
+  }
+
+  toggleResizeMode(): void {
+    const next = !this.resizeMode();
+    this.resizeMode.set(next);
+    this.moveMode.set(false);
+    this.layoutMode.set(false);
     if (next) {
       this.shapeMode.set(false);
       this.shapeTargetId.set(null);
@@ -560,6 +592,8 @@ export class FloorPlanComponent implements AfterViewInit, OnDestroy {
     this.shapeMode.set(next);
     if (next) {
       this.layoutMode.set(false);
+      this.moveMode.set(false);
+      this.resizeMode.set(false);
     }
     this.shapeTargetId.set(null);
   }

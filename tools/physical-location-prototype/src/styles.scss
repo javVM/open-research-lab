@@ -2,11 +2,11 @@
 
 @include mat.core();
 
-$prototype-primary: mat.m2-define-palette(mat.$m2-blue-palette, 500);
-$prototype-accent: mat.m2-define-palette(mat.$m2-blue-palette, A200, A100, A400);
+$prototype-primary: mat.m2-define-palette(mat.$m2-indigo-palette, 700);
+$prototype-accent: mat.m2-define-palette(mat.$m2-indigo-palette, A200, A100, A400);
 $prototype-warn: mat.m2-define-palette(mat.$m2-red-palette);
 
-$prototype-theme: mat.m2-define-dark-theme((
+$prototype-theme: mat.m2-define-light-theme((
   color: (
     primary: $prototype-primary,
     accent: $prototype-accent,
@@ -19,18 +19,32 @@ $prototype-theme: mat.m2-define-dark-theme((
 @include mat.all-component-themes($prototype-theme);
 
 :root {
-  --surface: #1b1e26;
-  --surface-raised: #20242e;
-  --surface-hover: #262b36;
-  --border: #3a3f4b;
-  --border-strong: #4a5160;
-  --text: #e8eaed;
-  --text-muted: #9aa1ac;
-  --accent: #5b8def;
-  --accent-soft: #23324f;
-  --empty: #8b93a1;
-  --empty-soft: #232833;
-  color-scheme: dark;
+  --surface: #ffffff;
+  --surface-raised: #f0f3ff;
+  --surface-hover: #e7eefe;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f0f3ff;
+  --surface-container: #e7eefe;
+  --surface-container-high: #e2e8f8;
+  --surface-container-highest: #dce2f3;
+  --surface-variant: #dce2f3;
+  --surface-dim: #d3daea;
+  --surface-bright: #f9f9ff;
+  --background: #f9f9ff;
+  --border: #c7c4d8;
+  --border-soft: rgba(199, 196, 216, 0.3);
+  --border-strong: #777587;
+  --text: #151c27;
+  --text-muted: #464555;
+  --accent: #4f46e5;
+  --accent-soft: #e0e7ff;
+  --accent-contrast: #ffffff;
+  --empty: #777587;
+  --empty-soft: #f0f3ff;
+  --primary-fixed: #e2dfff;
+  --primary-fixed-dim: #c3c0ff;
+  --on-primary-fixed: #0f0069;
+  color-scheme: light;
 }
 
 * {
@@ -47,13 +61,14 @@ body {
 
 body {
   font-family:
+    'Inter',
     system-ui,
     -apple-system,
     'Segoe UI',
     Roboto,
     sans-serif;
-  background: #14161c;
-  color: var(--text);
+  background: var(--background, #f9f9ff);
+  color: var(--text, #151c27);
 }
 
 button {

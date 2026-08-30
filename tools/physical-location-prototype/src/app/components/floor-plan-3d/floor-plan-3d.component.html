@@ -1,6 +1,13 @@
 <div class="floor-plan-3d" [attr.aria-label]="text.ariaLabel()">
-  <button type="button" class="floor-plan-3d__reset" [attr.title]="text.resetView()" (click)="resetView()">
-    ⟲
+  <div class="floor-plan-3d__tools floor-plan-3d__tools--left" role="group" aria-label="Navegación">
+    <button type="button" class="floor-plan-3d__tool" (click)="zoomIn()" aria-label="Zoom in" title="Zoom in"><mat-icon svgIcon="zoomIn" aria-hidden="true"></mat-icon></button>
+    <button type="button" class="floor-plan-3d__tool" (click)="zoomOut()" aria-label="Zoom out" title="Zoom out"><mat-icon svgIcon="zoomOut" aria-hidden="true"></mat-icon></button>
+    <button type="button" class="floor-plan-3d__tool" (click)="zoomFit()" aria-label="Reset view" title="Reset view"><mat-icon svgIcon="reset" aria-hidden="true"></mat-icon></button>
+    <span class="floor-plan-3d__tools-sep" aria-hidden="true"></span>
+    <button type="button" class="floor-plan-3d__tool" (click)="toggleMap.emit()" aria-label="2D view" title="Back to 2D"><mat-icon svgIcon="rect" aria-hidden="true"></mat-icon></button>
+  </div>
+  <button type="button" class="floor-plan-3d__reset" [attr.title]="text.resetView()" (click)="resetView()" aria-label="Reset view">
+    <mat-icon svgIcon="reset" aria-hidden="true"></mat-icon>
   </button>
   <span class="floor-plan-3d__hint">{{ text.orbitHint() }}</span>
 

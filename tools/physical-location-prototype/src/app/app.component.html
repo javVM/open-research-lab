@@ -1,71 +1,141 @@
 <div class="app-shell">
-  <p class="app-disclaimer">{{ text.disclaimer() }}</p>
-
-  <header class="app-header">
-    <div class="app-brand">
-      <mat-icon svgIcon="brand" aria-hidden="true" class="app-brand__mark"></mat-icon>
-      <h1>{{ text.title() }}</h1>
+  <nav class="sidenav" aria-label="Primary">
+    <div class="sidenav__brand">
+      <div class="sidenav__brand-title">
+        <mat-icon svgIcon="brand" aria-hidden="true" class="sidenav__mark"></mat-icon>
+        <h1>Nexus Lab</h1>
+      </div>
+      <p class="sidenav__subtitle">Precision Management</p>
     </div>
 
-    <nav class="mode-switcher" role="group" [attr.aria-label]="text.modeSwitcherAriaLabel()">
-      <button
-        type="button"
-        mat-button
-        class="mode-switcher__button"
-        [class.mode-switcher__button--active]="navigation.uiMode() === 'explore'"
-        [attr.aria-pressed]="navigation.uiMode() === 'explore'"
-        (click)="navigation.setUiMode('explore')"
-      >
-        <mat-icon svgIcon="explore" aria-hidden="true"></mat-icon>
-        <span>{{ text.modeExplore() }}</span>
-      </button>
-      <button
-        type="button"
-        mat-button
-        class="mode-switcher__button"
-        [class.mode-switcher__button--active]="navigation.uiMode() === 'scan'"
-        [attr.aria-pressed]="navigation.uiMode() === 'scan'"
-        (click)="navigation.setUiMode('scan')"
-      >
-        <mat-icon svgIcon="scan" aria-hidden="true"></mat-icon>
-        <span>{{ text.modeScan() }}</span>
-      </button>
-    </nav>
+    <ul class="sidenav__nav">
+      <li>
+        <button
+          type="button"
+          class="sidenav__link"
+          [class.sidenav__link--active]="navigation.uiMode() === 'explore'"
+          [attr.aria-current]="navigation.uiMode() === 'explore' ? 'page' : null"
+          [attr.aria-pressed]="navigation.uiMode() === 'explore'"
+          (click)="navigation.setUiMode('explore')"
+        >
+          <mat-icon svgIcon="explore" aria-hidden="true"></mat-icon>
+          <span>{{ text.modeExplore() }}</span>
+        </button>
+      </li>
+      <li>
+        <button
+          type="button"
+          class="sidenav__link"
+          [class.sidenav__link--active]="navigation.uiMode() === 'scan'"
+          [attr.aria-pressed]="navigation.uiMode() === 'scan'"
+          (click)="navigation.setUiMode('scan')"
+        >
+          <mat-icon svgIcon="scan" aria-hidden="true"></mat-icon>
+          <span>{{ text.modeScan() }}</span>
+        </button>
+      </li>
+      <li>
+        <span class="sidenav__link sidenav__link--disabled" aria-disabled="true">
+          <mat-icon svgIcon="search" aria-hidden="true"></mat-icon>
+          <span>Reports</span>
+        </span>
+      </li>
+      <li>
+        <span class="sidenav__link sidenav__link--disabled" aria-disabled="true">
+          <mat-icon svgIcon="translate" aria-hidden="true"></mat-icon>
+          <span>Settings</span>
+        </span>
+      </li>
+    </ul>
 
-    @if (navigation.uiMode() === 'explore') {
-      <app-search-bar></app-search-bar>
-    }
+    <div class="sidenav__bottom">
+      <ul class="sidenav__nav">
+        <li>
+          <span class="sidenav__link sidenav__link--disabled" aria-disabled="true">
+            <mat-icon svgIcon="info" aria-hidden="true"></mat-icon>
+            <span>Support</span>
+          </span>
+        </li>
+        <li>
+          <button
+            type="button"
+            class="sidenav__link"
+            (click)="collection.resetDemo()"
+            [attr.title]="text.resetButtonTitle()"
+            [attr.aria-label]="text.resetButtonTitle()"
+          >
+            <mat-icon svgIcon="reset" aria-hidden="true"></mat-icon>
+            <span>Reset demo</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
-    <div class="app-header__actions">
+  <header class="topbar">
+    <div class="topbar__left">
+      @if (navigation.uiMode() === 'explore') {
+        <app-search-bar class="topbar__search"></app-search-bar>
+      } @else {
+        <span class="topbar__title">Scan</span>
+      }
+    </div>
+    <div class="topbar__right">
       <app-language-switcher></app-language-switcher>
-      <button
-        type="button"
-        mat-icon-button
-        class="reset-button"
-        (click)="collection.resetDemo()"
-        [attr.title]="text.resetButtonTitle()"
-        [attr.aria-label]="text.resetButtonTitle()"
-      >
-        <mat-icon svgIcon="reset" aria-hidden="true"></mat-icon>
-      </button>
     </div>
   </header>
 
-  <main class="app-body">
+  <p class="app-disclaimer">{{ text.disclaimer() }}</p>
+
+  <main
+    class="app-body"
+    [class.app-body--tree-collapsed]="navigation.treeCollapsed()"
+    [class.app-body--no-detail]="!navigation.selectedItemId()"
+  >
     @switch (navigation.uiMode()) {
       @case ('explore') {
-        <section class="pane pane--building-picker" [attr.aria-label]="text.locationHierarchyAriaLabel()">
-          <h2 class="pane__heading">{{ text.locationsHeading() }}</h2>
+        <section
+          class="pane pane--building-picker"
+          [class.pane--building-picker--collapsed]="navigation.treeCollapsed()"
+          [attr.aria-label]="text.locationHierarchyAriaLabel()"
+          [attr.aria-hidden]="navigation.treeCollapsed()"
+        >
+          <div class="pane__heading-row">
+            <h2 class="pane__heading">{{ text.locationsHeading() }}</h2>
+            <button
+              type="button"
+              mat-icon-button
+              class="pane__collapse"
+              [attr.aria-label]="navigation.treeCollapsed() ? 'Expand hierarchy' : 'Collapse hierarchy'"
+              [attr.title]="navigation.treeCollapsed() ? 'Expand' : 'Collapse'"
+              (click)="navigation.treeCollapsed.set(!navigation.treeCollapsed())"
+            >
+              <mat-icon svgIcon="chevronLeft" aria-hidden="true"></mat-icon>
+            </button>
+          </div>
           <app-location-tree></app-location-tree>
         </section>
+        @if (navigation.treeCollapsed()) {
+          <button
+            type="button"
+            class="tree-expand"
+            aria-label="Expand hierarchy"
+            title="Expand"
+            (click)="navigation.treeCollapsed.set(false)"
+          >
+            <mat-icon svgIcon="chevronRight" aria-hidden="true"></mat-icon>
+          </button>
+        }
         <section class="pane pane--view" [attr.aria-label]="text.selectedLocationAriaLabel()">
           <h2 class="pane__heading">{{ text.contentsHeading() }}</h2>
           <app-location-view></app-location-view>
         </section>
-        <section class="pane pane--detail" [attr.aria-label]="text.itemDetailAriaLabel()">
-          <h2 class="pane__heading">{{ text.detailsHeading() }}</h2>
-          <app-item-detail></app-item-detail>
-        </section>
+        @if (navigation.selectedItemId()) {
+          <section class="pane pane--detail" [attr.aria-label]="text.itemDetailAriaLabel()">
+            <h2 class="pane__heading">{{ text.detailsHeading() }}</h2>
+            <app-item-detail></app-item-detail>
+          </section>
+        }
       }
       @case ('scan') {
         <app-scan-view class="pane pane--mode"></app-scan-view>

@@ -1,4 +1,6 @@
-import { Component, ElementRef, effect, inject, input, signal, untracked, type OnDestroy } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, effect, inject, input, signal, untracked, type OnDestroy } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { registerAppIcons } from '../../shared/icons';
 import type { Location, Point } from '../../../core/models';
 import { labelAnchor as polygonLabelAnchor, scaleOutline } from '../../../core/outline';
 import { CollectionService } from '../../collection.service';
@@ -59,7 +61,7 @@ interface WallFace {
 @Component({
   selector: 'app-floor-plan-3d',
   standalone: true,
-  imports: [],
+  imports: [MatIconModule],
   templateUrl: './floor-plan-3d.component.html',
   styleUrl: './floor-plan-3d.component.scss',
 })
@@ -67,6 +69,7 @@ export class FloorPlan3dComponent implements OnDestroy {
   readonly locations = input<Location[]>([]);
   /** Id of the location whose children `locations` are — its footprint drives the scene. */
   readonly containerLocationId = input<string | null>(null);
+  @Output() readonly toggleMap = new EventEmitter<void>();
 
   protected readonly collection = inject(CollectionService);
   protected readonly navigation = inject(NavigationService);
@@ -78,6 +81,7 @@ export class FloorPlan3dComponent implements OnDestroy {
   private readonly el = inject(ElementRef);
 
   constructor() {
+    registerAppIcons();
     this.resetView();
     window.addEventListener('resize', this.onWindowResize);
   }
@@ -178,6 +182,18 @@ export class FloorPlan3dComponent implements OnDestroy {
     this.rotateZDeg.set(INITIAL_ROTATE_Z);
     this.rotateXDeg.set(this.viewport.isMobile() ? MOBILE_INITIAL_ROTATE_X : DESKTOP_INITIAL_ROTATE_X);
     this.scale.set(this.fitScale());
+  }
+
+  zoomIn(): void {
+    this.scale.set(Math.min(MAX_SCALE, Math.max(MIN_SCALE, this.scale() * 1.25)));
+  }
+
+  zoomOut(): void {
+    this.scale.set(Math.min(MAX_SCALE, Math.max(MIN_SCALE, this.scale() / 1.25)));
+  }
+
+  zoomFit(): void {
+    this.resetView();
   }
 
   private maxStackZ(): number {

@@ -1,16 +1,19 @@
 import { Component, forwardRef, inject, input } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import type { LocationNode } from '../../../core/tree';
+import type { LocationType } from '../../../core/models';
 import { CollectionService } from '../../collection.service';
 import { MoveService } from '../../move.service';
 import { NavigationService } from '../../navigation.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createLocationTreeTranslations } from './location-tree.translations';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
+import { APP_ICON } from '../../shared/icons';
 
 @Component({
   standalone: true,
   selector: 'app-location-tree-nodes',
-  imports: [forwardRef(() => LocationTreeNodesComponent)],
+  imports: [forwardRef(() => LocationTreeNodesComponent), MatIconModule],
   template: `
     @for (node of nodes(); track node.location.id) {
       <div>
@@ -32,9 +35,13 @@ import { createLocationTypeTranslations } from '../../shared/location-type.trans
             (click)="toggle(node.location.id, $event)"
             [disabled]="node.children.length === 0"
           >
-            {{ node.children.length > 0 ? (isExpanded(node.location.id) ? '▾' : '▸') : '·' }}
+            @if (node.children.length > 0) {
+              <mat-icon [svgIcon]="isExpanded(node.location.id) ? 'chevronDown' : 'chevronRight'" aria-hidden="true"></mat-icon>
+            } @else {
+              <span class="tree-toggle__dot">·</span>
+            }
           </button>
-          <span class="tree-type-badge" [attr.data-type]="node.location.type">{{ locationType.label(node.location.type) }}</span>
+          <mat-icon [svgIcon]="iconFor(node.location.type)" aria-hidden="true" class="tree-icon"></mat-icon>
           <span class="tree-name">{{ node.location.name }}</span>
           @if (countItemsBelow(node) > 0) {
             <span class="tree-count">{{ countItemsBelow(node) }}</span>
@@ -91,5 +98,28 @@ export class LocationTreeNodesComponent {
   toggle(locationId: string, event: Event): void {
     event.stopPropagation();
     this.navigation.toggleExpanded(locationId);
+  }
+
+  iconFor(type: LocationType): string {
+    switch (type) {
+      case 'building':
+        return APP_ICON.domain;
+      case 'floor':
+        return APP_ICON.layers;
+      case 'room':
+        return APP_ICON.meetingRoom;
+      case 'cabinet':
+        return APP_ICON.kitchen;
+      case 'drawer':
+        return APP_ICON.horizontalSplit;
+      case 'tray':
+        return APP_ICON.gridView;
+      case 'box':
+        return APP_ICON.gridView;
+      case 'position':
+        return APP_ICON.gridView;
+      default:
+        return APP_ICON.gridView;
+    }
   }
 }

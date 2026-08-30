@@ -14,8 +14,10 @@ import { createLocationTypeTranslations } from '../../shared/location-type.trans
 import { FloorPlanComponent } from '../floor-plan/floor-plan.component';
 import { FloorPlan3dComponent } from '../floor-plan-3d/floor-plan-3d.component';
 import { PositionGridComponent } from '../position-grid/position-grid.component';
+import { QrLabelComponent } from '../qr-label/qr-label.component';
 import { GeometryService } from '../../shared/geometry.service';
 import { PromptModalComponent, type PromptRequest } from '../prompt-modal/prompt-modal.component';
+import { QR_SCANNABLE_LOCATION_TYPES } from '../../shared/hierarchy.constants';
 import { MIN_ROW_COLUMN_COUNT } from '../prompt-modal/prompt-modal.constants';
 import { QuickJumpService } from '../../shared/quick-jump.service';
 import { ITEM_HOLDING_TYPES, MAPPABLE_TYPES, PARENT_CHILD_TYPES } from '../../shared/hierarchy.constants';
@@ -35,6 +37,7 @@ import { registerAppIcons } from '../../shared/icons';
     FloorPlan3dComponent,
     PositionGridComponent,
     PromptModalComponent,
+    QrLabelComponent,
   ],
   templateUrl: './location-view.component.html',
   styleUrl: './location-view.component.scss',
@@ -51,7 +54,9 @@ export class LocationViewComponent {
   /** When false, the map/3D view is hidden and only the list is shown. */
   readonly allowMap = input<boolean>(true);
 
-  protected readonly viewMode = signal<'map' | '3d' | 'list'>('list');
+  protected get viewMode() {
+    return this.navigation.viewMode;
+  }
 
   readonly selectedLocation = computed<Location | undefined>(() => {
     const id = this.navigation.selectedLocationId();
@@ -100,18 +105,73 @@ export class LocationViewComponent {
 
   readonly isMapView = computed<boolean>(() => this.canShowMap() && this.viewMode() === 'map');
   readonly is3dView = computed<boolean>(() => this.canShowMap() && this.viewMode() === '3d');
+  readonly isDetailsView = computed<boolean>(() => !this.isMapView() && !this.is3dView());
 
   readonly viewModeIndex = computed<number>(() =>
     this.is3dView() ? 2 : this.isMapView() ? 1 : 0
   );
 
-  constructor() {
-    registerAppIcons();
-    this.viewMode.set(this.canShowMap() ? 'map' : 'list');
+  // Details helpers for location (when in Details view)
+  readonly locationPath = computed<Location[]>(() => {
+    const loc = this.selectedLocation();
+    return loc ? breadcrumb(this.collection.dataset().locations, loc.id) : [];
+  });
+
+  readonly locationSubtitle = computed<string>(() => {
+    const path = this.locationPath();
+    if (path.length <= 1) return '';
+    return path
+      .slice(0, -1)
+      .map((l) => l.name)
+      .join(' › ');
+  });
+
+  readonly locationItemCount = computed<number>(() => {
+    const loc = this.selectedLocation();
+    return loc ? (this.collection.locationItemCounts().get(loc.id) ?? 0) : 0;
+  });
+
+  readonly showLocationQr = computed<boolean>(() => {
+    const loc = this.selectedLocation();
+    return !!loc && QR_SCANNABLE_LOCATION_TYPES.includes(loc.type);
+  });
+
+  readonly locationQrPayload = computed<string>(() => {
+    const loc = this.selectedLocation();
+    return loc ? `box:${loc.id}` : '';
+  });
+
+  readonly printableLabelMeta = computed<string>(() => {
+    const path = this.locationPath();
+    return path.map((l) => l.name).join('-');
+  });
+
+  readonly labelFormat = signal<'qr' | 'datamatrix' | 'code128'>('qr');
+
+  selectLabelFormat(format: 'qr' | 'datamatrix' | 'code128'): void {
+    this.labelFormat.set(format);
   }
 
-  setViewMode(mode: 'map' | '3d' | 'list'): void {
-    this.viewMode.set(mode);
+  downloadQr(): void {
+    // Find the qr-label inside printable preview and trigger its download
+    const el = document.querySelector('.printable-label__qr app-qr-label') as HTMLElement | null;
+    const btn = el?.querySelector('.qr-label__download') as HTMLElement | null;
+    btn?.click();
+  }
+
+  printLabel(): void {
+    window.print();
+  }
+
+  constructor() {
+    registerAppIcons();
+    const initial = this.canShowMap() ? 'map' : 'details';
+    this.viewMode.set(initial as 'map' | '3d' | 'data');
+  }
+
+  setViewMode(mode: 'map' | '3d' | 'data' | 'list' | 'details'): void {
+    const normalized = mode === 'list' ? 'details' : mode === 'data' ? 'details' : mode;
+    this.viewMode.set(normalized as 'map' | '3d' | 'data');
   }
 
   itemCountAt(locationId: string): number {

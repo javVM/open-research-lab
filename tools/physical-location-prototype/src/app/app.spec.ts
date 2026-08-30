@@ -39,7 +39,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Physical Location Prototype');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Nexus Lab');
     expect(compiled.querySelectorAll('[data-location-id]').length).toBeGreaterThan(0);
   });
 
@@ -55,14 +55,15 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Physical Location Prototype');
+    // Branding stays Nexus Lab across locales
+    expect(compiled.querySelector('h1')?.textContent).toContain('Nexus Lab');
 
     const switcher = fixture.debugElement.query(By.css('app-language-switcher'))!
       .componentInstance as LanguageSwitcherComponent;
     switcher.onChange('es');
     fixture.detectChanges();
 
-    expect(compiled.querySelector('h1')?.textContent).toContain('Prototipo de ubicación física');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Nexus Lab');
     const searchInput = compiled.querySelector('.search-bar__input') as HTMLInputElement;
     expect(searchInput.placeholder).toContain('Buscar en la colección');
   });
@@ -80,8 +81,9 @@ describe('App', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
 
-    const buttons = compiled.querySelectorAll('.mode-switcher__button');
-    expect(buttons.length).toBe(2);
+    const buttons = compiled.querySelectorAll('.sidenav__link:not(.sidenav__link--disabled)');
+    // Explore + Scan + Reset demo = 3 actionable links in sidenav
+    expect(buttons.length).toBe(3);
 
     expect(Array.from(buttons).some((button) => button.textContent?.includes('Label'))).toBe(false);
     expect(Array.from(buttons).some((button) => button.textContent?.includes('Explore'))).toBe(true);

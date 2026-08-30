@@ -24,5 +24,7 @@ export const LOCATION_VIEW_I18N = {
   confirmButton: { key: 'locationView.confirmButton', fallback: 'OK' },
   viewModeMap: { key: 'locationView.viewMode.map', fallback: 'Map' },
   viewMode3d: { key: 'locationView.viewMode.3d', fallback: '3D' },
-  viewModeList: { key: 'locationView.viewMode.list', fallback: 'List' },
+  viewModeList: { key: 'locationView.viewMode.list', fallback: 'Details' },
+  viewModeData: { key: 'locationView.viewMode.data', fallback: 'Details' },
+  viewModeDetails: { key: 'locationView.viewMode.details', fallback: 'Details' },
 } as const;

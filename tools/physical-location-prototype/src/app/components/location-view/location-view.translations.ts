@@ -25,7 +25,9 @@ export const addButton = $localize `@@locationView.addButton:Add`;
 export const confirmButton = $localize `@@locationView.confirmButton:OK`;
 export const viewModeMap = $localize `@@locationView.viewMode.map:Map`;
 export const viewMode3d = $localize `@@locationView.viewMode.3d:3D`;
-export const viewModeList = $localize `@@locationView.viewMode.list:List`;
+export const viewModeList = $localize `@@locationView.viewMode.list:Details`;
+export const viewModeData = $localize `@@locationView.viewMode.data:Details`;
+export const viewModeDetails = $localize `@@locationView.viewMode.details:Details`;
 
 export function createLocationViewTranslations(i18n: TranslationService) {
   return {
@@ -53,5 +55,7 @@ export function createLocationViewTranslations(i18n: TranslationService) {
     viewModeMap: () => i18n.t('locationView.viewMode.map', viewModeMap),
     viewMode3d: () => i18n.t('locationView.viewMode.3d', viewMode3d),
     viewModeList: () => i18n.t('locationView.viewMode.list', viewModeList),
+    viewModeData: () => i18n.t('locationView.viewMode.data', viewModeData),
+    viewModeDetails: () => i18n.t('locationView.viewMode.details', viewModeDetails),
   };
 }

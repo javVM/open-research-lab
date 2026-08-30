@@ -1,34 +1,239 @@
 <div class="location-view">
   @if (selectedLocation(); as location) {
-    <nav class="breadcrumb" [attr.aria-label]="text.breadcrumbAriaLabel()">
-      <button type="button" mat-button class="breadcrumb__root" (click)="navigation.selectedLocationId.set(null)">
-        {{ text.rootBreadcrumb() }}
-      </button>
-      <span class="breadcrumb__sep">/</span>
-      @for (crumb of breadcrumbPath(); track crumb.id; let last = $last) {
-        <button type="button" mat-button (click)="navigation.selectLocation(crumb.id)">{{ crumb.name }}</button>
-        @if (!last) {
-          <span class="breadcrumb__sep">/</span>
+    <div class="view-header">
+      <nav class="breadcrumb" [attr.aria-label]="text.breadcrumbAriaLabel()">
+        <button type="button" mat-button class="breadcrumb__root" (click)="navigation.selectedLocationId.set(null)">
+          {{ text.rootBreadcrumb() }}
+        </button>
+        @for (crumb of breadcrumbPath(); track crumb.id; let last = $last) {
+          <mat-icon svgIcon="chevronRight" aria-hidden="true" class="breadcrumb__chevron"></mat-icon>
+          <button type="button" mat-button [class.breadcrumb__current]="last" (click)="navigation.selectLocation(crumb.id)">{{ crumb.name }}</button>
         }
+      </nav>
+      @if (canShowMap()) {
+        <div class="view-mode-toggle" role="group" [attr.aria-label]="text.viewModeData()">
+          <button
+            type="button"
+            mat-button
+            class="view-mode-toggle__button"
+            [class.view-mode-toggle__button--active]="isMapView()"
+            [attr.aria-pressed]="isMapView()"
+            (click)="setViewMode('map')"
+          >
+            {{ text.viewModeMap() }}
+          </button>
+          <button
+            type="button"
+            mat-button
+            class="view-mode-toggle__button"
+            [class.view-mode-toggle__button--active]="isDetailsView()"
+            [attr.aria-pressed]="isDetailsView()"
+            (click)="setViewMode('details')"
+          >
+            {{ text.viewModeDetails() }}
+          </button>
+        </div>
       }
-    </nav>
+    </div>
 
-    <h2>{{ location.name }}</h2>
+    @if (!isDetailsView() || isTrayGrid()) {
+      <h2>{{ location.name }}</h2>
+    }
 
-    @if (allowedChildTypes().length > 0 || canAddItem()) {
+    @if (location.type === 'tray' && isDetailsView()) {
+      <div class="details-view">
+        <div class="tray-header">
+          <h2 class="tray-header__title">{{ location.name }}</h2>
+          <div class="tray-header__badges">
+            <span class="tray-badge"><mat-icon svgIcon="thermostat" aria-hidden="true"></mat-icon> -80°C Target</span>
+            <span class="tray-badge"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> {{ location.name }}</span>
+            <span class="tray-badge tray-badge--primary"><mat-icon svgIcon="info" aria-hidden="true"></mat-icon> Cap: 24/32</span>
+          </div>
+        </div>
+        <div class="printable-card">
+          <div class="printable-card__header">
+            <div>
+              <h3>Printable Label Preview</h3>
+              <p>Standard 2x2 inch thermal label format</p>
+            </div>
+            <div class="printable-card__actions">
+              <button type="button" class="printable-card__icon" aria-label="Zoom in"><mat-icon svgIcon="zoomIn" aria-hidden="true"></mat-icon></button>
+              <button type="button" class="printable-card__icon" aria-label="Fullscreen"><mat-icon svgIcon="zoomFit" aria-hidden="true"></mat-icon></button>
+            </div>
+          </div>
+          <div class="printable-card__body">
+            <div class="printable-label">
+              <div class="printable-label__header">
+                <div>
+                  <span class="printable-label__brand">Nexus Lab</span>
+                  <span class="printable-label__sub">{{ location.name }}</span>
+                </div>
+                <mat-icon svgIcon="brand" aria-hidden="true"></mat-icon>
+              </div>
+              <div class="printable-label__qr">
+                <app-qr-label [payload]="locationQrPayload()"></app-qr-label>
+              </div>
+              <div class="printable-label__footer">
+                <span class="printable-label__code">{{ location.id.slice(0, 8) }}</span>
+                <span class="printable-label__meta">{{ printableLabelMeta() }}</span>
+              </div>
+            </div>
+            <div class="printable-card__controls">
+              <div class="printable-card__label-format">
+                <label>Label Format</label>
+                <div class="printable-card__format-options">
+                  <button type="button" class="printable-card__format-option" [class.printable-card__format-option--active]="labelFormat() === 'qr'" (click)="selectLabelFormat('qr')"><span>QR Code</span>@if (labelFormat() === 'qr') {<mat-icon svgIcon="info" aria-hidden="true"></mat-icon>}</button>
+                  <button type="button" class="printable-card__format-option" [class.printable-card__format-option--active]="labelFormat() === 'datamatrix'" (click)="selectLabelFormat('datamatrix')"><span>Data Matrix</span>@if (labelFormat() === 'datamatrix') {<mat-icon svgIcon="info" aria-hidden="true"></mat-icon>}</button>
+                  <button type="button" class="printable-card__format-option" [class.printable-card__format-option--active]="labelFormat() === 'code128'" (click)="selectLabelFormat('code128')"><span>Code 128</span>@if (labelFormat() === 'code128') {<mat-icon svgIcon="info" aria-hidden="true"></mat-icon>}</button>
+                </div>
+              </div>
+              <button type="button" class="printable-card__primary" (click)="downloadQr()"><mat-icon svgIcon="upload" aria-hidden="true"></mat-icon> Download PNG</button>
+              <button type="button" class="printable-card__secondary" (click)="printLabel()"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> Print</button>
+            </div>
+          </div>
+        </div>
+        <div class="metadata-grid">
+          <div class="metadata-card">
+            <div class="metadata-card__label"><mat-icon svgIcon="info" aria-hidden="true"></mat-icon> Capacity</div>
+            <div class="metadata-card__value">24 / 32 <span>Slots</span></div>
+            <div class="metadata-card__bar"><div class="metadata-card__fill" style="width: 75%"></div></div>
+          </div>
+          <div class="metadata-card">
+            <div class="metadata-card__label"><mat-icon svgIcon="thermostat" aria-hidden="true"></mat-icon> Environment</div>
+            <div class="metadata-card__value">-78.4°C</div>
+            <div class="metadata-card__hint"><mat-icon svgIcon="info" aria-hidden="true"></mat-icon> Within Target Range</div>
+          </div>
+          <div class="metadata-card">
+            <div class="metadata-card__label"><mat-icon svgIcon="info" aria-hidden="true"></mat-icon> Last Accessed</div>
+            <div class="metadata-card__value">2h ago</div>
+            <div class="metadata-card__hint">By Dr. Sarah Chen</div>
+          </div>
+        </div>
+      </div>
+    } @else if (isDetailsView() && !isTrayGrid()) {
+      <div class="details-view">
+        <div class="detail-card">
+          <div class="detail-card__header">
+            <h3>{{ location.name }}</h3>
+            <span class="detail-card__badge">{{ location.type }}</span>
+          </div>
+          <p class="detail-card__subtitle">
+            @if (locationSubtitle()) {
+              {{ locationSubtitle() }}
+            } @else {
+              {{ locationPath().length ? locationPath()[0].name : '' }}
+            }
+          </p>
+          @if (locationItemCount() > 0) {
+            <span class="detail-card__count">{{ locationItemCount() }} item(s)</span>
+          }
+        </div>
+
+        @if (location.type === 'room' || location.type === 'cabinet' || location.type === 'building') {
+          <div class="detail-bento">
+            <div class="detail-bento__card">
+              <div class="detail-bento__label">
+                <mat-icon svgIcon="thermostat" aria-hidden="true"></mat-icon>
+                <span>Target Temp</span>
+              </div>
+              <div class="detail-bento__value">22<span>°C</span></div>
+              <div class="detail-bento__hint">Fixed Setpoint</div>
+            </div>
+            <div class="detail-bento__card">
+              <div class="detail-bento__label">
+                <mat-icon svgIcon="humidity" aria-hidden="true"></mat-icon>
+                <span>Target Humidity</span>
+              </div>
+              <div class="detail-bento__value">45<span>%</span></div>
+              <div class="detail-bento__hint">Fixed Setpoint</div>
+            </div>
+          </div>
+        }
+
+        @if (showLocationQr()) {
+          <div class="printable-card">
+            <div class="printable-card__header">
+              <div>
+                <h3>Printable Label Preview</h3>
+                <p>Standard 2x2 inch thermal label format</p>
+              </div>
+              <div class="printable-card__actions">
+                <button type="button" class="printable-card__icon" aria-label="Zoom in"><mat-icon svgIcon="zoomIn" aria-hidden="true"></mat-icon></button>
+                <button type="button" class="printable-card__icon" aria-label="Fullscreen"><mat-icon svgIcon="zoomFit" aria-hidden="true"></mat-icon></button>
+              </div>
+            </div>
+            <div class="printable-card__body">
+              <div class="printable-label">
+                <div class="printable-label__header">
+                  <div>
+                    <span class="printable-label__brand">Nexus Lab</span>
+                    <span class="printable-label__sub">{{ location.name }}</span>
+                  </div>
+                  <mat-icon svgIcon="brand" aria-hidden="true"></mat-icon>
+                </div>
+                <div class="printable-label__qr">
+                  <app-qr-label [payload]="locationQrPayload()"></app-qr-label>
+                </div>
+                <div class="printable-label__footer">
+                  <span class="printable-label__code">{{ location.id.slice(0, 8) }}</span>
+                  <span class="printable-label__meta">{{ printableLabelMeta() }}</span>
+                </div>
+              </div>
+              <div class="printable-card__controls">
+                <div class="printable-card__label-format">
+                  <label>Label Format</label>
+                  <div class="printable-card__format-options">
+                    <button type="button" class="printable-card__format-option printable-card__format-option--active"><span>QR Code</span><mat-icon svgIcon="info" aria-hidden="true"></mat-icon></button>
+                    <button type="button" class="printable-card__format-option"><span>Data Matrix</span></button>
+                    <button type="button" class="printable-card__format-option"><span>Code 128</span></button>
+                  </div>
+                </div>
+                <button type="button" class="printable-card__primary" (click)="downloadQr()"><mat-icon svgIcon="upload" aria-hidden="true"></mat-icon> Download PNG</button>
+                <button type="button" class="printable-card__secondary"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> Print to Zebra ZT411</button>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (children().length > 0 || directItems().length > 0) {
+          <div class="detail-card">
+            <h4 class="detail-card__heading">Contents</h4>
+            @if (children().length > 0) {
+              <ul class="detail-list">
+                @for (child of children(); track child.id) {
+                  <li>
+                    <button type="button" class="detail-list__item" (click)="onCardClick(child.id)">
+                      <span class="detail-list__type">{{ child.type }}</span>
+                      <span class="detail-list__name">{{ child.name }}</span>
+                      <span class="detail-list__count">{{ itemCountAt(child.id) }} items</span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+            @if (directItems().length > 0) {
+              <ul class="detail-list detail-list--items">
+                @for (item of directItems(); track item.id) {
+                  <li class="detail-list__item detail-list__item--static">
+                    <span class="detail-list__name">{{ item.catalogueNumber }}</span>
+                    @if (item.label) {
+                      <span class="detail-list__type">{{ item.label }}</span>
+                    }
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @if (canAddItem()) {
       <div class="add-actions">
-        @for (childType of allowedChildTypes(); track childType) {
-          <button type="button" mat-flat-button color="primary" class="add-component" (click)="addComponent(childType)">
-            <mat-icon svgIcon="add" aria-hidden="true"></mat-icon>
-            {{ text.addComponent(locationType.label(childType)) }}
-          </button>
-        }
-        @if (canAddItem()) {
-          <button type="button" mat-stroked-button class="add-item" (click)="addItem()">
-            <mat-icon svgIcon="add" aria-hidden="true"></mat-icon>
-            {{ text.addItem() }}
-          </button>
-        }
+        <button type="button" mat-stroked-button class="add-item" (click)="addItem()">
+          <mat-icon svgIcon="add" aria-hidden="true"></mat-icon>
+          {{ text.addItem() }}
+        </button>
       </div>
     }
 
@@ -42,55 +247,16 @@
       <div class="move-error">{{ error }}</div>
     }
 
-    @if (canShowMap()) {
-      <div class="view-mode-toggle" role="group" [attr.aria-label]="text.viewModeList()">
-        <button
-          type="button"
-          mat-button
-          class="view-mode-toggle__button"
-          [class.view-mode-toggle__button--active]="!isMapView() && !is3dView()"
-          [attr.aria-pressed]="!isMapView() && !is3dView()"
-          (click)="setViewMode('list')"
-        >
-          {{ text.viewModeList() }}
-        </button>
-        <button
-          type="button"
-          mat-button
-          class="view-mode-toggle__button"
-          [class.view-mode-toggle__button--active]="isMapView()"
-          [attr.aria-pressed]="isMapView()"
-          (click)="setViewMode('map')"
-        >
-          {{ text.viewModeMap() }}
-        </button>
-        <button
-          type="button"
-          mat-button
-          class="view-mode-toggle__button"
-          [class.view-mode-toggle__button--active]="is3dView()"
-          [attr.aria-pressed]="is3dView()"
-          (click)="setViewMode('3d')"
-        >
-          {{ text.viewMode3d() }}
-        </button>
-        <span
-          class="view-mode-toggle__indicator"
-          [style.transform]="'translateX(' + viewModeIndex() * 100 + '%)'"
-        ></span>
-      </div>
-    }
-
     @if (isMapView()) {
-      <app-floor-plan [locations]="children()" [containerLocationId]="location.id"></app-floor-plan>
+      <app-floor-plan [locations]="children()" [containerLocationId]="location.id" (toggle3d)="setViewMode('3d')"></app-floor-plan>
     } @else if (is3dView()) {
-      <app-floor-plan-3d [locations]="children()" [containerLocationId]="location.id"></app-floor-plan-3d>
+      <app-floor-plan-3d [locations]="children()" [containerLocationId]="location.id" (toggleMap)="setViewMode('map')"></app-floor-plan-3d>
     } @else if (isTrayGrid()) {
       <app-position-grid [positions]="children()" (addItem)="addItemToLocation($event)"></app-position-grid>
     }
   }
 
-  @if (!isMapView() && !is3dView() && !isTrayGrid()) {
+  @if (!isMapView() && !is3dView() && !isTrayGrid() && (!isDetailsView() || !canShowMap() || !selectedLocation())) {
     <div class="container-grid" cdkDropListGroup>
       @for (child of children(); track child.id) {
         <div

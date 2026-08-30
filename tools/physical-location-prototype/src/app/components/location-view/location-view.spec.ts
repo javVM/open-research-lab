@@ -67,7 +67,7 @@ describe('LocationViewComponent', () => {
     expect(fixture.nativeElement.querySelector('.view-mode-toggle')).toBeTruthy();
   });
 
-  it('toggling to "list" for a building switches from the floor plan to container cards', () => {
+  it('toggling to "Details" for a building switches from the floor plan to details cards', () => {
     const collection = TestBed.inject(CollectionService);
     const navigation = TestBed.inject(NavigationService);
     const move = TestBed.inject(MoveService);
@@ -77,14 +77,16 @@ describe('LocationViewComponent', () => {
     const fixture = TestBed.createComponent(LocationViewComponent);
     fixture.detectChanges();
 
-    const listButton = Array.from(fixture.nativeElement.querySelectorAll('.view-mode-toggle button')).find(
-      (button) => (button as HTMLElement).textContent?.trim() === 'List',
+    const dataButton = Array.from(fixture.nativeElement.querySelectorAll('.view-mode-toggle button')).find(
+      (button) => (button as HTMLElement).textContent?.trim() === 'Details',
     ) as HTMLElement;
-    listButton.click();
+    dataButton.click();
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('app-floor-plan')).toBeFalsy();
-    expect(fixture.nativeElement.querySelectorAll('.container-card').length).toBeGreaterThan(0);
+    // Details view for a mappable location shows bento/QR + detail-list, not container-card
+    expect(fixture.nativeElement.querySelectorAll('.detail-card').length).toBeGreaterThan(0);
+    expect(fixture.nativeElement.querySelectorAll('.detail-list__item').length).toBeGreaterThan(0);
   });
 
   it('does not offer a map toggle for a location whose children have no floor-plan coordinates', () => {

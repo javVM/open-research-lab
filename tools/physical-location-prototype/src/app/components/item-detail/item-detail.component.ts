@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import type { Item, Location, Movement } from '../../../core/models';
-import { breadcrumb } from '../../../core/tree';
-import { historyOf } from '../../../core/search';
+import { breadcrumb, childrenOf } from '../../../core/tree';
+import { historyOf, itemsAtLocation } from '../../../core/search';
 import { QrLabelComponent } from '../qr-label/qr-label.component';
 import { HistoryModalComponent } from '../history-modal/history-modal.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -62,10 +62,47 @@ export class ItemDetailComponent {
     return item?.locationId ? breadcrumb(this.collection.dataset().locations, item.locationId) : [];
   });
 
+  readonly locationPath = computed<Location[]>(() => {
+    const loc = this.selectedLocation();
+    return loc ? breadcrumb(this.collection.dataset().locations, loc.id) : [];
+  });
+
+  readonly locationChildren = computed<Location[]>(() => {
+    const loc = this.selectedLocation();
+    return loc ? childrenOf(this.collection.dataset().locations, loc.id) : [];
+  });
+
+  readonly locationItems = computed<Item[]>(() => {
+    const loc = this.selectedLocation();
+    return loc ? itemsAtLocation(this.collection.dataset(), loc.id) : [];
+  });
+
+  readonly locationItemCount = computed<number>(() => {
+    const loc = this.selectedLocation();
+    return loc ? (this.collection.locationItemCounts().get(loc.id) ?? 0) : 0;
+  });
+
+  readonly locationSubtitle = computed<string>(() => {
+    const path = this.locationPath();
+    if (path.length <= 1) return '';
+    return path
+      .slice(0, -1)
+      .map((l) => l.name)
+      .join(' › ');
+  });
+
   readonly history = computed<Movement[]>(() => {
     const item = this.item();
     return item ? historyOf(this.collection.dataset(), item.id) : [];
   });
+
+  itemCountAt(locationId: string): number {
+    return this.collection.locationItemCounts().get(locationId) ?? 0;
+  }
+
+  selectLocation(locationId: string): void {
+    this.navigation.selectLocation(locationId);
+  }
 
   startMove(): void {
     const item = this.item();

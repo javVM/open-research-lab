@@ -63,7 +63,7 @@ describe('LocationTreeComponent', () => {
     expect(unchanged.locationId).not.toBe(cabinet.id);
   });
 
-  it('shows a translated location-type label, not the raw type string', () => {
+  it('shows a location icon, not the raw type string', () => {
     const fixture = TestBed.createComponent(LocationTreeComponent);
     fixture.detectChanges();
     const collection = TestBed.inject(CollectionService);
@@ -71,10 +71,11 @@ describe('LocationTreeComponent', () => {
     const move = TestBed.inject(MoveService);
     const building = collection.dataset().locations.find((l) => l.type === 'building')!;
 
-    const badge = fixture.nativeElement.querySelector(
-      `[data-location-id="${building.id}"] .tree-type-badge`,
-    ) as HTMLElement;
-    expect(badge.textContent?.trim()).toBe('Building');
+    const row = fixture.nativeElement.querySelector(`[data-location-id="${building.id}"]`) as HTMLElement;
+    expect(row.textContent).toContain(building.name);
+    expect(row.querySelector('.tree-icon')).toBeTruthy();
+    // badge removed — icon now represents type
+    expect(row.textContent).not.toContain('building');
   });
 
   it('toggling collapses and expands a node without changing the selection', () => {

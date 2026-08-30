@@ -253,3 +253,201 @@
   display: block;
   overflow: visible;
 }
+
+.item-detail--location {
+  background: transparent;
+  border: none;
+  padding: 0;
+  gap: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-card {
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #c7c4d8);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 20px -2px rgba(0,0,0,0.05);
+}
+
+.detail-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.detail-card__header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+  color: var(--text, #151c27);
+}
+
+.detail-card__badge {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: var(--text-muted, #464555);
+  border: 1px solid var(--border, #c7c4d8);
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: var(--surface-variant, #dce2f3);
+  flex-shrink: 0;
+}
+
+.detail-card__subtitle {
+  font-size: 14px;
+  color: var(--text-muted, #464555);
+  margin: 0 0 8px;
+}
+
+.detail-card__count {
+  font-size: 12px;
+  color: var(--accent, #4f46e5);
+  background: var(--accent-soft, #e0e7ff);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-weight: 600;
+}
+
+.detail-card__heading {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #464555);
+  margin: 0 0 12px;
+}
+
+.detail-bento {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.detail-bento__card {
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #c7c4d8);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 20px -2px rgba(0,0,0,0.05);
+}
+
+.detail-bento__label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #464555);
+  margin-bottom: 8px;
+}
+
+.detail-bento__label mat-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.detail-bento__label mat-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.detail-bento__value {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text, #151c27);
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.detail-bento__value span {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-muted, #464555);
+}
+
+.detail-bento__hint {
+  font-size: 10px;
+  color: var(--text-muted, #464555);
+  margin-top: 4px;
+}
+
+.detail-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-list__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  background: var(--surface-variant, #f0f3ff);
+  border: 1px solid var(--border-soft, rgba(199,196,216,0.3));
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.detail-list__item:hover {
+  background: var(--surface-hover, #e7eefe);
+  border-color: var(--accent, #4f46e5);
+}
+
+.detail-list__item--static {
+  cursor: default;
+  background: var(--surface, #ffffff);
+}
+
+.detail-list__type {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted, #464555);
+  border: 1px solid var(--border, #c7c4d8);
+  border-radius: 4px;
+  padding: 1px 6px;
+  background: var(--surface-variant, #dce2f3);
+  flex-shrink: 0;
+}
+
+.detail-list__name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text, #151c27);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detail-list__count {
+  font-size: 11px;
+  color: var(--text-muted, #464555);
+  background: var(--surface, #ffffff);
+  border-radius: 999px;
+  padding: 2px 6px;
+  border: 1px solid var(--border-soft, rgba(199,196,216,0.3));
+  flex-shrink: 0;
+}
+
+.detail-list--items .detail-list__item {
+  background: var(--surface-raised, #f0f3ff);
+}

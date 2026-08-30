@@ -74,14 +74,32 @@
     }
 
     <span class="floor-plan__zoom-group" role="group" aria-label="Zoom">
+      <button type="button" class="floor-plan__zoom-btn" (click)="zoomIn()" aria-label="Acercar"><mat-icon svgIcon="zoomIn" aria-hidden="true"></mat-icon></button>
       <button type="button" class="floor-plan__zoom-btn" (click)="zoomOut()" aria-label="Alejar"><mat-icon svgIcon="zoomOut" aria-hidden="true"></mat-icon></button>
       <button type="button" class="floor-plan__zoom-btn" (click)="zoomFit()" aria-label="Ajustar"><mat-icon svgIcon="zoomFit" aria-hidden="true"></mat-icon></button>
-      <button type="button" class="floor-plan__zoom-btn" (click)="zoomIn()" aria-label="Acercar"><mat-icon svgIcon="zoomIn" aria-hidden="true"></mat-icon></button>
+      <span class="floor-plan__zoom-sep" aria-hidden="true"></span>
+      <button type="button" class="floor-plan__zoom-btn" (click)="toggle3d.emit()" aria-label="3D"><mat-icon svgIcon="cube" aria-hidden="true"></mat-icon></button>
     </span>
   </div>
 }
 
-<div class="floor-plan__viewport"><div
+<div class="floor-plan__viewport">
+  <!-- Left vertical toolbar — zoom + 3D -->
+  <div class="floor-plan__tools floor-plan__tools--left" role="group" aria-label="Navegación">
+    <button type="button" class="floor-plan__tool" (click)="zoomIn()" aria-label="Zoom in" title="Zoom in"><mat-icon svgIcon="zoomIn" aria-hidden="true"></mat-icon></button>
+    <button type="button" class="floor-plan__tool" (click)="zoomOut()" aria-label="Zoom out" title="Zoom out"><mat-icon svgIcon="zoomOut" aria-hidden="true"></mat-icon></button>
+    <button type="button" class="floor-plan__tool" (click)="zoomFit()" aria-label="Reset view" title="Reset view"><mat-icon svgIcon="reset" aria-hidden="true"></mat-icon></button>
+    <span class="floor-plan__tools-sep" aria-hidden="true"></span>
+    <button type="button" class="floor-plan__tool" (click)="toggle3d.emit()" aria-label="3D view" title="3D view"><mat-icon svgIcon="cube" aria-hidden="true"></mat-icon></button>
+  </div>
+  <!-- Right vertical toolbar — add + reshape + move + resize -->
+  <div class="floor-plan__tools floor-plan__tools--right" role="group" aria-label="Edición">
+    <button type="button" class="floor-plan__tool" (click)="addComponent()" aria-label="Add" title="Add"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon></button>
+    <button type="button" class="floor-plan__tool" [class.floor-plan__tool--active]="moveMode()" (click)="toggleMoveMode()" aria-label="Move" title="Move"><mat-icon svgIcon="move" aria-hidden="true"></mat-icon></button>
+    <button type="button" class="floor-plan__tool" [class.floor-plan__tool--active]="resizeMode()" (click)="toggleResizeMode()" aria-label="Resize" title="Resize"><mat-icon svgIcon="resize" aria-hidden="true"></mat-icon></button>
+    <button type="button" class="floor-plan__tool" [class.floor-plan__tool--active]="shapeMode()" (click)="toggleShapeMode()" aria-label="Reshape" title="Reshape"><mat-icon svgIcon="shape" aria-hidden="true"></mat-icon></button>
+  </div>
+<div
   class="floor-plan"
   [attr.aria-label]="text.ariaLabel()"
   [style.width.px]="bounds().width"
@@ -141,27 +159,9 @@
         }
       </div>
 
-      @if (!layoutMode() && !shapeMode() && previewChildren(location).length > 0) {
-        <span class="floor-plan__preview-indicator" [attr.title]="text.previewHint()">▦</span>
-      }
 
-      @if (!layoutMode() && !shapeMode() && previewChildren(location).length > 0) {
-        <div class="floor-plan__preview">
-          @for (child of previewChildren(location); track child.id) {
-            <div
-              class="floor-plan__preview-rect"
-              [attr.title]="child.name"
-              [style.left.%]="previewRectPercent(location, child).x"
-              [style.top.%]="previewRectPercent(location, child).y"
-              [style.width.%]="previewRectPercent(location, child).width"
-              [style.height.%]="previewRectPercent(location, child).height"
-              [style.backgroundColor]="occupancyBackground(child.id)"
-            ></div>
-          }
-        </div>
-      }
 
-      @if (layoutMode()) {
+      @if (resizeMode() || layoutMode()) {
         <div class="floor-plan__resize-handle floor-plan__resize-handle--n" [attr.title]="text.resizeHint()" [attr.aria-label]="text.resizeHint()" (pointerdown)="onResizePointerDown($event, location, 'n')" (click)="$event.stopPropagation()"></div>
         <div class="floor-plan__resize-handle floor-plan__resize-handle--s" [attr.title]="text.resizeHint()" [attr.aria-label]="text.resizeHint()" (pointerdown)="onResizePointerDown($event, location, 's')" (click)="$event.stopPropagation()"></div>
         <div class="floor-plan__resize-handle floor-plan__resize-handle--e" [attr.title]="text.resizeHint()" [attr.aria-label]="text.resizeHint()" (pointerdown)="onResizePointerDown($event, location, 'e')" (click)="$event.stopPropagation()"></div>

@@ -17,6 +17,7 @@ export class QrLabelComponent {
   protected readonly text = createQrLabelTranslations(inject(TranslationService));
 
   readonly payload = input<string>('');
+  readonly format = input<CodeFormat | null>(null);
   protected readonly selectedFormat = signal<CodeFormat>('qr');
   protected readonly dataUrl = signal<string | null>(null);
   protected readonly rendering = signal(false);
@@ -29,6 +30,12 @@ export class QrLabelComponent {
   });
 
   constructor() {
+    effect(() => {
+      const external = this.format();
+      if (external && external !== this.selectedFormat()) {
+        this.selectedFormat.set(external);
+      }
+    });
     effect(() => {
       const text = this.payload().trim();
       this.dataUrl.set(null);

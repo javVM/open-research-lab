@@ -325,7 +325,7 @@ describe('FloorPlanComponent', () => {
     expect(updated.outline).toBeUndefined();
   });
 
-  it('shows a scaled-down preview of a location\'s own coordinated children (e.g. a room\'s cabinets)', () => {
+  it('no longer shows a scaled-down preview — preview removed as confusing UX', () => {
     const collection = TestBed.inject(CollectionService);
     const navigation = TestBed.inject(NavigationService);
     const move = TestBed.inject(MoveService);
@@ -341,11 +341,11 @@ describe('FloorPlanComponent', () => {
     fixture.componentRef.setInput("locations", roomsOfFloor);
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview').length).toBe(roomsOfFloor.length);
-    expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview-rect').length).toBeGreaterThan(0);
+    expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview').length).toBe(0);
+    expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview-rect').length).toBe(0);
   });
 
-  it('also previews floors when showing a building (three levels of nesting are now possible)', () => {
+  it('also no longer previews floors — feature removed', () => {
     const collection = TestBed.inject(CollectionService);
     const navigation = TestBed.inject(NavigationService);
     const move = TestBed.inject(MoveService);
@@ -360,8 +360,8 @@ describe('FloorPlanComponent', () => {
     fixture.componentRef.setInput("locations", floorsOfBuilding);
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview').length).toBe(floorsOfBuilding.length);
-    expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview-rect').length).toBeGreaterThan(0);
+    expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview').length).toBe(0);
+    expect(fixture.nativeElement.querySelectorAll('.floor-plan__preview-rect').length).toBe(0);
   });
 
   it('adds a component through the styled modal, not a browser prompt', async () => {

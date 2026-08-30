@@ -20,6 +20,9 @@ export class NavigationService {
   readonly selectedLocationId = signal<string | null>(null);
   readonly selectedItemId = signal<string | null>(null);
   readonly expandedIds = signal<ReadonlySet<string>>(new Set());
+  readonly treeCollapsed = signal<boolean>(false);
+  /** Map / Details toggle for the centre pane — Map shows floor-plan, Details shows location bento */
+  readonly viewMode = signal<'map' | 'details' | '3d' | 'data'>('map');
 
   constructor() {
     // Start with the first building expanded and selected so the app opens
