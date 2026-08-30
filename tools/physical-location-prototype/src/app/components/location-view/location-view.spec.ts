@@ -37,7 +37,7 @@ describe('LocationViewComponent', () => {
     expect(fixture.nativeElement.querySelectorAll('.position-cell--empty').length).toBeGreaterThan(0);
   });
 
-  it('renders container cards for a non-grid, non-map location (a drawer), with child names visible', () => {
+  it('renders detail list (not duplicate container cards) for a non-grid, non-map location (a drawer), with child names visible', () => {
     const collection = TestBed.inject(CollectionService);
     const navigation = TestBed.inject(NavigationService);
     const move = TestBed.inject(MoveService);
@@ -49,8 +49,9 @@ describe('LocationViewComponent', () => {
     const fixture = TestBed.createComponent(LocationViewComponent);
     fixture.detectChanges();
 
-    const cards = fixture.nativeElement.querySelectorAll('.container-card');
-    expect(cards.length).toBeGreaterThan(0);
+    // In Details view the drawer shows Contents via detail-list, container-grid is hidden to avoid duplication
+    expect(fixture.nativeElement.querySelectorAll('.detail-list__item').length).toBeGreaterThan(0);
+    expect(fixture.nativeElement.querySelector('.container-grid')).toBeFalsy();
   });
 
   it('shows a floor plan by default for a building (its rooms have map coordinates)', () => {

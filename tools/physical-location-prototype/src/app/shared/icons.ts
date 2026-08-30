@@ -32,6 +32,11 @@ export const APP_ICON = {
   kitchen: 'kitchen',
   horizontalSplit: 'horizontalSplit',
   gridView: 'gridView',
+  boxIcon: 'boxIcon',
+  roomIcon: 'roomIcon',
+  cabinetIcon: 'cabinetIcon',
+  settings: 'settings',
+  reports: 'reports',
 } as const;
 export type AppIcon = (typeof APP_ICON)[keyof typeof APP_ICON];
 
@@ -82,9 +87,15 @@ const ICON_SVGS: Record<AppIcon, string> = {
       <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
     </svg>`,
   [APP_ICON.scan]: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-      <circle cx="12" cy="13" r="4"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+      <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+      <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+      <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+      <rect x="7" y="7" width="10" height="10" rx="1.5"/>
+      <line x1="7" y1="12" x2="17" y2="12"/>
+      <line x1="9" y1="9" x2="9" y2="9"/>
+      <line x1="15" y1="9" x2="15" y2="9"/>
     </svg>`,
   [APP_ICON.shape]: `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -203,6 +214,40 @@ const ICON_SVGS: Record<AppIcon, string> = {
       <rect x="14" y="3" width="7" height="7"/>
       <rect x="3" y="14" width="7" height="7"/>
       <rect x="14" y="14" width="7" height="7"/>
+    </svg>`,
+  [APP_ICON.boxIcon]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="7" width="18" height="12" rx="1.5"/>
+      <path d="M3 7 L12 3 L21 7"/>
+      <line x1="12" y1="3" x2="12" y2="7"/>
+    </svg>`,
+  [APP_ICON.roomIcon]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="3" width="16" height="18" rx="1.5"/>
+      <line x1="4" y1="9" x2="20" y2="9"/>
+      <circle cx="14.5" cy="15" r="1"/>
+      <line x1="7" y1="21" x2="7" y2="9"/>
+    </svg>`,
+  [APP_ICON.cabinetIcon]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="5" y="3" width="14" height="18" rx="1.5"/>
+      <line x1="12" y1="3" x2="12" y2="21"/>
+      <line x1="9" y1="11" x2="9" y2="11.01"/>
+      <line x1="15" y1="11" x2="15" y2="11.01"/>
+      <line x1="9" y1="15" x2="9" y2="15.01"/>
+      <line x1="15" y1="15" x2="15" y2="15.01"/>
+    </svg>`,
+  [APP_ICON.settings]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.75 6.75 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.5 6.5 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594a1.125 1.125 0 01-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.5 6.5 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.75 6.75 0 010-.255c.007-.378-.138-.75-.43-.992l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/>
+      <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+    </svg>`,
+  [APP_ICON.reports]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/>
+      <rect x="7" y="10" width="3" height="7" rx="0.5"/>
+      <rect x="12" y="6" width="3" height="11" rx="0.5"/>
+      <rect x="17" y="12" width="3" height="5" rx="0.5"/>
     </svg>`,
 };
 

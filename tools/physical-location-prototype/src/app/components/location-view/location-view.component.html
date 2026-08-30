@@ -50,19 +50,26 @@
             <span class="tray-badge tray-badge--primary"><mat-icon svgIcon="info" aria-hidden="true"></mat-icon> Cap: 24/32</span>
           </div>
         </div>
-        <div class="printable-card">
+        <div class="printable-card" [class.printable-card--zoomed]="labelZoomed()">
           <div class="printable-card__header">
             <div>
               <h3>Printable Label Preview</h3>
               <p>Standard 2x2 inch thermal label format</p>
             </div>
             <div class="printable-card__actions">
-              <button type="button" class="printable-card__icon" aria-label="Zoom in"><mat-icon svgIcon="zoomIn" aria-hidden="true"></mat-icon></button>
-              <button type="button" class="printable-card__icon" aria-label="Fullscreen"><mat-icon svgIcon="zoomFit" aria-hidden="true"></mat-icon></button>
+              <button type="button" class="printable-card__icon" aria-label="Expand preview" (click)="openLabelPreview()"><mat-icon svgIcon="zoomFit" aria-hidden="true"></mat-icon></button>
             </div>
           </div>
           <div class="printable-card__body">
-            <div class="printable-label">
+            <div
+              class="printable-label printable-label--clickable"
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="'Open label preview for ' + location.name"
+              (click)="openLabelPreview()"
+              (keydown.enter)="openLabelPreview()"
+              (keydown.space)="openLabelPreview(); $event.preventDefault()"
+            >
               <div class="printable-label__header">
                 <div>
                   <span class="printable-label__brand">Nexus Lab</span>
@@ -71,7 +78,7 @@
                 <mat-icon svgIcon="brand" aria-hidden="true"></mat-icon>
               </div>
               <div class="printable-label__qr">
-                <app-qr-label [payload]="locationQrPayload()"></app-qr-label>
+                <app-qr-label [payload]="locationQrPayload()" [format]="labelFormat()"></app-qr-label>
               </div>
               <div class="printable-label__footer">
                 <span class="printable-label__code">{{ location.id.slice(0, 8) }}</span>
@@ -80,15 +87,17 @@
             </div>
             <div class="printable-card__controls">
               <div class="printable-card__label-format">
-                <label>Label Format</label>
-                <div class="printable-card__format-options">
-                  <button type="button" class="printable-card__format-option" [class.printable-card__format-option--active]="labelFormat() === 'qr'" (click)="selectLabelFormat('qr')"><span>QR Code</span>@if (labelFormat() === 'qr') {<mat-icon svgIcon="info" aria-hidden="true"></mat-icon>}</button>
-                  <button type="button" class="printable-card__format-option" [class.printable-card__format-option--active]="labelFormat() === 'datamatrix'" (click)="selectLabelFormat('datamatrix')"><span>Data Matrix</span>@if (labelFormat() === 'datamatrix') {<mat-icon svgIcon="info" aria-hidden="true"></mat-icon>}</button>
-                  <button type="button" class="printable-card__format-option" [class.printable-card__format-option--active]="labelFormat() === 'code128'" (click)="selectLabelFormat('code128')"><span>Code 128</span>@if (labelFormat() === 'code128') {<mat-icon svgIcon="info" aria-hidden="true"></mat-icon>}</button>
+                <label id="label-format-tray">Label Format</label>
+                <div class="printable-card__format-options" role="group" aria-labelledby="label-format-tray">
+                  <button type="button" class="printable-card__format-option" [class.printable-card__format-option--active]="labelFormat() === 'qr'" [attr.aria-pressed]="labelFormat() === 'qr'" (click)="selectLabelFormat('qr')"><span>QR Code</span>@if (labelFormat() === 'qr') {<mat-icon svgIcon="info" aria-hidden="true"></mat-icon>}</button>
+                  <button type="button" class="printable-card__format-option" [class.printable-card__format-option--active]="labelFormat() === 'datamatrix'" [attr.aria-pressed]="labelFormat() === 'datamatrix'" (click)="selectLabelFormat('datamatrix')"><span>Data Matrix</span>@if (labelFormat() === 'datamatrix') {<mat-icon svgIcon="info" aria-hidden="true"></mat-icon>}</button>
+                  <button type="button" class="printable-card__format-option" [class.printable-card__format-option--active]="labelFormat() === 'code128'" [attr.aria-pressed]="labelFormat() === 'code128'" (click)="selectLabelFormat('code128')"><span>Code 128</span>@if (labelFormat() === 'code128') {<mat-icon svgIcon="info" aria-hidden="true"></mat-icon>}</button>
                 </div>
               </div>
-              <button type="button" class="printable-card__primary" (click)="downloadQr()"><mat-icon svgIcon="upload" aria-hidden="true"></mat-icon> Download PNG</button>
-              <button type="button" class="printable-card__secondary" (click)="printLabel()"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> Print</button>
+              <div class="printable-card__action-row">
+                <button type="button" class="printable-card__secondary" (click)="printLabel()"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> Print</button>
+                <button type="button" class="printable-card__primary" (click)="downloadQr()"><mat-icon svgIcon="upload" aria-hidden="true"></mat-icon> Download PNG</button>
+              </div>
             </div>
           </div>
         </div>
@@ -111,121 +120,183 @@
         </div>
       </div>
     } @else if (isDetailsView() && !isTrayGrid()) {
-      <div class="details-view">
-        <div class="detail-card">
+      <div class="details-view details-view--room">
+        <div class="detail-card detail-card--info">
           <div class="detail-card__header">
             <h3>{{ location.name }}</h3>
             <span class="detail-card__badge">{{ location.type }}</span>
           </div>
-          <p class="detail-card__subtitle">
-            @if (locationSubtitle()) {
-              {{ locationSubtitle() }}
-            } @else {
-              {{ locationPath().length ? locationPath()[0].name : '' }}
-            }
-          </p>
           @if (locationItemCount() > 0) {
             <span class="detail-card__count">{{ locationItemCount() }} item(s)</span>
           }
         </div>
 
-        @if (location.type === 'room' || location.type === 'cabinet' || location.type === 'building') {
-          <div class="detail-bento">
-            <div class="detail-bento__card">
-              <div class="detail-bento__label">
-                <mat-icon svgIcon="thermostat" aria-hidden="true"></mat-icon>
-                <span>Target Temp</span>
+        <div class="details-layout">
+          <div class="details-layout__main">
+            @if (location.type === 'room' || location.type === 'cabinet' || location.type === 'building') {
+              <div class="detail-bento">
+                <div class="detail-bento__card">
+                  <div class="detail-bento__label">
+                    <mat-icon svgIcon="thermostat" aria-hidden="true"></mat-icon>
+                    <span>Target Temp</span>
+                  </div>
+                  <div class="detail-bento__value">22<span>°C</span></div>
+                  <div class="detail-bento__hint">Fixed Setpoint</div>
+                </div>
+                <div class="detail-bento__card">
+                  <div class="detail-bento__label">
+                    <mat-icon svgIcon="humidity" aria-hidden="true"></mat-icon>
+                    <span>Target Humidity</span>
+                  </div>
+                  <div class="detail-bento__value">45<span>%</span></div>
+                  <div class="detail-bento__hint">Fixed Setpoint</div>
+                </div>
               </div>
-              <div class="detail-bento__value">22<span>°C</span></div>
-              <div class="detail-bento__hint">Fixed Setpoint</div>
-            </div>
-            <div class="detail-bento__card">
-              <div class="detail-bento__label">
-                <mat-icon svgIcon="humidity" aria-hidden="true"></mat-icon>
-                <span>Target Humidity</span>
-              </div>
-              <div class="detail-bento__value">45<span>%</span></div>
-              <div class="detail-bento__hint">Fixed Setpoint</div>
-            </div>
-          </div>
-        }
+            }
 
-        @if (showLocationQr()) {
-          <div class="printable-card">
-            <div class="printable-card__header">
-              <div>
-                <h3>Printable Label Preview</h3>
-                <p>Standard 2x2 inch thermal label format</p>
-              </div>
-              <div class="printable-card__actions">
-                <button type="button" class="printable-card__icon" aria-label="Zoom in"><mat-icon svgIcon="zoomIn" aria-hidden="true"></mat-icon></button>
-                <button type="button" class="printable-card__icon" aria-label="Fullscreen"><mat-icon svgIcon="zoomFit" aria-hidden="true"></mat-icon></button>
-              </div>
-            </div>
-            <div class="printable-card__body">
-              <div class="printable-label">
-                <div class="printable-label__header">
+            @if (showLocationQr()) {
+              <div class="printable-card" [class.printable-card--zoomed]="labelZoomed()">
+                <div class="printable-card__header">
                   <div>
-                    <span class="printable-label__brand">Nexus Lab</span>
-                    <span class="printable-label__sub">{{ location.name }}</span>
+                    <h3>Printable Label Preview</h3>
+                    <p>Standard 2x2 inch thermal label format</p>
                   </div>
-                  <mat-icon svgIcon="brand" aria-hidden="true"></mat-icon>
+                  <div class="printable-card__actions">
+                    <button type="button" class="printable-card__icon" aria-label="Expand preview" (click)="openLabelPreview()"><mat-icon svgIcon="zoomFit" aria-hidden="true"></mat-icon></button>
+                  </div>
                 </div>
-                <div class="printable-label__qr">
-                  <app-qr-label [payload]="locationQrPayload()"></app-qr-label>
+                <div class="printable-card__body">
+                  <div
+                    class="printable-label printable-label--clickable"
+                    role="button"
+                    tabindex="0"
+                    [attr.aria-label]="'Open label preview for ' + location.name"
+                    (click)="openLabelPreview()"
+                    (keydown.enter)="openLabelPreview()"
+                    (keydown.space)="openLabelPreview(); $event.preventDefault()"
+                  >
+                    <div class="printable-label__header">
+                      <div>
+                        <span class="printable-label__brand">Nexus Lab</span>
+                        <span class="printable-label__sub">{{ location.name }}</span>
+                      </div>
+                      <mat-icon svgIcon="brand" aria-hidden="true"></mat-icon>
+                    </div>
+                    <div class="printable-label__qr">
+                      <app-qr-label [payload]="locationQrPayload()" [format]="labelFormat()"></app-qr-label>
+                    </div>
+                    <div class="printable-label__footer">
+                      <span class="printable-label__code">{{ location.id.slice(0, 8) }}</span>
+                      <span class="printable-label__meta">{{ printableLabelMeta() }}</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="printable-label__footer">
-                  <span class="printable-label__code">{{ location.id.slice(0, 8) }}</span>
-                  <span class="printable-label__meta">{{ printableLabelMeta() }}</span>
+                <div class="printable-card__footer-actions">
+                  <div class="printable-card__action-row">
+                    <button type="button" class="printable-card__secondary" (click)="printLabel()"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> Print</button>
+                    <button type="button" class="printable-card__primary" (click)="downloadQr()"><mat-icon svgIcon="upload" aria-hidden="true"></mat-icon> Download PNG</button>
+                  </div>
                 </div>
               </div>
-              <div class="printable-card__controls">
-                <div class="printable-card__label-format">
-                  <label>Label Format</label>
-                  <div class="printable-card__format-options">
-                    <button type="button" class="printable-card__format-option printable-card__format-option--active"><span>QR Code</span><mat-icon svgIcon="info" aria-hidden="true"></mat-icon></button>
-                    <button type="button" class="printable-card__format-option"><span>Data Matrix</span></button>
-                    <button type="button" class="printable-card__format-option"><span>Code 128</span></button>
-                  </div>
+            }
+          </div>
+
+          <div class="details-layout__side">
+            @if (showLocationQr()) {
+              <div class="detail-card detail-card--format">
+                <div class="detail-card__format-header">
+                  <h4 class="detail-card__heading">Label Format</h4>
+                  <mat-icon svgIcon="info" aria-hidden="true" class="detail-card__format-info"></mat-icon>
                 </div>
-                <button type="button" class="printable-card__primary" (click)="downloadQr()"><mat-icon svgIcon="upload" aria-hidden="true"></mat-icon> Download PNG</button>
-                <button type="button" class="printable-card__secondary"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> Print to Zebra ZT411</button>
+                <mat-form-field appearance="outline" class="label-format-field">
+                  <mat-select [value]="labelFormat()" (selectionChange)="selectLabelFormat($event.value)" aria-label="Label Format">
+                    <mat-option value="qr">QR Code</mat-option>
+                    <mat-option value="datamatrix">Data Matrix</mat-option>
+                    <mat-option value="code128">Code 128</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            }
+
+            @if (children().length > 0 || directItems().length > 0) {
+              <div class="detail-card">
+                <h4 class="detail-card__heading">CONTENTS</h4>
+                @if (children().length > 0) {
+                  <ul class="detail-list detail-list--contents">
+                    @for (child of children(); track child.id) {
+                      <li>
+                        <button type="button" class="detail-list__item detail-list__item--contents" (click)="onCardClick(child.id)">
+                          <span class="detail-list__main">
+                            <span class="detail-list__name">{{ child.name }}</span>
+                            <span class="detail-list__sub">{{ itemCountAt(child.id) }} items</span>
+                          </span>
+                          <mat-icon svgIcon="chevronRight" aria-hidden="true" class="detail-list__chevron"></mat-icon>
+                        </button>
+                      </li>
+                    }
+                  </ul>
+                }
+                @if (directItems().length > 0) {
+                  <ul class="detail-list detail-list--items">
+                    @for (item of directItems(); track item.id) {
+                      <li class="detail-list__item detail-list__item--static">
+                        <span class="detail-list__name">{{ item.catalogueNumber }}</span>
+                        @if (item.label) {
+                          <span class="detail-list__type">{{ item.label }}</span>
+                        }
+                      </li>
+                    }
+                  </ul>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      @if (labelPreviewOpen()) {
+        <div class="label-preview-backdrop" (click)="closeLabelPreview()" aria-hidden="true"></div>
+        <div class="label-preview-modal" role="dialog" aria-modal="true" aria-label="Label Preview">
+          <div class="label-preview-modal__header">
+            <h3>Label Preview</h3>
+            <button type="button" class="label-preview-modal__close" (click)="closeLabelPreview()" aria-label="Close">
+              Close <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="label-preview-modal__body">
+            <div class="printable-label printable-label--preview" [style.transform]="'scale(' + previewZoom() / 100 + ')'" [style.transformOrigin]="'center'">
+              <div class="printable-label__header">
+                <div>
+                  <span class="printable-label__brand">NEXUS LAB</span>
+                  <span class="printable-label__sub">{{ location.name }}</span>
+                </div>
+                <mat-icon svgIcon="brand" aria-hidden="true"></mat-icon>
+              </div>
+              <div class="printable-label__qr">
+                <app-qr-label [payload]="locationQrPayload()" [format]="labelFormat()"></app-qr-label>
+              </div>
+              <div class="printable-label__footer">
+                <span class="printable-label__code">{{ location.id.slice(0, 8) }}</span>
+                <span class="printable-label__meta">{{ printableLabelMeta() }}</span>
               </div>
             </div>
           </div>
-        }
-
-        @if (children().length > 0 || directItems().length > 0) {
-          <div class="detail-card">
-            <h4 class="detail-card__heading">Contents</h4>
-            @if (children().length > 0) {
-              <ul class="detail-list">
-                @for (child of children(); track child.id) {
-                  <li>
-                    <button type="button" class="detail-list__item" (click)="onCardClick(child.id)">
-                      <span class="detail-list__type">{{ child.type }}</span>
-                      <span class="detail-list__name">{{ child.name }}</span>
-                      <span class="detail-list__count">{{ itemCountAt(child.id) }} items</span>
-                    </button>
-                  </li>
-                }
-              </ul>
-            }
-            @if (directItems().length > 0) {
-              <ul class="detail-list detail-list--items">
-                @for (item of directItems(); track item.id) {
-                  <li class="detail-list__item detail-list__item--static">
-                    <span class="detail-list__name">{{ item.catalogueNumber }}</span>
-                    @if (item.label) {
-                      <span class="detail-list__type">{{ item.label }}</span>
-                    }
-                  </li>
-                }
-              </ul>
-            }
+          <div class="label-preview-modal__actions">
+            <div class="label-preview-modal__zoom" role="group" aria-label="Zoom">
+              <button type="button" class="label-preview-modal__zoom-btn" (click)="adjustPreviewZoom(-10)" aria-label="Zoom out">
+                <mat-icon svgIcon="zoomOut" aria-hidden="true"></mat-icon>
+              </button>
+              <span class="label-preview-modal__zoom-value">{{ previewZoom() }}%</span>
+              <button type="button" class="label-preview-modal__zoom-btn" (click)="adjustPreviewZoom(10)" aria-label="Zoom in">
+                <mat-icon svgIcon="zoomIn" aria-hidden="true"></mat-icon>
+              </button>
+            </div>
+            <button type="button" class="printable-card__primary label-preview-modal__print" (click)="printLabel()">
+              <mat-icon svgIcon="search" aria-hidden="true"></mat-icon> Print
+            </button>
           </div>
-        }
-      </div>
+        </div>
+      }
     }
 
     @if (canAddItem()) {
@@ -256,7 +327,7 @@
     }
   }
 
-  @if (!isMapView() && !is3dView() && !isTrayGrid() && (!isDetailsView() || !canShowMap() || !selectedLocation())) {
+  @if (!isMapView() && !is3dView() && !isTrayGrid() && (!isDetailsView() || !selectedLocation())) {
     <div class="container-grid" cdkDropListGroup>
       @for (child of children(); track child.id) {
         <div

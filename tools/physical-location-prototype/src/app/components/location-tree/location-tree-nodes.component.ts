@@ -107,15 +107,15 @@ export class LocationTreeNodesComponent {
       case 'floor':
         return APP_ICON.layers;
       case 'room':
-        return APP_ICON.meetingRoom;
+        return APP_ICON.roomIcon;
       case 'cabinet':
-        return APP_ICON.kitchen;
+        return APP_ICON.cabinetIcon;
       case 'drawer':
         return APP_ICON.horizontalSplit;
       case 'tray':
         return APP_ICON.gridView;
       case 'box':
-        return APP_ICON.gridView;
+        return APP_ICON.boxIcon;
       case 'position':
         return APP_ICON.gridView;
       default:

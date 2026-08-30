@@ -2,6 +2,8 @@ import { Component, computed, inject, input, signal } from '@angular/core';
 import { CdkDrag, CdkDropList, CdkDropListGroup, type CdkDragDrop } from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import type { Item, Location, LocationType } from '../../../core/models';
 import { breadcrumb, childrenOf } from '../../../core/tree';
 import { itemsAtLocation } from '../../../core/search';
@@ -33,6 +35,8 @@ import { registerAppIcons } from '../../shared/icons';
     CdkDropListGroup,
     MatButtonModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatSelectModule,
     FloorPlanComponent,
     FloorPlan3dComponent,
     PositionGridComponent,
@@ -147,9 +151,28 @@ export class LocationViewComponent {
   });
 
   readonly labelFormat = signal<'qr' | 'datamatrix' | 'code128'>('qr');
+  readonly labelZoomed = signal(false);
+  readonly labelPreviewOpen = signal(false);
+  readonly previewZoom = signal(100);
 
   selectLabelFormat(format: 'qr' | 'datamatrix' | 'code128'): void {
     this.labelFormat.set(format);
+  }
+
+  openLabelPreview(): void {
+    if (!this.showLocationQr()) {
+      return;
+    }
+    this.previewZoom.set(100);
+    this.labelPreviewOpen.set(true);
+  }
+
+  closeLabelPreview(): void {
+    this.labelPreviewOpen.set(false);
+  }
+
+  adjustPreviewZoom(delta: number): void {
+    this.previewZoom.update((value) => Math.min(200, Math.max(50, value + delta)));
   }
 
   downloadQr(): void {
@@ -159,8 +182,69 @@ export class LocationViewComponent {
     btn?.click();
   }
 
+  toggleLabelZoom(): void {
+    this.labelZoomed.update((value) => !value);
+  }
+
+  toggleLabelFullscreen(): void {
+    const card = document.querySelector('.printable-card') as HTMLElement | null;
+    if (!card) {
+      return;
+    }
+    if (document.fullscreenElement === card) {
+      void document.exitFullscreen().catch(() => {});
+      return;
+    }
+    void card.requestFullscreen().catch(() => {});
+  }
+
   printLabel(): void {
-    window.print();
+    const img = document.querySelector('.printable-label__qr img') as HTMLImageElement | null;
+    const src = img?.src ?? '';
+    if (!src) {
+      window.print();
+      return;
+    }
+    const printWindow = window.open('', '_blank', 'width=320,height=320');
+    if (!printWindow) {
+      window.print();
+      return;
+    }
+    printWindow.document.open();
+    printWindow.document.write(`<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Label</title>
+<style>
+  @page { margin: 0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #fff; }
+  img { display: block; max-width: 2in; max-height: 2in; image-rendering: pixelated; }
+</style>
+</head>
+<body><img src="${src}" alt="code"></body>
+</html>`);
+    printWindow.document.close();
+    const doPrint = (): void => {
+      printWindow.focus();
+      printWindow.print();
+      setTimeout(() => {
+        try {
+          printWindow.close();
+        } catch {
+          // ignore
+        }
+      }, 500);
+    };
+    const printImg = printWindow.document.querySelector('img') as HTMLImageElement | null;
+    if (printImg && !printImg.complete) {
+      printImg.onload = doPrint;
+      printImg.onerror = doPrint;
+      setTimeout(doPrint, 1200);
+    } else {
+      setTimeout(doPrint, 300);
+    }
   }
 
   constructor() {
