@@ -239,6 +239,7 @@
 
 .pane__heading-row {
   display: flex;
+  flex: none;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.75rem;
@@ -251,6 +252,7 @@
   justify-content: center;
   width: 28px;
   height: 28px;
+  padding: 0;
   border-radius: 999px;
   border: 1px solid var(--border-soft, rgba(199,196,216,0.3));
   background: var(--surface, #ffffff);
@@ -263,6 +265,10 @@
   border-color: var(--accent, #4f46e5);
   color: var(--accent, #4f46e5);
   background: var(--surface-hover, #e7eefe);
+}
+
+.pane__collapse mat-icon {
+  flex-shrink: 0;
 }
 
 .pane__collapse mat-icon svg {

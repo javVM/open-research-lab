@@ -328,26 +328,45 @@
   }
 
   @if (!isMapView() && !is3dView() && !isTrayGrid() && (!isDetailsView() || !selectedLocation())) {
-    <div class="container-grid" cdkDropListGroup>
+    <div class="container-grid" [class.container-grid--root]="!selectedLocation()" cdkDropListGroup>
       @for (child of children(); track child.id) {
-        <div
-          class="container-card"
-          [attr.data-type]="child.type"
-          [class.container-card--empty]="itemCountAt(child.id) === 0"
-          [class.container-card--drop-target]="move.movingItemId()"
-          cdkDropList
-          [cdkDropListData]="child.id"
-          (cdkDropListDropped)="onDrop($event)"
-          (click)="onCardClick(child.id)"
-        >
-          <span class="container-card__type">{{ locationType.label(child.type) }}</span>
-          <span class="container-card__name">{{ child.name }}</span>
-          @if (itemCountAt(child.id) > 0) {
-            <span class="container-card__count">{{ text.itemCount(itemCountAt(child.id)) }}</span>
-          } @else {
-            <span class="container-card__empty">{{ text.emptyBadge() }}</span>
-          }
-        </div>
+        @if (!selectedLocation() && child.type === 'building') {
+          <div
+            class="container-card container-card--building"
+            [class.container-card--drop-target]="move.movingItemId()"
+            cdkDropList
+            [cdkDropListData]="child.id"
+            (cdkDropListDropped)="onDrop($event)"
+            (click)="onCardClick(child.id)"
+          >
+            <mat-icon svgIcon="domain" aria-hidden="true" class="container-card__icon"></mat-icon>
+            <span class="container-card__name">{{ child.name }}</span>
+            @if (itemCountAt(child.id) > 0) {
+              <span class="container-card__count container-card__count--pill">{{ text.itemCount(itemCountAt(child.id)) }}</span>
+            } @else {
+              <span class="container-card__empty">{{ text.emptyBadge() }}</span>
+            }
+          </div>
+        } @else {
+          <div
+            class="container-card"
+            [attr.data-type]="child.type"
+            [class.container-card--empty]="itemCountAt(child.id) === 0"
+            [class.container-card--drop-target]="move.movingItemId()"
+            cdkDropList
+            [cdkDropListData]="child.id"
+            (cdkDropListDropped)="onDrop($event)"
+            (click)="onCardClick(child.id)"
+          >
+            <span class="container-card__type">{{ locationType.label(child.type) }}</span>
+            <span class="container-card__name">{{ child.name }}</span>
+            @if (itemCountAt(child.id) > 0) {
+              <span class="container-card__count">{{ text.itemCount(itemCountAt(child.id)) }}</span>
+            } @else {
+              <span class="container-card__empty">{{ text.emptyBadge() }}</span>
+            }
+          </div>
+        }
       }
 
       @if (directItems().length > 0) {
