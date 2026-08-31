@@ -8,6 +8,7 @@ import type { Item, Location, LocationType } from '../../../core/models';
 import { breadcrumb, childrenOf } from '../../../core/tree';
 import { itemsAtLocation } from '../../../core/search';
 import { BuildingDetailsComponent } from '../building-details/building-details.component';
+import { FloorDetailsComponent } from '../floor-details/floor-details.component';
 import { CollectionService } from '../../collection.service';
 import { MoveService } from '../../move.service';
 import { NavigationService } from '../../navigation.service';
@@ -44,6 +45,7 @@ import { registerAppIcons } from '../../shared/icons';
     PromptModalComponent,
     QrLabelComponent,
     BuildingDetailsComponent,
+    FloorDetailsComponent,
   ],
   templateUrl: './location-view.component.html',
   styleUrl: './location-view.component.scss',
@@ -153,6 +155,7 @@ export class LocationViewComponent {
   });
 
   readonly isBuildingDetails = computed<boolean>(() => this.selectedLocation()?.type === 'building' && this.isDetailsView());
+  readonly isFloorDetails = computed<boolean>(() => this.selectedLocation()?.type === 'floor' && this.isDetailsView());
 
   readonly labelFormat = signal<'qr' | 'datamatrix' | 'code128'>('qr');
   readonly labelZoomed = signal(false);

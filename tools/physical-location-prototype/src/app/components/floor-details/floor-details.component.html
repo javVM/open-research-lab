@@ -1,0 +1,51 @@
+<div class="details-view details-view--floor">
+  <div class="detail-card detail-card--info detail-card--floor-header">
+    <div class="detail-card__header">
+      <h3>{{ location().name }}</h3>
+      <span class="detail-card__badge">FLOOR</span>
+    </div>
+    <span class="detail-card__count">{{ totalItems() }} item(s)</span>
+  </div>
+
+  <h3 class="floor-summary__heading">Floor Summary</h3>
+  <div class="floor-summary">
+    <div class="floor-summary__card">
+      <div class="floor-summary__top">
+        <mat-icon svgIcon="roomIcon" aria-hidden="true"></mat-icon>
+        <span class="floor-summary__value">{{ roomCount() }}</span>
+      </div>
+      <span class="floor-summary__label">Rooms</span>
+    </div>
+    <div class="floor-summary__card">
+      <div class="floor-summary__top">
+        <mat-icon svgIcon="cabinetIcon" aria-hidden="true"></mat-icon>
+        <span class="floor-summary__value">{{ cabinetCount() }}</span>
+      </div>
+      <span class="floor-summary__label">Cabinets</span>
+    </div>
+    <div class="floor-summary__card">
+      <div class="floor-summary__top">
+        <mat-icon svgIcon="cube" aria-hidden="true"></mat-icon>
+        <span class="floor-summary__value">{{ totalItems() }}</span>
+      </div>
+      <span class="floor-summary__label">Total Items</span>
+    </div>
+  </div>
+
+  <div class="detail-card">
+    <h4 class="detail-card__heading">CONTENTS</h4>
+    <ul class="detail-list detail-list--contents">
+      @for (child of children(); track child.id) {
+        <li>
+          <button type="button" class="detail-list__item detail-list__item--contents floor-contents__item" (click)="selectChild.emit(child.id)">
+            <span class="detail-list__main">
+              <span class="detail-list__name">{{ child.name }}</span>
+              <span class="detail-list__sub">{{ itemCountAt(child.id) }} items</span>
+            </span>
+            <mat-icon svgIcon="chevronRight" aria-hidden="true" class="detail-list__chevron"></mat-icon>
+          </button>
+        </li>
+      }
+    </ul>
+  </div>
+</div>

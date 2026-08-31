@@ -236,13 +236,12 @@ const ICON_SVGS: Record<AppIcon, string> = {
       <line x1="7" y1="21" x2="7" y2="9"/>
     </svg>`,
   [APP_ICON.cabinetIcon]: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="5" y="3" width="14" height="18" rx="1.5"/>
-      <line x1="12" y1="3" x2="12" y2="21"/>
-      <line x1="9" y1="11" x2="9" y2="11.01"/>
-      <line x1="15" y1="11" x2="15" y2="11.01"/>
-      <line x1="9" y1="15" x2="9" y2="15.01"/>
-      <line x1="15" y1="15" x2="15" y2="15.01"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="4.5" width="16" height="15" rx="1.4"/>
+      <path d="M4 9h16"/>
+      <path d="M4 14h16"/>
+      <path d="M9 11.5h3" stroke-width="1.2"/>
+      <path d="M9 17h3" stroke-width="1.2"/>
     </svg>`,
   [APP_ICON.settings]: `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">

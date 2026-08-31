@@ -121,6 +121,8 @@
       </div>
     } @else if (isBuildingDetails()) {
       <app-building-details [location]="location" [children]="children()" (selectChild)="onCardClick($event)"></app-building-details>
+    } @else if (isFloorDetails()) {
+      <app-floor-details [location]="location" [children]="children()" (selectChild)="onCardClick($event)"></app-floor-details>
     } @else if (isDetailsView() && !isTrayGrid()) {
       <div class="details-view details-view--room">
         <div class="detail-card detail-card--info">
