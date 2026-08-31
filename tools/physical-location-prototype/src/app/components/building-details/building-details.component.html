@@ -1,0 +1,51 @@
+<div class="details-view details-view--building">
+  <div class="detail-card detail-card--info detail-card--building-header">
+    <div class="detail-card__header">
+      <h3>{{ location().name }}</h3>
+      <span class="detail-card__badge">BUILDING</span>
+    </div>
+    <span class="detail-card__count">{{ totalItems() }} item(s)</span>
+  </div>
+
+  <h3 class="building-summary__heading">Building Summary</h3>
+  <div class="building-summary">
+    <div class="building-summary__card">
+      <div class="building-summary__top">
+        <mat-icon svgIcon="layers" aria-hidden="true"></mat-icon>
+        <span class="building-summary__value">{{ floorCount() }}</span>
+      </div>
+      <span class="building-summary__label">Floors</span>
+    </div>
+    <div class="building-summary__card">
+      <div class="building-summary__top">
+        <mat-icon svgIcon="roomIcon" aria-hidden="true"></mat-icon>
+        <span class="building-summary__value">{{ roomCount() }}</span>
+      </div>
+      <span class="building-summary__label">Rooms</span>
+    </div>
+    <div class="building-summary__card">
+      <div class="building-summary__top">
+        <mat-icon svgIcon="cube" aria-hidden="true"></mat-icon>
+        <span class="building-summary__value">{{ totalItems() }}</span>
+      </div>
+      <span class="building-summary__label">Total Items</span>
+    </div>
+  </div>
+
+  <div class="detail-card">
+    <h4 class="detail-card__heading">CONTENTS</h4>
+    <ul class="detail-list detail-list--contents">
+      @for (child of children(); track child.id) {
+        <li>
+          <button type="button" class="detail-list__item detail-list__item--contents building-contents__item" (click)="selectChild.emit(child.id)">
+            <span class="detail-list__main">
+              <span class="detail-list__name">{{ child.name }}</span>
+              <span class="detail-list__sub">{{ itemCountAt(child.id) }} items</span>
+            </span>
+            <mat-icon svgIcon="chevronRight" aria-hidden="true" class="detail-list__chevron"></mat-icon>
+          </button>
+        </li>
+      }
+    </ul>
+  </div>
+</div>
