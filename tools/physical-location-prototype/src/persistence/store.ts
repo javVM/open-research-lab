@@ -1,7 +1,7 @@
 import type { Dataset } from '../core/models';
 import { generateSeed } from '../core/seed';
 
-const STORAGE_KEY = 'physical-location-prototype/dataset/v1';
+const STORAGE_KEY = 'physical-location-prototype/dataset/v3';
 
 /**
  * localStorage persistence is only experimental prototype persistence and

@@ -4,11 +4,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
 import type { Item, Location, LocationType } from '../../../core/models';
 import { breadcrumb, childrenOf } from '../../../core/tree';
 import { itemsAtLocation } from '../../../core/search';
 import { BuildingDetailsComponent } from '../building-details/building-details.component';
 import { FloorDetailsComponent } from '../floor-details/floor-details.component';
+import { StorageConditionService } from '../../shared/storage-condition.service';
 import { CollectionService } from '../../collection.service';
 import { MoveService } from '../../move.service';
 import { NavigationService } from '../../navigation.service';
@@ -39,6 +42,8 @@ import { registerAppIcons } from '../../shared/icons';
     MatIconModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatTooltipModule,
+    MatMenuModule,
     FloorPlanComponent,
     FloorPlan3dComponent,
     PositionGridComponent,
@@ -156,6 +161,43 @@ export class LocationViewComponent {
 
   readonly isBuildingDetails = computed<boolean>(() => this.selectedLocation()?.type === 'building' && this.isDetailsView());
   readonly isFloorDetails = computed<boolean>(() => this.selectedLocation()?.type === 'floor' && this.isDetailsView());
+  readonly headerAddLabel = computed<string>(() => {
+    const t = this.selectedLocation()?.type;
+    if (t === 'building') return 'Add floor';
+    if (t === 'floor') return 'Add room';
+    if (t === 'room') return 'Add cabinet';
+    if (t === 'cabinet') return 'Add drawer';
+    if (t === 'tray' || t === 'position' || t === 'drawer' || t === 'box') return 'Add item';
+    return 'Add item';
+  });
+  readonly headerAddOptions = computed<readonly { label: string; action: () => void }[]>(() => {
+    const loc = this.selectedLocation();
+    if (!loc) return [];
+    const opts: { label: string; action: () => void }[] = [];
+    for (const ct of this.allowedChildTypes()) {
+      const lbl = `Add ${this.locationType.label(ct)}`;
+      opts.push({ label: lbl, action: () => this.addComponent(ct) });
+    }
+    if (this.canAddItem()) opts.push({ label: 'Add item', action: () => this.addItem() });
+    return opts;
+  });
+  readonly hasMultipleAddOptions = computed(() => this.headerAddOptions().length > 1);
+  protected readonly storageCondition = inject(StorageConditionService);
+  readonly hasStorageIcon = computed<boolean>(() => {
+    const t = this.selectedLocation()?.type;
+    return t === 'cabinet' || t === 'drawer';
+  });
+  readonly primaryStorageCondition = computed(() => {
+    const loc = this.selectedLocation();
+    return loc ? this.storageCondition.effective(this.collection.dataset().locations, loc.id)[0] : undefined;
+  });
+  readonly storageTooltip = computed(() => {
+    const loc = this.selectedLocation();
+    if (!loc || !this.hasStorageIcon()) return '';
+    const eff = this.storageCondition.effective(this.collection.dataset().locations, loc.id).map(c => this.storageCondition.label(c)).join(', ');
+    const inherited = !loc.storageConditions?.length;
+    return inherited ? `${eff} · heredado` : eff;
+  });
 
   readonly labelFormat = signal<'qr' | 'datamatrix' | 'code128'>('qr');
   readonly labelZoomed = signal(false);
@@ -423,6 +465,24 @@ export class LocationViewComponent {
     resolve?.(value);
   }
 
+  addBuilding(): void {
+    void this.addBuildingAsync();
+  }
+  private async addBuildingAsync(): Promise<void> {
+    const name = await this.askText(this.text.addComponent('Building'), this.text.addComponentPrompt('Building'), `Building ${this.children().length + 1}`);
+    if (name === null) return;
+    const trimmed = name.trim() || `Building ${this.children().length + 1}`;
+    this.collection.addLocation({ id: newPrototypeId(ID_PREFIX.location), parentId: null, name: trimmed, type: 'building' });
+  }
+
+  headerAdd(): void {
+    const t = this.selectedLocation()?.type;
+    if (t === 'building') this.addComponent('floor');
+    else if (t === 'floor') this.addComponent('room');
+    else if (t === 'room') this.addComponent('cabinet');
+    else if (t === 'cabinet') this.addComponent('drawer');
+    else this.addItem();
+  }
   addItem(): void {
     const location = this.selectedLocation();
     if (!location) {

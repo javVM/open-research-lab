@@ -25,11 +25,32 @@ export interface Point {
   y: number;
 }
 
+export type StorageCondition =
+  | 'ambient_room'
+  | 'refrigerated'
+  | 'frozen'
+  | 'ultra_low_freezer'
+  | 'cryogenic'
+  | 'flammable'
+  | 'corrosive'
+  | 'toxic_biomaterial'
+  | 'radioactive'
+  | 'dry_storage'
+  | 'fluid_storage'
+  | 'vacuum_sealed'
+  | 'paleontology'
+  | 'geology'
+  | 'botany'
+  | 'zoology'
+  | 'historical_archive';
+
 export interface Location {
   id: string;
   parentId: string | null;
   name: string;
   type: LocationType;
+  /** Storage/museo conditions; array para hijos — vacío = hereda del padre, root vacío = ambient_room */
+  storageConditions?: StorageCondition[];
   /** 1-based row/column, only meaningful for `type === 'position'`. */
   row?: number;
   column?: number;

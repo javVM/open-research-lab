@@ -1,4 +1,4 @@
-import type { Dataset, Item, ItemStatus, Location, Movement } from './models';
+import type { Dataset, Item, ItemStatus, Location, Movement, StorageCondition } from './models';
 
 /**
  * Synthetic demonstration data — not user-validated.
@@ -112,6 +112,23 @@ const SPECIMEN_LABELS = [
 
 const CATALOGUE_PREFIXES = ['MNCN', 'PALEO', 'HERB'];
 
+const ALL_STORAGE_CONDITIONS: StorageCondition[] = [
+  'ambient_room','refrigerated','frozen','ultra_low_freezer','cryogenic','flammable','corrosive','toxic_biomaterial','radioactive','dry_storage','fluid_storage','vacuum_sealed','paleontology','geology','botany','zoology','historical_archive',
+];
+
+function pickStorageConditions(random: () => number, seed: number, allowMulti = false): StorageCondition[] {
+  if (random() < 0.3) return []; // 30% hereda
+  const count = allowMulti && random() < 0.15 ? 2 : 1;
+  const pool = [...ALL_STORAGE_CONDITIONS];
+  // shuffle deterministically via random
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j]!, pool[i]!];
+  }
+  // bias: first cabinets show more variedad visible
+  return pool.slice(0, count);
+}
+
 function pad(n: number, width: number): string {
   return String(n).padStart(width, '0');
 }
@@ -195,6 +212,7 @@ export function generateSeed(randomSeed = 20260824): Dataset {
             CABINET_LAYOUT.gap,
           );
           const cabinetSize = CABINET_SIZES[c % CABINET_SIZES.length];
+          const cabinetConditions = pickStorageConditions(random, cabinetNumber);
           locations.push({
             id: cabinetId,
             parentId: roomId,
@@ -204,17 +222,20 @@ export function generateSeed(randomSeed = 20260824): Dataset {
             y: cabinetRect.y,
             width: cabinetSize.width,
             height: cabinetSize.height,
+            ...(cabinetConditions.length ? { storageConditions: cabinetConditions } : {}),
           });
 
           const drawersInCabinet = 2 + (c % 2);
           for (let d = 1; d <= drawersInCabinet && drawerTotal < 200; d += 1) {
             drawerTotal += 1;
             const drawerId = nextId(locationCounter, 'loc');
+            const drawerConditions = drawerTotal % 3 === 0 ? pickStorageConditions(random, drawerTotal, true) : [];
             locations.push({
               id: drawerId,
               parentId: cabinetId,
               name: `Drawer ${pad(d, 2)}`,
               type: 'drawer',
+              ...(drawerConditions.length ? { storageConditions: drawerConditions } : {}),
             });
             drawerIds.push(drawerId);
 

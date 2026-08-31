@@ -43,7 +43,15 @@
     @if (location.type === 'tray' && isDetailsView()) {
       <div class="details-view">
         <div class="tray-header">
-          <h2 class="tray-header__title">{{ location.name }}</h2>
+          <div class="detail-card__header" style="margin-bottom:12px">
+            <h2 class="tray-header__title">{{ location.name }}</h2>
+            @if (hasMultipleAddOptions()) {
+              <button type="button" class="add-item add-item--header" [matMenuTriggerFor]="addMenuTray"><mat-icon svgIcon="add"></mat-icon> {{ headerAddLabel() }} <mat-icon svgIcon="chevronDown" style="width:14px;height:14px"></mat-icon></button>
+              <mat-menu #addMenuTray="matMenu">@for (opt of headerAddOptions(); track opt.label){<button mat-menu-item (click)="opt.action()">{{opt.label}}</button>}</mat-menu>
+            } @else {
+              <button type="button" class="add-item add-item--header" (click)="headerAdd()"><mat-icon svgIcon="add"></mat-icon> {{ headerAddLabel() }}</button>
+            }
+          </div>
           <div class="tray-header__badges">
             <span class="tray-badge"><mat-icon svgIcon="thermostat" aria-hidden="true"></mat-icon> -80°C Target</span>
             <span class="tray-badge"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> {{ location.name }}</span>
@@ -120,15 +128,30 @@
         </div>
       </div>
     } @else if (isBuildingDetails()) {
-      <app-building-details [location]="location" [children]="children()" (selectChild)="onCardClick($event)"></app-building-details>
+      <app-building-details [location]="location" [children]="children()" (selectChild)="onCardClick($event)" (addItem)="headerAdd()"></app-building-details>
     } @else if (isFloorDetails()) {
-      <app-floor-details [location]="location" [children]="children()" (selectChild)="onCardClick($event)"></app-floor-details>
+      <app-floor-details [location]="location" [children]="children()" (selectChild)="onCardClick($event)" (addItem)="headerAdd()"></app-floor-details>
     } @else if (isDetailsView() && !isTrayGrid()) {
       <div class="details-view details-view--room">
         <div class="detail-card detail-card--info">
           <div class="detail-card__header">
-            <h3>{{ location.name }}</h3>
+            <h3 class="with-icon">
+              @if (hasStorageIcon() && primaryStorageCondition()) {
+                <mat-icon [svgIcon]="storageCondition.icon(primaryStorageCondition()!)" [matTooltip]="storageTooltip()" aria-hidden="true" class="storage-icon"></mat-icon>
+              }
+              {{ location.name }}
+            </h3>
             <span class="detail-card__badge">{{ location.type }}</span>
+            @if (hasMultipleAddOptions()) {
+              <button type="button" class="add-item add-item--header" [matMenuTriggerFor]="addMenu"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> {{ headerAddLabel() }} <mat-icon svgIcon="chevronDown" aria-hidden="true" style="width:14px;height:14px"></mat-icon></button>
+              <mat-menu #addMenu="matMenu">
+                @for (opt of headerAddOptions(); track opt.label) {
+                  <button mat-menu-item (click)="opt.action()">{{ opt.label }}</button>
+                }
+              </mat-menu>
+            } @else {
+              <button type="button" class="add-item add-item--header" (click)="headerAdd()"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> {{ headerAddLabel() }}</button>
+            }
           </div>
           @if (locationItemCount() > 0) {
             <span class="detail-card__count">{{ locationItemCount() }} item(s)</span>
@@ -303,14 +326,7 @@
       }
     }
 
-    @if (canAddItem()) {
-      <div class="add-actions">
-        <button type="button" mat-stroked-button class="add-item" (click)="addItem()">
-          <mat-icon svgIcon="add" aria-hidden="true"></mat-icon>
-          {{ text.addItem() }}
-        </button>
-      </div>
-    }
+
 
     @if (move.movingItem(); as moving) {
       <div class="move-banner">
@@ -402,6 +418,12 @@
         </div>
       }
 
+      @if (!selectedLocation()) {
+        <button type="button" class="container-card container-card--building container-card--add" (click)="addBuilding()" aria-label="Add building">
+          <mat-icon svgIcon="add" aria-hidden="true" class="container-card__icon"></mat-icon>
+          <span class="container-card__name">Add building</span>
+        </button>
+      }
       @if (children().length === 0 && directItems().length === 0) {
         <p class="empty-state">{{ text.emptyState() }}</p>
       }

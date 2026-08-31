@@ -16,6 +16,7 @@ export class BuildingDetailsComponent {
   readonly location = input.required<Location>();
   readonly children = input.required<Location[]>();
   readonly selectChild = output<string>();
+  readonly addItem = output<void>();
 
   private readonly collection = inject(CollectionService);
 

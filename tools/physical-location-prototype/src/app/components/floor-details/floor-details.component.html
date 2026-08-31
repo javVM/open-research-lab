@@ -3,6 +3,7 @@
     <div class="detail-card__header">
       <h3>{{ location().name }}</h3>
       <span class="detail-card__badge">FLOOR</span>
+      <button type="button" class="add-item add-item--header" (click)="addItem.emit()"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> Add room</button>
     </div>
     <span class="detail-card__count">{{ totalItems() }} item(s)</span>
   </div>
