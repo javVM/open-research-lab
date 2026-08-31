@@ -1,6 +1,5 @@
-import { Component, OnDestroy, afterNextRender, inject, signal } from '@angular/core';
+import { Component, OnDestroy, afterNextRender, inject, output, signal } from '@angular/core';
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
-import { ScanService } from '../../scan.service';
 import { TranslationService } from '../../i18n/translation.service';
 import {
   QR_BOX_MAX_SIZE,
@@ -17,7 +16,8 @@ import { createQrScannerTranslations } from './qr-scanner.translations';
   styleUrl: './qr-scanner.component.scss',
 })
 export class QrScannerComponent implements OnDestroy {
-  private readonly scan = inject(ScanService);
+  /** Emitted when the camera successfully decodes a QR/barcode. */
+  readonly scanSuccess = output<string>();
   protected readonly text = createQrScannerTranslations(inject(TranslationService));
   private reader: Html5Qrcode | null = null;
   private started = false;
@@ -80,7 +80,7 @@ export class QrScannerComponent implements OnDestroy {
     }
     this.lastCode = code;
     this.lastTime = now;
-    this.scan.scanQr(code);
+    this.scanSuccess.emit(code);
   }
 
   ngOnDestroy(): void {

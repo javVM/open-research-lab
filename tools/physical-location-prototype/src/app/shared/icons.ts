@@ -37,6 +37,11 @@ export const APP_ICON = {
   cabinetIcon: 'cabinetIcon',
   settings: 'settings',
   reports: 'reports',
+  qrCodeScanner: 'qrCodeScanner',
+  place: 'place',
+  checkCircle: 'checkCircle',
+  warning: 'warning',
+  close: 'close',
 } as const;
 export type AppIcon = (typeof APP_ICON)[keyof typeof APP_ICON];
 
@@ -87,15 +92,17 @@ const ICON_SVGS: Record<AppIcon, string> = {
       <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
     </svg>`,
   [APP_ICON.scan]: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
       <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
       <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
       <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-      <rect x="7" y="7" width="10" height="10" rx="1.5"/>
-      <line x1="7" y1="12" x2="17" y2="12"/>
-      <line x1="9" y1="9" x2="9" y2="9"/>
-      <line x1="15" y1="9" x2="15" y2="9"/>
+      <rect x="7" y="7" width="3" height="3"/>
+      <rect x="14" y="7" width="3" height="3"/>
+      <rect x="7" y="14" width="3" height="3"/>
+      <path d="M14 14h3v3h-3z"/>
+      <path d="M14 17h3"/>
+      <path d="M17 14v3"/>
     </svg>`,
   [APP_ICON.shape]: `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -248,6 +255,40 @@ const ICON_SVGS: Record<AppIcon, string> = {
       <rect x="7" y="10" width="3" height="7" rx="0.5"/>
       <rect x="12" y="6" width="3" height="11" rx="0.5"/>
       <rect x="17" y="12" width="3" height="5" rx="0.5"/>
+    </svg>`,
+  [APP_ICON.qrCodeScanner]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+      <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+      <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+      <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+      <rect x="7" y="7" width="3" height="3"/>
+      <rect x="14" y="7" width="3" height="3"/>
+      <rect x="7" y="14" width="3" height="3"/>
+      <path d="M14 14h3v3h-3z"/>
+      <path d="M14 17h3"/>
+      <path d="M17 14v3"/>
+    </svg>`,
+  [APP_ICON.place]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+      <circle cx="12" cy="10" r="3"/>
+    </svg>`,
+  [APP_ICON.checkCircle]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="9 12 12 15 16 10"/>
+    </svg>`,
+  [APP_ICON.warning]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+      <line x1="12" y1="9" x2="12" y2="13"/>
+      <line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>`,
+  [APP_ICON.close]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
     </svg>`,
 };
 

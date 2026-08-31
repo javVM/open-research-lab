@@ -1,68 +1,230 @@
 <div class="scan-view">
   <header class="scan-view__header">
-    <h2>{{ text.heading() }}</h2>
+    <div class="scan-view__title">
+      <h2>{{ text.heading() }}</h2>
+      <p>{{ text.subheading() }}</p>
+    </div>
+
+    <div class="scan-mode-toggle" role="group" [attr.aria-label]="text.manualScanLabel()">
+      <button
+        type="button"
+        mat-button
+        class="scan-mode-toggle__button"
+        [class.scan-mode-toggle__button--active]="scan.scanMode() === SCAN_MODE.extract"
+        [attr.aria-pressed]="scan.scanMode() === SCAN_MODE.extract"
+        (click)="setMode(SCAN_MODE.extract)"
+      >
+        {{ text.extractModeLabel() }}
+      </button>
+      <button
+        type="button"
+        mat-button
+        class="scan-mode-toggle__button"
+        [class.scan-mode-toggle__button--active]="scan.scanMode() === SCAN_MODE.place"
+        [attr.aria-pressed]="scan.scanMode() === SCAN_MODE.place"
+        (click)="setMode(SCAN_MODE.place)"
+      >
+        {{ text.placeModeLabel() }}
+      </button>
+    </div>
   </header>
 
   <div class="scan-view__body">
-    <section class="scan-view__scanner" aria-label="Camera scanner">
-      <app-qr-scanner></app-qr-scanner>
+    <section class="scan-view__steps" aria-label="Scan steps">
+      <div
+        class="scan-step"
+        [class.scan-step--active]="isStep1Active()"
+        [class.scan-step--done]="isStep1Done()"
+        [class.scan-step--error]="isStep1Error()"
+      >
+        @if (isStep1Done()) {
+          <span class="scan-step__status-badge">{{ text.successLabel() }}</span>
+        }
+        @if (isStep1Error()) {
+          <span class="scan-step__status-badge scan-step__status-badge--error">{{ text.errorLabel() }}</span>
+        }
+        <div class="scan-step__icon">
+          @if (isStep1Done()) {
+            <mat-icon svgIcon="checkCircle" aria-hidden="true"></mat-icon>
+          } @else if (isStep1Error()) {
+            <mat-icon svgIcon="warning" aria-hidden="true"></mat-icon>
+          } @else {
+            <mat-icon svgIcon="qrCodeScanner" aria-hidden="true"></mat-icon>
+            <span class="scan-step__ripple" aria-hidden="true"></span>
+          }
+        </div>
+        <h3 class="scan-step__title">{{ text.step1Title() }}</h3>
+        @if (isStep1Done()) {
+          <p class="scan-step__value">{{ step1ItemLabel() }}</p>
+        } @else if (isStep1Error()) {
+          <p class="scan-step__value">{{ scan.lastError() }}</p>
+        } @else {
+          <p class="scan-step__description">
+            {{ scan.scanMode() === SCAN_MODE.extract ? text.step1ExtractDescription() : text.step1PlaceDescription() }}
+          </p>
+        }
+        <button
+          type="button"
+          mat-button
+          class="scan-step__action"
+          [attr.aria-label]="isStep1Active() ? text.scanLabel() : text.rescanLabel()"
+          (click)="isStep1Active() ? openScanModal() : rescanAndOpenItem()"
+        >
+          {{ isStep1Active() ? text.scanLabel() : text.rescanLabel() }}
+        </button>
+      </div>
+
+      @if (scan.scanMode() === SCAN_MODE.place) {
+        <div
+          class="scan-step"
+          [class.scan-step--active]="isStep2Active() && !isStep2Done()"
+          [class.scan-step--done]="isStep2Done()"
+          [class.scan-step--error]="isStep2Error()"
+          [class.scan-step--locked]="!isStep2Active() && !isStep2Error()"
+        >
+          @if (isStep2Done()) {
+            <span class="scan-step__status-badge">{{ text.successLabel() }}</span>
+          }
+          @if (isStep2Error()) {
+            <span class="scan-step__status-badge scan-step__status-badge--error">{{ text.errorLabel() }}</span>
+          }
+          <div class="scan-step__icon">
+            @if (isStep2Done()) {
+              <mat-icon svgIcon="checkCircle" aria-hidden="true"></mat-icon>
+            } @else if (isStep2Error()) {
+              <mat-icon svgIcon="warning" aria-hidden="true"></mat-icon>
+            } @else {
+              <mat-icon svgIcon="place" aria-hidden="true"></mat-icon>
+              @if (isStep2Active()) {
+                <span class="scan-step__ripple" aria-hidden="true"></span>
+              }
+            }
+          </div>
+          <h3 class="scan-step__title">{{ text.step2Title() }}</h3>
+          @if (isStep2Done()) {
+            <p class="scan-step__value">{{ text.destinationLabel() }}: {{ step2DestinationLabel() }}</p>
+          } @else if (isStep2Error()) {
+            <p class="scan-step__value">{{ scan.lastError() }}</p>
+          } @else {
+            <p class="scan-step__description">{{ text.step2Description() }}</p>
+          }
+          @if (isStep2Active() || isStep2Error()) {
+            <button
+              type="button"
+              mat-button
+              class="scan-step__action"
+              [attr.aria-label]="isStep2Active() ? text.scanLabel() : text.rescanLabel()"
+              (click)="isStep2Active() ? openScanModal() : rescanAndOpenDestination()"
+            >
+              {{ isStep2Active() ? text.scanLabel() : text.rescanLabel() }}
+            </button>
+          } @else {
+            <span class="scan-step__badge scan-step__badge--locked">{{ text.lockedLabel() }}</span>
+          }
+        </div>
+      }
     </section>
 
-    <aside class="scan-view__panel">
-      @if (scan.qrPending(); as pending) {
-        <div class="scan-view__card">
-          <h3>{{ pending.itemCatalogue }}</h3>
-          <p>Target: {{ pending.targetName }}</p>
+    <section class="scan-view__activity" aria-label="Recent scan activity">
+      <div class="scan-view__activity-header">
+        <h3>{{ text.recentScansHeading() }}</h3>
+      </div>
 
-          @if (pending.step === 'position') {
-            <mat-form-field appearance="outline" subscriptSizing="dynamic">
-              <mat-label>{{ text.pendingPositionLabel() }}</mat-label>
-              <input
-                matInput
-                type="text"
-                [formField]="positionField"
-                (keydown.enter)="submitPosition()"
-                [placeholder]="pending.targetName"
-              />
-            </mat-form-field>
-            <button type="button" mat-button (click)="submitPosition()">{{ text.scanButton() }}</button>
-          } @else {
-            <mat-form-field appearance="outline" subscriptSizing="dynamic">
-              <mat-label>{{ text.pendingTubeLabel() }}</mat-label>
-              <input
-                matInput
-                type="text"
-                [formField]="tubeField"
-                (keydown.enter)="submitTube()"
-                [placeholder]="pending.itemCatalogue"
-              />
-            </mat-form-field>
-            <button type="button" mat-button (click)="submitTube()">{{ text.scanButton() }}</button>
-          }
+      @if (recentScansList().length > 0) {
+        <table mat-table [dataSource]="recentScansList()" class="scan-view__table">
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let scan">
+              <mat-icon
+                [svgIcon]="scan.status === 'success' ? 'checkCircle' : 'warning'"
+                [attr.aria-label]="scan.status === 'success' ? text.statusSuccess() : text.statusWarning()"
+                class="scan-view__status-icon"
+                [class.scan-view__status-icon--warning]="scan.status === 'warning'"
+                aria-hidden="true"
+              ></mat-icon>
+            </td>
+          </ng-container>
 
-          <button type="button" mat-button class="scan-view__cancel" (click)="scan.cancelQr()">
-            {{ text.cancelButton() }}
-          </button>
-        </div>
+          <ng-container matColumnDef="operation">
+            <th mat-header-cell *matHeaderCellDef>{{ text.operationLabel() }}</th>
+            <td mat-cell *matCellDef="let scan">
+              <span
+                class="scan-view__operation"
+                [class.scan-view__operation--place]="scan.type === 'place'"
+              >
+                {{ scan.type === 'place' ? text.placeModeLabel() : text.extractModeLabel() }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="item">
+            <th mat-header-cell *matHeaderCellDef>Item</th>
+            <td mat-cell *matCellDef="let scan">{{ scan.itemCatalogue }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="details">
+            <th mat-header-cell *matHeaderCellDef>Details</th>
+            <td mat-cell *matCellDef="let scan">{{ scan.message }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="time">
+            <th mat-header-cell *matHeaderCellDef>Time</th>
+            <td mat-cell *matCellDef="let scan">{{ scan.occurredAt | date: 'shortTime' }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="recentScanColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: recentScanColumns;"></tr>
+        </table>
       } @else {
-        <div class="scan-view__card">
-          <mat-form-field appearance="outline" subscriptSizing="dynamic">
-            <mat-label>{{ text.manualScanLabel() }}</mat-label>
-            <input
-              matInput
-              type="text"
-              [formField]="manualField"
-              (keydown.enter)="submitManualCode()"
-              [placeholder]="text.manualScanPlaceholder()"
-            />
-          </mat-form-field>
-          <button type="button" mat-button (click)="submitManualCode()">{{ text.scanButton() }}</button>
-        </div>
+        <p class="scan-view__empty">{{ text.noRecentScans() }}</p>
       }
-
-      @if (scan.qrHint(); as hint) {
-        <div class="scan-view__hint" [attr.data-type]="hint.type">{{ hint.message }}</div>
-      }
-    </aside>
+    </section>
   </div>
+
+  @if (scanModalOpen()) {
+    <div class="scan-modal" role="dialog" aria-modal="true" [attr.aria-label]="scanModalMode() === 'camera' ? text.scanLabel() : text.manualEntryLabel()">
+      <div class="scan-modal__backdrop" (click)="closeScanModal()"></div>
+      <div class="scan-modal__panel">
+        <header class="scan-modal__header">
+          <h3 class="scan-modal__title">{{ scanModalMode() === 'camera' ? text.scanLabel() : text.manualEntryLabel() }}</h3>
+          <button
+            type="button"
+            mat-icon-button
+            class="scan-modal__close"
+            [attr.aria-label]="text.closeLabel()"
+            (click)="closeScanModal()"
+          >
+            <mat-icon svgIcon="close" aria-hidden="true"></mat-icon>
+          </button>
+        </header>
+
+        <div class="scan-modal__body">
+          @if (scanModalMode() === 'camera') {
+            <app-qr-scanner (scanSuccess)="onCameraScan($event)"></app-qr-scanner>
+          } @else {
+            <mat-form-field class="scan-modal__input" appearance="outline" subscriptSizing="dynamic">
+              <mat-label>{{ inputLabel() }}</mat-label>
+              <input
+                matInput
+                type="text"
+                [formField]="manualField"
+                (keydown.enter)="confirmManualCode()"
+                [placeholder]="inputPlaceholder()"
+              />
+            </mat-form-field>
+          }
+        </div>
+
+        <footer class="scan-modal__footer">
+          @if (scanModalMode() === 'camera') {
+            <button type="button" mat-button (click)="closeScanModal()">{{ text.cancelButton() }}</button>
+            <button type="button" mat-button (click)="setScanModalMode('manual')">{{ text.scanManuallyLabel() }}</button>
+          } @else {
+            <button type="button" mat-button (click)="setScanModalMode('camera')">{{ text.backToCameraLabel() }}</button>
+            <button type="button" mat-button (click)="confirmManualCode()">{{ text.confirmLabel() }}</button>
+          }
+        </footer>
+      </div>
+    </div>
+  }
 </div>
