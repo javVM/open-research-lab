@@ -86,6 +86,17 @@
   line-height: 1;
 }
 
+::ng-deep .cdk-overlay-pane:has(> .language-switcher-panel) {
+  max-width: calc(100vw - 0.5rem) !important;
+  // El trigger está anclado al borde derecho; el inline `left` que calcula
+  // CDK puede empujar el panel fuera del viewport y recortar las opciones.
+  // Forzamos anclaje a la derecha para que siempre quede visible.
+  left: auto !important;
+  right: 0.25rem !important;
+  display: flex;
+  justify-content: flex-end;
+}
+
 ::ng-deep .language-switcher-panel {
   padding: 0.4rem !important;
   border-radius: 0.85rem !important;
@@ -95,6 +106,7 @@
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0,0,0,0.08) !important;
   overflow: hidden;
   min-width: 9rem !important;
+  max-width: calc(100vw - 0.5rem) !important;
 
   .mat-mdc-option {
     min-height: 2.85rem !important;
