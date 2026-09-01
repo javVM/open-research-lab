@@ -12,6 +12,10 @@ export const moveHint = $localize `@@itemDetail.moveHint:Click a destination in 
 export const historyTitle = $localize `@@itemDetail.historyTitle:History`;
 export const noHistory = $localize `@@itemDetail.noHistory:No recorded movements.`;
 export const unlocated = $localize `@@itemDetail.unlocated:Unlocated`;
+export const closeDetailLabel = $localize `@@itemDetail.closeDetailLabel:Close detail`;
+export const labelPreviewTitle = $localize `@@itemDetail.labelPreviewTitle:Label Preview`;
+export const labelFormatAriaLabel = $localize `@@itemDetail.labelFormatAriaLabel:Label format`;
+export const printLabel = $localize `@@itemDetail.printLabel:Print Label`;
 
 export const activeStatus = $localize `@@itemDetail.status.active:Active`;
 export const checkedOutStatus = $localize `@@itemDetail.status.checkedOut:Checked out`;
@@ -60,5 +64,9 @@ export function createItemDetailTranslations(i18n: TranslationService) {
           return status;
       }
     },
+    closeDetailLabel: () => i18n.t('itemDetail.closeDetailLabel', closeDetailLabel),
+    labelPreviewTitle: () => i18n.t('itemDetail.labelPreviewTitle', labelPreviewTitle),
+    labelFormatAriaLabel: () => i18n.t('itemDetail.labelFormatAriaLabel', labelFormatAriaLabel),
+    printLabel: () => i18n.t('itemDetail.printLabel', printLabel),
   };
 }

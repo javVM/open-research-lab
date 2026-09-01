@@ -4,7 +4,7 @@
       <div class="item-detail__hero-row">
         <h2 class="item-detail__title">{{ item.catalogueNumber }}</h2>
         <span class="status-badge status-badge--activo" [attr.data-status]="item.status">{{ text.statusLabel(item.status) }}</span>
-        <button type="button" class="item-detail__close" (click)="close()" aria-label="Cerrar detalle"><mat-icon svgIcon="close" aria-hidden="true"></mat-icon></button>
+        <button type="button" class="item-detail__close" (click)="close()" [attr.aria-label]="text.closeDetailLabel()"><mat-icon svgIcon="close" aria-hidden="true"></mat-icon></button>
       </div>
       @if (item.label) {
         <p class="item-detail__subtitle">{{ item.label }}</p>
@@ -13,11 +13,11 @@
 
     <div class="label-preview">
       <div class="label-preview__header">
-        <span class="label-preview__title">Label Preview</span>
-        <div class="item-detail__format" role="group" aria-label="Label format">
-          <button type="button" class="format-btn" [class.format-btn--active]="qrFormat() === 'qr'" (click)="qrFormat.set('qr')">QR</button>
-          <button type="button" class="format-btn" [class.format-btn--active]="qrFormat() === 'datamatrix'" (click)="qrFormat.set('datamatrix')">Matrix</button>
-          <button type="button" class="format-btn" [class.format-btn--active]="qrFormat() === 'code128'" (click)="qrFormat.set('code128')">128</button>
+        <span class="label-preview__title">{{ text.labelPreviewTitle() }}</span>
+        <div class="item-detail__format" role="group" [attr.aria-label]="text.labelFormatAriaLabel()">
+          <button type="button" class="format-btn" [class.format-btn--active]="qrFormat() === 'qr'" (click)="qrFormat.set('qr')">{{ qrText.formatQr() }}</button>
+          <button type="button" class="format-btn" [class.format-btn--active]="qrFormat() === 'datamatrix'" (click)="qrFormat.set('datamatrix')">{{ qrText.formatDataMatrix() }}</button>
+          <button type="button" class="format-btn" [class.format-btn--active]="qrFormat() === 'code128'" (click)="qrFormat.set('code128')">{{ qrText.formatCode128() }}</button>
         </div>
       </div>
       <div class="printable-label">
@@ -37,8 +37,8 @@
         </div>
       </div>
       <div class="label-preview__actions">
-        <button type="button" class="label-preview__print" (click)="printLabel()"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> Print Label</button>
-        <button type="button" class="item-detail__download label-preview__download" (click)="downloadQr()"><mat-icon svgIcon="upload" aria-hidden="true"></mat-icon> Download PNG</button>
+        <button type="button" class="label-preview__print" (click)="printLabel()"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> {{ text.printLabel() }}</button>
+        <button type="button" class="item-detail__download label-preview__download" (click)="downloadQr()"><mat-icon svgIcon="upload" aria-hidden="true"></mat-icon> {{ qrText.download() }}</button>
       </div>
       <div class="item-detail__meta">item:{{ item.id }}</div>
     </div>
@@ -46,7 +46,7 @@
     <div class="ubicacion-card">
       <div class="ubicacion-card__heading">
         <mat-icon svgIcon="place" aria-hidden="true"></mat-icon>
-        <span>UBICACIÓN ACTUAL</span>
+        <span>{{ text.currentLocationLabel() | uppercase }}</span>
         <button type="button" mat-icon-button class="history-info" (click)="openHistory()" [attr.aria-label]="text.historyTitle()">
           <mat-icon svgIcon="info" aria-hidden="true"></mat-icon>
         </button>
@@ -68,7 +68,7 @@
     @if (isMoving()) {
       <button type="button" mat-button class="cancel-move" (click)="cancelMove()">{{ text.cancelMoveButton() }}</button>
     } @else {
-      <button type="button" mat-flat-button color="primary" class="start-move" (click)="startMove()">Mover ítem…</button>
+      <button type="button" mat-flat-button color="primary" class="start-move" (click)="startMove()">{{ text.moveButton() }}</button>
     }
     @if (isMoving()) {
       <p class="move-hint">{{ text.moveHint() }}</p>

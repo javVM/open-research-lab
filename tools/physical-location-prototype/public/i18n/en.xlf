@@ -2,29 +2,23 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng.template">
     <body>
-      <trans-unit id="app.title">
-        <source>Physical Location Prototype</source>
-      </trans-unit>
       <trans-unit id="app.disclaimer">
         <source>Synthetic demonstration data — not user-validated. This prototype does not constitute user validation or product approval.</source>
       </trans-unit>
-      <trans-unit id="app.resetButton.label">
-        <source>Reset demo data</source>
+      <trans-unit id="app.footer.madeBy">
+        <source>Made by</source>
       </trans-unit>
-      <trans-unit id="app.resetButton.title">
-        <source>Discard demo edits and regenerate the synthetic dataset</source>
+      <trans-unit id="app.mode.explore">
+        <source>Explore</source>
       </trans-unit>
-      <trans-unit id="app.pane.locationHierarchy">
-        <source>Location hierarchy</source>
+      <trans-unit id="app.mode.label">
+        <source>Label</source>
       </trans-unit>
-      <trans-unit id="app.pane.selectedLocation">
-        <source>Selected location</source>
+      <trans-unit id="app.mode.scan">
+        <source>Scan</source>
       </trans-unit>
-      <trans-unit id="app.pane.itemDetail">
-        <source>Item detail</source>
-      </trans-unit>
-      <trans-unit id="app.pane.locationsHeading">
-        <source>Locations</source>
+      <trans-unit id="app.modeSwitcher.ariaLabel">
+        <source>View mode</source>
       </trans-unit>
       <trans-unit id="app.pane.contentsHeading">
         <source>Contents</source>
@@ -32,333 +26,41 @@
       <trans-unit id="app.pane.detailsHeading">
         <source>Details</source>
       </trans-unit>
-      <trans-unit id="app.modeSwitcher.ariaLabel">
-        <source>View mode</source>
+      <trans-unit id="app.pane.itemDetail">
+        <source>Item detail</source>
       </trans-unit>
-      <trans-unit id="app.mode.explore">
-        <source>Explore</source>
+      <trans-unit id="app.pane.locationHierarchy">
+        <source>Location hierarchy</source>
       </trans-unit>
-      <trans-unit id="app.mode.scan">
-        <source>Scan</source>
+      <trans-unit id="app.pane.locationsHeading">
+        <source>Locations</source>
       </trans-unit>
-      <trans-unit id="app.mode.label">
-        <source>Label</source>
-      </trans-unit>
-
-      <trans-unit id="languageSwitcher.ariaLabel">
-        <source>Select language</source>
-      </trans-unit>
-
-      <trans-unit id="searchBar.placeholder">
-        <source>Search collection… (catalogue number or label)</source>
-      </trans-unit>
-      <trans-unit id="searchBar.ariaLabel">
-        <source>Search collection</source>
-      </trans-unit>
-      <trans-unit id="searchBar.noMatches">
-        <source>No matches</source>
-      </trans-unit>
-      <trans-unit id="searchBar.noCurrentLocation">
-        <source>No current location</source>
-      </trans-unit>
-
-      <trans-unit id="locationTree.ariaLabel">
-        <source>Physical location hierarchy</source>
-      </trans-unit>
-      <trans-unit id="locationTree.allLabel">
-        <source>All</source>
-      </trans-unit>
-      <trans-unit id="locationTree.emptyLabel">
-        <source>Empty</source>
-      </trans-unit>
-      <trans-unit id="locationTree.toggle.collapse">
-        <source>Collapse {name}</source>
-      </trans-unit>
-      <trans-unit id="locationTree.toggle.expand">
-        <source>Expand {name}</source>
-      </trans-unit>
-      <trans-unit id="locationTree.quickJump.label">
-        <source>Go to…</source>
-      </trans-unit>
-      <trans-unit id="locationTree.quickJump.ariaLabel">
-        <source>Go to anywhere</source>
-      </trans-unit>
-
-      <trans-unit id="locationView.breadcrumbAriaLabel">
-        <source>Location breadcrumb</source>
-      </trans-unit>
-      <trans-unit id="locationView.rootBreadcrumb">
-        <source>All</source>
-      </trans-unit>
-      <trans-unit id="locationView.movingBanner">
-        <source>Moving {catalogueNumber} — select a destination.</source>
-      </trans-unit>
-      <trans-unit id="locationView.cancelButton">
-        <source>Cancel</source>
-      </trans-unit>
-      <trans-unit id="locationView.emptyState">
-        <source>Nothing recorded here yet.</source>
-      </trans-unit>
-      <trans-unit id="locationView.directItemsIntro">
-        <source>Items stored directly in {name} (no finer position recorded):</source>
-      </trans-unit>
-      <trans-unit id="positionGrid.positionEmptyTitle">
-        <source>{name} (empty)</source>
-      </trans-unit>
-      <trans-unit id="locationView.itemCount">
-        <source>{count} item(s)</source>
-      </trans-unit>
-      <trans-unit id="locationView.emptyBadge">
-        <source>Empty</source>
-      </trans-unit>
-      <trans-unit id="locationView.viewMode.map">
-        <source>Map</source>
-      </trans-unit>
-      <trans-unit id="locationView.viewMode.3d">
-        <source>3D</source>
-      </trans-unit>
-      <trans-unit id="locationView.viewMode.list">
-        <source>List</source>
-      </trans-unit>
-
-      <trans-unit id="floorPlan.ariaLabel">
-        <source>Floor plan</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.dragHint">
-        <source>Drag to reposition</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.resizeHint">
-        <source>Drag to resize</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.previewHint">
-        <source>Hover to preview what is inside</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.itemCount">
-        <source>{count} item(s)</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.empty">
-        <source>Empty</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.uploadPlan">
-        <source>Upload floor plan image</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.removePlan">
-        <source>Remove floor plan image</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.addComponent">
-        <source>Add component</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.planLabel">
-        <source>Plan</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.addLabel">
-        <source>Add</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.layoutLabel">
-        <source>Move</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.layoutHint">
-        <source>Move and resize</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.shapeLabel">
-        <source>Shape</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.shapeHint">
-        <source>Edit the shape (90° corners only)</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.resetShapeLabel">
-        <source>Reset</source>
-      </trans-unit>
-      <trans-unit id="floorPlan.resetShapeHint">
-        <source>Revert to a rectangle</source>
-      </trans-unit>
-
-      <trans-unit id="floorPlan3d.ariaLabel">
-        <source>3D floor plan</source>
-      </trans-unit>
-      <trans-unit id="floorPlan3d.orbitHint">
-        <source>Drag to orbit, scroll to zoom</source>
-      </trans-unit>
-      <trans-unit id="floorPlan3d.resetView">
-        <source>Reset view</source>
-      </trans-unit>
-      <trans-unit id="floorPlan3d.itemCount">
-        <source>{count} item(s)</source>
-      </trans-unit>
-      <trans-unit id="floorPlan3d.empty">
-        <source>Empty</source>
-      </trans-unit>
-      <trans-unit id="floorPlan3d.rotateGroupLabel">
-        <source>Rotate view</source>
-      </trans-unit>
-      <trans-unit id="floorPlan3d.rotateUp">
-        <source>Tilt up</source>
-      </trans-unit>
-      <trans-unit id="floorPlan3d.rotateDown">
-        <source>Tilt down</source>
-      </trans-unit>
-      <trans-unit id="floorPlan3d.rotateLeft">
-        <source>Spin left</source>
-      </trans-unit>
-      <trans-unit id="floorPlan3d.rotateRight">
-        <source>Spin right</source>
-      </trans-unit>
-
-      <trans-unit id="locationType.building">
-        <source>Building</source>
-      </trans-unit>
-      <trans-unit id="locationType.floor">
-        <source>Floor</source>
-      </trans-unit>
-      <trans-unit id="locationType.room">
-        <source>Room</source>
-      </trans-unit>
-      <trans-unit id="locationType.cabinet">
-        <source>Cabinet</source>
-      </trans-unit>
-      <trans-unit id="locationType.drawer">
-        <source>Drawer</source>
-      </trans-unit>
-      <trans-unit id="locationType.position">
-        <source>Position</source>
-      </trans-unit>
-      <trans-unit id="locationType.box">
-        <source>Box</source>
-      </trans-unit>
-      <trans-unit id="locationType.tray">
-        <source>Tray</source>
-      </trans-unit>
-
-      <trans-unit id="qrScanner.title">
-        <source>Scan QR / barcode</source>
-      </trans-unit>
-      <trans-unit id="qrScanner.starting">
-        <source>Starting camera…</source>
-      </trans-unit>
-      <trans-unit id="qrScanner.error">
-        <source>Could not start camera</source>
-      </trans-unit>
-
-      <trans-unit id="qrLabel.heading">
-        <source>Printable label</source>
-      </trans-unit>
-      <trans-unit id="qrLabel.qrAlt">
-        <source>Barcode</source>
-      </trans-unit>
-      <trans-unit id="qrLabel.loading">
-        <source>Generating…</source>
-      </trans-unit>
-      <trans-unit id="qrLabel.empty">
-        <source>Nothing to encode</source>
-      </trans-unit>
-      <trans-unit id="qrLabel.format.qr">
-        <source>QR</source>
-      </trans-unit>
-      <trans-unit id="qrLabel.format.dataMatrix">
-        <source>Data Matrix</source>
-      </trans-unit>
-      <trans-unit id="qrLabel.format.code128">
-        <source>Code 128</source>
-      </trans-unit>
-      <trans-unit id="qrLabel.download">
-        <source>Download PNG</source>
-      </trans-unit>
-
-      <trans-unit id="scanView.heading">
-        <source>Scan</source>
-      </trans-unit>
-      <trans-unit id="scanView.manualScanLabel">
-        <source>Simulate scan (desktop)</source>
-      </trans-unit>
-      <trans-unit id="scanView.manualScanPlaceholder">
-        <source>item:MNCN-0001 or box:loc-0001</source>
-      </trans-unit>
-      <trans-unit id="scanView.scanButton">
-        <source>Scan</source>
-      </trans-unit>
-      <trans-unit id="scanView.pendingPositionLabel">
-        <source>Position</source>
-      </trans-unit>
-      <trans-unit id="scanView.pendingTubeLabel">
-        <source>Tube</source>
-      </trans-unit>
-      <trans-unit id="scanView.cancelButton">
-        <source>Cancel</source>
-      </trans-unit>
-      <trans-unit id="scanView.recentScansHeading">
-        <source>Recent scans</source>
-      </trans-unit>
-      <trans-unit id="scanView.noRecentScans">
-        <source>No scans yet.</source>
-      </trans-unit>
-      <trans-unit id="scanView.backToExplore">
-        <source>Back to explore</source>
-      </trans-unit>
-
-      <trans-unit id="labelView.heading">
-        <source>Labels</source>
-      </trans-unit>
-      <trans-unit id="labelView.selectPrompt">
-        <source>Select a location or item from the tree to generate its label.</source>
-      </trans-unit>
-      <trans-unit id="labelView.locationSection">
+      <trans-unit id="app.pane.selectedLocation">
         <source>Selected location</source>
       </trans-unit>
-      <trans-unit id="labelView.itemSection">
-        <source>Selected item</source>
+      <trans-unit id="app.quickJump.closeLabel">
+        <source>Close</source>
       </trans-unit>
-      <trans-unit id="labelView.backToExplore">
-        <source>Back to explore</source>
+      <trans-unit id="app.quickJump.sheetTitle">
+        <source>Go to anywhere</source>
       </trans-unit>
-
-      <trans-unit id="itemDetail.emptyState">
-        <source>Select an item or location to see its details.</source>
+      <trans-unit id="app.resetButton.label">
+        <source>Reset demo data</source>
       </trans-unit>
-      <trans-unit id="itemDetail.status.label">
-        <source>Status</source>
+      <trans-unit id="app.resetButton.title">
+        <source>Discard demo edits and regenerate the synthetic dataset</source>
       </trans-unit>
-      <trans-unit id="itemDetail.currentLocation.label">
-        <source>Current location</source>
+      <trans-unit id="app.scanButton.label">
+        <source>Scan</source>
       </trans-unit>
-      <trans-unit id="itemDetail.notLocated">
-        <source>Not currently located</source>
+      <trans-unit id="app.scanButton.title">
+        <source>Open the camera scanner</source>
       </trans-unit>
-      <trans-unit id="itemDetail.moveButton">
-        <source>Move item…</source>
+      <trans-unit id="app.title">
+        <source>Physical Location Prototype</source>
       </trans-unit>
-      <trans-unit id="itemDetail.cancelMoveButton">
-        <source>Cancel move</source>
-      </trans-unit>
-      <trans-unit id="itemDetail.moveHint">
-        <source>Click a destination in the location tree, or a card/cell in the centre panel, to confirm — or drag it there directly.</source>
-      </trans-unit>
-      <trans-unit id="itemDetail.historyTitle">
-        <source>History</source>
-      </trans-unit>
-      <trans-unit id="itemDetail.noHistory">
-        <source>No recorded movements.</source>
-      </trans-unit>
-      <trans-unit id="itemDetail.unlocated">
-        <source>Unlocated</source>
-      </trans-unit>
-      <trans-unit id="itemDetail.status.active">
-        <source>Active</source>
-      </trans-unit>
-      <trans-unit id="itemDetail.status.checkedOut">
-        <source>Checked out</source>
-      </trans-unit>
-      <trans-unit id="itemDetail.status.lost">
-        <source>Lost</source>
-      </trans-unit>
-      <trans-unit id="itemDetail.status.archived">
-        <source>Archived</source>
-      </trans-unit>
-
       <trans-unit id="confirmMoveModal.ariaLabel">
         <source>Confirm move</source>
-      </trans-unit>
-      <trans-unit id="confirmMoveModal.prompt">
-        <source>Move {catalogueNumber} to {destination}?</source>
       </trans-unit>
       <trans-unit id="confirmMoveModal.cancel">
         <source>Cancel</source>
@@ -366,18 +68,221 @@
       <trans-unit id="confirmMoveModal.confirm">
         <source>Move here</source>
       </trans-unit>
-
+      <trans-unit id="confirmMoveModal.prompt">
+        <source>Move {catalogueNumber} to {destination}?</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.addButton">
+        <source>Add</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.addComponent">
+        <source>Add component</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.addComponentPrompt">
+        <source>Name for the new {type}:</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.addComponentTitle">
+        <source>Add {type}</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.addLabel">
+        <source>Add</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.ariaLabel">
+        <source>Floor plan</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.cancelButton">
+        <source>Cancel</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.dragHint">
+        <source>Drag to reposition</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.empty">
+        <source>Empty</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.itemCount">
+        <source>{count} item(s)</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.layoutHint">
+        <source>Move and resize</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.layoutLabel">
+        <source>Move</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.planLabel">
+        <source>Plan</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.previewHint">
+        <source>Hover to preview what is inside</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.removePlan">
+        <source>Remove floor plan image</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.resetShapeHint">
+        <source>Revert to a rectangle</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.resetShapeLabel">
+        <source>Reset</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.resizeHint">
+        <source>Drag to resize</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.shapeHint">
+        <source>Edit the shape (90° corners only)</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.shapeLabel">
+        <source>Shape</source>
+      </trans-unit>
+      <trans-unit id="floorPlan.uploadPlan">
+        <source>Upload floor plan image</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.ariaLabel">
+        <source>3D floor plan</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.empty">
+        <source>Empty</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.itemCount">
+        <source>{count} item(s)</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.orbitHint">
+        <source>Drag to orbit, scroll to zoom</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.resetView">
+        <source>Reset view</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.rotateDown">
+        <source>Tilt down</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.rotateGroupLabel">
+        <source>Rotate view</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.rotateLeft">
+        <source>Spin left</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.rotateRight">
+        <source>Spin right</source>
+      </trans-unit>
+      <trans-unit id="floorPlan3d.rotateUp">
+        <source>Tilt up</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.cancelMoveButton">
+        <source>Cancel move</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.currentLocation.label">
+        <source>Current location</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.emptyState">
+        <source>Select an item or location to see its details.</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.historyTitle">
+        <source>History</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.moveButton">
+        <source>Move item…</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.moveHint">
+        <source>Click a destination in the location tree, or a card/cell in the centre panel, to confirm — or drag it there directly.</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.name">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.noHistory">
+        <source>No recorded movements.</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.notLocated">
+        <source>Not currently located</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.active">
+        <source>Active</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.archived">
+        <source>Archived</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.checkedOut">
+        <source>Checked out</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.label">
+        <source>Status</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.status.lost">
+        <source>Lost</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.unlocated">
+        <source>Unlocated</source>
+      </trans-unit>
+      <trans-unit id="labelView.backToExplore">
+        <source>Back to explore</source>
+      </trans-unit>
+      <trans-unit id="labelView.heading">
+        <source>Labels</source>
+      </trans-unit>
+      <trans-unit id="labelView.itemSection">
+        <source>Selected item</source>
+      </trans-unit>
+      <trans-unit id="labelView.locationSection">
+        <source>Selected location</source>
+      </trans-unit>
+      <trans-unit id="labelView.selectPrompt">
+        <source>Select a location or item from the tree to generate its label.</source>
+      </trans-unit>
+      <trans-unit id="languageSwitcher.ariaLabel">
+        <source>Select language</source>
+      </trans-unit>
+      <trans-unit id="locationTree.allLabel">
+        <source>All</source>
+      </trans-unit>
+      <trans-unit id="locationTree.ariaLabel">
+        <source>Physical location hierarchy</source>
+      </trans-unit>
+      <trans-unit id="locationTree.emptyLabel">
+        <source>Empty</source>
+      </trans-unit>
+      <trans-unit id="locationTree.quickJump.ariaLabel">
+        <source>Go to anywhere</source>
+      </trans-unit>
+      <trans-unit id="locationTree.quickJump.label">
+        <source>Go to…</source>
+      </trans-unit>
+      <trans-unit id="locationTree.selectBuilding">
+        <source>Select building</source>
+      </trans-unit>
+      <trans-unit id="locationTree.toggle.collapse">
+        <source>Collapse {name}</source>
+      </trans-unit>
+      <trans-unit id="locationTree.toggle.expand">
+        <source>Expand {name}</source>
+      </trans-unit>
+      <trans-unit id="locationType.box">
+        <source>Box</source>
+      </trans-unit>
+      <trans-unit id="locationType.building">
+        <source>Building</source>
+      </trans-unit>
+      <trans-unit id="locationType.cabinet">
+        <source>Cabinet</source>
+      </trans-unit>
+      <trans-unit id="locationType.drawer">
+        <source>Drawer</source>
+      </trans-unit>
+      <trans-unit id="locationType.floor">
+        <source>Floor</source>
+      </trans-unit>
+      <trans-unit id="locationType.position">
+        <source>Position</source>
+      </trans-unit>
+      <trans-unit id="locationType.room">
+        <source>Room</source>
+      </trans-unit>
+      <trans-unit id="locationType.tray">
+        <source>Tray</source>
+      </trans-unit>
+      <trans-unit id="locationView.addButton">
+        <source>Add</source>
+      </trans-unit>
       <trans-unit id="locationView.addComponent">
         <source>Add {type}</source>
       </trans-unit>
       <trans-unit id="locationView.addComponentPrompt">
-        <source>Name for the new {type}:</source>
-      </trans-unit>
-      <trans-unit id="locationView.trayRowsPrompt">
-        <source>Number of rows:</source>
-      </trans-unit>
-      <trans-unit id="locationView.trayColumnsPrompt">
-        <source>Number of columns:</source>
+        <source>{type} Name</source>
       </trans-unit>
       <trans-unit id="locationView.addItem">
         <source>Add item</source>
@@ -385,20 +290,101 @@
       <trans-unit id="locationView.addItemPrompt">
         <source>Catalogue number for the new item:</source>
       </trans-unit>
-      <trans-unit id="app.quickJump.sheetTitle">
-        <source>Go to anywhere</source>
+      <trans-unit id="locationView.breadcrumbAriaLabel">
+        <source>Location breadcrumb</source>
       </trans-unit>
-      <trans-unit id="app.quickJump.closeLabel">
+      <trans-unit id="locationView.cancelButton">
+        <source>Cancel</source>
+      </trans-unit>
+      <trans-unit id="locationView.confirmButton">
+        <source>OK</source>
+      </trans-unit>
+      <trans-unit id="locationView.directItemsIntro">
+        <source>Items stored directly in {name} (no finer position recorded):</source>
+      </trans-unit>
+      <trans-unit id="locationView.emptyBadge">
+        <source>Empty</source>
+      </trans-unit>
+      <trans-unit id="locationView.emptyState">
+        <source>Nothing recorded here yet.</source>
+      </trans-unit>
+      <trans-unit id="locationView.itemCount">
+        <source>{count} item(s)</source>
+      </trans-unit>
+      <trans-unit id="locationView.movingBanner">
+        <source>Moving {catalogueNumber} — select a destination.</source>
+      </trans-unit>
+      <trans-unit id="locationView.rootBreadcrumb">
+        <source>All</source>
+      </trans-unit>
+      <trans-unit id="locationView.trayColumnsPrompt">
+        <source>Number of columns:</source>
+      </trans-unit>
+      <trans-unit id="locationView.trayColumnsTitle">
+        <source>Tray columns</source>
+      </trans-unit>
+      <trans-unit id="locationView.trayRowsPrompt">
+        <source>Number of rows:</source>
+      </trans-unit>
+      <trans-unit id="locationView.trayRowsTitle">
+        <source>Tray rows</source>
+      </trans-unit>
+      <trans-unit id="locationView.viewMode.3d">
+        <source>3D</source>
+      </trans-unit>
+      <trans-unit id="locationView.viewMode.data">
+        <source>Details</source>
+      </trans-unit>
+      <trans-unit id="locationView.viewMode.details">
+        <source>Details</source>
+      </trans-unit>
+      <trans-unit id="locationView.viewMode.list">
+        <source>Details</source>
+      </trans-unit>
+      <trans-unit id="locationView.viewMode.map">
+        <source>Map</source>
+      </trans-unit>
+      <trans-unit id="positionGrid.positionEmptyTitle">
+        <source>{name} (empty)</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.download">
+        <source>Download PNG</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.empty">
+        <source>Nothing to encode</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.format.code128">
+        <source>Code 128</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.format.dataMatrix">
+        <source>Data Matrix</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.format.qr">
+        <source>QR</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.heading">
+        <source>Printable label</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.loading">
+        <source>Generating…</source>
+      </trans-unit>
+      <trans-unit id="qrLabel.qrAlt">
+        <source>Barcode</source>
+      </trans-unit>
+      <trans-unit id="qrScanner.cameraNotAllowed">
+        <source>Camera access is not allowed in this context.</source>
+      </trans-unit>
+      <trans-unit id="qrScanner.closeButton">
         <source>Close</source>
       </trans-unit>
-      <trans-unit id="app.footer.madeBy">
-        <source>Made by</source>
+      <trans-unit id="qrScanner.error">
+        <source>Could not start camera</source>
       </trans-unit>
-      <trans-unit id="quickJumpSheet.searchPlaceholder">
-        <source>Building, room, cabinet, tray…</source>
+      <trans-unit id="qrScanner.starting">
+        <source>Starting camera…</source>
       </trans-unit>
-      <trans-unit id="quickJumpSheet.searchAriaLabel">
-        <source>Search destination</source>
+      <trans-unit id="qrScanner.title">
+        <source>Scan QR / barcode</source>
       </trans-unit>
       <trans-unit id="quickJumpSheet.clearLabel">
         <source>Clear</source>
@@ -406,11 +392,305 @@
       <trans-unit id="quickJumpSheet.empty">
         <source>No matches</source>
       </trans-unit>
+      <trans-unit id="quickJumpSheet.itemsCount">
+        <source>{count} items</source>
+      </trans-unit>
       <trans-unit id="quickJumpSheet.recents">
         <source>Recent</source>
       </trans-unit>
-      <trans-unit id="quickJumpSheet.itemsCount">
-        <source>{count} items</source>
+      <trans-unit id="quickJumpSheet.searchAriaLabel">
+        <source>Search destination</source>
+      </trans-unit>
+      <trans-unit id="quickJumpSheet.searchPlaceholder">
+        <source>Building, room, cabinet, tray…</source>
+      </trans-unit>
+      <trans-unit id="scanView.awaitingInputLabel">
+        <source>Awaiting Input</source>
+      </trans-unit>
+      <trans-unit id="scanView.backToCameraLabel">
+        <source>Back to Camera</source>
+      </trans-unit>
+      <trans-unit id="scanView.backToExplore">
+        <source>Back to explore</source>
+      </trans-unit>
+      <trans-unit id="scanView.cancelButton">
+        <source>Cancel</source>
+      </trans-unit>
+      <trans-unit id="scanView.closeLabel">
+        <source>Close</source>
+      </trans-unit>
+      <trans-unit id="scanView.confirmLabel">
+        <source>Confirm</source>
+      </trans-unit>
+      <trans-unit id="scanView.destinationInputLabel">
+        <source>Destination code</source>
+      </trans-unit>
+      <trans-unit id="scanView.destinationInputPlaceholder">
+        <source>loc-0001 or box:loc-0001</source>
+      </trans-unit>
+      <trans-unit id="scanView.destinationLabel">
+        <source>Destination</source>
+      </trans-unit>
+      <trans-unit id="scanView.errorLabel">
+        <source>Error</source>
+      </trans-unit>
+      <trans-unit id="scanView.extractInputLabel">
+        <source>Item code</source>
+      </trans-unit>
+      <trans-unit id="scanView.extractInputPlaceholder">
+        <source>item:MNCN-0001</source>
+      </trans-unit>
+      <trans-unit id="scanView.extractModeLabel">
+        <source>Extract</source>
+      </trans-unit>
+      <trans-unit id="scanView.heading">
+        <source>Intelligent Logistics</source>
+      </trans-unit>
+      <trans-unit id="scanView.itemInputLabel">
+        <source>Item code</source>
+      </trans-unit>
+      <trans-unit id="scanView.itemInputPlaceholder">
+        <source>item:MNCN-0001</source>
+      </trans-unit>
+      <trans-unit id="scanView.lockedLabel">
+        <source>Locked</source>
+      </trans-unit>
+      <trans-unit id="scanView.manualEntryLabel">
+        <source>Manual Entry</source>
+      </trans-unit>
+      <trans-unit id="scanView.manualScanLabel">
+        <source>Simulate scan (desktop)</source>
+      </trans-unit>
+      <trans-unit id="scanView.manualScanPlaceholder">
+        <source>item:MNCN-0001 or box:loc-0001</source>
+      </trans-unit>
+      <trans-unit id="scanView.noRecentScans">
+        <source>No scans yet.</source>
+      </trans-unit>
+      <trans-unit id="scanView.operationLabel">
+        <source>Operation</source>
+      </trans-unit>
+      <trans-unit id="scanView.pendingPositionLabel">
+        <source>Position</source>
+      </trans-unit>
+      <trans-unit id="scanView.pendingTubeLabel">
+        <source>Tube</source>
+      </trans-unit>
+      <trans-unit id="scanView.placeModeLabel">
+        <source>Place</source>
+      </trans-unit>
+      <trans-unit id="scanView.recentScansHeading">
+        <source>Recent Activity</source>
+      </trans-unit>
+      <trans-unit id="scanView.rescanLabel">
+        <source>Rescan</source>
+      </trans-unit>
+      <trans-unit id="scanView.scanButton">
+        <source>Scan</source>
+      </trans-unit>
+      <trans-unit id="scanView.scanLabel">
+        <source>Scan</source>
+      </trans-unit>
+      <trans-unit id="scanView.scanManuallyLabel">
+        <source>Scan Manually</source>
+      </trans-unit>
+      <trans-unit id="scanView.selectedLabel">
+        <source>Selected</source>
+      </trans-unit>
+      <trans-unit id="scanView.statusSuccess">
+        <source>Success</source>
+      </trans-unit>
+      <trans-unit id="scanView.statusWarning">
+        <source>Warning</source>
+      </trans-unit>
+      <trans-unit id="scanView.step1ExtractDescription">
+        <source>Scan an item to remove it from storage.</source>
+      </trans-unit>
+      <trans-unit id="scanView.step1PlaceDescription">
+        <source>Scan the item you want to return to storage.</source>
+      </trans-unit>
+      <trans-unit id="scanView.step1Title">
+        <source>Step 1: Scan Item</source>
+      </trans-unit>
+      <trans-unit id="scanView.step2Description">
+        <source>Scan the location tag where the item should be stored.</source>
+      </trans-unit>
+      <trans-unit id="scanView.step2Title">
+        <source>Step 2: Scan Destination</source>
+      </trans-unit>
+      <trans-unit id="scanView.subheading">
+        <source>Scan items and destinations to maintain precise inventory control.</source>
+      </trans-unit>
+      <trans-unit id="scanView.successLabel">
+        <source>Success</source>
+      </trans-unit>
+      <trans-unit id="scanView.viewAllLabel">
+        <source>View All</source>
+      </trans-unit>
+      <trans-unit id="searchBar.ariaLabel">
+        <source>Search collection</source>
+      </trans-unit>
+      <trans-unit id="searchBar.noCurrentLocation">
+        <source>No current location</source>
+      </trans-unit>
+      <trans-unit id="searchBar.noMatches">
+        <source>No matches</source>
+      </trans-unit>
+      <trans-unit id="searchBar.placeholder">
+        <source>Search collection… (catalogue number or label)</source>
+      </trans-unit>
+      <trans-unit id="app.brand.subtitle">
+        <source>Precision Management</source>
+      </trans-unit>
+      <trans-unit id="app.nav.reports">
+        <source>Reports</source>
+      </trans-unit>
+      <trans-unit id="app.nav.settings">
+        <source>Settings</source>
+      </trans-unit>
+      <trans-unit id="app.nav.support">
+        <source>Support</source>
+      </trans-unit>
+      <trans-unit id="app.resetButton.shortLabel">
+        <source>Reset demo</source>
+      </trans-unit>
+      <trans-unit id="app.tree.collapse">
+        <source>Collapse</source>
+      </trans-unit>
+      <trans-unit id="app.tree.collapseHierarchy">
+        <source>Collapse hierarchy</source>
+      </trans-unit>
+      <trans-unit id="app.tree.expand">
+        <source>Expand</source>
+      </trans-unit>
+      <trans-unit id="app.tree.expandHierarchy">
+        <source>Expand hierarchy</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.closeDetailLabel">
+        <source>Close detail</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.labelFormatAriaLabel">
+        <source>Label format</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.labelPreviewTitle">
+        <source>Label Preview</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.printLabel">
+        <source>Print Label</source>
+      </trans-unit>
+      <trans-unit id="locationDetails.buildingSummaryHeading">
+        <source>Building Summary</source>
+      </trans-unit>
+      <trans-unit id="locationDetails.cabinetsLabel">
+        <source>Cabinets</source>
+      </trans-unit>
+      <trans-unit id="locationDetails.contentsHeading">
+        <source>Contents</source>
+      </trans-unit>
+      <trans-unit id="locationDetails.floorSummaryHeading">
+        <source>Floor Summary</source>
+      </trans-unit>
+      <trans-unit id="locationDetails.floorsLabel">
+        <source>Floors</source>
+      </trans-unit>
+      <trans-unit id="locationDetails.roomsLabel">
+        <source>Rooms</source>
+      </trans-unit>
+      <trans-unit id="locationDetails.totalItemsLabel">
+        <source>Total Items</source>
+      </trans-unit>
+      <trans-unit id="locationEditModal.cancel">
+        <source>Cancel</source>
+      </trans-unit>
+      <trans-unit id="locationEditModal.editTitle">
+        <source>Edit {type}</source>
+      </trans-unit>
+      <trans-unit id="locationEditModal.nameLabel">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="locationEditModal.saveChanges">
+        <source>Save Changes</source>
+      </trans-unit>
+      <trans-unit id="locationEditModal.storageConditions">
+        <source>Storage conditions</source>
+      </trans-unit>
+      <trans-unit id="locationEditModal.targetHumidity">
+        <source>Target Humidity (%)</source>
+      </trans-unit>
+      <trans-unit id="locationEditModal.targetTemperature">
+        <source>Target Temperature (°C)</source>
+      </trans-unit>
+      <trans-unit id="locationView.addPositionHint">
+        <source>Will be added to {position} · first available slot</source>
+      </trans-unit>
+      <trans-unit id="locationView.availableLabel">
+        <source>available</source>
+      </trans-unit>
+      <trans-unit id="locationView.capacityLabel">
+        <source>Capacity</source>
+      </trans-unit>
+      <trans-unit id="locationView.containersHeading">
+        <source>Containers</source>
+      </trans-unit>
+      <trans-unit id="locationView.fixedSetpointLabel">
+        <source>Fixed Setpoint</source>
+      </trans-unit>
+      <trans-unit id="locationView.itemsHeading">
+        <source>Items</source>
+      </trans-unit>
+      <trans-unit id="locationView.labelFormatLabel">
+        <source>Label Format</source>
+      </trans-unit>
+      <trans-unit id="locationView.labelPreviewTitle">
+        <source>Label Preview</source>
+      </trans-unit>
+      <trans-unit id="locationView.noItemsYet">
+        <source>No items yet</source>
+      </trans-unit>
+      <trans-unit id="locationView.printLabel">
+        <source>Print</source>
+      </trans-unit>
+      <trans-unit id="locationView.printableLabelFormat">
+        <source>Standard 2x2 inch thermal label format</source>
+      </trans-unit>
+      <trans-unit id="locationView.printableLabelPreview">
+        <source>Printable Label Preview</source>
+      </trans-unit>
+      <trans-unit id="locationView.slotsLabel">
+        <source>Slots</source>
+      </trans-unit>
+      <trans-unit id="locationView.targetHumidityLabel">
+        <source>Target Humidity</source>
+      </trans-unit>
+      <trans-unit id="locationView.targetTemperatureLabel">
+        <source>Target Temp</source>
+      </trans-unit>
+      <trans-unit id="locationView.trayView.ariaLabel">
+        <source>Tray view</source>
+      </trans-unit>
+      <trans-unit id="locationView.trayView.grid">
+        <source>Grid</source>
+      </trans-unit>
+      <trans-unit id="positionGrid.availableLabel">
+        <source>Available</source>
+      </trans-unit>
+      <trans-unit id="promptModal.uniqueIdentifierHint">
+        <source>Use a unique identifier for this location.</source>
+      </trans-unit>
+      <trans-unit id="scanView.detailsColumn">
+        <source>Details</source>
+      </trans-unit>
+      <trans-unit id="scanView.itemColumn">
+        <source>Item</source>
+      </trans-unit>
+      <trans-unit id="scanView.recentActivityAriaLabel">
+        <source>Recent scan activity</source>
+      </trans-unit>
+      <trans-unit id="scanView.stepsAriaLabel">
+        <source>Scan steps</source>
+      </trans-unit>
+      <trans-unit id="scanView.timeColumn">
+        <source>Time</source>
       </trans-unit>
     </body>
   </file>

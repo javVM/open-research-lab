@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { UpperCasePipe } from '@angular/common';
 import type { Item, Location, Movement } from '../../../core/models';
 import { breadcrumb, childrenOf } from '../../../core/tree';
 import { historyOf, itemsAtLocation } from '../../../core/search';
@@ -14,12 +15,13 @@ import { registerAppIcons } from '../../shared/icons';
 import { QR_SCANNABLE_LOCATION_TYPES } from '../../shared/hierarchy.constants';
 import { createItemDetailTranslations } from './item-detail.translations';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
+import { createQrLabelTranslations } from '../qr-label/qr-label.translations';
 import type { LocationType } from '../../../core/models';
 
 @Component({
   standalone: true,
   selector: 'app-item-detail',
-  imports: [QrLabelComponent, HistoryModalComponent, MatButtonModule, MatIconModule],
+  imports: [QrLabelComponent, HistoryModalComponent, MatButtonModule, MatIconModule, UpperCasePipe],
   templateUrl: './item-detail.component.html',
   styleUrl: './item-detail.component.scss',
 })
@@ -28,6 +30,7 @@ export class ItemDetailComponent {
   protected readonly navigation = inject(NavigationService);
   protected readonly move = inject(MoveService);
   protected readonly text = createItemDetailTranslations(inject(TranslationService));
+  protected readonly qrText = createQrLabelTranslations(inject(TranslationService));
   private readonly locationType = createLocationTypeTranslations(inject(TranslationService));
   protected readonly qrFormat = signal<'qr' | 'datamatrix' | 'code128'>('qr');
 

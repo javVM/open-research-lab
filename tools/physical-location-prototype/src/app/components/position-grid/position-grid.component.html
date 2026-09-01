@@ -32,7 +32,7 @@
                   <span class="position-cell__code">{{ occupant.catalogueNumber }}</span>
                 </div>
               } @else {
-                <div class="position-cell__available"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> AVAILABLE</div>
+                <div class="position-cell__available"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> {{ text.availableLabel() }}</div>
               }
             }
           </td>

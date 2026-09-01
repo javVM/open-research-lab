@@ -5,7 +5,7 @@
         <mat-icon svgIcon="brand" aria-hidden="true" class="sidenav__mark"></mat-icon>
         <h1>Nexus Lab</h1>
       </div>
-      <p class="sidenav__subtitle">Precision Management</p>
+      <p class="sidenav__subtitle">{{ text.brandSubtitle() }}</p>
     </div>
 
     <ul class="sidenav__nav">
@@ -37,13 +37,13 @@
       <li>
         <span class="sidenav__link sidenav__link--disabled" aria-disabled="true">
           <mat-icon svgIcon="reports" aria-hidden="true"></mat-icon>
-          <span>Reports</span>
+          <span>{{ text.navReports() }}</span>
         </span>
       </li>
       <li>
         <span class="sidenav__link sidenav__link--disabled" aria-disabled="true">
           <mat-icon svgIcon="settings" aria-hidden="true"></mat-icon>
-          <span>Settings</span>
+          <span>{{ text.navSettings() }}</span>
         </span>
       </li>
     </ul>
@@ -53,7 +53,7 @@
         <li>
           <span class="sidenav__link sidenav__link--disabled" aria-disabled="true">
             <mat-icon svgIcon="info" aria-hidden="true"></mat-icon>
-            <span>Support</span>
+            <span>{{ text.navSupport() }}</span>
           </span>
         </li>
         <li>
@@ -65,7 +65,7 @@
             [attr.aria-label]="text.resetButtonTitle()"
           >
             <mat-icon svgIcon="reset" aria-hidden="true"></mat-icon>
-            <span>Reset demo</span>
+            <span>{{ text.resetButtonShortLabel() }}</span>
           </button>
         </li>
       </ul>
@@ -74,11 +74,7 @@
 
   <header class="topbar">
     <div class="topbar__left">
-      @if (navigation.uiMode() === 'explore') {
-        <app-search-bar class="topbar__search"></app-search-bar>
-      } @else {
-        <span class="topbar__title">Scan</span>
-      }
+      <app-search-bar class="topbar__search"></app-search-bar>
     </div>
     <div class="topbar__right">
       <app-language-switcher></app-language-switcher>
@@ -105,8 +101,8 @@
             <button
               type="button"
               class="pane__collapse"
-              [attr.aria-label]="navigation.treeCollapsed() ? 'Expand hierarchy' : 'Collapse hierarchy'"
-              [attr.title]="navigation.treeCollapsed() ? 'Expand' : 'Collapse'"
+              [attr.aria-label]="navigation.treeCollapsed() ? text.treeExpandHierarchy() : text.treeCollapseHierarchy()"
+              [attr.title]="navigation.treeCollapsed() ? text.treeExpand() : text.treeCollapse()"
               (click)="navigation.treeCollapsed.set(!navigation.treeCollapsed())"
             >
               <mat-icon svgIcon="chevronLeft" aria-hidden="true"></mat-icon>
@@ -118,8 +114,8 @@
           <button
             type="button"
             class="tree-expand"
-            aria-label="Expand hierarchy"
-            title="Expand"
+            [attr.aria-label]="text.treeExpandHierarchy()"
+            [attr.title]="text.treeExpand()"
             (click)="navigation.treeCollapsed.set(false)"
           >
             <mat-icon svgIcon="chevronRight" aria-hidden="true"></mat-icon>

@@ -5,7 +5,10 @@ import type { Location } from '../../../core/models';
 import { descendantIds } from '../../../core/tree';
 import { CollectionService } from '../../collection.service';
 import { registerAppIcons } from '../../shared/icons';
-import { ADD_LABEL } from '../../shared/add-labels.constants';
+import { TranslationService } from '../../i18n/translation.service';
+import { createLocationViewTranslations } from '../location-view/location-view.translations';
+import { createLocationTypeTranslations } from '../../shared/location-type.translations';
+import { createLocationDetailsTranslations } from '../../shared/location-details.translations';
 
 @Component({
   standalone: true,
@@ -20,8 +23,12 @@ export class BuildingDetailsComponent {
   readonly selectChild = output<string>();
   readonly addItem = output<void>();
 
-  protected readonly addLabel = ADD_LABEL;
   private readonly collection = inject(CollectionService);
+  private readonly locationType = createLocationTypeTranslations(inject(TranslationService));
+  protected readonly text = createLocationViewTranslations(inject(TranslationService));
+  protected readonly detailsText = createLocationDetailsTranslations(inject(TranslationService));
+  protected readonly addFloorLabel = computed(() => this.text.addComponent(this.locationType.label('floor')));
+  protected readonly typeLabel = computed(() => this.locationType.label(this.location().type));
 
   constructor() {
     registerAppIcons();

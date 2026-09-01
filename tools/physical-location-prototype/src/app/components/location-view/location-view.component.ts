@@ -19,6 +19,7 @@ import { NavigationService } from '../../navigation.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createLocationViewTranslations } from './location-view.translations';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
+import { createQrLabelTranslations } from '../qr-label/qr-label.translations';
 import { FloorPlanComponent } from '../floor-plan/floor-plan.component';
 import { FloorPlan3dComponent } from '../floor-plan-3d/floor-plan-3d.component';
 import { PositionGridComponent } from '../position-grid/position-grid.component';
@@ -29,7 +30,6 @@ import { QR_SCANNABLE_LOCATION_TYPES } from '../../shared/hierarchy.constants';
 import { MIN_ROW_COLUMN_COUNT } from '../prompt-modal/prompt-modal.constants';
 import { QuickJumpService } from '../../shared/quick-jump.service';
 import { ITEM_HOLDING_TYPES, MAPPABLE_TYPES, PARENT_CHILD_TYPES } from '../../shared/hierarchy.constants';
-import { ADD_LABEL } from '../../shared/add-labels.constants';
 import { ID_PREFIX, newPrototypeId } from '../../shared/prototype-id';
 import { registerAppIcons } from '../../shared/icons';
 
@@ -64,6 +64,7 @@ export class LocationViewComponent {
   protected readonly move = inject(MoveService);
   protected readonly text = createLocationViewTranslations(inject(TranslationService));
   protected readonly locationType = createLocationTypeTranslations(inject(TranslationService));
+  protected readonly qrText = createQrLabelTranslations(inject(TranslationService));
   protected readonly geometry = inject(GeometryService);
   private readonly quickJump = inject(QuickJumpService);
 
@@ -182,31 +183,31 @@ export class LocationViewComponent {
 
   readonly isBuildingDetails = computed<boolean>(() => this.selectedLocation()?.type === 'building' && this.isDetailsView());
   readonly isFloorDetails = computed<boolean>(() => this.selectedLocation()?.type === 'floor' && this.isDetailsView());
-  private readonly headerAddLabelByLocationType: Readonly<Record<LocationType, string>> = {
-    building: ADD_LABEL.floor,
-    floor: ADD_LABEL.room,
-    room: ADD_LABEL.cabinet,
-    cabinet: ADD_LABEL.drawer,
-    drawer: ADD_LABEL.item,
-    box: ADD_LABEL.item,
-    tray: ADD_LABEL.item,
-    position: ADD_LABEL.item,
-  };
+  private readonly headerAddLabelByLocationType = computed<Readonly<Record<LocationType, string>>>(() => ({
+    building: this.text.addComponent(this.locationType.label('floor')),
+    floor: this.text.addComponent(this.locationType.label('room')),
+    room: this.text.addComponent(this.locationType.label('cabinet')),
+    cabinet: this.text.addComponent(this.locationType.label('drawer')),
+    drawer: this.text.addItem(),
+    box: this.text.addItem(),
+    tray: this.text.addItem(),
+    position: this.text.addItem(),
+  }));
   readonly headerAddLabel = computed<string>(() => {
-    if (this.hasMultipleAddOptions()) return ADD_LABEL.add;
+    if (this.hasMultipleAddOptions()) return this.text.addButton();
     const selectedLocationType = this.selectedLocation()?.type;
-    if (!selectedLocationType) return ADD_LABEL.item;
-    return this.headerAddLabelByLocationType[selectedLocationType];
+    if (!selectedLocationType) return this.text.addItem();
+    return this.headerAddLabelByLocationType()[selectedLocationType];
   });
   readonly headerAddOptions = computed<readonly { label: string; action: () => void }[]>(() => {
     const selectedLocation = this.selectedLocation();
     if (!selectedLocation) return [];
     const addOptions: { label: string; action: () => void }[] = [];
     for (const childLocationType of this.allowedChildTypes()) {
-      const addOptionLabel = `Add ${this.locationType.label(childLocationType)}`;
+      const addOptionLabel = this.text.addComponent(this.locationType.label(childLocationType));
       addOptions.push({ label: addOptionLabel, action: () => this.addComponent(childLocationType) });
     }
-    if (this.canAddItem()) addOptions.push({ label: ADD_LABEL.item, action: () => this.addItem() });
+    if (this.canAddItem()) addOptions.push({ label: this.text.addItem(), action: () => this.addItem() });
     return addOptions;
   });
   readonly hasMultipleAddOptions = computed(() => this.headerAddOptions().length > 1);
@@ -493,9 +494,10 @@ export class LocationViewComponent {
     void this.addBuildingAsync();
   }
   private async addBuildingAsync(): Promise<void> {
-    const name = await this.askText(this.text.addComponent('Building'), this.text.addComponentPrompt('Building'), `Building ${this.children().length + 1}`);
+    const buildingLabel = this.locationType.label('building');
+    const name = await this.askText(this.text.addComponent(buildingLabel), this.text.addComponentPrompt(buildingLabel), `${buildingLabel} ${this.children().length + 1}`);
     if (name === null) return;
-    const trimmed = name.trim() || `Building ${this.children().length + 1}`;
+    const trimmed = name.trim() || `${buildingLabel} ${this.children().length + 1}`;
     this.collection.addLocation({ id: newPrototypeId(ID_PREFIX.location), parentId: null, name: trimmed, type: 'building' });
   }
 

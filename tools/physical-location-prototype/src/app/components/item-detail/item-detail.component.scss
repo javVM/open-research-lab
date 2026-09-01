@@ -109,22 +109,49 @@
 
 .label-preview__header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
 }
 
 .label-preview__title {
   font-size: 13px;
   font-weight: 700;
   color: var(--text, #151c27);
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
-.item-detail__format{
-  display:flex;gap:4px;background:#f1f1f3;border-radius:999px;padding:4px;
+.item-detail__format {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2px;
+  width: 100%;
+  background: #f1f1f3;
+  border-radius: 999px;
+  padding: 3px;
+  box-sizing: border-box;
 }
-.format-btn{flex:1;border:none;background:transparent;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;color:#464555;white-space:nowrap}
-.format-btn--active{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12);color:#4f46e5}
+
+.format-btn {
+  flex: 1 1 0;
+  border: none;
+  background: transparent;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #464555;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.format-btn--active {
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  color: #4f46e5;
+}
 
 /* Reuse printable-label del sistema (mismo formato que location-view) */
 .printable-label {
@@ -140,6 +167,7 @@
   background: #fff;
   flex-shrink: 0;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 .printable-label__header {
   width: 100%;
@@ -340,5 +368,4 @@
 
 @include on-mobile {
   .item-detail {padding:14px}
-  .label-preview__header{flex-direction:column;align-items:stretch}
 }

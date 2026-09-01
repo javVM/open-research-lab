@@ -40,6 +40,11 @@ import {
   destinationInputPlaceholder,
   statusSuccess,
   statusWarning,
+  itemColumn,
+  detailsColumn,
+  timeColumn,
+  stepsAriaLabel,
+  recentActivityAriaLabel,
 } from './scan-view.constants';
 
 export function createScanViewTranslations(i18n: TranslationService) {
@@ -84,5 +89,10 @@ export function createScanViewTranslations(i18n: TranslationService) {
     destinationInputPlaceholder: () => i18n.t('scanView.destinationInputPlaceholder', destinationInputPlaceholder),
     statusSuccess: () => i18n.t('scanView.statusSuccess', statusSuccess),
     statusWarning: () => i18n.t('scanView.statusWarning', statusWarning),
+    itemColumn: () => i18n.t('scanView.itemColumn', itemColumn),
+    detailsColumn: () => i18n.t('scanView.detailsColumn', detailsColumn),
+    timeColumn: () => i18n.t('scanView.timeColumn', timeColumn),
+    stepsAriaLabel: () => i18n.t('scanView.stepsAriaLabel', stepsAriaLabel),
+    recentActivityAriaLabel: () => i18n.t('scanView.recentActivityAriaLabel', recentActivityAriaLabel),
   };
 }

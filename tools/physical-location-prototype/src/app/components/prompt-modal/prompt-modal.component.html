@@ -21,7 +21,7 @@
           autofocus
         />
         @if (kind() === 'text') {
-          <mat-hint>Use a unique identifier for this location.</mat-hint>
+          <mat-hint>{{ text.uniqueIdentifierHint() }}</mat-hint>
         }
       </mat-form-field>
       <div class="modal__actions">

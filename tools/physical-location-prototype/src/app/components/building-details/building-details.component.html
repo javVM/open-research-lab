@@ -3,48 +3,48 @@
     <div class="detail-card__header">
       <h3 class="editable-title" (click)="edit()" role="button" tabindex="0" matTooltip="Click to rename">{{ location().name }}</h3>
 
-       <button type="button" class="add-item add-item--header" (click)="addItem.emit()"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> {{ addLabel.floor }}</button>
+       <button type="button" class="add-item add-item--header" (click)="addItem.emit()"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> {{ addFloorLabel() }}</button>
     </div>
     <div class="detail-card__chips">
-      <span class="detail-card__badge detail-card__badge--muted">BUILDING</span>
-      <span class="detail-card__count">{{ totalItems() }} item(s)</span>
+      <span class="detail-card__badge detail-card__badge--muted">{{ typeLabel() }}</span>
+      <span class="detail-card__count">{{ text.itemCount(totalItems()) }}</span>
     </div>
   </div>
 
-  <h3 class="building-summary__heading">Building Summary</h3>
+  <h3 class="building-summary__heading">{{ detailsText.buildingSummaryHeading() }}</h3>
   <div class="building-summary">
     <div class="building-summary__card">
       <div class="building-summary__top">
         <mat-icon svgIcon="layers" aria-hidden="true"></mat-icon>
         <span class="building-summary__value">{{ floorCount() }}</span>
       </div>
-      <span class="building-summary__label">Floors</span>
+      <span class="building-summary__label">{{ detailsText.floorsLabel() }}</span>
     </div>
     <div class="building-summary__card">
       <div class="building-summary__top">
         <mat-icon svgIcon="roomIcon" aria-hidden="true"></mat-icon>
         <span class="building-summary__value">{{ roomCount() }}</span>
       </div>
-      <span class="building-summary__label">Rooms</span>
+      <span class="building-summary__label">{{ detailsText.roomsLabel() }}</span>
     </div>
     <div class="building-summary__card">
       <div class="building-summary__top">
         <mat-icon svgIcon="cube" aria-hidden="true"></mat-icon>
         <span class="building-summary__value">{{ totalItems() }}</span>
       </div>
-      <span class="building-summary__label">Total Items</span>
+      <span class="building-summary__label">{{ detailsText.totalItemsLabel() }}</span>
     </div>
   </div>
 
   <div class="detail-card">
-    <h4 class="detail-card__heading">CONTENTS</h4>
+    <h4 class="detail-card__heading">{{ detailsText.contentsHeading() }}</h4>
     <ul class="detail-list detail-list--contents">
       @for (child of children(); track child.id) {
         <li>
           <button type="button" class="detail-list__item detail-list__item--contents building-contents__item" (click)="selectChild.emit(child.id)">
             <span class="detail-list__main">
               <span class="detail-list__name">{{ child.name }}</span>
-              <span class="detail-list__sub">{{ itemCountAt(child.id) }} items</span>
+              <span class="detail-list__sub">{{ text.itemCount(itemCountAt(child.id)) }}</span>
             </span>
             <mat-icon svgIcon="chevronRight" aria-hidden="true" class="detail-list__chevron"></mat-icon>
           </button>

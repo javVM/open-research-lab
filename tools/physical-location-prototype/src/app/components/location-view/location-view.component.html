@@ -34,9 +34,9 @@
           </button>
         </div>
       } @else if (isTrayGrid()) {
-        <div class="view-mode-toggle" role="group" aria-label="Tray view">
-          <button type="button" mat-button class="view-mode-toggle__button" [class.view-mode-toggle__button--active]="!isDetailsView()" [attr.aria-pressed]="!isDetailsView()" (click)="setViewMode('map')">Grid</button>
-          <button type="button" mat-button class="view-mode-toggle__button" [class.view-mode-toggle__button--active]="isDetailsView()" [attr.aria-pressed]="isDetailsView()" (click)="setViewMode('details')">Details</button>
+        <div class="view-mode-toggle" role="group" [attr.aria-label]="text.trayViewAriaLabel()">
+          <button type="button" mat-button class="view-mode-toggle__button" [class.view-mode-toggle__button--active]="!isDetailsView()" [attr.aria-pressed]="!isDetailsView()" (click)="setViewMode('map')">{{ text.trayViewGrid() }}</button>
+          <button type="button" mat-button class="view-mode-toggle__button" [class.view-mode-toggle__button--active]="isDetailsView()" [attr.aria-pressed]="isDetailsView()" (click)="setViewMode('details')">{{ text.viewModeDetails() }}</button>
         </div>
       }
     </div>
@@ -64,11 +64,11 @@
             }
           </div>
           <div class="detail-card__chips">
-            <span class="detail-card__badge detail-card__badge--muted">TRAY</span>
-            <span class="detail-card__count">{{ locationItemCount() }} item(s)</span>
+            <span class="detail-card__badge detail-card__badge--muted">{{ locationType.label('tray') }}</span>
+            <span class="detail-card__count">{{ text.itemCount(locationItemCount()) }}</span>
           </div>
           @if (nextAvailablePositionName()) {
-            <p class="detail-card__position-hint">Se añadirá en <strong>{{ nextAvailablePositionName() }}</strong> · primer hueco disponible</p>
+            <p class="detail-card__position-hint">{{ text.addPositionHint(nextAvailablePositionName()) }}</p>
           }
         </div>
         <div class="details-layout">
@@ -76,8 +76,8 @@
             <div class="printable-card" [class.printable-card--zoomed]="labelZoomed()">
               <div class="printable-card__header">
                 <div>
-                  <h3>Printable Label Preview</h3>
-                  <p>Standard 2x2 inch thermal label format</p>
+                  <h3>{{ text.printableLabelPreview() }}</h3>
+                  <p>{{ text.printableLabelFormat() }}</p>
                 </div>
                 <div class="printable-card__actions">
                   <button type="button" class="printable-card__icon" aria-label="Expand preview" (click)="openLabelPreview()"><mat-icon svgIcon="zoomFit" aria-hidden="true"></mat-icon></button>
@@ -92,20 +92,20 @@
               </div>
               <div class="printable-card__footer-actions">
                 <div class="printable-card__action-row">
-                  <button type="button" class="printable-card__secondary" (click)="printLabel()"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> Print</button>
-                  <button type="button" class="printable-card__primary" (click)="downloadQr()"><mat-icon svgIcon="upload" aria-hidden="true"></mat-icon> Download PNG</button>
+                  <button type="button" class="printable-card__secondary" (click)="printLabel()"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> {{ text.printLabel() }}</button>
+                  <button type="button" class="printable-card__primary" (click)="downloadQr()"><mat-icon svgIcon="upload" aria-hidden="true"></mat-icon> {{ qrText.download() }}</button>
                 </div>
               </div>
             </div>
           </div>
           <div class="details-layout__side">
             <div class="metadata-card">
-              <div class="metadata-card__label"><mat-icon svgIcon="info" aria-hidden="true"></mat-icon> Capacity</div>
-              <div class="metadata-card__value">{{ locationItemCount() }} / {{ children().length }} <span>Slots</span></div>
+              <div class="metadata-card__label"><mat-icon svgIcon="info" aria-hidden="true"></mat-icon> {{ text.capacityLabel() }}</div>
+              <div class="metadata-card__value">{{ locationItemCount() }} / {{ children().length }} <span>{{ text.slotsLabel() }}</span></div>
               <div class="metadata-card__bar"><div class="metadata-card__fill" [style.width.%]="children().length ? (locationItemCount()/children().length*100) : 0"></div></div>
             </div>
             <div class="detail-card detail-card--scroll">
-              <h4 class="detail-card__heading">CONTENTS @if (nextAvailablePositionName()) { <span class="detail-card__heading-meta">· {{ nextAvailablePositionName() }} disponible</span> }</h4>
+              <h4 class="detail-card__heading">{{ text.containersHeading() }} @if (nextAvailablePositionName()) { <span class="detail-card__heading-meta">· {{ nextAvailablePositionName() }} {{ text.availableLabel() }}</span> }</h4>
               <ul class="detail-list detail-list--contents">
                 @for (item of trayItems(); track item.id) {
                   <li>
@@ -116,7 +116,7 @@
                   </li>
                 }
                 @if (trayItems().length === 0) {
-                  <li class="detail-list__empty">No items yet</li>
+                  <li class="detail-list__empty">{{ text.noItemsYet() }}</li>
                 }
               </ul>
             </div>
@@ -147,9 +147,9 @@
             }
           </div>
           <div class="detail-card__chips">
-            <span class="detail-card__badge detail-card__badge--muted">{{ location.type }}</span>
+            <span class="detail-card__badge detail-card__badge--muted">{{ locationType.label(location.type) }}</span>
             @if (locationItemCount() > 0) {
-              <span class="detail-card__count">{{ locationItemCount() }} item(s)</span>
+              <span class="detail-card__count">{{ text.itemCount(locationItemCount()) }}</span>
             }
           </div>
         </div>
@@ -161,18 +161,18 @@
                 <div class="detail-bento__card">
                   <div class="detail-bento__label">
                     <mat-icon svgIcon="thermostat" aria-hidden="true"></mat-icon>
-                    <span>Target Temp</span>
+                    <span>{{ text.targetTemperatureLabel() }}</span>
                   </div>
                   <div class="detail-bento__value">22<span>°C</span></div>
-                  <div class="detail-bento__hint">Fixed Setpoint</div>
+                  <div class="detail-bento__hint">{{ text.fixedSetpointLabel() }}</div>
                 </div>
                 <div class="detail-bento__card">
                   <div class="detail-bento__label">
                     <mat-icon svgIcon="humidity" aria-hidden="true"></mat-icon>
-                    <span>Target Humidity</span>
+                    <span>{{ text.targetHumidityLabel() }}</span>
                   </div>
                   <div class="detail-bento__value">45<span>%</span></div>
-                  <div class="detail-bento__hint">Fixed Setpoint</div>
+                  <div class="detail-bento__hint">{{ text.fixedSetpointLabel() }}</div>
                 </div>
               </div>
             }
@@ -181,8 +181,8 @@
               <div class="printable-card" [class.printable-card--zoomed]="labelZoomed()">
                 <div class="printable-card__header">
                   <div>
-                    <h3>Printable Label Preview</h3>
-                    <p>Standard 2x2 inch thermal label format</p>
+                    <h3>{{ text.printableLabelPreview() }}</h3>
+                    <p>{{ text.printableLabelFormat() }}</p>
                   </div>
                   <div class="printable-card__actions">
                     <button type="button" class="printable-card__icon" aria-label="Expand preview" (click)="openLabelPreview()"><mat-icon svgIcon="zoomFit" aria-hidden="true"></mat-icon></button>
@@ -216,8 +216,8 @@
                 </div>
                 <div class="printable-card__footer-actions">
                   <div class="printable-card__action-row">
-                    <button type="button" class="printable-card__secondary" (click)="printLabel()"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> Print</button>
-                    <button type="button" class="printable-card__primary" (click)="downloadQr()"><mat-icon svgIcon="upload" aria-hidden="true"></mat-icon> Download PNG</button>
+                    <button type="button" class="printable-card__secondary" (click)="printLabel()"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> {{ text.printLabel() }}</button>
+                    <button type="button" class="printable-card__primary" (click)="downloadQr()"><mat-icon svgIcon="upload" aria-hidden="true"></mat-icon> {{ qrText.download() }}</button>
                   </div>
                 </div>
               </div>
@@ -228,14 +228,14 @@
             @if (showLocationQr()) {
               <div class="detail-card detail-card--format">
                 <div class="detail-card__format-header">
-                  <h4 class="detail-card__heading">Label Format</h4>
+                  <h4 class="detail-card__heading">{{ text.labelFormatLabel() }}</h4>
                   <mat-icon svgIcon="info" aria-hidden="true" class="detail-card__format-info"></mat-icon>
                 </div>
                 <mat-form-field appearance="outline" class="label-format-field">
-                  <mat-select [value]="labelFormat()" (selectionChange)="selectLabelFormat($event.value)" aria-label="Label Format">
-                    <mat-option value="qr">QR Code</mat-option>
-                    <mat-option value="datamatrix">Data Matrix</mat-option>
-                    <mat-option value="code128">Code 128</mat-option>
+                  <mat-select [value]="labelFormat()" (selectionChange)="selectLabelFormat($event.value)" [attr.aria-label]="text.labelFormatLabel()">
+                    <mat-option value="qr">{{ qrText.formatQr() }}</mat-option>
+                    <mat-option value="datamatrix">{{ qrText.formatDataMatrix() }}</mat-option>
+                    <mat-option value="code128">{{ qrText.formatCode128() }}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -243,14 +243,14 @@
 
             @if (children().length > 0) {
               <div class="detail-card">
-                <h4 class="detail-card__heading">CONTAINERS</h4>
+                <h4 class="detail-card__heading">{{ text.containersHeading() }}</h4>
                 <ul class="detail-list detail-list--contents">
                   @for (child of children(); track child.id) {
                     <li>
                       <button type="button" class="detail-list__item detail-list__item--contents" (click)="onCardClick(child.id)">
                         <span class="detail-list__main">
                           <span class="detail-list__name">{{ child.name }}</span>
-                          <span class="detail-list__sub">{{ itemCountAt(child.id) }} items</span>
+                          <span class="detail-list__sub">{{ text.itemCount(itemCountAt(child.id)) }}</span>
                         </span>
                         <mat-icon svgIcon="chevronRight" aria-hidden="true" class="detail-list__chevron"></mat-icon>
                       </button>
@@ -261,7 +261,7 @@
             }
             @if (directItems().length > 0 || trayItems().length > 0) {
               <div class="detail-card">
-                <h4 class="detail-card__heading">ITEMS</h4>
+                <h4 class="detail-card__heading">{{ text.itemsHeading() }}</h4>
                 <ul class="detail-list detail-list--items">
                   @for (item of (trayItems().length ? trayItems() : directItems()); track item.id) {
                     <li>
@@ -298,9 +298,9 @@
       <div class="label-preview-backdrop" (click)="closeLabelPreview()" aria-hidden="true"></div>
       <div class="label-preview-modal" role="dialog" aria-modal="true" aria-label="Label Preview">
         <div class="label-preview-modal__header">
-          <h3>Label Preview</h3>
-          <button type="button" class="label-preview-modal__close" (click)="closeLabelPreview()" aria-label="Close">
-            Close <span aria-hidden="true">×</span>
+          <h3>{{ text.labelPreviewTitle() }}</h3>
+          <button type="button" class="label-preview-modal__close" (click)="closeLabelPreview()" [attr.aria-label]="text.cancelButton()">
+            {{ text.cancelButton() }} <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="label-preview-modal__body">
@@ -332,7 +332,7 @@
             </button>
           </div>
           <button type="button" class="printable-card__primary label-preview-modal__print" (click)="printLabel()">
-            <mat-icon svgIcon="search" aria-hidden="true"></mat-icon> Print
+            <mat-icon svgIcon="search" aria-hidden="true"></mat-icon> {{ text.printLabel() }}
           </button>
         </div>
       </div>
@@ -419,9 +419,9 @@
       }
 
       @if (!selectedLocation()) {
-        <button type="button" class="container-card container-card--building container-card--add" (click)="addBuilding()" aria-label="Add building">
+        <button type="button" class="container-card container-card--building container-card--add" (click)="addBuilding()" [attr.aria-label]="text.addComponent(locationType.label('building'))">
           <mat-icon svgIcon="add" aria-hidden="true" class="container-card__icon"></mat-icon>
-          <span class="container-card__name">Add building</span>
+          <span class="container-card__name">{{ text.addComponent(locationType.label('building')) }}</span>
         </button>
       }
       @if (children().length === 0 && directItems().length === 0) {

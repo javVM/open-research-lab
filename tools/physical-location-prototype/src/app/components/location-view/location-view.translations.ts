@@ -14,7 +14,7 @@ export const itemCount = (count: number): string =>
 export const emptyBadge = $localize `@@locationView.emptyBadge:Empty`;
 export const addComponent = (type: string): string => $localize `@@locationView.addComponent:Add ${type}`;
 export const addComponentPrompt = (type: string): string =>
-  $localize `@@locationView.addComponentPrompt:${type} Name`;
+  $localize `@@locationView.addComponentPrompt:Name for the new ${type}:`;
 export const trayRowsTitle = $localize `@@locationView.trayRowsTitle:Tray rows`;
 export const trayRowsPrompt = $localize `@@locationView.trayRowsPrompt:Number of rows:`;
 export const trayColumnsTitle = $localize `@@locationView.trayColumnsTitle:Tray columns`;
@@ -28,6 +28,24 @@ export const viewMode3d = $localize `@@locationView.viewMode.3d:3D`;
 export const viewModeList = $localize `@@locationView.viewMode.list:Details`;
 export const viewModeData = $localize `@@locationView.viewMode.data:Details`;
 export const viewModeDetails = $localize `@@locationView.viewMode.details:Details`;
+export const trayViewAriaLabel = $localize `@@locationView.trayView.ariaLabel:Tray view`;
+export const trayViewGrid = $localize `@@locationView.trayView.grid:Grid`;
+export const printableLabelPreview = $localize `@@locationView.printableLabelPreview:Printable Label Preview`;
+export const printableLabelFormat = $localize `@@locationView.printableLabelFormat:Standard 2x2 inch thermal label format`;
+export const printLabel = $localize `@@locationView.printLabel:Print`;
+export const capacityLabel = $localize `@@locationView.capacityLabel:Capacity`;
+export const slotsLabel = $localize `@@locationView.slotsLabel:Slots`;
+export const noItemsYet = $localize `@@locationView.noItemsYet:No items yet`;
+export const targetTemperatureLabel = $localize `@@locationView.targetTemperatureLabel:Target Temp`;
+export const fixedSetpointLabel = $localize `@@locationView.fixedSetpointLabel:Fixed Setpoint`;
+export const targetHumidityLabel = $localize `@@locationView.targetHumidityLabel:Target Humidity`;
+export const labelFormatLabel = $localize `@@locationView.labelFormatLabel:Label Format`;
+export const containersHeading = $localize `@@locationView.containersHeading:Containers`;
+export const itemsHeading = $localize `@@locationView.itemsHeading:Items`;
+export const labelPreviewTitle = $localize `@@locationView.labelPreviewTitle:Label Preview`;
+export const addPositionHint = (position: string): string =>
+  $localize `@@locationView.addPositionHint:Will be added to ${position} · first available slot`;
+export const availableLabel = $localize `@@locationView.availableLabel:available`;
 
 export function createLocationViewTranslations(i18n: TranslationService) {
   return {
@@ -57,5 +75,23 @@ export function createLocationViewTranslations(i18n: TranslationService) {
     viewModeList: () => i18n.t('locationView.viewMode.list', viewModeList),
     viewModeData: () => i18n.t('locationView.viewMode.data', viewModeData),
     viewModeDetails: () => i18n.t('locationView.viewMode.details', viewModeDetails),
+    trayViewAriaLabel: () => i18n.t('locationView.trayView.ariaLabel', trayViewAriaLabel),
+    trayViewGrid: () => i18n.t('locationView.trayView.grid', trayViewGrid),
+    printableLabelPreview: () => i18n.t('locationView.printableLabelPreview', printableLabelPreview),
+    printableLabelFormat: () => i18n.t('locationView.printableLabelFormat', printableLabelFormat),
+    printLabel: () => i18n.t('locationView.printLabel', printLabel),
+    capacityLabel: () => i18n.t('locationView.capacityLabel', capacityLabel),
+    slotsLabel: () => i18n.t('locationView.slotsLabel', slotsLabel),
+    noItemsYet: () => i18n.t('locationView.noItemsYet', noItemsYet),
+    targetTemperatureLabel: () => i18n.t('locationView.targetTemperatureLabel', targetTemperatureLabel),
+    fixedSetpointLabel: () => i18n.t('locationView.fixedSetpointLabel', fixedSetpointLabel),
+    targetHumidityLabel: () => i18n.t('locationView.targetHumidityLabel', targetHumidityLabel),
+    labelFormatLabel: () => i18n.t('locationView.labelFormatLabel', labelFormatLabel),
+    containersHeading: () => i18n.t('locationView.containersHeading', containersHeading),
+    itemsHeading: () => i18n.t('locationView.itemsHeading', itemsHeading),
+    labelPreviewTitle: () => i18n.t('locationView.labelPreviewTitle', labelPreviewTitle),
+    addPositionHint: (position: string): string =>
+      i18n.t('locationView.addPositionHint', addPositionHint(position), { position }),
+    availableLabel: () => i18n.t('locationView.availableLabel', availableLabel),
   };
 }

@@ -1,8 +1,10 @@
-import { Component, computed, effect, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { form, FormField, type FieldTree } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { TranslationService } from '../../i18n/translation.service';
+import { createPromptModalTranslations } from './prompt-modal.translations';
 
 export interface PromptRequest {
   readonly kind: 'text' | 'number';
@@ -29,6 +31,7 @@ export class PromptModalComponent {
   readonly request = input<PromptRequest | null>(null);
   readonly confirmed = output<string>();
   readonly dismissed = output<void>();
+  protected readonly text = createPromptModalTranslations(inject(TranslationService));
 
   protected readonly field = signal('');
   protected readonly fieldControl: FieldTree<string> = form(this.field);
