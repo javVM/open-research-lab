@@ -37,9 +37,16 @@
 
 .modal__cancel,
 .modal__confirm {
-  padding: 0.4rem 0.9rem;
-  border-radius: 0.4rem;
+  min-height: 36px;
+  padding: 0 18px;
+  border-radius: 999px;
   font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   cursor: pointer;
 }
 
@@ -49,8 +56,11 @@
   color: #151c27;
 }
 .modal__confirm {
-  background: #4f46e5;
-  border: 1px solid #4f46e5;
+  background: #4F46E5;
+  border: 1px solid #4F46E5;
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(79,70,229,.25);
 }
+.modal__confirm:hover{ background:#4338ca; }
+.modal__confirm:disabled{ opacity:.5; }

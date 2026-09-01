@@ -40,9 +40,8 @@
 }
 
 .position-cell--empty {
-  background: var(--empty-soft, #232833);
-  border-style: dashed;
-  border-color: var(--border-strong, #4a5160);
+  background: #eef1ff;
+  border: 1px solid #c7c4d8;
 }
 
 .position-cell--empty .position-cell__label {
@@ -50,8 +49,13 @@
 }
 
 .position-cell--occupied {
-  background: var(--surface-hover, #262b36);
+  background: #fff;
+  border: 1px solid #c7c4d8;
 }
+.position-cell__flask{width:18px;height:18px;color:#4f46e5;margin-bottom:2px}
+.position-cell__available{display:flex;flex-direction:column;align-items:center;gap:2px;color:#9aa1ac;font-size:10px;font-weight:600}
+.position-cell__available mat-icon{width:16px;height:16px}
+.position-cell--occupied .position-cell__code{color:#151c27}
 
 .position-cell--selected {
   outline: 2px solid var(--accent, #5b8def);

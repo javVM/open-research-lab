@@ -34,7 +34,10 @@ export class LocationTreeComponent {
    * changes, instead of on every change-detection pass (see `buildTree` for
    * the single-pass grouping that also makes each rebuild itself cheap).
    */
-  protected readonly roots = computed<LocationNode[]>(() => buildTree(this.collection.dataset().locations));
+  protected readonly roots = computed<LocationNode[]>(() => {
+    const withoutPositions = this.collection.dataset().locations.filter((location) => location.type !== 'position');
+    return buildTree(withoutPositions);
+  });
 
   /** Only the root buildings: used by the mobile-only dropdown. */
   protected readonly buildings = computed(() =>

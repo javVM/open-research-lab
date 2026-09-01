@@ -1,5 +1,7 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { CdkDrag, CdkDropList, CdkDropListGroup, type CdkDragDrop } from '@angular/cdk/drag-drop';
+import { MatIconModule } from '@angular/material/icon';
+import { registerAppIcons } from '../../shared/icons';
 import type { Item, Location } from '../../../core/models';
 import { CollectionService } from '../../collection.service';
 import { MoveService } from '../../move.service';
@@ -23,13 +25,14 @@ interface GridCell {
 @Component({
   standalone: true,
   selector: 'app-position-grid',
-  imports: [CdkDropList, CdkDrag, CdkDropListGroup],
+  imports: [CdkDropList, CdkDrag, CdkDropListGroup, MatIconModule],
   templateUrl: './position-grid.component.html',
   styleUrl: './position-grid.component.scss',
 })
 export class PositionGridComponent {
   readonly positions = input.required<Location[]>();
   readonly addItem = output<string>();
+  constructor(){ registerAppIcons(); }
 
   private readonly collection = inject(CollectionService);
   protected readonly navigation = inject(NavigationService);

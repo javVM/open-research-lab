@@ -103,10 +103,17 @@ export class LocationViewComponent {
     const location = this.selectedLocation();
     return location ? itemsAtLocation(this.collection.dataset(), location.id) : [];
   });
+  readonly trayItems = computed<Item[]>(() => {
+    const location = this.selectedLocation();
+    if (!location || location.type !== 'tray') return this.directItems();
+    const descendantPositionIds = new Set(this.children().map((child) => child.id));
+    return this.collection.dataset().items.filter((item) => item.locationId !== null && descendantPositionIds.has(item.locationId));
+  });
 
   readonly isTrayGrid = computed<boolean>(() =>
     this.children().some((child) => child.type === 'position'),
   );
+  readonly canShowTrayToggle = computed<boolean>(() => this.isTrayGrid() && this.isDetailsView());
 
   /**
    * True when every direct child has floor-plan coordinates — currently
@@ -121,7 +128,10 @@ export class LocationViewComponent {
 
   readonly isMapView = computed<boolean>(() => this.canShowMap() && this.viewMode() === 'map');
   readonly is3dView = computed<boolean>(() => this.canShowMap() && this.viewMode() === '3d');
-  readonly isDetailsView = computed<boolean>(() => !this.isMapView() && !this.is3dView());
+  readonly isDetailsView = computed<boolean>(() => {
+    if (this.isTrayGrid()) return this.viewMode() === 'details' || this.viewMode() === 'data';
+    return !this.isMapView() && !this.is3dView();
+  });
 
   readonly viewModeIndex = computed<number>(() =>
     this.is3dView() ? 2 : this.isMapView() ? 1 : 0
