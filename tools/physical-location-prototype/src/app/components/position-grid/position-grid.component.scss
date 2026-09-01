@@ -2,35 +2,44 @@
 
 .position-grid {
   width: 100%;
-  height: 100%;
-  min-height: 18rem;
-  border-collapse: collapse;
+  height: auto;
+  min-height: 0;
+  border-collapse: separate;
+  border-spacing: 8px;
   table-layout: fixed;
+  background: #f9f9ff;
+  border-radius: 10px;
+  padding: 6px;
+  display: table;
 }
 
 .position-grid tbody {
-  height: 100%;
+  height: auto;
 }
 
 .position-grid tr {
-  height: calc(100% / var(--rows, 1));
+  height: auto;
 }
 
 .position-cell {
   width: auto;
-  height: auto;
-  min-height: 5rem;
-  border: 1px solid var(--border, #3a3f4b);
+  height: 5.8rem;
+  min-height: 5.8rem;
+  border: 1.5px dashed #c7c4d8;
+  border-radius: 10px;
   vertical-align: middle;
-  padding: 0.75rem 0.5rem;
+  padding: 0.55rem 0.45rem 0.5rem;
   cursor: pointer;
   position: relative;
   text-align: center;
-  transition: background-color 0.12s ease;
+  background: #fff;
+  transition: background-color 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+  display: table-cell;
 }
 
 .position-cell:hover {
-  background: var(--surface-hover, #262b36);
+  background: #f9f9ff;
+  border-color: #a5a3b8;
 }
 
 .position-cell--none {
@@ -40,8 +49,8 @@
 }
 
 .position-cell--empty {
-  background: #eef1ff;
-  border: 1px solid #c7c4d8;
+  background: #fff;
+  border: 1.5px dashed #c7c4d8;
 }
 
 .position-cell--empty .position-cell__label {
@@ -49,22 +58,30 @@
 }
 
 .position-cell--occupied {
-  background: #fff;
-  border: 1px solid #c7c4d8;
+  background: #f8f7ff;
+  border: 1.5px dashed #c7c4d8;
 }
-.position-cell__flask{width:18px;height:18px;color:#4f46e5;margin-bottom:2px}
-.position-cell__available{display:flex;flex-direction:column;align-items:center;gap:2px;color:#9aa1ac;font-size:10px;font-weight:600}
-.position-cell__available mat-icon{width:16px;height:16px}
-.position-cell--occupied .position-cell__code{color:#151c27}
+.position-cell__flask{width:16px;height:16px;color:#fff;flex-shrink:0}
+.position-cell__available{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#9aa1ac;font-size:11px;font-weight:500}
+.position-cell__available mat-icon{width:18px;height:18px;color:#c7c4d8}
+.position-cell--occupied .position-cell__code{color:inherit; font-size:13px}
 
 .position-cell--selected {
-  outline: 2px solid var(--accent, #5b8def);
-  outline-offset: -2px;
+  border-style: solid;
+  border-color: #4f46e5;
+  border-width: 1.5px;
+  background: #eef1ff;
+  box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.15) inset;
+}
+
+.position-cell--selected.position-cell--occupied {
+  border-style: solid;
 }
 
 .position-cell--drop-target {
-  outline: 2px dashed var(--accent, #5b8def);
-  outline-offset: -2px;
+  border-style: dashed;
+  border-color: #4f46e5;
+  background: #eef1ff;
 }
 
 .position-cell--qr-hint {
@@ -87,11 +104,11 @@
   position: absolute;
   top: 0.32rem;
   left: 0.42rem;
-  font-size: 0.58rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: var(--text-muted, #9aa1ac);
-  opacity: 0.85;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-muted, #6b6a85);
+  opacity: 0.95;
   line-height: 1;
   pointer-events: none;
 }
@@ -105,21 +122,22 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.3rem, 1.2cqw, 0.5rem);
+  gap: 6px;
   margin: 0 auto;
-  width: fit-content;
-  max-width: 92%;
-  font-size: clamp(0.78rem, 7cqw, 1.05rem);
+  width: 92%;
+  max-width: none;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.015em;
   line-height: 1;
-  background: var(--accent-soft, #23324f);
-  border: 1px solid rgba(91, 141, 239, 0.35);
+  background: #4f46e5;
+  color: #fff;
+  border: 1px solid #4f46e5;
   border-radius: 999px;
-  padding: clamp(0.38rem, 2.5cqh, 0.62rem) clamp(0.55rem, 3cqw, 1rem);
+  padding: 9px 14px;
   cursor: grab;
-  min-height: clamp(1.65rem, 14cqh, 2.4rem);
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.22);
+  min-height: 32px;
+  box-shadow: 0 1px 4px rgba(79,70,229,0.22);
   vertical-align: middle;
 }
 
@@ -144,9 +162,11 @@
 }
 
 .position-cell__item--special {
-  background: #2a2418;
-  border-color: rgba(240, 201, 138, 0.4);
+  background: #e5e7eb;
+  color: #374151;
+  border-color: #c7c4d8;
 }
+.position-cell__item--special .position-cell__flask{color:#6b7280}
 
 @include on-mobile {
   .position-grid {

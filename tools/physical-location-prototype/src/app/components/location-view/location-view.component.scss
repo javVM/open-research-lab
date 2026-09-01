@@ -4,8 +4,9 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
   padding: 0.5rem;
+  padding-bottom: 1rem;
 }
 
 .location-view > .view-header,
@@ -18,11 +19,17 @@
 
 .location-view > app-floor-plan,
 .location-view > app-floor-plan-3d,
-.location-view > app-position-grid,
 .location-view > .container-grid {
   flex: 1 1 auto;
   min-height: 0;
   overflow: visible;
+}
+
+.location-view > app-position-grid {
+  flex: none;
+  min-height: 0;
+  overflow: visible;
+  align-self: stretch;
 }
 
 .view-header {
@@ -89,6 +96,15 @@
 
 h2 {
   margin: 0 0 0.6rem;
+}
+
+.tray-grid-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text, #151c27);
+  letter-spacing: -0.01em;
 }
 
 .add-actions {
@@ -823,11 +839,29 @@ h2 {
 
 .detail-list__item--static {
   cursor: default;
-  background: var(--surface, #ffffff);
+  background: var(--surface-raised, #f0f3ff);
   justify-content: space-between;
   padding: 10px 12px;
   border-radius: 8px;
   border: 1.5px solid #c7c4d8;
+}
+
+.detail-list--contents .detail-list__item--static {
+  background: var(--surface-raised, #f0f3ff);
+}
+
+.detail-list__item--selectable {
+  cursor: pointer;
+}
+
+.detail-list__item--selectable:hover {
+  background: var(--surface-hover, #f9f9ff);
+  border-color: var(--accent, #4f46e5);
+}
+
+.detail-list__item--selectable:focus-visible {
+  outline: 2px solid var(--accent, #4f46e5);
+  outline-offset: 2px;
 }
 
 .detail-list__type {
@@ -1356,4 +1390,76 @@ h2 {
   .label-preview-modal {
     width: 95vw;
   }
+}
+
+.detail-card__position-hint {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: var(--text-muted, #6b7280);
+  line-height: 1.4;
+}
+
+.detail-card__position-hint strong {
+  color: var(--accent, #4f46e5);
+  font-weight: 700;
+}
+
+.detail-card__heading-meta {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 11px;
+  color: var(--text-muted, #6b7280);
+  margin-left: 6px;
+}
+
+.tray-content-card {
+  background: #fff;
+  border: 1px solid var(--border-soft, rgba(199,196,216,0.4));
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.tray-content-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.tray-content-card__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text, #151c27);
+}
+.tray-content-card__subtitle {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--text-muted, #6b7280);
+}
+.tray-content-card__capacity {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #4f46e5;
+  background: #eef1ff;
+  border: 1px solid #c7c4d8;
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+.tray-content-card__header-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+  flex-wrap:wrap;
+}
+.tray-content-card app-position-grid {
+  display: block;
+  background: #f9f9ff;
+  border-radius: 10px;
+  padding: 8px;
 }

@@ -110,6 +110,14 @@ export class LocationViewComponent {
     return this.collection.dataset().items.filter((item) => item.locationId !== null && descendantPositionIds.has(item.locationId));
   });
 
+  readonly nextAvailablePosition = computed<Location | undefined>(() => {
+    if (!this.isTrayGrid()) return undefined;
+    const occupied = new Set(this.collection.dataset().items.map((item) => item.locationId));
+    return this.children().find((child) => child.type === 'position' && !occupied.has(child.id));
+  });
+
+  readonly nextAvailablePositionName = computed<string>(() => this.nextAvailablePosition()?.name ?? '');
+
   readonly isTrayGrid = computed<boolean>(() =>
     this.children().some((child) => child.type === 'position'),
   );
@@ -315,8 +323,7 @@ export class LocationViewComponent {
 
   constructor() {
     registerAppIcons();
-    const initial = this.canShowMap() ? 'map' : 'details';
-    this.viewMode.set(initial as 'map' | '3d' | 'data');
+    this.viewMode.set('map' as 'map' | '3d' | 'data');
   }
 
   setViewMode(mode: 'map' | '3d' | 'data' | 'list' | 'details'): void {
@@ -498,7 +505,11 @@ export class LocationViewComponent {
     else if (selectedLocationType === 'floor') this.addComponent('room');
     else if (selectedLocationType === 'room') this.addComponent('cabinet');
     else if (selectedLocationType === 'cabinet') this.addComponent('drawer');
-    else this.addItem();
+    else if (selectedLocationType === 'tray') {
+      const next = this.nextAvailablePosition();
+      if (next) this.addItemToLocation(next.id);
+      else this.addItem();
+    } else this.addItem();
   }
   readonly editLocation = signal<Location | null>(null);
   editLocationName(): void {

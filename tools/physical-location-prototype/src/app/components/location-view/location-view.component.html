@@ -35,14 +35,17 @@
         </div>
       } @else if (isTrayGrid()) {
         <div class="view-mode-toggle" role="group" aria-label="Tray view">
-          <button type="button" mat-button class="view-mode-toggle__button" [class.view-mode-toggle__button--active]="isDetailsView()" [attr.aria-pressed]="isDetailsView()" (click)="setViewMode('details')">Details</button>
           <button type="button" mat-button class="view-mode-toggle__button" [class.view-mode-toggle__button--active]="!isDetailsView()" [attr.aria-pressed]="!isDetailsView()" (click)="setViewMode('map')">Grid</button>
+          <button type="button" mat-button class="view-mode-toggle__button" [class.view-mode-toggle__button--active]="isDetailsView()" [attr.aria-pressed]="isDetailsView()" (click)="setViewMode('details')">Details</button>
         </div>
       }
     </div>
 
     @if ((!isDetailsView() || isTrayGrid()) && location.type !== 'tray') {
       <h2>{{ location.name }}</h2>
+    }
+    @if (isTrayGrid() && !isDetailsView()) {
+      <h2 class="tray-grid-title">{{ location.name }}</h2>
     }
 
     @if (location.type === 'tray' && isDetailsView()) {
@@ -57,13 +60,16 @@
               <button type="button" class="add-item add-item--header" [matMenuTriggerFor]="addMenuTray"><mat-icon svgIcon="add"></mat-icon> {{ headerAddLabel() }} <mat-icon svgIcon="chevronDown" style="width:14px;height:14px"></mat-icon></button>
               <mat-menu #addMenuTray="matMenu">@for (opt of headerAddOptions(); track opt.label){<button mat-menu-item (click)="opt.action()">{{opt.label}}</button>}</mat-menu>
             } @else {
-              <button type="button" class="add-item add-item--header" (click)="headerAdd()"><mat-icon svgIcon="add"></mat-icon> {{ headerAddLabel() }}</button>
+              <button type="button" class="add-item add-item--header" (click)="headerAdd()" [attr.title]="nextAvailablePositionName() ? 'Se añadirá en ' + nextAvailablePositionName() : null"><mat-icon svgIcon="add"></mat-icon> {{ headerAddLabel() }}</button>
             }
           </div>
           <div class="detail-card__chips">
             <span class="detail-card__badge detail-card__badge--muted">TRAY</span>
             <span class="detail-card__count">{{ locationItemCount() }} item(s)</span>
           </div>
+          @if (nextAvailablePositionName()) {
+            <p class="detail-card__position-hint">Se añadirá en <strong>{{ nextAvailablePositionName() }}</strong> · primer hueco disponible</p>
+          }
         </div>
         <div class="details-layout">
           <div class="details-layout__main">
@@ -99,12 +105,14 @@
               <div class="metadata-card__bar"><div class="metadata-card__fill" [style.width.%]="children().length ? (locationItemCount()/children().length*100) : 0"></div></div>
             </div>
             <div class="detail-card detail-card--scroll">
-              <h4 class="detail-card__heading">CONTENTS</h4>
+              <h4 class="detail-card__heading">CONTENTS @if (nextAvailablePositionName()) { <span class="detail-card__heading-meta">· {{ nextAvailablePositionName() }} disponible</span> }</h4>
               <ul class="detail-list detail-list--contents">
                 @for (item of trayItems(); track item.id) {
-                  <li class="detail-list__item detail-list__item--static">
-                    <span class="detail-list__name">{{ item.catalogueNumber }}</span>
-                    @if (item.label) { <span class="detail-list__type">{{ item.label }}</span> }
+                  <li>
+                    <button type="button" class="detail-list__item detail-list__item--static detail-list__item--selectable" (click)="onItemClick(item.id, $event)" [attr.aria-label]="'Ver ' + item.catalogueNumber">
+                      <span class="detail-list__name">{{ item.catalogueNumber }}</span>
+                      @if (item.label) { <span class="detail-list__type">{{ item.label }}</span> }
+                    </button>
                   </li>
                 }
                 @if (trayItems().length === 0) {
@@ -256,11 +264,13 @@
                 <h4 class="detail-card__heading">ITEMS</h4>
                 <ul class="detail-list detail-list--items">
                   @for (item of (trayItems().length ? trayItems() : directItems()); track item.id) {
-                    <li class="detail-list__item detail-list__item--static">
-                      <span class="detail-list__name">{{ item.catalogueNumber }}</span>
-                      @if (item.label) {
-                        <span class="detail-list__type">{{ item.label }}</span>
-                      }
+                    <li>
+                      <button type="button" class="detail-list__item detail-list__item--static detail-list__item--selectable" (click)="onItemClick(item.id, $event)" [attr.aria-label]="'Ver ' + item.catalogueNumber">
+                        <span class="detail-list__name">{{ item.catalogueNumber }}</span>
+                        @if (item.label) {
+                          <span class="detail-list__type">{{ item.label }}</span>
+                        }
+                      </button>
                     </li>
                   }
                 </ul>

@@ -1,56 +1,78 @@
 @if (item(); as item) {
-  <div class="item-detail">
-    <h2>{{ item.catalogueNumber }}</h2>
-
-    <app-qr-label [payload]="qrPayload()"></app-qr-label>
-
-    <div class="item-fields">
+  <div class="item-detail item-detail--nexus">
+    <div class="item-detail__hero">
+      <div class="item-detail__hero-row">
+        <h2 class="item-detail__title">{{ item.catalogueNumber }}</h2>
+        <span class="status-badge status-badge--activo" [attr.data-status]="item.status">{{ text.statusLabel(item.status) }}</span>
+        <button type="button" class="item-detail__close" (click)="close()" aria-label="Cerrar detalle"><mat-icon svgIcon="close" aria-hidden="true"></mat-icon></button>
+      </div>
       @if (item.label) {
-        <div class="item-field">
-          <span class="item-field__label">{{ text.nameLabel() }}</span>
-          <span class="item-field__value">{{ item.label }}</span>
-        </div>
+        <p class="item-detail__subtitle">{{ item.label }}</p>
       }
+    </div>
 
-      <div class="item-field">
-        <span class="item-field__label">{{ text.statusFieldLabel() }}</span>
-        <span class="status-badge" [attr.data-status]="item.status">{{ text.statusLabel(item.status) }}</span>
+    <div class="label-preview">
+      <div class="label-preview__header">
+        <span class="label-preview__title">Label Preview</span>
+        <div class="item-detail__format" role="group" aria-label="Label format">
+          <button type="button" class="format-btn" [class.format-btn--active]="qrFormat() === 'qr'" (click)="qrFormat.set('qr')">QR</button>
+          <button type="button" class="format-btn" [class.format-btn--active]="qrFormat() === 'datamatrix'" (click)="qrFormat.set('datamatrix')">Matrix</button>
+          <button type="button" class="format-btn" [class.format-btn--active]="qrFormat() === 'code128'" (click)="qrFormat.set('code128')">128</button>
+        </div>
       </div>
+      <div class="printable-label">
+        <div class="printable-label__header">
+          <div>
+            <span class="printable-label__brand">Nexus Lab</span>
+            <span class="printable-label__sub">{{ item.catalogueNumber }}</span>
+          </div>
+          <mat-icon svgIcon="cube" aria-hidden="true"></mat-icon>
+        </div>
+        <div class="item-detail__qr printable-label__qr">
+          <app-qr-label [payload]="qrPayload()" [format]="qrFormat()"></app-qr-label>
+        </div>
+        <div class="printable-label__footer">
+          <span class="printable-label__code">{{ item.catalogueNumber }}</span>
+          <span class="printable-label__meta">{{ printableLabelMeta() }}</span>
+        </div>
+      </div>
+      <div class="label-preview__actions">
+        <button type="button" class="label-preview__print" (click)="printLabel()"><mat-icon svgIcon="search" aria-hidden="true"></mat-icon> Print Label</button>
+        <button type="button" class="item-detail__download label-preview__download" (click)="downloadQr()"><mat-icon svgIcon="upload" aria-hidden="true"></mat-icon> Download PNG</button>
+      </div>
+      <div class="item-detail__meta">item:{{ item.id }}</div>
+    </div>
 
-      <div class="item-field">
-        <span class="item-field__label dt-with-icon">
-          {{ text.currentLocationLabel() }}
-          <button
-            type="button"
-            mat-icon-button
-            class="history-info"
-            (click)="openHistory()"
-            [attr.aria-label]="text.historyTitle()"
-          >
-            <mat-icon svgIcon="info" aria-hidden="true"></mat-icon>
-          </button>
-        </span>
-        @if (path().length > 0) {
-          <ol class="breadcrumb-list">
-            @for (location of path(); track location.id) {
-              <li>{{ location.name }}</li>
-            }
-          </ol>
-        } @else {
-          <span class="empty-state">{{ text.notLocated() }}</span>
-        }
+    <div class="ubicacion-card">
+      <div class="ubicacion-card__heading">
+        <mat-icon svgIcon="place" aria-hidden="true"></mat-icon>
+        <span>UBICACIÓN ACTUAL</span>
+        <button type="button" mat-icon-button class="history-info" (click)="openHistory()" [attr.aria-label]="text.historyTitle()">
+          <mat-icon svgIcon="info" aria-hidden="true"></mat-icon>
+        </button>
       </div>
+      @if (path().length > 0) {
+        <ol class="breadcrumb-list breadcrumb-list--inline ubicacion-list">
+          @for (location of path(); track location.id; let last = $last) {
+            <li class="ubicacion-list__row" [class.ubicacion-list__row--active]="last">
+              <span class="ubicacion-list__label">{{ locationTypeLabel(location.type) }}</span>
+              <span class="ubicacion-list__value">{{ location.name }}</span>
+            </li>
+          }
+        </ol>
+      } @else {
+        <span class="empty-state">{{ text.notLocated() }}</span>
+      }
     </div>
 
     @if (isMoving()) {
       <button type="button" mat-button class="cancel-move" (click)="cancelMove()">{{ text.cancelMoveButton() }}</button>
     } @else {
-      <button type="button" mat-button class="start-move" (click)="startMove()">{{ text.moveButton() }}</button>
+      <button type="button" mat-flat-button color="primary" class="start-move" (click)="startMove()">Mover ítem…</button>
     }
     @if (isMoving()) {
       <p class="move-hint">{{ text.moveHint() }}</p>
     }
-
 
     @if (showHistory()) {
       <app-history-modal

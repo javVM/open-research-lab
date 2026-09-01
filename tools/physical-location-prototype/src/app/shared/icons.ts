@@ -47,6 +47,7 @@ export const APP_ICON = {
   dryStorage: 'dryStorage',
   fluidStorage: 'fluidStorage',
   vacuumSealed: 'vacuumSealed',
+  sampleSlide: 'sampleSlide',
   paleontology: 'paleontology',
   geology: 'geology',
   botany: 'botany',
@@ -277,7 +278,8 @@ const ICON_SVGS: Record<AppIcon, string> = {
   [APP_ICON.geology]: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71L12 2z"/><path d="M12 18V2"/><path d="M8 12l4 2 4-2"/></svg>`,
   [APP_ICON.botany]: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 20c0-4 3-7 6-8 0 3-2 6-6 8z" fill="currentColor" opacity="0.8"/><path d="M12 20c0-3-3-4-5-5 1-2 4-3 5 5z" fill="currentColor"/><path d="M12 20v-8"/><path d="M8 20a4 2 0 0 1 8 0"/></svg>`,
   [APP_ICON.zoology]: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-4-3-4-8a4 4 0 0 1 8 0c0 5-4 8-4 8z"/><path d="M12 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M7 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M17 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M12 14v4"/></svg>`,
-  [APP_ICON.flask]: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 7l-3 8a4 4 0 0 0 3 6h4a4 4 0 0 0 3-6l-3-8z"/><path d="M7 21h10"/></svg>`,
+  [APP_ICON.flask]: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.2 3.2h7.6"/><path d="M10 3.2v6.3l-4.2 7.2a3.7 3.7 0 0 0 3.2 5.5h5.9a3.7 3.7 0 0 0 3.2 -5.5L14 9.5V3.2"/><path d="M9.8 13.5h4.4l2 3.5a2.4 2.4 0 0 1 -2.1 3.5H9.9a2.4 2.4 0 0 1 -2.1 -3.5Z" fill="currentColor" opacity="0.32" stroke="none"/></svg>`,
+  [APP_ICON.sampleSlide]: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="1.6"/><rect x="7" y="10.5" width="10" height="3" rx="0.7" fill="currentColor" stroke="none" opacity="0.95"/><circle cx="17" cy="12" r="0.9" fill="#fff" stroke="none"/></svg>`,
   [APP_ICON.historicalArchive]: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20v18H2z"/><path d="M2 8h20M7 3v18M17 3v18M12 3v18M2 13h20M2 18h20"/></svg>`,
   [APP_ICON.settings]: `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">

@@ -115,6 +115,8 @@ describe('LocationViewComponent', () => {
 
     const fixture = TestBed.createComponent(LocationViewComponent);
     fixture.detectChanges();
+    navigation.viewMode.set('details');
+    fixture.detectChanges();
 
     const addItemButton = Array.from(fixture.nativeElement.querySelectorAll('.add-item')).find((button) =>
       (button as HTMLElement).textContent?.includes('Add item'),
