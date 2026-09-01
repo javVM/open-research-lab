@@ -51,6 +51,8 @@ export interface Location {
   type: LocationType;
   /** Storage/museo conditions; array para hijos — vacío = hereda del padre, root vacío = ambient_room */
   storageConditions?: StorageCondition[];
+  targetTemperature?: number;
+  targetHumidity?: number;
   /** 1-based row/column, only meaningful for `type === 'position'`. */
   row?: number;
   column?: number;

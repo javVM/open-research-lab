@@ -427,6 +427,12 @@ h2 {
 }
 .detail-card__header h3.with-icon { display:inline-flex; align-items:center; gap:8px; }
 .storage-icon { width:20px; height:20px; color: var(--accent, #4f46e5); }
+.editable-title{cursor:pointer;border-radius:6px;padding:2px 6px;margin:-2px -6px;transition:background .15s}
+.editable-title:hover{background:#eef1ff}
+.editable-title:focus-visible{outline:2px solid #4f46e5;outline-offset:2px}
+.edit-btn{border:none;background:#eef1ff;color:#4f46e5;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;margin-left:4px}
+.edit-btn:hover{background:#e0e7ff}
+.edit-btn mat-icon{width:16px;height:16px}
 .add-item--header { margin-left:auto; background:#4f46e5; color:#fff; border:none; border-radius:10px; padding:10px 18px; font-size:14px; font-weight:700; display:inline-flex; align-items:center; gap:8px; cursor:pointer; flex-shrink:0; box-shadow:0 1px 3px rgba(0,0,0,.15); }
 .add-item--header mat-icon{width:18px;height:18px}
 .container-card--add{border-style:dashed; background:#f9f9ff; color:#4f46e5; justify-content:center; gap:8px;}
@@ -714,6 +720,8 @@ h2 {
   padding: 2px 8px;
   font-weight: 600;
 }
+.detail-card__badge--muted{background:#f1f1f3;color:#6b7280;border-color:#e5e7eb;font-size:10px}
+.detail-card__chips{display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap}
 
 .detail-card__heading {
   font-size: 12px;

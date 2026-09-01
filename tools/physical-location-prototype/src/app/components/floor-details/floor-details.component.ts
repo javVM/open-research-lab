@@ -1,5 +1,6 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import type { Location } from '../../../core/models';
 import { descendantIds } from '../../../core/tree';
 import { CollectionService } from '../../collection.service';
@@ -8,7 +9,7 @@ import { registerAppIcons } from '../../shared/icons';
 @Component({
   standalone: true,
   selector: 'app-floor-details',
-  imports: [MatIconModule],
+  imports: [MatIconModule, MatTooltipModule],
   templateUrl: './floor-details.component.html',
   styleUrl: './floor-details.component.scss',
 })
@@ -33,5 +34,9 @@ export class FloorDetailsComponent {
 
   itemCountAt(locationId: string): number {
     return this.collection.locationItemCounts().get(locationId) ?? 0;
+  }
+  edit(): void {
+    const v = window.prompt('New name', this.location().name);
+    if (v && v.trim() && v.trim() !== this.location().name) this.collection.updateLocationName(this.location().id, v.trim());
   }
 }

@@ -6,8 +6,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
-import type { Item, Location, LocationType } from '../../../core/models';
+import type { Item, Location, LocationType, StorageCondition } from '../../../core/models';
 import { breadcrumb, childrenOf } from '../../../core/tree';
+import { LocationEditModalComponent } from '../location-edit-modal/location-edit-modal.component';
 import { itemsAtLocation } from '../../../core/search';
 import { BuildingDetailsComponent } from '../building-details/building-details.component';
 import { FloorDetailsComponent } from '../floor-details/floor-details.component';
@@ -44,6 +45,7 @@ import { registerAppIcons } from '../../shared/icons';
     MatSelectModule,
     MatTooltipModule,
     MatMenuModule,
+    LocationEditModalComponent,
     FloorPlanComponent,
     FloorPlan3dComponent,
     PositionGridComponent,
@@ -483,6 +485,27 @@ export class LocationViewComponent {
     else if (t === 'cabinet') this.addComponent('drawer');
     else this.addItem();
   }
+  readonly editLocation = signal<Location | null>(null);
+  editLocationName(): void {
+    const loc = this.selectedLocation();
+    if (!loc) return;
+    this.editLocation.set({ ...loc });
+  }
+  onEditSave(data: { name: string; targetTemperature?: number; targetHumidity?: number; storageConditions: StorageCondition[] }): void {
+    const loc = this.editLocation();
+    if (!loc) return;
+    if (data.name && data.name !== loc.name) this.collection.updateLocationName(loc.id, data.name);
+    if (data.targetTemperature !== undefined || data.targetHumidity !== undefined || loc.type === 'room' || loc.type === 'cabinet') {
+      const ds = this.collection.dataset();
+      const locations = ds.locations.map(l => l.id === loc.id ? { ...l, targetTemperature: data.targetTemperature, targetHumidity: data.targetHumidity } : l);
+      this.collection.setDataset({ ...ds, locations });
+    }
+    this.collection.updateLocationStorageConditions(loc.id, data.storageConditions);
+    // contents never edited here
+    this.editLocation.set(null);
+  }
+  onEditCancel(): void { this.editLocation.set(null); }
+
   addItem(): void {
     const location = this.selectedLocation();
     if (!location) {

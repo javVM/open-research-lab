@@ -14,7 +14,7 @@ export const itemCount = (count: number): string =>
 export const emptyBadge = $localize `@@locationView.emptyBadge:Empty`;
 export const addComponent = (type: string): string => $localize `@@locationView.addComponent:Add ${type}`;
 export const addComponentPrompt = (type: string): string =>
-  $localize `@@locationView.addComponentPrompt:Name for the new ${type}:`;
+  $localize `@@locationView.addComponentPrompt:${type} Name`;
 export const trayRowsTitle = $localize `@@locationView.trayRowsTitle:Tray rows`;
 export const trayRowsPrompt = $localize `@@locationView.trayRowsPrompt:Number of rows:`;
 export const trayColumnsTitle = $localize `@@locationView.trayColumnsTitle:Tray columns`;

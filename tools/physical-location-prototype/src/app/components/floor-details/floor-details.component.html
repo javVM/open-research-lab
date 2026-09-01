@@ -1,11 +1,13 @@
 <div class="details-view details-view--floor">
   <div class="detail-card detail-card--info detail-card--floor-header">
     <div class="detail-card__header">
-      <h3>{{ location().name }}</h3>
-      <span class="detail-card__badge">FLOOR</span>
+      <h3 class="editable-title" (click)="edit()" role="button" tabindex="0" matTooltip="Click to rename">{{ location().name }}</h3>
       <button type="button" class="add-item add-item--header" (click)="addItem.emit()"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> Add room</button>
     </div>
-    <span class="detail-card__count">{{ totalItems() }} item(s)</span>
+    <div class="detail-card__chips">
+      <span class="detail-card__badge detail-card__badge--muted">FLOOR</span>
+      <span class="detail-card__count">{{ totalItems() }} item(s)</span>
+    </div>
   </div>
 
   <h3 class="floor-summary__heading">Floor Summary</h3>

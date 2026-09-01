@@ -136,12 +136,9 @@
         <div class="detail-card detail-card--info">
           <div class="detail-card__header">
             <h3 class="with-icon">
-              @if (hasStorageIcon() && primaryStorageCondition()) {
-                <mat-icon [svgIcon]="storageCondition.icon(primaryStorageCondition()!)" [matTooltip]="storageTooltip()" aria-hidden="true" class="storage-icon"></mat-icon>
-              }
               {{ location.name }}
+              <button type="button" class="edit-btn" (click)="editLocationName()" matTooltip="Edit" aria-label="Edit"><mat-icon svgIcon="shape" aria-hidden="true"></mat-icon></button>
             </h3>
-            <span class="detail-card__badge">{{ location.type }}</span>
             @if (hasMultipleAddOptions()) {
               <button type="button" class="add-item add-item--header" [matMenuTriggerFor]="addMenu"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> {{ headerAddLabel() }} <mat-icon svgIcon="chevronDown" aria-hidden="true" style="width:14px;height:14px"></mat-icon></button>
               <mat-menu #addMenu="matMenu">
@@ -153,9 +150,12 @@
               <button type="button" class="add-item add-item--header" (click)="headerAdd()"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> {{ headerAddLabel() }}</button>
             }
           </div>
-          @if (locationItemCount() > 0) {
-            <span class="detail-card__count">{{ locationItemCount() }} item(s)</span>
-          }
+          <div class="detail-card__chips">
+            <span class="detail-card__badge detail-card__badge--muted">{{ location.type }}</span>
+            @if (locationItemCount() > 0) {
+              <span class="detail-card__count">{{ locationItemCount() }} item(s)</span>
+            }
+          </div>
         </div>
 
         <div class="details-layout">
@@ -436,3 +436,4 @@
   (confirmed)="onPromptConfirmed($event)"
   (dismissed)="onPromptDismissed()"
 ></app-prompt-modal>
+<app-location-edit-modal [location]="editLocation()" (closed)="onEditCancel()" (saved)="onEditSave($event)"></app-location-edit-modal>

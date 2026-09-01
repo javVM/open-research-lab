@@ -15,10 +15,14 @@
           matInput
           type="text"
           [formField]="fieldControl"
+          [placeholder]="message()"
           (keydown.enter)="confirm()"
           [attr.inputmode]="kind() === 'number' ? 'numeric' : null"
           autofocus
         />
+        @if (kind() === 'text') {
+          <mat-hint>Use a unique identifier for this location.</mat-hint>
+        }
       </mat-form-field>
       <div class="modal__actions">
         <button type="button" mat-button class="modal__cancel" (click)="cancel()">{{ cancelLabel() }}</button>

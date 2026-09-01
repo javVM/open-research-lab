@@ -159,6 +159,19 @@ export class CollectionService {
     this.store.setState({ ...dataset, locations: [...dataset.locations, location] });
   }
 
+  updateLocationName(locationId: string, name: string): void {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    const dataset = this.dataset();
+    const locations = dataset.locations.map(l => l.id === locationId ? { ...l, name: trimmed } : l);
+    this.store.setState({ ...dataset, locations });
+  }
+  updateLocationStorageConditions(locationId: string, conditions: import('../core/models').StorageCondition[]): void {
+    const dataset = this.dataset();
+    const locations = dataset.locations.map(l => l.id === locationId ? { ...l, storageConditions: conditions.length ? conditions : undefined } : l);
+    this.store.setState({ ...dataset, locations });
+  }
+
   /** Appends several locations to the dataset in a single update. */
   addLocations(locations: Location[]): void {
     const dataset = this.dataset();

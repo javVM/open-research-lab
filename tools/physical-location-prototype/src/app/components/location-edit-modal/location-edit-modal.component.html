@@ -1,0 +1,35 @@
+@if (location(); as loc) {
+<div class="modal-backdrop" (click)="cancel()">
+  <div class="modal" role="dialog" aria-modal="true" [attr.aria-label]="'Edit ' + loc.type" (click)="$event.stopPropagation()">
+    <h3 class="modal__title">Edit {{ loc.type }} <span class="modal__badge">{{ loc.type }}</span></h3>
+    <mat-form-field appearance="outline" class="modal__field">
+      <mat-label>{{ loc.type }} Name</mat-label>
+      <input matInput [value]="name()" (input)="name.set($any($event.target).value)" />
+    </mat-form-field>
+    @if (loc.type === 'room' || loc.type === 'cabinet') {
+      <div class="modal__row">
+        <mat-form-field appearance="outline" class="modal__field modal__field--half">
+          <mat-label>Target Temperature (°C)</mat-label>
+          <input matInput [value]="temp()" (input)="temp.set($any($event.target).value)" inputmode="numeric" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="modal__field modal__field--half">
+          <mat-label>Target Humidity (%)</mat-label>
+          <input matInput [value]="humidity()" (input)="humidity.set($any($event.target).value)" inputmode="numeric" />
+        </mat-form-field>
+      </div>
+    }
+    @if (loc.type === 'cabinet' || loc.type === 'drawer') {
+      <mat-form-field appearance="outline" class="modal__field">
+        <mat-label>Storage conditions</mat-label>
+        <mat-select multiple [value]="conditions()" (selectionChange)="conditions.set($event.value)">
+          @for (c of allConditions; track c) { <mat-option [value]="c">{{ label(c) }}</mat-option> }
+        </mat-select>
+      </mat-form-field>
+    }
+    <div class="modal__actions">
+      <button type="button" mat-button class="modal__cancel" (click)="cancel()">Cancel</button>
+      <button type="button" mat-flat-button color="primary" class="modal__confirm" (click)="save()">Save Changes</button>
+    </div>
+  </div>
+</div>
+}
