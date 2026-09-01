@@ -5,6 +5,7 @@ import type { Location } from '../../../core/models';
 import { descendantIds } from '../../../core/tree';
 import { CollectionService } from '../../collection.service';
 import { registerAppIcons } from '../../shared/icons';
+import { ADD_LABEL } from '../../shared/add-labels.constants';
 
 @Component({
   standalone: true,
@@ -19,6 +20,7 @@ export class BuildingDetailsComponent {
   readonly selectChild = output<string>();
   readonly addItem = output<void>();
 
+  protected readonly addLabel = ADD_LABEL;
   private readonly collection = inject(CollectionService);
 
   constructor() {

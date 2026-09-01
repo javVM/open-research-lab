@@ -29,6 +29,7 @@ import { QR_SCANNABLE_LOCATION_TYPES } from '../../shared/hierarchy.constants';
 import { MIN_ROW_COLUMN_COUNT } from '../prompt-modal/prompt-modal.constants';
 import { QuickJumpService } from '../../shared/quick-jump.service';
 import { ITEM_HOLDING_TYPES, MAPPABLE_TYPES, PARENT_CHILD_TYPES } from '../../shared/hierarchy.constants';
+import { ADD_LABEL } from '../../shared/add-labels.constants';
 import { ID_PREFIX, newPrototypeId } from '../../shared/prototype-id';
 import { registerAppIcons } from '../../shared/icons';
 
@@ -74,8 +75,8 @@ export class LocationViewComponent {
   }
 
   readonly selectedLocation = computed<Location | undefined>(() => {
-    const id = this.navigation.selectedLocationId();
-    return id ? this.collection.dataset().locations.find((location) => location.id === id) : undefined;
+    const selectedLocationId = this.navigation.selectedLocationId();
+    return selectedLocationId ? this.collection.dataset().locations.find((location) => location.id === selectedLocationId) : undefined;
   });
 
   protected readonly promptRequest = signal<PromptRequest | null>(null);
@@ -93,8 +94,8 @@ export class LocationViewComponent {
       return childrenOf(this.collection.dataset().locations, location.id);
     }
     return this.collection.dataset().locations
-      .filter((loc) => loc.parentId === null)
-      .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+      .filter((locationEntry) => locationEntry.parentId === null)
+      .sort((firstLocation, secondLocation) => firstLocation.name.localeCompare(secondLocation.name, undefined, { numeric: true }));
   });
 
   /** Items stored directly at the selected location (no finer position). */
@@ -128,8 +129,8 @@ export class LocationViewComponent {
 
   // Details helpers for location (when in Details view)
   readonly locationPath = computed<Location[]>(() => {
-    const loc = this.selectedLocation();
-    return loc ? breadcrumb(this.collection.dataset().locations, loc.id) : [];
+    const selectedLocationData = this.selectedLocation();
+    return selectedLocationData ? breadcrumb(this.collection.dataset().locations, selectedLocationData.id) : [];
   });
 
   readonly locationSubtitle = computed<string>(() => {
@@ -137,67 +138,74 @@ export class LocationViewComponent {
     if (path.length <= 1) return '';
     return path
       .slice(0, -1)
-      .map((l) => l.name)
+      .map((locationEntry) => locationEntry.name)
       .join(' › ');
   });
 
   readonly locationItemCount = computed<number>(() => {
-    const loc = this.selectedLocation();
-    return loc ? (this.collection.locationItemCounts().get(loc.id) ?? 0) : 0;
+    const selectedLocationData = this.selectedLocation();
+    return selectedLocationData ? (this.collection.locationItemCounts().get(selectedLocationData.id) ?? 0) : 0;
   });
 
   readonly showLocationQr = computed<boolean>(() => {
-    const loc = this.selectedLocation();
-    return !!loc && QR_SCANNABLE_LOCATION_TYPES.includes(loc.type);
+    const selectedLocationData = this.selectedLocation();
+    return !!selectedLocationData && QR_SCANNABLE_LOCATION_TYPES.includes(selectedLocationData.type);
   });
 
   readonly locationQrPayload = computed<string>(() => {
-    const loc = this.selectedLocation();
-    return loc ? `box:${loc.id}` : '';
+    const selectedLocationData = this.selectedLocation();
+    return selectedLocationData ? `box:${selectedLocationData.id}` : '';
   });
 
   readonly printableLabelMeta = computed<string>(() => {
     const path = this.locationPath();
-    return path.map((l) => l.name).join('-');
+    return path.map((locationEntry) => locationEntry.name).join('-');
   });
 
   readonly isBuildingDetails = computed<boolean>(() => this.selectedLocation()?.type === 'building' && this.isDetailsView());
   readonly isFloorDetails = computed<boolean>(() => this.selectedLocation()?.type === 'floor' && this.isDetailsView());
+  private readonly headerAddLabelByLocationType: Readonly<Record<LocationType, string>> = {
+    building: ADD_LABEL.floor,
+    floor: ADD_LABEL.room,
+    room: ADD_LABEL.cabinet,
+    cabinet: ADD_LABEL.drawer,
+    drawer: ADD_LABEL.item,
+    box: ADD_LABEL.item,
+    tray: ADD_LABEL.item,
+    position: ADD_LABEL.item,
+  };
   readonly headerAddLabel = computed<string>(() => {
-    const t = this.selectedLocation()?.type;
-    if (t === 'building') return 'Add floor';
-    if (t === 'floor') return 'Add room';
-    if (t === 'room') return 'Add cabinet';
-    if (t === 'cabinet') return 'Add drawer';
-    if (t === 'tray' || t === 'position' || t === 'drawer' || t === 'box') return 'Add item';
-    return 'Add item';
+    if (this.hasMultipleAddOptions()) return ADD_LABEL.add;
+    const selectedLocationType = this.selectedLocation()?.type;
+    if (!selectedLocationType) return ADD_LABEL.item;
+    return this.headerAddLabelByLocationType[selectedLocationType];
   });
   readonly headerAddOptions = computed<readonly { label: string; action: () => void }[]>(() => {
-    const loc = this.selectedLocation();
-    if (!loc) return [];
-    const opts: { label: string; action: () => void }[] = [];
-    for (const ct of this.allowedChildTypes()) {
-      const lbl = `Add ${this.locationType.label(ct)}`;
-      opts.push({ label: lbl, action: () => this.addComponent(ct) });
+    const selectedLocation = this.selectedLocation();
+    if (!selectedLocation) return [];
+    const addOptions: { label: string; action: () => void }[] = [];
+    for (const childLocationType of this.allowedChildTypes()) {
+      const addOptionLabel = `Add ${this.locationType.label(childLocationType)}`;
+      addOptions.push({ label: addOptionLabel, action: () => this.addComponent(childLocationType) });
     }
-    if (this.canAddItem()) opts.push({ label: 'Add item', action: () => this.addItem() });
-    return opts;
+    if (this.canAddItem()) addOptions.push({ label: ADD_LABEL.item, action: () => this.addItem() });
+    return addOptions;
   });
   readonly hasMultipleAddOptions = computed(() => this.headerAddOptions().length > 1);
   protected readonly storageCondition = inject(StorageConditionService);
   readonly hasStorageIcon = computed<boolean>(() => {
-    const t = this.selectedLocation()?.type;
-    return t === 'cabinet' || t === 'drawer';
+    const selectedLocationType = this.selectedLocation()?.type;
+    return selectedLocationType === 'cabinet' || selectedLocationType === 'drawer';
   });
   readonly primaryStorageCondition = computed(() => {
-    const loc = this.selectedLocation();
-    return loc ? this.storageCondition.effective(this.collection.dataset().locations, loc.id)[0] : undefined;
+    const selectedLocationData = this.selectedLocation();
+    return selectedLocationData ? this.storageCondition.effective(this.collection.dataset().locations, selectedLocationData.id)[0] : undefined;
   });
   readonly storageTooltip = computed(() => {
-    const loc = this.selectedLocation();
-    if (!loc || !this.hasStorageIcon()) return '';
-    const eff = this.storageCondition.effective(this.collection.dataset().locations, loc.id).map(c => this.storageCondition.label(c)).join(', ');
-    const inherited = !loc.storageConditions?.length;
+    const selectedLocationData = this.selectedLocation();
+    if (!selectedLocationData || !this.hasStorageIcon()) return '';
+    const eff = this.storageCondition.effective(this.collection.dataset().locations, selectedLocationData.id).map((storageConditionEntry) => this.storageCondition.label(storageConditionEntry)).join(', ');
+    const inherited = !selectedLocationData.storageConditions?.length;
     return inherited ? `${eff} · heredado` : eff;
   });
 
@@ -228,9 +236,9 @@ export class LocationViewComponent {
 
   downloadQr(): void {
     // Find the qr-label inside printable preview and trigger its download
-    const el = document.querySelector('.printable-label__qr app-qr-label') as HTMLElement | null;
-    const btn = el?.querySelector('.qr-label__download') as HTMLElement | null;
-    btn?.click();
+    const qrLabelHostElement = document.querySelector('.printable-label__qr app-qr-label') as HTMLElement | null;
+    const downloadButtonElement = qrLabelHostElement?.querySelector('.qr-label__download') as HTMLElement | null;
+    downloadButtonElement?.click();
   }
 
   toggleLabelZoom(): void {
@@ -250,9 +258,9 @@ export class LocationViewComponent {
   }
 
   printLabel(): void {
-    const img = document.querySelector('.printable-label__qr img') as HTMLImageElement | null;
-    const src = img?.src ?? '';
-    if (!src) {
+    const qrImageElement = document.querySelector('.printable-label__qr img') as HTMLImageElement | null;
+    const qrImageSource = qrImageElement?.src ?? '';
+    if (!qrImageSource) {
       window.print();
       return;
     }
@@ -262,20 +270,17 @@ export class LocationViewComponent {
       return;
     }
     printWindow.document.open();
-    printWindow.document.write(`<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Label</title>
-<style>
-  @page { margin: 0; }
-  * { box-sizing: border-box; }
-  body { margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #fff; }
-  img { display: block; max-width: 2in; max-height: 2in; image-rendering: pixelated; }
-</style>
-</head>
-<body><img src="${src}" alt="code"></body>
-</html>`);
+    printWindow.document.title = 'Label';
+    const printStyleElement = printWindow.document.createElement('style');
+    printStyleElement.textContent = '@page { margin: 0; } * { box-sizing: border-box; } body { margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #fff; } img { display: block; max-width: 2in; max-height: 2in; image-rendering: pixelated; }';
+    printWindow.document.head.appendChild(printStyleElement);
+    const metaCharset = printWindow.document.createElement('meta');
+    metaCharset.setAttribute('charset', 'utf-8');
+    printWindow.document.head.appendChild(metaCharset);
+    const printableImage = printWindow.document.createElement('img');
+    printableImage.src = qrImageSource;
+    printableImage.alt = 'code';
+    printWindow.document.body.appendChild(printableImage);
     printWindow.document.close();
     const doPrint = (): void => {
       printWindow.focus();
@@ -356,9 +361,9 @@ export class LocationViewComponent {
     }
     const trimmed = chosen.trim();
     const finalName = trimmed || name;
-    const id = newPrototypeId(ID_PREFIX.location);
+    const newLocationId = newPrototypeId(ID_PREFIX.location);
     const child: Location = {
-      id,
+      id: newLocationId,
       parentId: container.id,
       name: finalName,
       type: childType,
@@ -385,15 +390,15 @@ export class LocationViewComponent {
       if (columns === null) {
         return;
       }
-      for (let row = 1; row <= rows; row += 1) {
+      for (let currentRow = 1; currentRow <= rows; currentRow += 1) {
         for (let column = 1; column <= columns; column += 1) {
           const positionId = newPrototypeId(ID_PREFIX.location);
           locations.push({
             id: positionId,
-            parentId: id,
-            name: `R${row} C${column}`,
+            parentId: newLocationId,
+            name: `R${currentRow} C${column}`,
             type: 'position',
-            row,
+            row: currentRow,
             column,
           });
         }
@@ -478,29 +483,29 @@ export class LocationViewComponent {
   }
 
   headerAdd(): void {
-    const t = this.selectedLocation()?.type;
-    if (t === 'building') this.addComponent('floor');
-    else if (t === 'floor') this.addComponent('room');
-    else if (t === 'room') this.addComponent('cabinet');
-    else if (t === 'cabinet') this.addComponent('drawer');
+    const selectedLocationType = this.selectedLocation()?.type;
+    if (selectedLocationType === 'building') this.addComponent('floor');
+    else if (selectedLocationType === 'floor') this.addComponent('room');
+    else if (selectedLocationType === 'room') this.addComponent('cabinet');
+    else if (selectedLocationType === 'cabinet') this.addComponent('drawer');
     else this.addItem();
   }
   readonly editLocation = signal<Location | null>(null);
   editLocationName(): void {
-    const loc = this.selectedLocation();
-    if (!loc) return;
-    this.editLocation.set({ ...loc });
+    const selectedLocationData = this.selectedLocation();
+    if (!selectedLocationData) return;
+    this.editLocation.set({ ...selectedLocationData });
   }
   onEditSave(data: { name: string; targetTemperature?: number; targetHumidity?: number; storageConditions: StorageCondition[] }): void {
-    const loc = this.editLocation();
-    if (!loc) return;
-    if (data.name && data.name !== loc.name) this.collection.updateLocationName(loc.id, data.name);
-    if (data.targetTemperature !== undefined || data.targetHumidity !== undefined || loc.type === 'room' || loc.type === 'cabinet') {
-      const ds = this.collection.dataset();
-      const locations = ds.locations.map(l => l.id === loc.id ? { ...l, targetTemperature: data.targetTemperature, targetHumidity: data.targetHumidity } : l);
-      this.collection.setDataset({ ...ds, locations });
+    const editingLocation = this.editLocation();
+    if (!editingLocation) return;
+    if (data.name && data.name !== editingLocation.name) this.collection.updateLocationName(editingLocation.id, data.name);
+    if (data.targetTemperature !== undefined || data.targetHumidity !== undefined || editingLocation.type === 'room' || editingLocation.type === 'cabinet') {
+      const currentDataset = this.collection.dataset();
+      const locations = currentDataset.locations.map((locationEntry) => locationEntry.id === editingLocation.id ? { ...locationEntry, targetTemperature: data.targetTemperature, targetHumidity: data.targetHumidity } : locationEntry);
+      this.collection.setDataset({ ...currentDataset, locations });
     }
-    this.collection.updateLocationStorageConditions(loc.id, data.storageConditions);
+    this.collection.updateLocationStorageConditions(editingLocation.id, data.storageConditions);
     // contents never edited here
     this.editLocation.set(null);
   }

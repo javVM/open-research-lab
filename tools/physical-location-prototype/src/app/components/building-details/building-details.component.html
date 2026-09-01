@@ -3,7 +3,7 @@
     <div class="detail-card__header">
       <h3 class="editable-title" (click)="edit()" role="button" tabindex="0" matTooltip="Click to rename">{{ location().name }}</h3>
 
-       <button type="button" class="add-item add-item--header" (click)="addItem.emit()"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> Add floor</button>
+       <button type="button" class="add-item add-item--header" (click)="addItem.emit()"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> {{ addLabel.floor }}</button>
     </div>
     <div class="detail-card__chips">
       <span class="detail-card__badge detail-card__badge--muted">BUILDING</span>
