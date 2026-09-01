@@ -119,4 +119,17 @@ describe('ScanService', () => {
 
     expect(service.lastExtractedItem()).toBeNull();
   });
+
+  it('keeps the operation type of a recorded warning when the scan mode changes', () => {
+    const service = scanService();
+    service.setScanMode(SCAN_MODE.place);
+
+    service.scanQr('unknown-code');
+
+    expect(service.recentWarnings()[0]?.type).toBe(SCAN_MODE.place);
+
+    service.setScanMode(SCAN_MODE.extract);
+
+    expect(service.recentWarnings()[0]?.type).toBe(SCAN_MODE.place);
+  });
 });

@@ -50,6 +50,7 @@ interface ExtractedItem {
 
 interface ScanError {
   id: number;
+  type: ScanMode;
   attemptedCode: string;
   message: string;
   occurredAt: string;
@@ -111,7 +112,7 @@ export class ScanService {
       .reverse()
       .map((error) => ({
         id: String(error.id),
-        type: this.scanMode(),
+        type: error.type,
         itemCatalogue: error.attemptedCode,
         itemId: error.attemptedCode,
         fromName: null,
@@ -488,6 +489,7 @@ export class ScanService {
     this.scanErrors.update((current) => {
       const next: ScanError = {
         id: this.nextScanErrorId,
+        type: this.scanMode(),
         attemptedCode: this.lastAttemptedCode,
         message,
         occurredAt: new Date().toISOString(),
