@@ -869,6 +869,39 @@
       <trans-unit id="settings.dateFormatIsoOption">
         <source>ISO 8601 (YYYY-MM-DD)</source>
       </trans-unit>
+      <trans-unit id="settings.defaultPrefixLabel">
+        <source>Default catalogue prefix</source>
+      </trans-unit>
+      <trans-unit id="settings.defaultPrefixHint">
+        <source>Used when creating new items.</source>
+      </trans-unit>
+      <trans-unit id="settings.showEmptyLocationsLabel">
+        <source>Show empty locations in tree</source>
+      </trans-unit>
+      <trans-unit id="settings.defaultLabelSizeLabel">
+        <source>Default label size</source>
+      </trans-unit>
+      <trans-unit id="settings.labelSizeSmallOption">
+        <source>Small</source>
+      </trans-unit>
+      <trans-unit id="settings.labelSizeMediumOption">
+        <source>Medium</source>
+      </trans-unit>
+      <trans-unit id="settings.labelSizeLargeOption">
+        <source>Large</source>
+      </trans-unit>
+      <trans-unit id="settings.backupReminderLabel">
+        <source>Backup reminder</source>
+      </trans-unit>
+      <trans-unit id="settings.backupReminderOffOption">
+        <source>Off</source>
+      </trans-unit>
+      <trans-unit id="settings.backupReminderWeekOption">
+        <source>Every 7 days</source>
+      </trans-unit>
+      <trans-unit id="settings.backupReminderMonthOption">
+        <source>Every 30 days</source>
+      </trans-unit>
       <trans-unit id="itemCategory.item_macrofossil">
         <source>Macrofossil</source>
       </trans-unit>

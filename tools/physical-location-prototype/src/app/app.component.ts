@@ -10,6 +10,7 @@ import { LanguageSwitcherComponent } from './components/language-switcher/langua
 import { ScanViewComponent } from './components/scan-view/scan-view.component';
 import { ReportsViewComponent } from './components/reports-view/reports-view.component';
 import { SettingsViewComponent } from './components/settings-view/settings-view.component';
+import { NotificationsBellComponent } from './components/notifications-bell/notifications-bell.component';
 import { CollectionService } from './collection.service';
 import { NavigationService } from './navigation.service';
 import { QuickJumpService } from './shared/quick-jump.service';
@@ -32,6 +33,7 @@ import { createAppTranslations } from './app.translations';
     ScanViewComponent,
     ReportsViewComponent,
     SettingsViewComponent,
+    NotificationsBellComponent,
     QuickJumpSheetComponent,
   ],
   selector: 'app-root',

@@ -3,25 +3,36 @@ import { Injectable, signal } from '@angular/core';
 export type TemperatureUnit = 'celsius' | 'fahrenheit';
 export type DateFormat = 'locale' | 'iso';
 export type ThemePreference = 'dark' | 'system';
+export type LabelSize = 'small' | 'medium' | 'large';
 
 export interface AppSettings {
   institutionName: string;
+  defaultPrefix: string;
   temperatureUnit: TemperatureUnit;
   dateFormat: DateFormat;
   themePreference: ThemePreference;
+  showEmptyLocations: boolean;
+  defaultLabelSize: LabelSize;
+  backupReminderDays: number;
   requireAgentOnMove: boolean;
   requireNoteOnMove: boolean;
+  lastBackupAt: string | null;
 }
 
 const SETTINGS_STORAGE_KEY = 'physical-location-prototype:settings';
 
 const DEFAULT_SETTINGS: AppSettings = {
   institutionName: '',
+  defaultPrefix: 'MNCN-',
   temperatureUnit: 'celsius',
   dateFormat: 'locale',
   themePreference: 'system',
+  showEmptyLocations: true,
+  defaultLabelSize: 'medium',
+  backupReminderDays: 0,
   requireAgentOnMove: false,
   requireNoteOnMove: false,
+  lastBackupAt: null,
 };
 
 /**
@@ -41,6 +52,10 @@ export class SettingsService {
     } catch {
       // localStorage may be unavailable; settings still apply for the session.
     }
+  }
+
+  markBackupNow(): void {
+    this.update({ lastBackupAt: new Date().toISOString() });
   }
 }
 

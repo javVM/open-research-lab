@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { SettingsService, type DateFormat, type TemperatureUnit, type ThemePreference } from '../../settings.service';
+import { SettingsService, type DateFormat, type LabelSize, type TemperatureUnit, type ThemePreference } from '../../settings.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createSettingsViewTranslations } from './settings-view.translations';
 
@@ -30,9 +30,13 @@ export class SettingsViewComponent {
 
   protected readonly form = new FormGroup({
     institutionName: new FormControl(''),
+    defaultPrefix: new FormControl(''),
     temperatureUnit: new FormControl<TemperatureUnit>('celsius'),
     dateFormat: new FormControl<DateFormat>('locale'),
     themePreference: new FormControl<ThemePreference>('system'),
+    showEmptyLocations: new FormControl(true),
+    defaultLabelSize: new FormControl<LabelSize>('medium'),
+    backupReminderDays: new FormControl<number>(0),
     requireAgentOnMove: new FormControl(false),
     requireNoteOnMove: new FormControl(false),
   });
@@ -44,9 +48,13 @@ export class SettingsViewComponent {
     const value = this.formValue();
     return (
       value.institutionName !== current.institutionName ||
+      value.defaultPrefix !== current.defaultPrefix ||
       value.temperatureUnit !== current.temperatureUnit ||
       value.dateFormat !== current.dateFormat ||
       value.themePreference !== current.themePreference ||
+      value.showEmptyLocations !== current.showEmptyLocations ||
+      value.defaultLabelSize !== current.defaultLabelSize ||
+      value.backupReminderDays !== current.backupReminderDays ||
       value.requireAgentOnMove !== current.requireAgentOnMove ||
       value.requireNoteOnMove !== current.requireNoteOnMove
     );
@@ -57,9 +65,13 @@ export class SettingsViewComponent {
     this.form.setValue(
       {
         institutionName: current.institutionName,
+        defaultPrefix: current.defaultPrefix,
         temperatureUnit: current.temperatureUnit,
         dateFormat: current.dateFormat,
         themePreference: current.themePreference,
+        showEmptyLocations: current.showEmptyLocations,
+        defaultLabelSize: current.defaultLabelSize,
+        backupReminderDays: current.backupReminderDays,
         requireAgentOnMove: current.requireAgentOnMove,
         requireNoteOnMove: current.requireNoteOnMove,
       },
@@ -71,9 +83,13 @@ export class SettingsViewComponent {
     const value = this.formValue();
     this.settings.update({
       institutionName: value.institutionName ?? '',
+      defaultPrefix: value.defaultPrefix ?? 'MNCN-',
       temperatureUnit: value.temperatureUnit ?? 'celsius',
       dateFormat: value.dateFormat ?? 'locale',
       themePreference: value.themePreference ?? 'system',
+      showEmptyLocations: value.showEmptyLocations ?? true,
+      defaultLabelSize: value.defaultLabelSize ?? 'medium',
+      backupReminderDays: value.backupReminderDays ?? 0,
       requireAgentOnMove: value.requireAgentOnMove ?? false,
       requireNoteOnMove: value.requireNoteOnMove ?? false,
     });
@@ -84,9 +100,13 @@ export class SettingsViewComponent {
     this.form.setValue(
       {
         institutionName: current.institutionName,
+        defaultPrefix: current.defaultPrefix,
         temperatureUnit: current.temperatureUnit,
         dateFormat: current.dateFormat,
         themePreference: current.themePreference,
+        showEmptyLocations: current.showEmptyLocations,
+        defaultLabelSize: current.defaultLabelSize,
+        backupReminderDays: current.backupReminderDays,
         requireAgentOnMove: current.requireAgentOnMove,
         requireNoteOnMove: current.requireNoteOnMove,
       },

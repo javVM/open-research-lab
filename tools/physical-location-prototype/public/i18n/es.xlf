@@ -1178,6 +1178,50 @@
         <source>ISO 8601 (YYYY-MM-DD)</source>
         <target>ISO 8601 (AAAA-MM-DD)</target>
       </trans-unit>
+      <trans-unit id="settings.defaultPrefixLabel">
+        <source>Default catalogue prefix</source>
+        <target>Prefijo de catálogo por defecto</target>
+      </trans-unit>
+      <trans-unit id="settings.defaultPrefixHint">
+        <source>Used when creating new items.</source>
+        <target>Se usa al crear nuevos ítems.</target>
+      </trans-unit>
+      <trans-unit id="settings.showEmptyLocationsLabel">
+        <source>Show empty locations in tree</source>
+        <target>Mostrar ubicaciones vacías en el árbol</target>
+      </trans-unit>
+      <trans-unit id="settings.defaultLabelSizeLabel">
+        <source>Default label size</source>
+        <target>Tamaño de etiqueta por defecto</target>
+      </trans-unit>
+      <trans-unit id="settings.labelSizeSmallOption">
+        <source>Small</source>
+        <target>Pequeña</target>
+      </trans-unit>
+      <trans-unit id="settings.labelSizeMediumOption">
+        <source>Medium</source>
+        <target>Mediana</target>
+      </trans-unit>
+      <trans-unit id="settings.labelSizeLargeOption">
+        <source>Large</source>
+        <target>Grande</target>
+      </trans-unit>
+      <trans-unit id="settings.backupReminderLabel">
+        <source>Backup reminder</source>
+        <target>Recordatorio de respaldo</target>
+      </trans-unit>
+      <trans-unit id="settings.backupReminderOffOption">
+        <source>Off</source>
+        <target>Desactivado</target>
+      </trans-unit>
+      <trans-unit id="settings.backupReminderWeekOption">
+        <source>Every 7 days</source>
+        <target>Cada 7 días</target>
+      </trans-unit>
+      <trans-unit id="settings.backupReminderMonthOption">
+        <source>Every 30 days</source>
+        <target>Cada 30 días</target>
+      </trans-unit>
       <trans-unit id="itemCategory.item_macrofossil">
         <source>Macrofossil</source>
         <target>Macro-fósil</target>

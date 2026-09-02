@@ -61,6 +61,7 @@ export const APP_ICON = {
   checkCircle: 'checkCircle',
   warning: 'warning',
   close: 'close',
+  notifications: 'notifications',
 } as const;
 export type AppIcon = (typeof APP_ICON)[keyof typeof APP_ICON];
 
@@ -326,6 +327,11 @@ const ICON_SVGS: Record<AppIcon, string> = {
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <line x1="18" y1="6" x2="6" y2="18"/>
       <line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>`,
+  [APP_ICON.notifications]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 26 26" fill="currentColor">
+      <path d="M12 2.2A2.8 2.8 0 0 1 14.8 5v.3A9.8 9.8 0 0 1 21 14v1.2c0 2.1 1.2 3.5 2.9 4.6H0c1.7-1.1 2.9-2.5 2.9-4.6V14A9.8 9.8 0 0 1 9.2 5.3V5A2.8 2.8 0 0 1 12 2.2Z"/>
+      <path d="M8.2 19.8h7.6a3.8 3.8 0 0 1-7.6 0Z"/>
     </svg>`,
 };
 
