@@ -797,6 +797,9 @@
       <trans-unit id="reports.table.time">
         <source>Time</source>
       </trans-unit>
+      <trans-unit id="reports.table.performedBy">
+        <source>Agent</source>
+      </trans-unit>
       <trans-unit id="itemCategory.item_macrofossil">
         <source>Macrofossil</source>
       </trans-unit>

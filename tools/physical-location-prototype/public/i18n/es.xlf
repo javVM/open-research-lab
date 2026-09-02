@@ -1062,6 +1062,10 @@
         <source>Time</source>
         <target>Hora</target>
       </trans-unit>
+      <trans-unit id="reports.table.performedBy">
+        <source>Agent</source>
+        <target>Agente</target>
+      </trans-unit>
       <trans-unit id="itemCategory.item_macrofossil">
         <source>Macrofossil</source>
         <target>Macro-fósil</target>

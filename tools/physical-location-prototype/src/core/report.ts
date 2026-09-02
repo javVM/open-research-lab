@@ -54,6 +54,7 @@ export interface ReportMovementRow {
   action: ReportMovementAction;
   locationName: string | null;
   occurredAt: string;
+  performedBy: string | null;
 }
 
 export interface ReportSummary {
@@ -211,6 +212,7 @@ export function computeReportSummary(dataset: Dataset, recentMovementLimit = 8):
         action,
         locationName,
         occurredAt: movement.occurredAt,
+        performedBy: movement.performedBy ?? null,
       };
     });
 

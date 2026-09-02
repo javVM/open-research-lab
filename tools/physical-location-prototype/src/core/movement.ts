@@ -24,6 +24,7 @@ export function move(
   toLocationId: string | null,
   occurredAt: string,
   note?: string,
+  performedBy?: string,
 ): MoveResult {
   const item = dataset.items.find((candidate) => candidate.id === itemId);
   if (!item) {
@@ -55,6 +56,7 @@ export function move(
     toLocationId,
     occurredAt,
     note,
+    performedBy,
   };
 
   const updatedItems = dataset.items.map((candidate) =>

@@ -32,6 +32,8 @@ function mulberry32(seed: number) {
 const ROW_LETTERS = ['A', 'B'];
 const GRID_COLUMNS = 4;
 
+const AGENT_NAMES = ['A. López', 'M. Chen', 'J. Patel', 'S. Okafor', 'E. Schmidt', 'K. Tanaka'];
+
 interface Rect {
   x: number;
   y: number;
@@ -299,7 +301,13 @@ export function generateSeed(randomSeed = 20260824): Dataset {
     occupiedPositions.delete(locationId);
   }
 
-  function recordMovement(itemId: string, from: string | null, to: string | null, occurredAt: string, note: string) {
+  function recordMovement(
+    itemId: string,
+    from: string | null,
+    to: string | null,
+    occurredAt: string,
+    note: string,
+  ) {
     movementCounter.value += 1;
     movements.push({
       id: `mov-seed-${pad(movementCounter.value, 4)}`,
@@ -308,6 +316,7 @@ export function generateSeed(randomSeed = 20260824): Dataset {
       toLocationId: to,
       occurredAt,
       note,
+      performedBy: AGENT_NAMES[Math.floor(random() * AGENT_NAMES.length)],
     });
   }
 

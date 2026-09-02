@@ -37,6 +37,7 @@ export const itemColumn = $localize `@@reports.table.item:Item`;
 export const actionColumn = $localize `@@reports.table.action:Action`;
 export const locationColumn = $localize `@@reports.table.location:Location`;
 export const timeColumn = $localize `@@reports.table.time:Time`;
+export const performedByColumn = $localize `@@reports.table.performedBy:Agent`;
 
 /** Donut segment colours, one per item status, in a fixed presentation order. */
 export const STATUS_SEGMENT_COLOR: Record<ItemStatus, string> = {

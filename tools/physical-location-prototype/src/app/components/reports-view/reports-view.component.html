@@ -79,6 +79,7 @@
               <th class="reports__table-item-header" scope="col">{{ text.itemColumn() }}</th>
               <th class="reports__table-action-header" scope="col">{{ text.actionColumn() }}</th>
               <th class="reports__table-location-header" scope="col">{{ text.locationColumn() }}</th>
+              <th class="reports__table-performed-by-header" scope="col">{{ text.performedByColumn() }}</th>
               <th class="reports__table-time-header" scope="col">{{ text.timeColumn() }}</th>
             </tr>
           </thead>
@@ -92,6 +93,7 @@
                   </span>
                 </td>
                 <td class="reports__table-location">{{ row.locationName ?? '—' }}</td>
+                <td class="reports__table-performed-by">{{ row.performedBy ?? '—' }}</td>
                 <td class="reports__table-time">{{ row.occurredAt | date: 'medium' }}</td>
               </tr>
             }

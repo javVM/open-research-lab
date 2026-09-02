@@ -281,6 +281,8 @@ export interface Movement {
   toLocationId: string | null;
   occurredAt: string;
   note?: string;
+  /** Person or agent who recorded the movement. */
+  performedBy?: string;
 }
 
 export interface Dataset {

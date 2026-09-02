@@ -190,7 +190,7 @@ app-line-chart {
 }
 
 .reports__table-item-header {
-  width: 22%;
+  width: 18%;
 }
 
 .reports__table-action-header {
@@ -198,11 +198,15 @@ app-line-chart {
 }
 
 .reports__table-location-header {
-  width: 26%;
+  width: 22%;
+}
+
+.reports__table-performed-by-header {
+  width: 16%;
 }
 
 .reports__table-time-header {
-  width: 36%;
+  width: 28%;
 }
 
 .reports__table th {

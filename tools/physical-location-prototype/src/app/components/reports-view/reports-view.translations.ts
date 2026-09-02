@@ -35,6 +35,7 @@ import {
   actionColumn,
   locationColumn,
   timeColumn,
+  performedByColumn,
 } from './reports-view.constants';
 
 export function createReportsViewTranslations(i18n: TranslationService) {
@@ -76,5 +77,6 @@ export function createReportsViewTranslations(i18n: TranslationService) {
     actionColumn: () => i18n.t('reports.table.action', actionColumn),
     locationColumn: () => i18n.t('reports.table.location', locationColumn),
     timeColumn: () => i18n.t('reports.table.time', timeColumn),
+    performedByColumn: () => i18n.t('reports.table.performedBy', performedByColumn),
   };
 }

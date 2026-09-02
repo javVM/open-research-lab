@@ -108,4 +108,10 @@ describe('computeReportSummary', () => {
     expect(summary.buildingSegments).toEqual([]);
     expect(summary.recentMovements).toEqual([]);
   });
+
+  it('includes the agent who performed the movement', () => {
+    const summary = computeReportSummary(generateSeed());
+    expect(summary.recentMovements.length).toBeGreaterThan(0);
+    expect(summary.recentMovements.some((row) => row.performedBy)).toBe(true);
+  });
 });
