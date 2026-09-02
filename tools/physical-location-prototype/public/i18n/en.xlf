@@ -846,7 +846,7 @@
         <source>Display</source>
       </trans-unit>
       <trans-unit id="settings.category.data">
-        <source>Data & Storage</source>
+        <source>Data &amp; Storage</source>
       </trans-unit>
       <trans-unit id="settings.category.movements">
         <source>Provenance</source>

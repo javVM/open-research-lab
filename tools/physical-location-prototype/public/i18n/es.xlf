@@ -1147,7 +1147,7 @@
         <target>Visualización</target>
       </trans-unit>
       <trans-unit id="settings.category.data">
-        <source>Data & Storage</source>
+        <source>Data &amp; Storage</source>
         <target>Datos y almacenamiento</target>
       </trans-unit>
       <trans-unit id="settings.category.movements">
