@@ -1,6 +1,6 @@
 # ADR-0008 — Modular monolith in a product-scoped monorepo
 
-- Status: Proposed; the repository-boundary part is **superseded** (see Amendment below)
+- Status: Proposed; the repository-boundary part is **Superseded by ADR-0014** (see Amendment below)
 - Date: 2026-08-23
 
 ## Context

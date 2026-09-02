@@ -9,25 +9,29 @@ anything. It is binding.
 
 **Open Research Lab** — open-source software for scientific research. Licence: Apache-2.0.
 
-Current state: **Phase 1 (market validation) complete; no product code exists and none should be
-added here.** This is the **umbrella repository**: strategy, research and product documentation.
-Products live in their own repositories; the `sample-operations` repository does not exist yet and
-must not be created until user validation returns a GO.
+Current state: **Phase 1 (market validation) complete; the candidate product has received a
+sector GO and is now incubating inside this repository.** This is the **umbrella repository /
+laboratory**: strategy, research, product documentation, and the evolving product code.
 
-The permitted prototypes are the tools explicitly listed under [`tools/`](tools/).
+Products will eventually live in their own repositories, but the standalone `sample-operations`
+repository is **not created yet**. Until the extraction criteria in ADR-0014 are met, the product
+code evolves here under `tools/physical-location-prototype`.
+
+The permitted prototypes and tools are explicitly listed under [`tools/`](tools/).
 Currently these are [`tools/collection-validator`](tools/collection-validator/README.md),
-[`tools/sample-operations-slice`](tools/sample-operations-slice/README.md) and
-[`tools/physical-location-prototype`](tools/physical-location-prototype/README.md). The first two
+[`tools/sample-operations-slice`](tools/sample-operations-slice/README.md),
+[`tools/physical-location-prototype`](tools/physical-location-prototype/README.md) and
+[`tools/validation-research`](tools/validation-research/README.md). The first two
 were built to gather evidence during (or ahead of) user validation and remain throwaway experiments;
 nothing in them may be promoted to a shared package or reused as an architecture precedent.
 
-`tools/physical-location-prototype` is an **evolving prototype** that is being shaped toward the
-candidate Sample Operations product. It is still not the product itself and still has not passed the
-user-validation GO, but it is no longer treated as disposable. Its `src/core` remains a deliberate
-simplification of the domain model (it collapses `Position` into `Location`), not a preview of
-`packages/core`, and it uses in-memory/`localStorage` persistence rather than SQLite by deliberate
-choice, documented in its own README. It will be extracted to the standalone `sample-operations`
-repository when the maintainer decides the time is right.
+`tools/physical-location-prototype` (also referred to as *Nexus Lab* / *Physical Collections*) is the
+**product in gestation** for the candidate Sample Operations product. It is no longer treated as a
+disposable experiment, but it is still not the final standalone product repository. Its `src/core`
+remains a deliberate simplification of the domain model (it collapses `Position` into `Location`),
+not a preview of `packages/core`, and it uses in-memory/`localStorage` persistence rather than SQLite
+by deliberate choice, documented in its own README. It will be extracted to the standalone
+`sample-operations` repository when the criteria in ADR-0014 are met.
 
 The candidate first product, **Sample Operations**, is a local-first desktop tool for tracking
 where physical specimens and samples are and what has happened to them. Its target users are
@@ -193,7 +197,7 @@ Full detail in [docs/architecture/testing-strategy.md](docs/architecture/testing
   `tools/sample-operations-slice` throwaway prototype, the `tools/physical-location-prototype`
   evolving prototype, and the `tools/validation-research` analysis scripts (Python standard
   library only, no dependencies; research, not product code). Sample Operations code, when it
-  exists, goes in its own repository (ADR-0008, as amended). `tools/physical-location-prototype` is
+  exists, goes in its own repository (ADR-0008, as amended by ADR-0014). `tools/physical-location-prototype` is
   being shaped toward that product but remains a prototype until it is extracted.
 - No repository-wide toolchain and no CI. `tools/collection-validator`,
   `tools/sample-operations-slice` and `tools/physical-location-prototype` each have their own

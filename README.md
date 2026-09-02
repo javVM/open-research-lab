@@ -17,13 +17,18 @@ read-only, works entirely offline, and claims no standards conformance.
 It exists to test one question with real collections — **is this useful?** — before any product is
 committed to. Small enough to throw away: [tools/collection-validator](tools/collection-validator/README.md)
 
-### Sample Operations — in design (no code yet)
+### Sample Operations / Nexus Lab — evolving prototype
 
 A local-first desktop tool for small research groups and collections that need to answer two
 questions reliably: **where is this sample?** and **what has happened to it?**
 
 No server, no account, no network. All data in a single SQLite file you own, exportable to CSV
 at any time — so your records outlive the software.
+
+Phase 1 market validation is complete and the sector has given a GO. The candidate product is
+currently incubating as [`tools/physical-location-prototype`](tools/physical-location-prototype/README.md)
+inside this laboratory repository while it is shaped into the standalone `sample-operations`
+product.
 
 Design work so far: [market validation](docs/product/market-validation.md) · [discovery report](docs/discovery-report.md) ·
 [documentation index](docs/README.md)
