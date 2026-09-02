@@ -10,8 +10,8 @@ function dataset(): Dataset {
       { id: 'pos-a2', parentId: 'tray', name: 'A02', type: 'position', row: 1, column: 2 },
     ],
     items: [
-      { id: 'item-1', catalogueNumber: 'MNCN-0001', locationId: 'pos-a1', status: 'active' },
-      { id: 'item-2', catalogueNumber: 'MNCN-0002', locationId: null, status: 'active' },
+      { id: 'item-1', catalogueNumber: 'MNCN-0001', category: 'item_macrofossil', locationId: 'pos-a1', status: 'active' },
+      { id: 'item-2', catalogueNumber: 'MNCN-0002', category: 'item_microfossil', locationId: null, status: 'active' },
     ],
     movements: [],
   };

@@ -1,5 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
-import type { Dataset, Item, Location, Movement, Point } from '../core/models';
+import type { Dataset, Item, ItemCategory, Location, Movement, Point } from '../core/models';
 import { itemCountsByLocation } from '../core/search';
 import { nearestInsidePosition, rectInsidePolygon, scaleOutline } from '../core/outline';
 import { createStore, resetDemoData, type DatasetStore } from '../persistence/store';
@@ -179,12 +179,17 @@ export class CollectionService {
   }
 
   /** Creates a new item at the given location and records an accession movement. */
-  addItem(catalogueNumber: string, locationId: string | null): Item {
+  addItem(
+    catalogueNumber: string,
+    locationId: string | null,
+    category: ItemCategory = 'item_unprocessed_matrix',
+  ): Item {
     const dataset = this.dataset();
     const id = newPrototypeId(ID_PREFIX.item);
     const item: Item = {
       id,
       catalogueNumber: catalogueNumber.trim(),
+      category,
       locationId,
       status: 'active',
     };

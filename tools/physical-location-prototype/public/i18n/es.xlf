@@ -922,6 +922,346 @@
         <source>Time</source>
         <target>Hora</target>
       </trans-unit>
+      <trans-unit id="reports.heading">
+        <source>Inventory Reports</source>
+        <target>Informes de inventario</target>
+      </trans-unit>
+      <trans-unit id="reports.subheading">
+        <source>Current collection overview and distribution</source>
+        <target>Resumen y distribución actual de la colección</target>
+      </trans-unit>
+      <trans-unit id="reports.metricTotalItems">
+        <source>Total items</source>
+        <target>Ítems totales</target>
+      </trans-unit>
+      <trans-unit id="reports.metricLocationsInUse">
+        <source>Locations in use</source>
+        <target>Ubicaciones en uso</target>
+      </trans-unit>
+      <trans-unit id="reports.metricLocationsInUseCaption">
+        <source>holding at least one item</source>
+        <target>con al menos un ítem</target>
+      </trans-unit>
+      <trans-unit id="reports.metricUnlocated">
+        <source>Unlocated items</source>
+        <target>Ítems sin ubicar</target>
+      </trans-unit>
+      <trans-unit id="reports.metricUnlocatedCaption">
+        <source>not in storage</source>
+        <target>fuera de almacenamiento</target>
+      </trans-unit>
+      <trans-unit id="reports.metricIntegrity">
+        <source>Integrity</source>
+        <target>Integridad</target>
+      </trans-unit>
+      <trans-unit id="reports.metricIntegrityCaption">
+        <source>of items are located</source>
+        <target>de los ítems están ubicados</target>
+      </trans-unit>
+      <trans-unit id="reports.distributionHeading">
+        <source>Collection by status</source>
+        <target>Colección por estado</target>
+      </trans-unit>
+      <trans-unit id="reports.distributionTotalLabel">
+        <source>Total</source>
+        <target>Total</target>
+      </trans-unit>
+      <trans-unit id="reports.distributionAriaLabel">
+        <source>Distribution of the collection by status</source>
+        <target>Distribución de la colección por estado</target>
+      </trans-unit>
+      <trans-unit id="reports.byBuildingHeading">
+        <source>Items by building</source>
+        <target>Ítems por edificio</target>
+      </trans-unit>
+      <trans-unit id="reports.byBuildingAriaLabel">
+        <source>Items per building</source>
+        <target>Ítems por edificio</target>
+      </trans-unit>
+      <trans-unit id="reports.byCategoryHeading">
+        <source>Items by category</source>
+        <target>Ítems por categoría</target>
+      </trans-unit>
+      <trans-unit id="reports.byCategoryAriaLabel">
+        <source>Items per catalogue prefix</source>
+        <target>Ítems por prefijo de catálogo</target>
+      </trans-unit>
+      <trans-unit id="reports.segmentTooltip">
+        <source>{label}: {count} ({percent}%)</source>
+        <target>{label}: {count} ({percent}%)</target>
+      </trans-unit>
+      <trans-unit id="reports.othersCategory">
+        <source>Others</source>
+        <target>Otros</target>
+      </trans-unit>
+      <trans-unit id="reports.recentHeading">
+        <source>Recent movements</source>
+        <target>Movimientos recientes</target>
+      </trans-unit>
+      <trans-unit id="reports.recentAriaLabel">
+        <source>Recent movement activity</source>
+        <target>Actividad reciente de movimientos</target>
+      </trans-unit>
+      <trans-unit id="reports.emptyMovements">
+        <source>No movements recorded yet.</source>
+        <target>Todavía no hay movimientos registrados.</target>
+      </trans-unit>
+      <trans-unit id="reports.status.active">
+        <source>Active</source>
+        <target>Activo</target>
+      </trans-unit>
+      <trans-unit id="reports.status.checkedOut">
+        <source>Checked out</source>
+        <target>Prestado</target>
+      </trans-unit>
+      <trans-unit id="reports.status.lost">
+        <source>Lost</source>
+        <target>Perdido</target>
+      </trans-unit>
+      <trans-unit id="reports.status.archived">
+        <source>Archived</source>
+        <target>Archivado</target>
+      </trans-unit>
+      <trans-unit id="reports.action.placed">
+        <source>Placed</source>
+        <target>Colocado</target>
+      </trans-unit>
+      <trans-unit id="reports.action.extracted">
+        <source>Extracted</source>
+        <target>Extraído</target>
+      </trans-unit>
+      <trans-unit id="reports.action.transferred">
+        <source>Transferred</source>
+        <target>Transferido</target>
+      </trans-unit>
+      <trans-unit id="reports.table.item">
+        <source>Item</source>
+        <target>Ítem</target>
+      </trans-unit>
+      <trans-unit id="reports.table.action">
+        <source>Action</source>
+        <target>Acción</target>
+      </trans-unit>
+      <trans-unit id="reports.table.location">
+        <source>Location</source>
+        <target>Ubicación</target>
+      </trans-unit>
+      <trans-unit id="reports.table.time">
+        <source>Time</source>
+        <target>Hora</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_macrofossil">
+        <source>Macrofossil</source>
+        <target>Macro-fósil</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_microfossil">
+        <source>Microfossil</source>
+        <target>Micro-fósil</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_ichnofossil">
+        <source>Ichnofossil / Trace</source>
+        <target>Icnofósil / Huella</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_mineral_crystal">
+        <source>Mineral / Crystal</source>
+        <target>Mineral / Cristal</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_rock_core">
+        <source>Rock core</source>
+        <target>Testigo de Perforación</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_meteorite">
+        <source>Meteorite</source>
+        <target>Meteorito</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_thin_section_geo">
+        <source>Geological thin section</source>
+        <target>Lámina Delgada Geológica</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_cast_mold">
+        <source>Cast / Mold</source>
+        <target>Réplica / Molde</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_osteology_bone">
+        <source>Osteological bone</source>
+        <target>Hueso Osteológico</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_skull">
+        <source>Skull</source>
+        <target>Cráneo</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_taxidermy_mount">
+        <source>Taxidermy mount</source>
+        <target>Montaje Taxidérmico</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_study_skin">
+        <source>Study skin</source>
+        <target>Piel de Estudio</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_entomology_pin">
+        <source>Pinned insect</source>
+        <target>Insecto Alfileteado</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_shell_conchology">
+        <source>Shell / Mollusk</source>
+        <target>Concha / Molusco Seco</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_nest_egg">
+        <source>Nest / Egg</source>
+        <target>Nido / Huevo</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_herbarium_sheet">
+        <source>Herbarium sheet</source>
+        <target>Pliego de Herbario</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_carpological_fruit">
+        <source>Carpological specimen</source>
+        <target>Colección Carpológica</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_wood_xylarium">
+        <source>Wood sample</source>
+        <target>Muestra de Madera</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_fungi_mycology">
+        <source>Fungus / Mushroom</source>
+        <target>Hongo / Seta Deshidratada</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_algae_packet">
+        <source>Algae / Moss packet</source>
+        <target>Sobre de Algas / Musgos</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_cryovial_tissue">
+        <source>Cryovial tissue</source>
+        <target>Criovial de Tejido</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_eppendorf_dna">
+        <source>Eppendorf tube</source>
+        <target>Tubo Eppendorf</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_blood_bag">
+        <source>Blood / Plasma bag</source>
+        <target>Bolsa de Sangre / Plasma</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_petri_dish">
+        <source>Petri dish</source>
+        <target>Placa de Petri</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_microscope_slide">
+        <source>Microscope slide</source>
+        <target>Portaobjetos Histológico</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_paraffin_block">
+        <source>Paraffin block</source>
+        <target>Bloque de Parafina</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_vacutainer_tube">
+        <source>Vacutainer tube</source>
+        <target>Tubo Vacutainer</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_wet_jar_specimen">
+        <source>Wet specimen jar</source>
+        <target>Frasco Wet de Conservación</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_vial_larva">
+        <source>Larva / Parasite vial</source>
+        <target>Vial de Larvas o Parásitos</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_formalin_tank">
+        <source>Formalin tank</source>
+        <target>Tanque de Formol</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_pottery_sherd">
+        <source>Pottery sherd</source>
+        <target>Fragmento Cerámico</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_lithic_tool">
+        <source>Lithic tool</source>
+        <target>Herramienta Lítica</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_coin_numismatics">
+        <source>Coin</source>
+        <target>Moneda Antigua</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_textile_historic">
+        <source>Historic textile</source>
+        <target>Fragmento Textil Histórico</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_skeletal_remains">
+        <source>Skeletal remains</source>
+        <target>Resto Óseo Humano</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_field_notebook">
+        <source>Field notebook</source>
+        <target>Cuaderno de Campo</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_stratigraphic_map">
+        <source>Stratigraphic map</source>
+        <target>Plano Estratigráfico</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_photographic_plate">
+        <source>Photographic plate</source>
+        <target>Placa Fotográfica de Vidrio</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_subsampling_pellet">
+        <source>Subsampling pellet</source>
+        <target>Pellet / Píldora de Sedimento</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_amber_inclusion">
+        <source>Amber inclusion</source>
+        <target>Ámbar con Inclusión</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_frozen_tissue_pod">
+        <source>Frozen tissue pod</source>
+        <target>Cápsula de Tejido Congelado</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_well_plate">
+        <source>Multi-well plate</source>
+        <target>Placa Multipocillo / ELISA</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_lyophilized_vial">
+        <source>Lyophilized vial</source>
+        <target>Vial Liofilizado</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_seed_bank_vial">
+        <source>Seed bank vial</source>
+        <target>Vial de Banco de Semillas</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_dna_card">
+        <source>DNA capture card</source>
+        <target>Tarjeta de Captura de ADN</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_environmental_filter">
+        <source>Environmental filter</source>
+        <target>Filtro de ADN Ambiental / eDNA</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_skeletal_articulated">
+        <source>Articulated skeleton</source>
+        <target>Esqueleto Articulado</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_glass_slide_box">
+        <source>Glass slide box</source>
+        <target>Caja de Portaobjetos</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_metal_artifact">
+        <source>Metal artifact</source>
+        <target>Artefacto Metálico Arqueológico</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_glass_historic">
+        <source>Historic glass</source>
+        <target>Vidrio Histórico / Arqueológico</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_organic_leather">
+        <source>Organic leather</source>
+        <target>Cuero / Resto Orgánico Antiguo</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_microfiche_film">
+        <source>Microfiche / Microfilm</source>
+        <target>Microficha / Microfilm</target>
+      </trans-unit>
+      <trans-unit id="itemCategory.item_unprocessed_matrix">
+        <source>Unprocessed matrix</source>
+        <target>Matriz sin Procesar</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

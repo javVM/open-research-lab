@@ -8,6 +8,7 @@ import { ItemDetailComponent } from './components/item-detail/item-detail.compon
 import { ConfirmMoveModalComponent } from './components/confirm-move-modal/confirm-move-modal.component';
 import { LanguageSwitcherComponent } from './components/language-switcher/language-switcher.component';
 import { ScanViewComponent } from './components/scan-view/scan-view.component';
+import { ReportsViewComponent } from './components/reports-view/reports-view.component';
 import { CollectionService } from './collection.service';
 import { NavigationService } from './navigation.service';
 import { QuickJumpService } from './shared/quick-jump.service';
@@ -28,6 +29,7 @@ import { createAppTranslations } from './app.translations';
     ConfirmMoveModalComponent,
     LanguageSwitcherComponent,
     ScanViewComponent,
+    ReportsViewComponent,
     QuickJumpSheetComponent,
   ],
   selector: 'app-root',

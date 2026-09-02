@@ -17,8 +17,8 @@ function dataset(): Dataset {
       { id: 'pos-a1', parentId: 'tray', name: 'A01', type: 'position', row: 1, column: 1 },
     ],
     items: [
-      { id: 'item-1', catalogueNumber: 'MNCN-0001', label: 'Mammoth mandible', locationId: 'pos-a1', status: 'active' },
-      { id: 'item-2', catalogueNumber: 'PALEO-0001', label: 'Trilobite plate', locationId: null, status: 'lost' },
+      { id: 'item-1', catalogueNumber: 'MNCN-0001', label: 'Mammoth mandible', category: 'item_macrofossil', locationId: 'pos-a1', status: 'active' },
+      { id: 'item-2', catalogueNumber: 'PALEO-0001', label: 'Trilobite plate', category: 'item_macrofossil', locationId: null, status: 'lost' },
     ],
     movements: [
       { id: 'mov-1', itemId: 'item-1', fromLocationId: null, toLocationId: 'drawer', occurredAt: '2026-01-01T00:00:00.000Z' },

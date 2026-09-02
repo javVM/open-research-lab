@@ -68,7 +68,7 @@ describe('App', () => {
     expect(searchInput.placeholder).toContain('Buscar en la colección');
   });
 
-  it('renders a mode switcher with Explore and Scan only', async () => {
+  it('renders a mode switcher with Explore, Scan and Reports', async () => {
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [App],
@@ -82,11 +82,12 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
 
     const buttons = compiled.querySelectorAll('.sidenav__link:not(.sidenav__link--disabled)');
-    // Explore + Scan + Reset demo = 3 actionable links in sidenav
-    expect(buttons.length).toBe(3);
+    // Explore + Scan + Reports + Reset demo = 4 actionable links in sidenav
+    expect(buttons.length).toBe(4);
 
     expect(Array.from(buttons).some((button) => button.textContent?.includes('Label'))).toBe(false);
     expect(Array.from(buttons).some((button) => button.textContent?.includes('Explore'))).toBe(true);
     expect(Array.from(buttons).some((button) => button.textContent?.includes('Scan'))).toBe(true);
+    expect(Array.from(buttons).some((button) => button.textContent?.includes('Reports'))).toBe(true);
   });
 });

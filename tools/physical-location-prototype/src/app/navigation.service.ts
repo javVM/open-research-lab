@@ -16,7 +16,7 @@ export class NavigationService {
   private readonly move = inject(MoveService);
 
   /** Current high-level UI mode. */
-  readonly uiMode = signal<'explore' | 'scan'>('explore');
+  readonly uiMode = signal<'explore' | 'scan' | 'reports'>('explore');
   readonly selectedLocationId = signal<string | null>(null);
   readonly selectedItemId = signal<string | null>(null);
   readonly expandedIds = signal<ReadonlySet<string>>(new Set());
@@ -34,7 +34,7 @@ export class NavigationService {
     }
   }
 
-  setUiMode(mode: 'explore' | 'scan'): void {
+  setUiMode(mode: 'explore' | 'scan' | 'reports'): void {
     this.uiMode.set(mode);
     this.selectedLocationId.set(null);
     this.selectedItemId.set(null);

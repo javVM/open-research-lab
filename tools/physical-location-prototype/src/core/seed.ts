@@ -1,4 +1,14 @@
-import type { Dataset, Item, ItemStatus, Location, Movement, StorageCondition } from './models';
+import {
+  ITEM_CATEGORIES,
+  ITEM_CATEGORY_LABEL,
+  type Dataset,
+  type Item,
+  type ItemCategory,
+  type ItemStatus,
+  type Location,
+  type Movement,
+  type StorageCondition,
+} from './models';
 
 /**
  * Synthetic demonstration data — not user-validated.
@@ -90,24 +100,6 @@ const BUILDINGS = [
       { name: 'First', rooms: ['Room E11', 'Room E12', 'Room E13'] },
     ],
   },
-];
-
-const SPECIMEN_LABELS = [
-  'Mammoth mandible',
-  'Trilobite plate',
-  'Ammonite cast',
-  'Fossil leaf',
-  'Bird wing bone',
-  'Turtle shell fragment',
-  'Fish vertebra',
-  'Gastropod shell',
-  'Bivalve shell pair',
-  'Coral colony fragment',
-  'Petrified wood section',
-  'Insect in amber',
-  'Shark tooth',
-  'Bone fragment, unidentified',
-  'Herbarium sheet',
 ];
 
 const CATALOGUE_PREFIXES = ['MNCN', 'PALEO', 'HERB'];
@@ -315,7 +307,8 @@ export function generateSeed(randomSeed = 20260824): Dataset {
   for (let i = 0; i < totalItems; i += 1) {
     const prefix = CATALOGUE_PREFIXES[i % CATALOGUE_PREFIXES.length];
     const catalogueNumber = `${prefix}-${pad((prefixCounters[prefix].value += 1), 4)}`;
-    const label = `${SPECIMEN_LABELS[i % SPECIMEN_LABELS.length]}`;
+    const category: ItemCategory = ITEM_CATEGORIES[i % ITEM_CATEGORIES.length];
+    const label = ITEM_CATEGORY_LABEL[category];
     const id = nextId(itemCounter, 'item');
 
     // Guarantee at least one of each notable status among the first three
@@ -350,7 +343,7 @@ export function generateSeed(randomSeed = 20260824): Dataset {
       }
     }
 
-    items.push({ id, catalogueNumber, label, locationId, status });
+    items.push({ id, catalogueNumber, label, category, locationId, status });
 
     if (locationId) {
       recordMovement(id, null, locationId, createdAt, 'Accessioned');
