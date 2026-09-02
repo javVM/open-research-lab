@@ -1,0 +1,92 @@
+@keyframes donut-segment-grow {
+  from {
+    stroke-dasharray: 0 var(--donut-circumference);
+  }
+  to {
+    stroke-dasharray: var(--segment-length) var(--segment-remainder);
+  }
+}
+
+.donut {
+  position: relative;
+  width: 11rem;
+  height: 11rem;
+  margin: 0 auto;
+}
+
+.donut--sm {
+  width: 8rem;
+  height: 8rem;
+}
+
+.donut__svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.donut__track {
+  stroke: var(--surface-variant, #dce2f3);
+}
+
+.donut__segment {
+  animation: donut-segment-grow 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.donut__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.125rem;
+  pointer-events: none;
+}
+
+.donut__center-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted, #464555);
+}
+
+.donut__center-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text, #151c27);
+}
+
+.donut__legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+}
+
+.legend-item__swatch {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.legend-item__label {
+  flex: 1;
+  color: var(--text, #151c27);
+}
+
+.legend-item__percent {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted, #464555);
+}

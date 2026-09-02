@@ -70,6 +70,17 @@ describe('computeReportSummary', () => {
     );
   });
 
+  it('builds a monthly movement timeline with one series per action', () => {
+    const summary = computeReportSummary(generateSeed());
+    expect(summary.movementTimeline.length).toBeGreaterThan(0);
+    for (const series of summary.movementTimeline) {
+      expect(series.points.length).toBeGreaterThan(0);
+      expect(series.points.reduce((sum, point) => sum + point.count, 0)).toBeGreaterThan(0);
+      const months = series.points.map((point) => point.month);
+      expect(months).toEqual([...months].sort());
+    }
+  });
+
   it('lists the most recent movements first, within the limit', () => {
     const summary = computeReportSummary(generateSeed(), 5);
     expect(summary.recentMovements.length).toBe(5);

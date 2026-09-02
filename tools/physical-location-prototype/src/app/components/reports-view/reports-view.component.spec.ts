@@ -56,6 +56,15 @@ describe('ReportsViewComponent', () => {
     }
   });
 
+  it('renders a movement timeline line chart', () => {
+    const fixture = TestBed.createComponent(ReportsViewComponent);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelectorAll('.chart--timeline .line-chart__line').length).toBeGreaterThan(0);
+    expect(el.querySelectorAll('.chart--timeline .line-chart__point').length).toBeGreaterThan(0);
+  });
+
   it('renders recent movements in the activity table', () => {
     const fixture = TestBed.createComponent(ReportsViewComponent);
     fixture.detectChanges();

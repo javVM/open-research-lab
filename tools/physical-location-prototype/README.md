@@ -87,8 +87,9 @@ npm start          # ng serve, http://localhost:4200
   the same view at once.
 - **History**: every move is recorded and shown on the item detail panel.
 - **Reports**: a read-only analytics view — key metrics (total items, locations in use,
-  unlocated items, integrity), a donut of the collection by status, an items-per-building
-  donut, an items-per-category donut (with hover tooltips), and recent movements — all computed live from the
+  unlocated items, integrity), donuts for collection by status, items per building and
+  items per category, a line chart of monthly movement activity (placed, extracted,
+  transferred), and recent movements — all computed live from the
   demo dataset (`core/report.ts`). The demo dataset uses a lightweight `ItemCategory` taxonomy
   (≈50 specimen/material categories) to populate the category chart.
 - **QR / barcode scanner**: a full-screen mobile-first camera scanner (opened from the header) reads QR, Data Matrix, Code 128, Code 39 and EAN-13 and passes the result to the existing QR scan flow. It debounces repeated reads and stops the camera on close.

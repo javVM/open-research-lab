@@ -26,139 +26,48 @@
   <div class="reports__charts">
     <section class="chart" [attr.aria-label]="text.distributionAriaLabel()">
       <h3 class="chart__title">{{ text.distributionHeading() }}</h3>
-      <div class="donut">
-        <svg
-          class="donut__svg"
-          viewBox="0 0 100 100"
-          role="img"
-          [attr.aria-label]="text.distributionAriaLabel()"
-          [style.--donut-circumference]="DONUT_CIRCUMFERENCE"
-        >
-          <circle class="donut__track" cx="50" cy="50" r="40" fill="none" stroke-width="16"></circle>
-          @for (segment of donutSegments(); track segment.status) {
-            <circle
-              class="donut__segment"
-              cx="50"
-              cy="50"
-              r="40"
-              fill="none"
-              stroke-width="16"
-              [attr.stroke]="segment.color"
-              [attr.stroke-dasharray]="segment.dasharray"
-              [attr.stroke-dashoffset]="segment.dashoffset"
-              [style.--segment-length]="segment.length"
-              [style.--segment-remainder]="segment.remainder"
-            >
-              <title>{{ text.segmentTooltip({ label: segment.label, count: segment.count, percent: segment.percent }) }}</title>
-            </circle>
-          }
-        </svg>
-        <div class="donut__center">
-          <span class="donut__center-label">{{ text.distributionTotalLabel() }}</span>
-          <span class="donut__center-value">{{ summary().totalItems }}</span>
-        </div>
-      </div>
-      <ul class="donut__legend">
-        @for (segment of donutSegments(); track segment.status) {
-          <li class="legend-item">
-            <span class="legend-item__swatch" [style.background]="segment.color" aria-hidden="true"></span>
-            <span class="legend-item__label">{{ statusLabel(segment.status) }}</span>
-            <span class="legend-item__percent">{{ segment.percent }}%</span>
-          </li>
-        }
-      </ul>
+      <app-donut-chart
+        [segments]="statusDonutSegments()"
+        [centerLabel]="text.distributionTotalLabel()"
+        [centerValue]="summary().totalItems"
+        [ariaLabel]="text.distributionAriaLabel()"
+      ></app-donut-chart>
     </section>
 
     <section class="chart chart--category" [attr.aria-label]="text.byCategoryAriaLabel()">
       <h3 class="chart__title">{{ text.byCategoryHeading() }}</h3>
-      <div class="donut donut--sm">
-        <svg
-          class="donut__svg"
-          viewBox="0 0 100 100"
-          role="img"
-          [attr.aria-label]="text.byCategoryAriaLabel()"
-          [style.--donut-circumference]="DONUT_CIRCUMFERENCE"
-        >
-          <circle class="donut__track" cx="50" cy="50" r="40" fill="none" stroke-width="16"></circle>
-          @for (segment of categoryDonutSegments(); track segment.category) {
-            <circle
-              class="donut__segment"
-              cx="50"
-              cy="50"
-              r="40"
-              fill="none"
-              stroke-width="16"
-              [attr.stroke]="segment.color"
-              [attr.stroke-dasharray]="segment.dasharray"
-              [attr.stroke-dashoffset]="segment.dashoffset"
-              [style.--segment-length]="segment.length"
-              [style.--segment-remainder]="segment.remainder"
-            >
-              <title>{{ text.segmentTooltip({ label: segment.label, count: segment.count, percent: segment.percent }) }}</title>
-            </circle>
-          }
-        </svg>
-        <div class="donut__center">
-          <span class="donut__center-label">{{ text.distributionTotalLabel() }}</span>
-          <span class="donut__center-value">{{ summary().totalItems }}</span>
-        </div>
-      </div>
-      <ul class="donut__legend">
-        @for (segment of categoryDonutSegments(); track segment.category) {
-          <li class="legend-item">
-            <span class="legend-item__swatch" [style.background]="segment.color" aria-hidden="true"></span>
-            <span class="legend-item__label">{{ categoryLabel(segment.category) }}</span>
-            <span class="legend-item__percent">{{ segment.percent }}%</span>
-          </li>
-        }
-      </ul>
+      <app-donut-chart
+        [segments]="categoryDonutSegments()"
+        [centerLabel]="text.distributionTotalLabel()"
+        [centerValue]="summary().totalItems"
+        [ariaLabel]="text.byCategoryAriaLabel()"
+      ></app-donut-chart>
     </section>
 
     <section class="chart chart--building" [attr.aria-label]="text.byBuildingAriaLabel()">
       <h3 class="chart__title">{{ text.byBuildingHeading() }}</h3>
-      <div class="donut donut--sm">
-        <svg
-          class="donut__svg"
-          viewBox="0 0 100 100"
-          role="img"
-          [attr.aria-label]="text.byBuildingAriaLabel()"
-          [style.--donut-circumference]="DONUT_CIRCUMFERENCE"
-        >
-          <circle class="donut__track" cx="50" cy="50" r="40" fill="none" stroke-width="16"></circle>
-          @for (segment of buildingDonutSegments(); track segment.buildingId) {
-            <circle
-              class="donut__segment"
-              cx="50"
-              cy="50"
-              r="40"
-              fill="none"
-              stroke-width="16"
-              [attr.stroke]="segment.color"
-              [attr.stroke-dasharray]="segment.dasharray"
-              [attr.stroke-dashoffset]="segment.dashoffset"
-              [style.--segment-length]="segment.length"
-              [style.--segment-remainder]="segment.remainder"
-            >
-              <title>{{ text.segmentTooltip({ label: segment.label, count: segment.count, percent: segment.percent }) }}</title>
-            </circle>
-          }
-        </svg>
-        <div class="donut__center">
-          <span class="donut__center-label">{{ text.distributionTotalLabel() }}</span>
-          <span class="donut__center-value">{{ summary().totalItems }}</span>
-        </div>
-      </div>
-      <ul class="donut__legend">
-        @for (segment of buildingDonutSegments(); track segment.buildingId) {
-          <li class="legend-item">
-            <span class="legend-item__swatch" [style.background]="segment.color" aria-hidden="true"></span>
-            <span class="legend-item__label">{{ segment.label }}</span>
-            <span class="legend-item__percent">{{ segment.percent }}%</span>
-          </li>
-        }
-      </ul>
+      <app-donut-chart
+        [segments]="buildingDonutSegments()"
+        [centerLabel]="text.distributionTotalLabel()"
+        [centerValue]="summary().totalItems"
+        [ariaLabel]="text.byBuildingAriaLabel()"
+      ></app-donut-chart>
     </section>
   </div>
+
+  <section class="chart chart--timeline" [attr.aria-label]="text.timelineAriaLabel()">
+    <h3 class="chart__title">{{ text.timelineHeading() }}</h3>
+    @if (timelineChart(); as chart) {
+      <app-line-chart
+        [series]="chart.series"
+        [formattedMonths]="chart.formattedMonths"
+        [yTicks]="chart.yTicks"
+        [ariaLabel]="text.timelineAriaLabel()"
+      ></app-line-chart>
+    } @else {
+      <p class="reports__empty">{{ text.emptyMovements() }}</p>
+    }
+  </section>
 
   <section class="reports__activity" [attr.aria-label]="text.recentAriaLabel()">
     <h3 class="chart__title">{{ text.recentHeading() }}</h3>
@@ -167,10 +76,10 @@
         <table class="reports__table">
           <thead>
             <tr>
-              <th scope="col">{{ text.itemColumn() }}</th>
-              <th scope="col">{{ text.actionColumn() }}</th>
-              <th scope="col">{{ text.locationColumn() }}</th>
-              <th scope="col">{{ text.timeColumn() }}</th>
+              <th class="reports__table-item-header" scope="col">{{ text.itemColumn() }}</th>
+              <th class="reports__table-action-header" scope="col">{{ text.actionColumn() }}</th>
+              <th class="reports__table-location-header" scope="col">{{ text.locationColumn() }}</th>
+              <th class="reports__table-time-header" scope="col">{{ text.timeColumn() }}</th>
             </tr>
           </thead>
           <tbody>

@@ -7,23 +7,25 @@ import { CollectionService } from '../../collection.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createItemCategoryTranslations } from '../../shared/item-category.translations';
 import { registerAppIcons } from '../../shared/icons';
+import { DonutChartComponent, type DonutChartSegment } from '../donut-chart/donut-chart.component';
+import { LineChartComponent, type LineChartSeries } from '../line-chart/line-chart.component';
 import {
-  DONUT_RADIUS,
+  ACTION_LINE_COLOR,
   STATUS_SEGMENT_COLOR,
+  categorySegmentColor,
 } from './reports-view.constants';
 import { createReportsViewTranslations } from './reports-view.translations';
 
-const DONUT_CIRCUMFERENCE = 2 * Math.PI * DONUT_RADIUS;
-
 /**
- * Read-only analytics view over the current dataset: key metrics, a
- * status donut, a per-building bar chart, and recent movements. All numbers
- * come from `computeReportSummary` (core/report.ts) — nothing is hardcoded.
+ * Read-only analytics view over the current dataset: key metrics, donuts for
+ * status/building/category distribution, a line chart of movement activity over
+ * time, and recent movements. All numbers come from `computeReportSummary`
+ * (core/report.ts) — nothing is hardcoded.
  */
 @Component({
   standalone: true,
   selector: 'app-reports-view',
-  imports: [DatePipe, MatIconModule],
+  imports: [DatePipe, MatIconModule, DonutChartComponent, LineChartComponent],
   templateUrl: './reports-view.component.html',
   styleUrl: './reports-view.component.scss',
 })
@@ -31,7 +33,6 @@ export class ReportsViewComponent {
   protected readonly collection = inject(CollectionService);
   protected readonly text = createReportsViewTranslations(inject(TranslationService));
   protected readonly categoryText = createItemCategoryTranslations(inject(TranslationService));
-  protected readonly DONUT_CIRCUMFERENCE = DONUT_CIRCUMFERENCE;
 
   constructor() {
     registerAppIcons();
@@ -39,68 +40,112 @@ export class ReportsViewComponent {
 
   protected readonly summary = computed(() => computeReportSummary(this.collection.dataset()));
 
-  protected readonly donutSegments = computed(() =>
-    this.buildDonutSegments(
-      this.summary().statusSegments,
-      (segment) => STATUS_SEGMENT_COLOR[segment.status],
-      (segment) => this.statusLabel(segment.status),
-    ),
+  protected readonly statusDonutSegments = computed((): DonutChartSegment[] =>
+    this.summary()
+      .statusSegments.filter((segment) => segment.count > 0)
+      .map((segment) => {
+        const label = this.statusLabel(segment.status);
+        const percent = Math.round(segment.fraction * 100);
+        return {
+          key: segment.status,
+          label,
+          tooltip: this.text.segmentTooltip({ label, count: segment.count, percent }),
+          count: segment.count,
+          percent,
+          color: STATUS_SEGMENT_COLOR[segment.status],
+        };
+      }),
   );
 
-  protected readonly categoryDonutSegments = computed(() =>
-    this.buildDonutSegments(
-      this.summary().categorySegments,
-      (segment, index, total) =>
-        segment.category === 'others'
-          ? '#94a3b8'
-          : `hsl(${Math.round((index * 360) / Math.max(total, 1))} 70% 55%)`,
-      (segment) => this.categoryLabel(segment.category),
-    ),
-  );
-
-  protected readonly buildingDonutSegments = computed(() =>
-    this.buildDonutSegments(
-      this.summary().buildingSegments,
-      (segment, index, total) =>
-        `hsl(${Math.round((index * 360) / Math.max(total, 1))} 70% 55%)`,
-      (segment) => segment.name,
-    ),
-  );
-
-  private buildDonutSegments<T extends { count: number; fraction: number }>(
-    segments: T[],
-    colorFor: (segment: T, index: number, total: number) => string,
-    labelFor: (segment: T) => string,
-  ): Array<
-    T & {
-      label: string;
-      percent: number;
-      color: string;
-      length: number;
-      remainder: number;
-      dasharray: string;
-      dashoffset: string;
-    }
-  > {
-    const filtered = segments.filter((segment) => segment.count > 0);
-    const total = filtered.length;
-    let cumulativeLength = 0;
-    return filtered.map((segment, index) => {
-      const length = segment.fraction * DONUT_CIRCUMFERENCE;
-      const remainder = DONUT_CIRCUMFERENCE - length;
-      const result = {
-        ...segment,
-        label: labelFor(segment),
-        percent: Math.round(segment.fraction * 100),
-        color: colorFor(segment, index, total),
-        length,
-        remainder,
-        dasharray: `${length} ${remainder}`,
-        dashoffset: `-${cumulativeLength}`,
+  protected readonly categoryDonutSegments = computed((): DonutChartSegment[] => {
+    const segments = this.summary().categorySegments.filter((segment) => segment.count > 0);
+    return segments.map((segment) => {
+      const label = this.categoryLabel(segment.category);
+      const percent = Math.round(segment.fraction * 100);
+      return {
+        key: segment.category,
+        label,
+        tooltip: this.text.segmentTooltip({ label, count: segment.count, percent }),
+        count: segment.count,
+        percent,
+        color: categorySegmentColor(segment.category),
       };
-      cumulativeLength += length;
-      return result;
     });
+  });
+
+  protected readonly buildingDonutSegments = computed((): DonutChartSegment[] => {
+    const segments = this.summary().buildingSegments.filter((segment) => segment.count > 0);
+    const total = segments.length;
+    return segments.map((segment, index) => {
+      const percent = Math.round(segment.fraction * 100);
+      return {
+        key: segment.buildingId,
+        label: segment.name,
+        tooltip: this.text.segmentTooltip({ label: segment.name, count: segment.count, percent }),
+        count: segment.count,
+        percent,
+        color: `hsl(${Math.round((index * 360) / Math.max(total, 1))} 55% 45%)`,
+      };
+    });
+  });
+
+  protected readonly timelineChart = computed(() => {
+    const timeline = this.summary().movementTimeline;
+    if (timeline.length === 0 || timeline[0].points.length === 0) {
+      return null;
+    }
+
+    const months = timeline[0].points.map((point) => point.month);
+    const formattedMonths = months.map((month) => this.formatMonth(month));
+    const maxCount = Math.max(
+      ...timeline.flatMap((series) => series.points.map((point) => point.count)),
+      1,
+    );
+
+    const series: LineChartSeries[] = timeline.map((item) => ({
+      key: item.action,
+      label: this.actionLabel(item.action),
+      color: ACTION_LINE_COLOR[item.action],
+      points: item.points.map((point) => {
+        const actionLabel = this.actionLabel(item.action);
+        const formattedMonth = this.formatMonth(point.month);
+        return {
+          month: point.month,
+          count: point.count,
+          tooltip: this.text.timelineTooltip({
+            month: formattedMonth,
+            action: actionLabel,
+            count: point.count,
+          }),
+        };
+      }),
+    }));
+
+    return {
+      formattedMonths,
+      yTicks: this.yTicksForMax(maxCount),
+      series,
+    };
+  });
+
+  private yTicksForMax(maxCount: number): { value: number }[] {
+    if (maxCount <= 0) {
+      return [{ value: 0 }];
+    }
+
+    const targetTicks = 6;
+    const roughStep = maxCount / targetTicks;
+    const magnitude = Math.pow(10, Math.floor(Math.log10(roughStep)));
+    const normalized = roughStep / magnitude;
+    const multiplier = normalized > 5 ? 10 : normalized > 2 ? 5 : 2;
+    const step = multiplier * magnitude;
+    const maxTick = Math.ceil(maxCount / step) * step;
+
+    const ticks: { value: number }[] = [];
+    for (let value = 0; value <= maxTick; value += step) {
+      ticks.push({ value });
+    }
+    return ticks;
   }
 
   protected readonly integrityPercentLabel = computed(() => {
@@ -167,5 +212,10 @@ export class ReportsViewComponent {
       return this.text.othersCategory();
     }
     return this.categoryText.label(category)();
+  }
+
+  protected formatMonth(month: string): string {
+    const [year, monthNumber] = month.split('-');
+    return `${monthNumber}/${year}`;
   }
 }

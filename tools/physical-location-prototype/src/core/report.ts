@@ -36,6 +36,17 @@ export interface ReportCategorySegment {
   fraction: number;
 }
 
+export interface ReportMovementTimelinePoint {
+  /** Month in ISO `YYYY-MM` form, ordered chronologically within a series. */
+  month: string;
+  count: number;
+}
+
+export interface ReportMovementTimelineSeries {
+  action: ReportMovementAction;
+  points: ReportMovementTimelinePoint[];
+}
+
 export interface ReportMovementRow {
   movementId: string;
   itemId: string;
@@ -55,6 +66,7 @@ export interface ReportSummary {
   statusSegments: ReportStatusSegment[];
   buildingSegments: ReportBuildingSegment[];
   categorySegments: ReportCategorySegment[];
+  movementTimeline: ReportMovementTimelineSeries[];
   recentMovements: ReportMovementRow[];
 }
 
@@ -154,6 +166,29 @@ export function computeReportSummary(dataset: Dataset, recentMovementLimit = 8):
       };
     });
 
+  const actionCountsByMonth = new Map<ReportMovementAction, Map<string, number>>();
+  const months = new Set<string>();
+  for (const movement of dataset.movements) {
+    const action = classifyMovement(movement.fromLocationId, movement.toLocationId);
+    const month = movement.occurredAt.slice(0, 7);
+    months.add(month);
+    if (!actionCountsByMonth.has(action)) {
+      actionCountsByMonth.set(action, new Map());
+    }
+    const actionMonthCounts = actionCountsByMonth.get(action)!;
+    actionMonthCounts.set(month, (actionMonthCounts.get(month) ?? 0) + 1);
+  }
+  const sortedMonths = [...months].sort();
+  const movementTimeline: ReportMovementTimelineSeries[] = [...actionCountsByMonth.entries()]
+    .sort(([actionA], [actionB]) => actionA.localeCompare(actionB))
+    .map(([action, countsByMonth]) => ({
+      action,
+      points: sortedMonths.map((month) => ({
+        month,
+        count: countsByMonth.get(month) ?? 0,
+      })),
+    }));
+
   const locationNames = new Map(
     dataset.locations.map((location) => [location.id, location.name]),
   );
@@ -188,6 +223,7 @@ export function computeReportSummary(dataset: Dataset, recentMovementLimit = 8):
     statusSegments,
     buildingSegments,
     categorySegments,
+    movementTimeline,
     recentMovements,
   };
 }

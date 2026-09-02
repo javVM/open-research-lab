@@ -18,6 +18,9 @@ import {
   byCategoryAriaLabel,
   segmentTooltip,
   othersCategory,
+  timelineHeading,
+  timelineAriaLabel,
+  timelineTooltip,
   recentHeading,
   recentAriaLabel,
   emptyMovements,
@@ -55,6 +58,10 @@ export function createReportsViewTranslations(i18n: TranslationService) {
     segmentTooltip: (params: { label: string; count: number; percent: number }) =>
       i18n.t('reports.segmentTooltip', segmentTooltip, params),
     othersCategory: () => i18n.t('reports.othersCategory', othersCategory),
+    timelineHeading: () => i18n.t('reports.timelineHeading', timelineHeading),
+    timelineAriaLabel: () => i18n.t('reports.timelineAriaLabel', timelineAriaLabel),
+    timelineTooltip: (params: { month: string; action: string; count: number }) =>
+      i18n.t('reports.timelineTooltip', timelineTooltip, params),
     recentHeading: () => i18n.t('reports.recentHeading', recentHeading),
     recentAriaLabel: () => i18n.t('reports.recentAriaLabel', recentAriaLabel),
     emptyMovements: () => i18n.t('reports.emptyMovements', emptyMovements),

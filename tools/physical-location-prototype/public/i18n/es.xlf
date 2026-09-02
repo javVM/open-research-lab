@@ -994,6 +994,18 @@
         <source>Others</source>
         <target>Otros</target>
       </trans-unit>
+      <trans-unit id="reports.timelineHeading">
+        <source>Movements over time</source>
+        <target>Movimientos a lo largo del tiempo</target>
+      </trans-unit>
+      <trans-unit id="reports.timelineAriaLabel">
+        <source>Monthly movement activity over time</source>
+        <target>Actividad mensual de movimientos a lo largo del tiempo</target>
+      </trans-unit>
+      <trans-unit id="reports.timelineTooltip">
+        <source>{month}: {action} — {count}</source>
+        <target>{month}: {action} — {count}</target>
+      </trans-unit>
       <trans-unit id="reports.recentHeading">
         <source>Recent movements</source>
         <target>Movimientos recientes</target>

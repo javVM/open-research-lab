@@ -1,0 +1,77 @@
+@if (series().length > 0) {
+  <svg
+    class="line-chart"
+    [attr.viewBox]="layout().viewBox"
+    role="img"
+    [attr.aria-label]="ariaLabel()"
+  >
+    <line
+      class="line-chart__axis"
+      x1="40"
+      y1="24"
+      x2="40"
+      [attr.y2]="layout().axisEndY"
+    ></line>
+    <line
+      class="line-chart__axis"
+      x1="40"
+      [attr.y1]="layout().axisEndY"
+      [attr.x2]="layout().axisEndX"
+      [attr.y2]="layout().axisEndY"
+    ></line>
+
+    @for (tick of layout().yTicks; track tick.value) {
+      <line
+        class="line-chart__grid"
+        x1="40"
+        [attr.y1]="tick.y"
+        [attr.x2]="layout().axisEndX"
+        [attr.y2]="tick.y"
+      ></line>
+      <text
+        class="line-chart__axis-label line-chart__axis-label--y"
+        x="32"
+        [attr.y]="tick.y + 4"
+      >{{ tick.value }}</text>
+    }
+
+    @for (month of formattedMonths(); track month; let i = $index) {
+      <text
+        class="line-chart__axis-label line-chart__axis-label--x"
+        [attr.x]="40 + i * layout().xStep"
+        [attr.y]="layout().axisEndY + 44"
+      >{{ month }}</text>
+    }
+
+    @for (s of layout().series; track s.key) {
+      <polyline
+        class="line-chart__line"
+        fill="none"
+        [attr.stroke]="s.color"
+        [attr.points]="s.points.map((point) => `${point.x},${point.y}`).join(' ')"
+      ></polyline>
+      @for (point of s.points; track point.month) {
+        <circle
+          class="line-chart__point"
+          [attr.cx]="point.x"
+          [attr.cy]="point.y"
+          r="3"
+          [attr.fill]="s.color"
+        >
+          <title>{{ point.tooltip }}</title>
+        </circle>
+      }
+    }
+  </svg>
+
+  <ul class="line-chart__legend">
+    @for (s of series(); track s.key) {
+      <li class="legend-item">
+        <span class="legend-item__swatch" [style.background]="s.color" aria-hidden="true"></span>
+        <span class="legend-item__label">{{ s.label }}</span>
+      </li>
+    }
+  </ul>
+} @else {
+  <p class="line-chart__empty">{{ emptyMessage() }}</p>
+}

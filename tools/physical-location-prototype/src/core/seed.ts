@@ -52,6 +52,14 @@ function layoutGrid(index: number, columns: number, cellWidth: number, cellHeigh
 }
 
 const FLOOR_LAYOUT = { columns: 1, cellWidth: 600, cellHeight: 400, gap: 24 };
+
+const TIMELINE_START_MS = new Date('2026-01-01T00:00:00.000Z').getTime();
+const TIMELINE_END_MS = new Date('2026-08-31T23:59:59.000Z').getTime();
+
+function randomTimestamp(random: () => number, startMs = TIMELINE_START_MS, endMs = TIMELINE_END_MS): string {
+  const ms = startMs + Math.floor(random() * (endMs - startMs));
+  return new Date(ms).toISOString();
+}
 const ROOM_LAYOUT = { columns: 3, cellWidth: 184, cellHeight: 184, gap: 16 };
 const CABINET_LAYOUT = { columns: 2, cellWidth: 84, cellHeight: 164, gap: 12 };
 
@@ -267,7 +275,6 @@ export function generateSeed(randomSeed = 20260824): Dataset {
   const movementCounter: Counter = { value: 0 };
 
   const totalItems = 150;
-  const createdAt = '2026-01-15T09:00:00.000Z';
   const occupiedPositions = new Set<string>();
 
   /**
@@ -346,17 +353,23 @@ export function generateSeed(randomSeed = 20260824): Dataset {
     items.push({ id, catalogueNumber, label, category, locationId, status });
 
     if (locationId) {
-      recordMovement(id, null, locationId, createdAt, 'Accessioned');
-    }
+      const accessionedAt = randomTimestamp(random);
+      recordMovement(id, null, locationId, accessionedAt, 'Accessioned');
 
-    // Give roughly a quarter of the stored items a second movement, so the
-    // history panel has something to show beyond a single accession event.
-    if (locationId && status === 'active' && random() < 0.25) {
-      const secondLocation = pickLocation();
-      if (secondLocation !== locationId) {
-        releasePosition(locationId);
-        recordMovement(id, locationId, secondLocation, '2026-08-10T11:30:00.000Z', 'Reorganised during stocktake');
-        items[items.length - 1] = { ...items[items.length - 1], locationId: secondLocation };
+      // Give roughly a quarter of the stored items a second movement, so the
+      // history panel has something to show beyond a single accession event.
+      if (status === 'active' && random() < 0.25) {
+        const secondLocation = pickLocation();
+        if (secondLocation !== locationId) {
+          releasePosition(locationId);
+          const transferredAt = randomTimestamp(
+            random,
+            new Date(accessionedAt).getTime() + 1,
+            TIMELINE_END_MS,
+          );
+          recordMovement(id, locationId, secondLocation, transferredAt, 'Reorganised during stocktake');
+          items[items.length - 1] = { ...items[items.length - 1], locationId: secondLocation };
+        }
       }
     }
   }
