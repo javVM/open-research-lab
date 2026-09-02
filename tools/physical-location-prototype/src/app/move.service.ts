@@ -59,12 +59,12 @@ export class MoveService {
   }
 
   /** Confirms the pending destination, or returns null if there is none to confirm. */
-  confirmPendingMove(): string | null {
+  confirmPendingMove(note?: string, performedBy?: string): string | null {
     const toLocationId = this.pendingMoveTargetId();
     if (toLocationId) {
-      this.completeMove(toLocationId);
+      return this.completeMove(toLocationId, note, performedBy);
     }
-    return toLocationId;
+    return null;
   }
 
   /**
@@ -72,14 +72,23 @@ export class MoveService {
    * can reveal it in the UI), or null when there is nothing to move / the
    * move was rejected by the domain rules.
    */
-  completeMove(toLocationId: string): string | null {
+  completeMove(toLocationId: string, note?: string, performedBy?: string): string | null {
     const itemId = this.movingItemId();
     if (!itemId) {
       return null;
     }
-    const requireAgent = this.settings.settings().requireAgentOnMove;
-    const performedBy = requireAgent ? (this.settings.settings().institutionName.trim() || '— required') : undefined;
-    const result = moveItem(this.collection.dataset(), itemId, toLocationId, new Date().toISOString(), 'Moved in prototype UI', performedBy);
+    const s = this.settings.settings();
+    if (s.requireAgentOnMove && !performedBy && !s.institutionName.trim()) {
+      this.moveError.set('Agente requerido: indica quién realiza el movimiento.');
+      return null;
+    }
+    if (s.requireNoteOnMove && !note?.trim()) {
+      this.moveError.set('Nota requerida: añade una explicación para este movimiento.');
+      return null;
+    }
+    const effectivePerformedBy = performedBy ?? (s.requireAgentOnMove ? s.institutionName.trim() : undefined);
+    const effectiveNote = note?.trim() || 'Moved in prototype UI';
+    const result = moveItem(this.collection.dataset(), itemId, toLocationId, new Date().toISOString(), effectiveNote, effectivePerformedBy);
     this.pendingMoveTargetId.set(null);
     if (result.ok === false) {
       this.moveError.set(result.error);

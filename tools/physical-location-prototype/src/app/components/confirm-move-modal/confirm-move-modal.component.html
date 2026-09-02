@@ -1,14 +1,23 @@
 @if (move.movingItem(); as item) {
   @if (move.pendingMoveTargetId(); as targetId) {
     <div class="modal-backdrop" (click)="cancel()">
-      <div
-        class="modal"
-        role="dialog"
-        aria-modal="true"
-        [attr.aria-label]="text.ariaLabel()"
-        (click)="$event.stopPropagation()"
-      >
+      <div class="modal" role="dialog" aria-modal="true" [attr.aria-label]="text.ariaLabel()" (click)="$event.stopPropagation()">
         <p>{{ text.prompt(item.catalogueNumber, move.pendingMoveTargetLabel() ?? '') }}</p>
+        @if (settings.settings().requireAgentOnMove) {
+          <mat-form-field appearance="outline" class="modal__field">
+            <mat-label>Agente</mat-label>
+            <input matInput [ngModel]="agent()" (ngModelChange)="agent.set($event)" placeholder="Nombre de quien mueve" />
+          </mat-form-field>
+        }
+        @if (settings.settings().requireNoteOnMove) {
+          <mat-form-field appearance="outline" class="modal__field">
+            <mat-label>Nota</mat-label>
+            <textarea matInput [ngModel]="note()" (ngModelChange)="note.set($event)" placeholder="Explicación del movimiento" rows="3"></textarea>
+          </mat-form-field>
+        }
+        @if (move.moveError()) {
+          <p class="modal__error" role="alert">{{ move.moveError() }}</p>
+        }
         <div class="modal__actions">
           <button type="button" mat-button class="modal__cancel" (click)="cancel()">{{ text.cancel() }}</button>
           <button type="button" mat-button color="primary" class="modal__confirm" (click)="confirm()">{{ text.confirm() }}</button>

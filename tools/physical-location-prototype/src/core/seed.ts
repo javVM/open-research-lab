@@ -112,7 +112,7 @@ const BUILDINGS = [
   },
 ];
 
-const CATALOGUE_PREFIXES = ['MNCN', 'PALEO', 'HERB'];
+const CATALOGUE_PREFIXES = ['ITEM', 'PALEO', 'HERB'];
 
 const ALL_STORAGE_CONDITIONS: StorageCondition[] = [
   'ambient_room','refrigerated','frozen','ultra_low_freezer','cryogenic','flammable','corrosive','toxic_biomaterial','radioactive','dry_storage','fluid_storage','vacuum_sealed','paleontology','geology','botany','zoology','historical_archive',
@@ -267,7 +267,7 @@ export function generateSeed(randomSeed = 20260824): Dataset {
     .map((location) => location.id);
 
   const prefixCounters: Record<string, Counter> = {
-    MNCN: { value: 0 },
+    ITEM: { value: 0 },
     PALEO: { value: 0 },
     HERB: { value: 0 },
   };

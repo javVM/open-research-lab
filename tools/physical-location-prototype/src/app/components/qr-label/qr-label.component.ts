@@ -1,6 +1,7 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import QRCode from 'qrcode';
+import { SettingsService } from '../../settings.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createQrLabelTranslations } from './qr-label.translations';
 
@@ -15,6 +16,7 @@ type CodeFormat = 'qr' | 'datamatrix' | 'code128';
 })
 export class QrLabelComponent {
   protected readonly text = createQrLabelTranslations(inject(TranslationService));
+  private readonly settings = inject(SettingsService);
 
   readonly payload = input<string>('');
   readonly format = input<CodeFormat | null>(null);
@@ -49,13 +51,18 @@ export class QrLabelComponent {
     });
   }
 
+  protected readonly labelScale = computed(() => {
+    const s = this.settings.settings().defaultLabelSize;
+    return s === 'small' ? 0.85 : s === 'large' ? 1.25 : 1;
+  });
+
   private async generate(text: string, format: CodeFormat): Promise<void> {
     this.rendering.set(true);
 
     if (format === 'qr') {
       try {
         const url = await QRCode.toDataURL(text, {
-          width: 192,
+          width: Math.round(192 * this.labelScale()),
           margin: 2,
           color: { dark: '#000000', light: '#ffffff' },
         });

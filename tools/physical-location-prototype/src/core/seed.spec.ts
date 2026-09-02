@@ -86,7 +86,7 @@ describe('generateSeed', () => {
     const dataset = generateSeed();
     expect(dataset.items).toHaveLength(150);
     for (const item of dataset.items) {
-      expect(item.catalogueNumber).toMatch(/^(MNCN|PALEO|HERB)-\d{4}$/);
+      expect(item.catalogueNumber).toMatch(/^(ITEM|PALEO|HERB)-\d{4}$/);
     }
   });
 

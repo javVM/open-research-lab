@@ -83,7 +83,7 @@ export class SettingsViewComponent {
     const value = this.formValue();
     this.settings.update({
       institutionName: value.institutionName ?? '',
-      defaultPrefix: value.defaultPrefix ?? 'MNCN-',
+      defaultPrefix: value.defaultPrefix ?? 'ITEM-',
       temperatureUnit: value.temperatureUnit ?? 'celsius',
       dateFormat: value.dateFormat ?? 'locale',
       themePreference: value.themePreference ?? 'system',

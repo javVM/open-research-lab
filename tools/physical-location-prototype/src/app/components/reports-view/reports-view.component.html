@@ -98,7 +98,7 @@
                 </td>
                 <td class="reports__table-location">{{ row.locationName ?? '—' }}</td>
                 <td class="reports__table-performed-by">{{ row.performedBy ?? '—' }}</td>
-                <td class="reports__table-time">{{ row.occurredAt | date: 'medium' }}</td>
+                <td class="reports__table-time">{{ formatOccurredAt(row.occurredAt) }}</td>
               </tr>
             }
           </tbody>

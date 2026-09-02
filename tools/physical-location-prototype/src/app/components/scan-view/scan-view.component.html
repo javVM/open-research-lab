@@ -169,7 +169,7 @@
 
           <ng-container matColumnDef="time">
             <th mat-header-cell *matHeaderCellDef>{{ text.timeColumn() }}</th>
-            <td mat-cell *matCellDef="let scan">{{ scan.occurredAt | date: 'shortTime' }}</td>
+            <td mat-cell *matCellDef="let scan">{{ formatTime(scan.occurredAt) }}</td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="recentScanColumns"></tr>

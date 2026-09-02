@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { ScanService, SCAN_MODE, type ScanMode } from '../../scan.service';
+import { SettingsService } from '../../settings.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { QrScannerComponent } from '../qr-scanner/qr-scanner.component';
 import { createScanViewTranslations } from './scan-view.translations';
@@ -40,6 +41,7 @@ function formatScanItemLabel(catalogue: string, label: string | null): string {
 })
 export class ScanViewComponent {
   protected readonly scan = inject(ScanService);
+  protected readonly settings = inject(SettingsService);
   protected readonly text = createScanViewTranslations(inject(TranslationService));
   protected readonly SCAN_MODE = SCAN_MODE;
 
@@ -70,6 +72,15 @@ export class ScanViewComponent {
       (a, b) => (a.occurredAt < b.occurredAt ? 1 : -1),
     ),
   );
+
+  protected formatTime(iso: string): string {
+    const d = new Date(iso);
+    if (this.settings.settings().dateFormat === 'iso') {
+      const pad = (n: number) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+    return d.toLocaleTimeString();
+  }
   protected readonly scanModalOpen = signal(false);
   protected readonly scanModalMode = signal<ScanModalMode>('camera');
 

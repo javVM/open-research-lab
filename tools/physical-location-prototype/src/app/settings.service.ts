@@ -23,15 +23,15 @@ const SETTINGS_STORAGE_KEY = 'physical-location-prototype:settings';
 
 const DEFAULT_SETTINGS: AppSettings = {
   institutionName: '',
-  defaultPrefix: 'MNCN-',
+  defaultPrefix: 'ITEM-',
   temperatureUnit: 'celsius',
   dateFormat: 'locale',
   themePreference: 'system',
   showEmptyLocations: true,
   defaultLabelSize: 'medium',
   backupReminderDays: 0,
-  requireAgentOnMove: false,
-  requireNoteOnMove: false,
+  requireAgentOnMove: true,
+  requireNoteOnMove: true,
   lastBackupAt: null,
 };
 

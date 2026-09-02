@@ -9,6 +9,7 @@ import { QuickJumpService } from '../../shared/quick-jump.service';
 import { CollectionService } from '../../collection.service';
 import { MoveService } from '../../move.service';
 import { NavigationService } from '../../navigation.service';
+import { SettingsService } from '../../settings.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { ViewportService } from '../../shared/viewport.service';
 import { createLocationTreeTranslations } from './location-tree.translations';
@@ -25,6 +26,7 @@ export class LocationTreeComponent {
   protected readonly collection = inject(CollectionService);
   protected readonly navigation = inject(NavigationService);
   protected readonly move = inject(MoveService);
+  protected readonly settings = inject(SettingsService);
   protected readonly text = createLocationTreeTranslations(inject(TranslationService));
   protected readonly viewport = inject(ViewportService);
   protected readonly quickJump = inject(QuickJumpService);
@@ -36,7 +38,19 @@ export class LocationTreeComponent {
    */
   protected readonly roots = computed<LocationNode[]>(() => {
     const withoutPositions = this.collection.dataset().locations.filter((location) => location.type !== 'position');
-    return buildTree(withoutPositions);
+    let roots = buildTree(withoutPositions);
+    if (!this.settings.settings().showEmptyLocations) {
+      const counts = this.collection.locationItemCounts();
+      const hasItems = (node: LocationNode): boolean => {
+        const direct = (counts.get(node.location.id) ?? 0) > 0;
+        if (direct) return true;
+        return node.children.some(hasItems);
+      };
+      const prune = (nodes: LocationNode[]): LocationNode[] =>
+        nodes.filter(hasItems).map(n => ({ ...n, children: prune(n.children) }));
+      roots = prune(roots);
+    }
+    return roots;
   });
 
   /** Only the root buildings: used by the mobile-only dropdown. */
