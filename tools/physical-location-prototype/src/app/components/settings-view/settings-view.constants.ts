@@ -7,6 +7,7 @@ export const categoryDisplay = $localize `@@settings.category.display:Display`;
 export const categoryData = $localize `@@settings.category.data:Data & Storage`;
 export const categoryMovements = $localize `@@settings.category.movements:Provenance`;
 export const identityHeading = $localize `@@settings.identityHeading:Laboratory identity`;
+export const identityHint = $localize `@@settings.identityHint:These values are used when creating reports and new items.`;
 export const institutionNameLabel = $localize `@@settings.institutionNameLabel:Collection name`;
 export const institutionNameHint = $localize `@@settings.institutionNameHint:Appears on reports and printable labels. Stored locally.`;
 export const defaultPrefixLabel = $localize `@@settings.defaultPrefixLabel:Default catalogue prefix`;

@@ -1078,6 +1078,10 @@
         <source>Collection identity</source>
         <target>Identidad del laboratorio</target>
       </trans-unit>
+      <trans-unit id="settings.identityHint">
+        <source>These values are used when creating reports and new items.</source>
+        <target>Estos valores se usan al crear informes e ítems nuevos.</target>
+      </trans-unit>
       <trans-unit id="settings.institutionNameLabel">
         <source>Institution name</source>
         <target>Nombre de la colección</target>

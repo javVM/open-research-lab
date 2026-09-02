@@ -30,8 +30,8 @@ const DEFAULT_SETTINGS: AppSettings = {
   showEmptyLocations: true,
   defaultLabelSize: 'medium',
   backupReminderDays: 0,
-  requireAgentOnMove: true,
-  requireNoteOnMove: true,
+  requireAgentOnMove: false,
+  requireNoteOnMove: false,
   lastBackupAt: null,
 };
 

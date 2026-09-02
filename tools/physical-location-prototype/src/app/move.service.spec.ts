@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { MoveService } from './move.service';
 import { CollectionService } from './collection.service';
 import { NavigationService } from './navigation.service';
+import { SettingsService } from './settings.service';
 import { ancestorIds } from '../core/tree';
 
 describe('MoveService', () => {
@@ -21,6 +22,10 @@ describe('MoveService', () => {
 
   function move(): MoveService {
     return TestBed.inject(MoveService);
+  }
+
+  function settings(): SettingsService {
+    return TestBed.inject(SettingsService);
   }
 
   it('completeMove creates a movement and updates the item location', () => {
@@ -136,5 +141,47 @@ describe('MoveService', () => {
     m.completeMove(emptyPosition.id);
 
     expect(col.locationItemCounts().get(emptyPosition.id)).toBe(1);
+  });
+
+  it('completeMove requires an agent when requireAgentOnMove is enabled and no institution name is set', () => {
+    const s = settings();
+    s.update({ requireAgentOnMove: true });
+
+    const m = move();
+    const col = collection();
+    const positions = col.dataset().locations.filter((l) => l.type === 'position');
+    const emptyPosition = positions.find(
+      (position) => !col.dataset().items.some((candidate) => candidate.locationId === position.id),
+    )!;
+    const item = col.dataset().items.find((candidate) => candidate.status === 'active' && candidate.locationId)!;
+
+    m.startMove(item.id);
+    m.completeMove(emptyPosition.id);
+
+    expect(m.movingItemId()).toBe(item.id);
+    expect(m.moveError()).toContain('Agente requerido');
+    const unchanged = col.dataset().items.find((candidate) => candidate.id === item.id)!;
+    expect(unchanged.locationId).toBe(item.locationId);
+  });
+
+  it('completeMove requires a note when requireNoteOnMove is enabled', () => {
+    const s = settings();
+    s.update({ requireNoteOnMove: true });
+
+    const m = move();
+    const col = collection();
+    const positions = col.dataset().locations.filter((l) => l.type === 'position');
+    const emptyPosition = positions.find(
+      (position) => !col.dataset().items.some((candidate) => candidate.locationId === position.id),
+    )!;
+    const item = col.dataset().items.find((candidate) => candidate.status === 'active' && candidate.locationId)!;
+
+    m.startMove(item.id);
+    m.completeMove(emptyPosition.id);
+
+    expect(m.movingItemId()).toBe(item.id);
+    expect(m.moveError()).toContain('Nota requerida');
+    const unchanged = col.dataset().items.find((candidate) => candidate.id === item.id)!;
+    expect(unchanged.locationId).toBe(item.locationId);
   });
 });

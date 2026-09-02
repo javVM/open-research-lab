@@ -809,6 +809,9 @@
       <trans-unit id="settings.identityHeading">
         <source>Laboratory identity</source>
       </trans-unit>
+      <trans-unit id="settings.identityHint">
+        <source>These values are used when creating reports and new items.</source>
+      </trans-unit>
       <trans-unit id="settings.institutionNameLabel">
         <source>Collection name</source>
       </trans-unit>
