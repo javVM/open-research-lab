@@ -2,7 +2,11 @@
   <header class="reports__header">
     <div class="reports__heading">
       <h2>{{ text.heading() }}</h2>
-      <p>{{ text.subheading() }}</p>
+      @if (settings.settings().institutionName) {
+        <p class="reports__institution">{{ settings.settings().institutionName }}</p>
+      } @else {
+        <p>{{ text.subheading() }}</p>
+      }
     </div>
   </header>
 

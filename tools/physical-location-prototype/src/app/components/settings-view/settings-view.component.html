@@ -1,0 +1,121 @@
+<div class="settings">
+  <header class="settings__header">
+    <h2>{{ text.heading() }}</h2>
+    <p>{{ text.subheading() }}</p>
+  </header>
+
+  <div class="settings__layout">
+    <nav class="settings__submenu" aria-label="Settings categories">
+      <button
+        type="button"
+        class="settings__submenu-item"
+        [class.settings__submenu-item--active]="activeCategory() === 'general'"
+        [attr.aria-current]="activeCategory() === 'general' ? 'page' : null"
+        (click)="activeCategory.set('general')"
+      >
+        {{ text.categoryGeneral() }}
+      </button>
+      <button
+        type="button"
+        class="settings__submenu-item"
+        [class.settings__submenu-item--active]="activeCategory() === 'display'"
+        [attr.aria-current]="activeCategory() === 'display' ? 'page' : null"
+        (click)="activeCategory.set('display')"
+      >
+        {{ text.categoryDisplay() }}
+      </button>
+      <button
+        type="button"
+        class="settings__submenu-item"
+        [class.settings__submenu-item--active]="activeCategory() === 'data'"
+        [attr.aria-current]="activeCategory() === 'data' ? 'page' : null"
+        (click)="activeCategory.set('data')"
+      >
+        {{ text.categoryData() }}
+      </button>
+      <button
+        type="button"
+        class="settings__submenu-item"
+        [class.settings__submenu-item--active]="activeCategory() === 'movements'"
+        [attr.aria-current]="activeCategory() === 'movements' ? 'page' : null"
+        (click)="activeCategory.set('movements')"
+      >
+        {{ text.categoryMovements() }}
+      </button>
+    </nav>
+
+    <form class="settings__form" [formGroup]="form" (ngSubmit)="save()">
+      @if (activeCategory() === 'general') {
+        <section class="settings__section">
+          <h3 class="settings__section-title">{{ text.identityHeading() }}</h3>
+          <p class="settings__section-hint">{{ text.subheading() }}</p>
+          <mat-form-field class="settings__field" appearance="outline">
+            <mat-label>{{ text.institutionNameLabel() }}</mat-label>
+            <input matInput formControlName="institutionName" [attr.aria-label]="text.institutionNameLabel()" />
+            <mat-hint>{{ text.institutionNameHint() }}</mat-hint>
+          </mat-form-field>
+        </section>
+      }
+
+      @if (activeCategory() === 'display') {
+        <section class="settings__section">
+          <h3 class="settings__section-title">{{ text.unitsHeading() }}</h3>
+          <mat-form-field class="settings__field" appearance="outline">
+            <mat-label>{{ text.temperatureUnitLabel() }}</mat-label>
+            <mat-select formControlName="temperatureUnit" [attr.aria-label]="text.temperatureUnitLabel()">
+              <mat-option value="celsius">{{ text.celsiusOption() }}</mat-option>
+              <mat-option value="fahrenheit">{{ text.fahrenheitOption() }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </section>
+
+        <section class="settings__section">
+          <h3 class="settings__section-title">{{ text.displayHeading() }}</h3>
+          <mat-form-field class="settings__field" appearance="outline">
+            <mat-label>{{ text.dateFormatLabel() }}</mat-label>
+            <mat-select formControlName="dateFormat" [attr.aria-label]="text.dateFormatLabel()">
+              <mat-option value="locale">{{ text.dateFormatLocaleOption() }}</mat-option>
+              <mat-option value="iso">{{ text.dateFormatIsoOption() }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="settings__field" appearance="outline">
+            <mat-label>{{ text.themeLabel() }}</mat-label>
+            <mat-select formControlName="themePreference" [attr.aria-label]="text.themeLabel()">
+              <mat-option value="system">{{ text.themeSystemOption() }}</mat-option>
+              <mat-option value="dark">{{ text.themeDarkOption() }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </section>
+      }
+
+      @if (activeCategory() === 'data') {
+        <section class="settings__section">
+          <h3 class="settings__section-title">{{ text.dataHeading() }}</h3>
+          <p class="settings__section-hint">{{ text.dataHint() }}</p>
+        </section>
+      }
+
+      @if (activeCategory() === 'movements') {
+        <section class="settings__section">
+          <h3 class="settings__section-title">{{ text.movementsHeading() }}</h3>
+          <p class="settings__section-hint">{{ text.movementsHint() }}</p>
+          <mat-slide-toggle formControlName="requireAgentOnMove" [attr.aria-label]="text.requireAgentOnMoveLabel()">
+            {{ text.requireAgentOnMoveLabel() }}
+          </mat-slide-toggle>
+          <mat-slide-toggle formControlName="requireNoteOnMove" [attr.aria-label]="text.requireNoteOnMoveLabel()">
+            {{ text.requireNoteOnMoveLabel() }}
+          </mat-slide-toggle>
+        </section>
+      }
+
+      <div class="settings__actions">
+        <button type="button" mat-button (click)="reset()" [disabled]="!isDirty()">
+          {{ text.discardButton() }}
+        </button>
+        <button type="submit" mat-flat-button color="primary" [disabled]="!isDirty()">
+          {{ text.saveButton() }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -800,6 +800,75 @@
       <trans-unit id="reports.table.performedBy">
         <source>Agent</source>
       </trans-unit>
+      <trans-unit id="settings.heading">
+        <source>Settings</source>
+      </trans-unit>
+      <trans-unit id="settings.subheading">
+        <source>Local preferences. Nothing leaves this device.</source>
+      </trans-unit>
+      <trans-unit id="settings.identityHeading">
+        <source>Laboratory identity</source>
+      </trans-unit>
+      <trans-unit id="settings.institutionNameLabel">
+        <source>Collection name</source>
+      </trans-unit>
+      <trans-unit id="settings.institutionNameHint">
+        <source>Appears on reports and printable labels. Stored locally.</source>
+      </trans-unit>
+      <trans-unit id="settings.unitsHeading">
+        <source>Units</source>
+      </trans-unit>
+      <trans-unit id="settings.temperatureUnitLabel">
+        <source>Temperature unit</source>
+      </trans-unit>
+      <trans-unit id="settings.celsiusOption">
+        <source>Celsius (°C)</source>
+      </trans-unit>
+      <trans-unit id="settings.fahrenheitOption">
+        <source>Fahrenheit (°F)</source>
+      </trans-unit>
+      <trans-unit id="settings.movementsHeading">
+        <source>Provenance</source>
+      </trans-unit>
+      <trans-unit id="settings.requireAgentOnMoveLabel">
+        <source>Require agent for every movement</source>
+      </trans-unit>
+      <trans-unit id="settings.discardButton">
+        <source>Discard changes</source>
+      </trans-unit>
+      <trans-unit id="settings.saveButton">
+        <source>Save settings</source>
+      </trans-unit>
+      <trans-unit id="settings.category.general">
+        <source>General</source>
+      </trans-unit>
+      <trans-unit id="settings.category.display">
+        <source>Display</source>
+      </trans-unit>
+      <trans-unit id="settings.category.data">
+        <source>Data & Storage</source>
+      </trans-unit>
+      <trans-unit id="settings.category.movements">
+        <source>Provenance</source>
+      </trans-unit>
+      <trans-unit id="settings.dataHeading">
+        <source>Local file</source>
+      </trans-unit>
+      <trans-unit id="settings.dataHint">
+        <source>One SQLite file at a path you choose. You own the data — export to CSV at any time.</source>
+      </trans-unit>
+      <trans-unit id="settings.movementsHint">
+        <source>Every movement writes a history record. These options require extra fields before a move is allowed.</source>
+      </trans-unit>
+      <trans-unit id="settings.requireNoteOnMoveLabel">
+        <source>Require note for every movement</source>
+      </trans-unit>
+      <trans-unit id="settings.dateFormatLocaleOption">
+        <source>System locale</source>
+      </trans-unit>
+      <trans-unit id="settings.dateFormatIsoOption">
+        <source>ISO 8601 (YYYY-MM-DD)</source>
+      </trans-unit>
       <trans-unit id="itemCategory.item_macrofossil">
         <source>Macrofossil</source>
       </trans-unit>

@@ -163,7 +163,7 @@
                     <mat-icon svgIcon="thermostat" aria-hidden="true"></mat-icon>
                     <span>{{ text.targetTemperatureLabel() }}</span>
                   </div>
-                  <div class="detail-bento__value">22<span>°C</span></div>
+                  <div class="detail-bento__value">{{ formatTemperature(location.targetTemperature) }}<span>{{ temperatureUnitSymbol() }}</span></div>
                   <div class="detail-bento__hint">{{ text.fixedSetpointLabel() }}</div>
                 </div>
                 <div class="detail-bento__card">
@@ -171,7 +171,7 @@
                     <mat-icon svgIcon="humidity" aria-hidden="true"></mat-icon>
                     <span>{{ text.targetHumidityLabel() }}</span>
                   </div>
-                  <div class="detail-bento__value">45<span>%</span></div>
+                  <div class="detail-bento__value">{{ location.targetHumidity ?? '—' }}<span>%</span></div>
                   <div class="detail-bento__hint">{{ text.fixedSetpointLabel() }}</div>
                 </div>
               </div>

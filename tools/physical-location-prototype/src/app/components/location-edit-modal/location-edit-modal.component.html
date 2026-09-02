@@ -9,7 +9,7 @@
     @if (loc.type === 'room' || loc.type === 'cabinet') {
       <div class="modal__row">
         <mat-form-field appearance="outline" class="modal__field modal__field--half">
-          <mat-label>{{ text.targetTemperature() }}</mat-label>
+          <mat-label>{{ text.targetTemperature() }} ({{ temperatureUnitSymbol() }})</mat-label>
           <input matInput [value]="temp()" (input)="temp.set($any($event.target).value)" inputmode="numeric" />
         </mat-form-field>
         <mat-form-field appearance="outline" class="modal__field modal__field--half">

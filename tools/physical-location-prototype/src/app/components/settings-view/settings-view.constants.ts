@@ -1,0 +1,31 @@
+import { $localize } from '../../i18n/localize';
+
+export const heading = $localize `@@settings.heading:Settings`;
+export const subheading = $localize `@@settings.subheading:Local preferences. Nothing leaves this device.`;
+export const categoryGeneral = $localize `@@settings.category.general:General`;
+export const categoryDisplay = $localize `@@settings.category.display:Display`;
+export const categoryData = $localize `@@settings.category.data:Data & Storage`;
+export const categoryMovements = $localize `@@settings.category.movements:Provenance`;
+export const identityHeading = $localize `@@settings.identityHeading:Laboratory identity`;
+export const institutionNameLabel = $localize `@@settings.institutionNameLabel:Collection name`;
+export const institutionNameHint = $localize `@@settings.institutionNameHint:Appears on reports and printable labels. Stored locally.`;
+export const unitsHeading = $localize `@@settings.unitsHeading:Units`;
+export const displayHeading = $localize `@@settings.displayHeading:Appearance`;
+export const temperatureUnitLabel = $localize `@@settings.temperatureUnitLabel:Temperature`;
+export const celsiusOption = $localize `@@settings.celsiusOption:Celsius (°C)`;
+export const fahrenheitOption = $localize `@@settings.fahrenheitOption:Fahrenheit (°F)`;
+export const dateFormatLabel = $localize `@@settings.dateFormatLabel:Date format`;
+export const dateFormatLocaleOption = $localize `@@settings.dateFormatLocaleOption:System locale`;
+export const dateFormatIsoOption = $localize `@@settings.dateFormatIsoOption:ISO 8601 (YYYY-MM-DD)`;
+export const themeLabel = $localize `@@settings.themeLabel:Theme`;
+
+export const themeDarkOption = $localize `@@settings.themeDarkOption:Dark`;
+export const themeSystemOption = $localize `@@settings.themeSystemOption:System`;
+export const dataHeading = $localize `@@settings.dataHeading:Local file`;
+export const dataHint = $localize `@@settings.dataHint:One SQLite file at a path you choose. You own the data — export to CSV at any time.`;
+export const movementsHeading = $localize `@@settings.movementsHeading:Provenance`;
+export const movementsHint = $localize `@@settings.movementsHint:Every movement writes a history record. These options require extra fields before a move is allowed.`;
+export const requireAgentOnMoveLabel = $localize `@@settings.requireAgentOnMoveLabel:Require agent for every movement`;
+export const requireNoteOnMoveLabel = $localize `@@settings.requireNoteOnMoveLabel:Require note for every movement`;
+export const discardButton = $localize `@@settings.discardButton:Discard changes`;
+export const saveButton = $localize `@@settings.saveButton:Save settings`;

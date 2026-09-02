@@ -3,6 +3,7 @@ import type { Item } from '../core/models';
 import { breadcrumbLabel } from '../core/tree';
 import { move as moveItem } from '../core/movement';
 import { CollectionService } from './collection.service';
+import { SettingsService } from './settings.service';
 
 /**
  * The move flow: which item is being moved, the pending destination awaiting
@@ -14,6 +15,7 @@ import { CollectionService } from './collection.service';
 @Injectable({ providedIn: 'root' })
 export class MoveService {
   private readonly collection = inject(CollectionService);
+  private readonly settings = inject(SettingsService);
 
   readonly movingItemId = signal<string | null>(null);
   readonly moveError = signal<string | null>(null);
@@ -75,7 +77,9 @@ export class MoveService {
     if (!itemId) {
       return null;
     }
-    const result = moveItem(this.collection.dataset(), itemId, toLocationId, new Date().toISOString(), 'Moved in prototype UI');
+    const requireAgent = this.settings.settings().requireAgentOnMove;
+    const performedBy = requireAgent ? (this.settings.settings().institutionName.trim() || '— required') : undefined;
+    const result = moveItem(this.collection.dataset(), itemId, toLocationId, new Date().toISOString(), 'Moved in prototype UI', performedBy);
     this.pendingMoveTargetId.set(null);
     if (result.ok === false) {
       this.moveError.set(result.error);

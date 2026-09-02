@@ -1066,6 +1066,118 @@
         <source>Agent</source>
         <target>Agente</target>
       </trans-unit>
+      <trans-unit id="settings.heading">
+        <source>Settings</source>
+        <target>Ajustes</target>
+      </trans-unit>
+      <trans-unit id="settings.subheading">
+        <source>Application preferences and collection identity</source>
+        <target>Preferencias locales. Nada sale de este dispositivo.</target>
+      </trans-unit>
+      <trans-unit id="settings.identityHeading">
+        <source>Collection identity</source>
+        <target>Identidad del laboratorio</target>
+      </trans-unit>
+      <trans-unit id="settings.institutionNameLabel">
+        <source>Institution name</source>
+        <target>Nombre de la colección</target>
+      </trans-unit>
+      <trans-unit id="settings.institutionNameHint">
+        <source>Shown on reports and labels</source>
+        <target>Aparece en informes y etiquetas. Se guarda localmente.</target>
+      </trans-unit>
+      <trans-unit id="settings.unitsHeading">
+        <source>Units</source>
+        <target>Unidades</target>
+      </trans-unit>
+      <trans-unit id="settings.temperatureUnitLabel">
+        <source>Temperature unit</source>
+        <target>Unidad de temperatura</target>
+      </trans-unit>
+      <trans-unit id="settings.celsiusOption">
+        <source>Celsius (°C)</source>
+        <target>Celsius (°C)</target>
+      </trans-unit>
+      <trans-unit id="settings.fahrenheitOption">
+        <source>Fahrenheit (°F)</source>
+        <target>Fahrenheit (°F)</target>
+      </trans-unit>
+      <trans-unit id="settings.movementsHeading">
+        <source>Movements</source>
+        <target>Procedencia</target>
+      </trans-unit>
+      <trans-unit id="settings.requireAgentOnMoveLabel">
+        <source>Require agent name for every movement</source>
+        <target>Exigir agente en cada movimiento</target>
+      </trans-unit>
+      <trans-unit id="settings.discardButton">
+        <source>Discard changes</source>
+        <target>Descartar cambios</target>
+      </trans-unit>
+      <trans-unit id="settings.saveButton">
+        <source>Save settings</source>
+        <target>Guardar ajustes</target>
+      </trans-unit>
+      <trans-unit id="settings.displayHeading">
+        <source>Apariencia</source>
+        <target>Apariencia</target>
+      </trans-unit>
+      <trans-unit id="settings.dateFormatLabel">
+        <source>Formato de fecha</source>
+        <target>Formato de fecha</target>
+      </trans-unit>
+      <trans-unit id="settings.themeLabel">
+        <source>Tema</source>
+        <target>Tema</target>
+      </trans-unit>
+      <trans-unit id="settings.themeDarkOption">
+        <source>Oscuro</source>
+        <target>Oscuro</target>
+      </trans-unit>
+      <trans-unit id="settings.themeSystemOption">
+        <source>Sistema</source>
+        <target>Sistema</target>
+      </trans-unit>
+      <trans-unit id="settings.category.general">
+        <source>General</source>
+        <target>General</target>
+      </trans-unit>
+      <trans-unit id="settings.category.display">
+        <source>Display</source>
+        <target>Visualización</target>
+      </trans-unit>
+      <trans-unit id="settings.category.data">
+        <source>Data & Storage</source>
+        <target>Datos y almacenamiento</target>
+      </trans-unit>
+      <trans-unit id="settings.category.movements">
+        <source>Provenance</source>
+        <target>Procedencia</target>
+      </trans-unit>
+      <trans-unit id="settings.dataHeading">
+        <source>Local file</source>
+        <target>Archivo local</target>
+      </trans-unit>
+      <trans-unit id="settings.dataHint">
+        <source>One SQLite file at a path you choose. You own the data — export to CSV at any time.</source>
+        <target>Un único archivo SQLite en la ruta que elijas. Tú eres dueño de los datos — exporta a CSV cuando quieras.</target>
+      </trans-unit>
+      <trans-unit id="settings.movementsHint">
+        <source>Every movement writes a history record. These options require extra fields before a move is allowed.</source>
+        <target>Cada movimiento escribe un registro en el historial. Estas opciones exigen campos extra antes de permitir el movimiento.</target>
+      </trans-unit>
+      <trans-unit id="settings.requireNoteOnMoveLabel">
+        <source>Require note for every movement</source>
+        <target>Exigir nota en cada movimiento</target>
+      </trans-unit>
+      <trans-unit id="settings.dateFormatLocaleOption">
+        <source>System locale</source>
+        <target>Idioma del sistema</target>
+      </trans-unit>
+      <trans-unit id="settings.dateFormatIsoOption">
+        <source>ISO 8601 (YYYY-MM-DD)</source>
+        <target>ISO 8601 (AAAA-MM-DD)</target>
+      </trans-unit>
       <trans-unit id="itemCategory.item_macrofossil">
         <source>Macrofossil</source>
         <target>Macro-fósil</target>

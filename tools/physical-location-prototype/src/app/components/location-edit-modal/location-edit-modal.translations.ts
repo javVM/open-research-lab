@@ -3,7 +3,7 @@ import type { TranslationService } from '../../i18n/translation.service';
 
 export const editTitle = (type: string): string => $localize `@@locationEditModal.editTitle:Edit ${type}`;
 export const nameLabel = $localize `@@locationEditModal.nameLabel:Name`;
-export const targetTemperature = $localize `@@locationEditModal.targetTemperature:Target Temperature (°C)`;
+export const targetTemperature = $localize `@@locationEditModal.targetTemperature:Target Temperature`;
 export const targetHumidity = $localize `@@locationEditModal.targetHumidity:Target Humidity (%)`;
 export const storageConditions = $localize `@@locationEditModal.storageConditions:Storage conditions`;
 export const cancel = $localize `@@locationEditModal.cancel:Cancel`;

@@ -16,6 +16,7 @@ import { StorageConditionService } from '../../shared/storage-condition.service'
 import { CollectionService } from '../../collection.service';
 import { MoveService } from '../../move.service';
 import { NavigationService } from '../../navigation.service';
+import { SettingsService } from '../../settings.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createLocationViewTranslations } from './location-view.translations';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
@@ -62,6 +63,7 @@ export class LocationViewComponent {
   protected readonly collection = inject(CollectionService);
   protected readonly navigation = inject(NavigationService);
   protected readonly move = inject(MoveService);
+  protected readonly settings = inject(SettingsService);
   protected readonly text = createLocationViewTranslations(inject(TranslationService));
   protected readonly locationType = createLocationTypeTranslations(inject(TranslationService));
   protected readonly qrText = createQrLabelTranslations(inject(TranslationService));
@@ -79,6 +81,18 @@ export class LocationViewComponent {
     const selectedLocationId = this.navigation.selectedLocationId();
     return selectedLocationId ? this.collection.dataset().locations.find((location) => location.id === selectedLocationId) : undefined;
   });
+
+  protected formatTemperature(celsius?: number): string {
+    if (celsius === undefined) return '—';
+    if (this.settings.settings().temperatureUnit === 'fahrenheit') {
+      return Math.round((celsius * 9) / 5 + 32).toString();
+    }
+    return Math.round(celsius).toString();
+  }
+
+  protected temperatureUnitSymbol(): string {
+    return this.settings.settings().temperatureUnit === 'fahrenheit' ? '°F' : '°C';
+  }
 
   protected readonly promptRequest = signal<PromptRequest | null>(null);
   private pendingPrompt: ((value: string | null) => void) | null = null;

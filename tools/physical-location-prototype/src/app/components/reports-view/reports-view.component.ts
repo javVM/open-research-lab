@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import type { ItemCategory, ItemStatus } from '../../../core/models';
 import { computeReportSummary, type ReportMovementAction } from '../../../core/report';
 import { CollectionService } from '../../collection.service';
+import { SettingsService } from '../../settings.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createItemCategoryTranslations } from '../../shared/item-category.translations';
 import { registerAppIcons } from '../../shared/icons';
@@ -31,6 +32,7 @@ import { createReportsViewTranslations } from './reports-view.translations';
 })
 export class ReportsViewComponent {
   protected readonly collection = inject(CollectionService);
+  protected readonly settings = inject(SettingsService);
   protected readonly text = createReportsViewTranslations(inject(TranslationService));
   protected readonly categoryText = createItemCategoryTranslations(inject(TranslationService));
 

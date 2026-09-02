@@ -48,10 +48,17 @@
         </button>
       </li>
       <li>
-        <span class="sidenav__link sidenav__link--disabled" aria-disabled="true">
+        <button
+          type="button"
+          class="sidenav__link"
+          [class.sidenav__link--active]="navigation.uiMode() === 'settings'"
+          [attr.aria-current]="navigation.uiMode() === 'settings' ? 'page' : null"
+          [attr.aria-pressed]="navigation.uiMode() === 'settings'"
+          (click)="navigation.setUiMode('settings')"
+        >
           <mat-icon svgIcon="settings" aria-hidden="true"></mat-icon>
           <span>{{ text.navSettings() }}</span>
-        </span>
+        </button>
       </li>
     </ul>
 
@@ -144,6 +151,9 @@
       }
       @case ('reports') {
         <app-reports-view class="pane pane--mode"></app-reports-view>
+      }
+      @case ('settings') {
+        <app-settings-view class="pane pane--mode"></app-settings-view>
       }
     }
   </main>
