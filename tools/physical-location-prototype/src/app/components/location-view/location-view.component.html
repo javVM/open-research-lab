@@ -48,7 +48,7 @@
       <h2 class="tray-grid-title">{{ location.name }}</h2>
     }
 
-    @if (location.type === 'tray' && isDetailsView()) {
+    @if (location.type === 'tray' && isDetailsView() && showLocationDetailsPanel()) {
       <div class="details-view">
         <div class="detail-card detail-card--info">
           <div class="detail-card__header">
@@ -123,11 +123,11 @@
           </div>
         </div>
       </div>
-    } @else if (isBuildingDetails()) {
+    } @else if (isBuildingDetails() && showLocationDetailsPanel()) {
       <app-building-details [location]="location" [children]="children()" (selectChild)="onCardClick($event)" (addItem)="headerAdd()"></app-building-details>
-    } @else if (isFloorDetails()) {
+    } @else if (isFloorDetails() && showLocationDetailsPanel()) {
       <app-floor-details [location]="location" [children]="children()" (selectChild)="onCardClick($event)" (addItem)="headerAdd()"></app-floor-details>
-    } @else if (isDetailsView() && !isTrayGrid()) {
+    } @else if (isDetailsView() && !isTrayGrid() && showLocationDetailsPanel()) {
       <div class="details-view details-view--room">
         <div class="detail-card detail-card--info">
           <div class="detail-card__header">
@@ -338,11 +338,13 @@
       </div>
     }
 
-    @if (isMapView()) {
+    @if (showFloorPlan()) {
       <app-floor-plan [locations]="children()" [containerLocationId]="location.id" (toggle3d)="setViewMode('3d')"></app-floor-plan>
-    } @else if (is3dView()) {
+    }
+    @if (is3dView()) {
       <app-floor-plan-3d [locations]="children()" [containerLocationId]="location.id" (toggleMap)="setViewMode('map')"></app-floor-plan-3d>
-    } @else if (isTrayGrid() && !isDetailsView()) {
+    }
+    @if (showPositionGrid()) {
       <app-position-grid [positions]="children()" (addItem)="addItemToLocation($event)"></app-position-grid>
     }
   }

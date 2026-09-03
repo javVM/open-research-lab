@@ -35,12 +35,12 @@
       >{{ tick.value }}</text>
     }
 
-    @for (month of formattedMonths(); track month; let i = $index) {
+    @for (item of layout().xLabels; track item.index) {
       <text
         class="line-chart__axis-label line-chart__axis-label--x"
-        [attr.x]="40 + i * layout().xStep"
+        [attr.x]="40 + item.index * layout().xStep"
         [attr.y]="layout().axisEndY + 44"
-      >{{ month }}</text>
+      >{{ item.label }}</text>
     }
 
     @for (s of layout().series; track s.key) {

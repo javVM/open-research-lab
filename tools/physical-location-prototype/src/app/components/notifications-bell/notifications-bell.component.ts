@@ -53,6 +53,19 @@ import { registerAppIcons } from '../../shared/icons';
     .bell__item { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; padding: 0.5rem 0.6rem; border-radius: 8px; background: var(--surface-container-low, #f0f3ff); font-size: 0.85rem; color: var(--text, #151c27); }
     .bell__text { flex: 1; }
     .bell__dismiss { border: 0; background: transparent; font-size: 1.1rem; line-height: 1; cursor: pointer; color: var(--text-muted, #464555); padding: 0 0.2rem; }
+    @media (max-width: 700px) {
+      .bell__panel {
+        position: fixed;
+        top: 64px;
+        left: 0.5rem;
+        right: 0.5rem;
+        min-width: auto;
+        max-width: none;
+        max-height: calc(100dvh - 64px - 64px - 40px - 1rem);
+        overflow-y: auto;
+        z-index: 60;
+      }
+    }
   `],
 })
 export class NotificationsBellComponent {

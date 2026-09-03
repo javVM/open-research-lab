@@ -2,7 +2,7 @@
 
 :host {
   display: block;
-  height: 100vh;
+  height: 100dvh;
 }
 
 .app-shell {
@@ -366,12 +366,21 @@
 }
 
 @include on-mobile {
+  .app-shell {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
   .sidenav {
     display: none;
   }
 
   .topbar {
+    position: sticky;
+    top: 0;
     left: 0;
+    right: 0;
+    flex-shrink: 0;
     padding: 0 12px;
   }
 
@@ -383,18 +392,22 @@
     margin-left: 0;
     padding: 0.25rem 0.6rem;
     font-size: 0.65rem;
+    flex-shrink: 0;
   }
 
   .app-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
     margin-left: 0;
-    grid-template-columns: 1fr;
-    grid-auto-rows: min-content;
-    overflow-y: visible;
-    padding: 12px 12px calc(12px + 64px + 44px);
+    padding: 12px 12px calc(12px + 64px + 40px);
+    overflow: hidden;
   }
 
   .mobile-pane-tabs {
     display: flex;
+    flex: none;
     gap: 4px;
     padding: 4px;
     background: var(--surface-container-low, #f0f3ff);
@@ -427,10 +440,10 @@
   .pane {
     display: flex;
     flex-direction: column;
-    overflow-x: clip;
-    overflow-y: visible;
-    max-width: 100vw;
+    flex: 1 1 auto;
     min-height: 0;
+    overflow: hidden;
+    max-width: 100vw;
   }
 
   .pane > app-location-tree,
@@ -458,9 +471,15 @@
     left: 0;
     right: 0;
     bottom: 64px;
+    height: 40px;
     margin-left: 0;
-    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0));
+    padding: 0 0.75rem;
+    padding-bottom: env(safe-area-inset-bottom, 0);
     z-index: 40;
+  }
+
+  .app-footer__text {
+    display: none;
   }
 
   .bottom-nav {

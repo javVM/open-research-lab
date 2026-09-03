@@ -72,6 +72,11 @@ export class LineChartComponent {
     const maxCount = Math.max(...this.yTicks().map((tick) => tick.value), 1);
     const monthCount = this.formattedMonths().length;
     const xStep = monthCount > 1 ? chartWidth / (monthCount - 1) : 0;
+    const maxXLabels = Math.max(2, Math.floor(chartWidth / 60));
+    const xTickInterval = monthCount > 0 ? Math.max(1, Math.ceil(monthCount / maxXLabels)) : 1;
+    const xLabels = this.formattedMonths()
+      .map((label, index) => ({ label, index }))
+      .filter((_, index) => index % xTickInterval === 0 || index === monthCount - 1);
 
     const xForIndex = (index: number): number => PADDING.left + index * xStep;
     const yForCount = (count: number): number =>
@@ -82,6 +87,7 @@ export class LineChartComponent {
       axisEndX: width - PADDING.right,
       axisEndY: PADDING.top + chartHeight,
       xStep,
+      xLabels,
       yTicks: this.yTicks().map((tick) => ({
         value: tick.value,
         y: yForCount(tick.value),

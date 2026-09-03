@@ -1,4 +1,5 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
+import { ViewportService } from '../../shared/viewport.service';
 import { CdkDrag, CdkDropList, CdkDropListGroup, type CdkDragDrop } from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -69,6 +70,7 @@ export class LocationViewComponent {
   protected readonly qrText = createQrLabelTranslations(inject(TranslationService));
   protected readonly geometry = inject(GeometryService);
   private readonly quickJump = inject(QuickJumpService);
+  protected readonly viewport = inject(ViewportService);
 
   /** When false, the map/3D view is hidden and only the list is shown. */
   readonly allowMap = input<boolean>(true);
@@ -155,6 +157,12 @@ export class LocationViewComponent {
     if (this.isTrayGrid()) return this.viewMode() === 'details' || this.viewMode() === 'data';
     return !this.isMapView() && !this.is3dView();
   });
+
+  readonly showFloorPlan = computed<boolean>(
+    () => this.isMapView() || (this.viewport.isMobile() && this.canShowMap() && !this.isTrayGrid() && this.isDetailsView()),
+  );
+  readonly showPositionGrid = computed<boolean>(() => this.isTrayGrid() && !this.is3dView());
+  readonly showLocationDetailsPanel = computed<boolean>(() => this.isDetailsView() && !this.viewport.isMobile());
 
   readonly viewModeIndex = computed<number>(() =>
     this.is3dView() ? 2 : this.isMapView() ? 1 : 0

@@ -369,5 +369,9 @@
 .history-info:hover{color:var(--accent, #4f46e5)}
 
 @include on-mobile {
-  .item-detail {padding:14px}
+  .item-detail {
+    padding: 14px;
+    min-height: 0;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
+  }
 }

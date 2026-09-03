@@ -180,6 +180,7 @@ app-line-chart {
 
 .reports__table-wrap {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .reports__table {
@@ -187,6 +188,19 @@ app-line-chart {
   table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.85rem;
+}
+
+@include on-mobile {
+  .reports__table {
+    table-layout: auto;
+    min-width: max-content;
+    font-size: 0.8rem;
+  }
+
+  .reports__table th,
+  .reports__table td {
+    padding: 0.4rem 0.5rem;
+  }
 }
 
 .reports__table-item-header {
