@@ -2,10 +2,18 @@ import { Component, computed, effect, inject, input, signal } from '@angular/cor
 import { MatButtonModule } from '@angular/material/button';
 import QRCode from 'qrcode';
 import { SettingsService } from '../../settings.service';
+import { ThemeService } from '../../theme.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createQrLabelTranslations } from './qr-label.translations';
 
 type CodeFormat = 'qr' | 'datamatrix' | 'code128';
+type QrVariant = 'default' | 'print';
+
+const QR_PRINT_DARK = '#000000';
+const QR_PRINT_LIGHT = '#ffffff';
+const QR_DEFAULT_DARK_FALLBACK = '#151c27';
+const QR_DEFAULT_DARK_FALLBACK_DARK = '#e8eaed';
+const QR_DEFAULT_LIGHT = '#00000000';
 
 @Component({
   standalone: true,
@@ -17,9 +25,11 @@ type CodeFormat = 'qr' | 'datamatrix' | 'code128';
 export class QrLabelComponent {
   protected readonly text = createQrLabelTranslations(inject(TranslationService));
   private readonly settings = inject(SettingsService);
+  private readonly theme = inject(ThemeService);
 
   readonly payload = input<string>('');
   readonly format = input<CodeFormat | null>(null);
+  readonly variant = input<QrVariant>('default');
   protected readonly selectedFormat = signal<CodeFormat>('qr');
   protected readonly dataUrl = signal<string | null>(null);
   protected readonly rendering = signal(false);
@@ -60,11 +70,14 @@ export class QrLabelComponent {
     this.rendering.set(true);
 
     if (format === 'qr') {
+      const isPrint = this.variant() === 'print';
+      const darkColor = isPrint || !this.theme.isDark() ? QR_PRINT_DARK : this.themeTextColor();
+      const lightColor = isPrint ? QR_PRINT_LIGHT : QR_DEFAULT_LIGHT;
       try {
         const url = await QRCode.toDataURL(text, {
           width: Math.round(192 * this.labelScale()),
           margin: 2,
-          color: { dark: '#000000', light: '#ffffff' },
+          color: { dark: darkColor, light: lightColor },
         });
         if (this.isCurrent(text, format)) {
           this.dataUrl.set(url);
@@ -135,6 +148,11 @@ export class QrLabelComponent {
       default:
         return this.text.formatQr();
     }
+  }
+
+  private themeTextColor(): string {
+    const value = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+    return value || (this.theme.isDark() ? QR_DEFAULT_DARK_FALLBACK_DARK : QR_DEFAULT_DARK_FALLBACK);
   }
 
   async download(): Promise<void> {

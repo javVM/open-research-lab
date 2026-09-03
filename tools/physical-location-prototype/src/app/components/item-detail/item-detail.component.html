@@ -29,7 +29,7 @@
           <mat-icon svgIcon="cube" aria-hidden="true"></mat-icon>
         </div>
         <div class="item-detail__qr printable-label__qr">
-          <app-qr-label [payload]="qrPayload()" [format]="qrFormat()"></app-qr-label>
+          <app-qr-label [payload]="qrPayload()" [format]="qrFormat()" variant="print"></app-qr-label>
         </div>
         <div class="printable-label__footer">
           <span class="printable-label__code">{{ item.catalogueNumber }}</span>

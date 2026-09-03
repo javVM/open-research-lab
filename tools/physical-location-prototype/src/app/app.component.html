@@ -105,26 +105,62 @@
   >
     @switch (navigation.uiMode()) {
       @case ('explore') {
-        <section
-          class="pane pane--building-picker"
-          [class.pane--building-picker--collapsed]="navigation.treeCollapsed()"
-          [attr.aria-label]="text.locationHierarchyAriaLabel()"
-          [attr.aria-hidden]="navigation.treeCollapsed()"
-        >
-          <div class="pane__heading-row">
-            <h2 class="pane__heading">{{ text.locationsHeading() }}</h2>
+        @if (viewport.isMobile()) {
+          <nav class="mobile-pane-tabs" aria-label="Explore panels">
             <button
               type="button"
-              class="pane__collapse"
-              [attr.aria-label]="navigation.treeCollapsed() ? text.treeExpandHierarchy() : text.treeCollapseHierarchy()"
-              [attr.title]="navigation.treeCollapsed() ? text.treeExpand() : text.treeCollapse()"
-              (click)="navigation.treeCollapsed.set(!navigation.treeCollapsed())"
+              class="mobile-pane-tabs__button"
+              [class.mobile-pane-tabs__button--active]="navigation.mobileExplorePane() === 'tree'"
+              [attr.aria-pressed]="navigation.mobileExplorePane() === 'tree'"
+              (click)="navigation.mobileExplorePane.set('tree')"
             >
-              <mat-icon svgIcon="chevronLeft" aria-hidden="true"></mat-icon>
+              {{ text.locationsHeading() }}
             </button>
-          </div>
-          <app-location-tree></app-location-tree>
-        </section>
+            <button
+              type="button"
+              class="mobile-pane-tabs__button"
+              [class.mobile-pane-tabs__button--active]="navigation.mobileExplorePane() === 'view'"
+              [attr.aria-pressed]="navigation.mobileExplorePane() === 'view'"
+              (click)="navigation.mobileExplorePane.set('view')"
+            >
+              {{ text.contentsHeading() }}
+            </button>
+            @if (navigation.selectedItemId()) {
+              <button
+                type="button"
+                class="mobile-pane-tabs__button"
+                [class.mobile-pane-tabs__button--active]="navigation.mobileExplorePane() === 'detail'"
+                [attr.aria-pressed]="navigation.mobileExplorePane() === 'detail'"
+                (click)="navigation.mobileExplorePane.set('detail')"
+              >
+                {{ text.detailsHeading() }}
+              </button>
+            }
+          </nav>
+        }
+
+        @if (!viewport.isMobile() || navigation.mobileExplorePane() === 'tree') {
+          <section
+            class="pane pane--building-picker"
+            [class.pane--building-picker--collapsed]="navigation.treeCollapsed()"
+            [attr.aria-label]="text.locationHierarchyAriaLabel()"
+            [attr.aria-hidden]="navigation.treeCollapsed()"
+          >
+            <div class="pane__heading-row">
+              <h2 class="pane__heading">{{ text.locationsHeading() }}</h2>
+              <button
+                type="button"
+                class="pane__collapse"
+                [attr.aria-label]="navigation.treeCollapsed() ? text.treeExpandHierarchy() : text.treeCollapseHierarchy()"
+                [attr.title]="navigation.treeCollapsed() ? text.treeExpand() : text.treeCollapse()"
+                (click)="navigation.treeCollapsed.set(!navigation.treeCollapsed())"
+              >
+                <mat-icon svgIcon="chevronLeft" aria-hidden="true"></mat-icon>
+              </button>
+            </div>
+            <app-location-tree></app-location-tree>
+          </section>
+        }
         @if (navigation.treeCollapsed()) {
           <button
             type="button"
@@ -136,11 +172,13 @@
             <mat-icon svgIcon="chevronRight" aria-hidden="true"></mat-icon>
           </button>
         }
-        <section class="pane pane--view" [attr.aria-label]="text.selectedLocationAriaLabel()">
-          <h2 class="pane__heading">{{ text.contentsHeading() }}</h2>
-          <app-location-view></app-location-view>
-        </section>
-        @if (navigation.selectedItemId()) {
+        @if (!viewport.isMobile() || navigation.mobileExplorePane() === 'view') {
+          <section class="pane pane--view" [attr.aria-label]="text.selectedLocationAriaLabel()">
+            <h2 class="pane__heading">{{ text.contentsHeading() }}</h2>
+            <app-location-view></app-location-view>
+          </section>
+        }
+        @if (navigation.selectedItemId() && (!viewport.isMobile() || navigation.mobileExplorePane() === 'detail')) {
           <section class="pane pane--detail" [attr.aria-label]="text.itemDetailAriaLabel()">
             <h2 class="pane__heading">{{ text.detailsHeading() }}</h2>
             <app-item-detail></app-item-detail>
@@ -179,4 +217,50 @@
       <span>javVM</span>
     </a>
   </footer>
+
+  <nav class="bottom-nav" aria-label="Primary">
+    <button
+      type="button"
+      class="bottom-nav__item"
+      [class.bottom-nav__item--active]="navigation.uiMode() === 'explore'"
+      [attr.aria-current]="navigation.uiMode() === 'explore' ? 'page' : null"
+      [attr.aria-pressed]="navigation.uiMode() === 'explore'"
+      (click)="navigation.setUiMode('explore')"
+    >
+      <mat-icon svgIcon="explore" aria-hidden="true"></mat-icon>
+      <span>{{ text.modeExplore() }}</span>
+    </button>
+    <button
+      type="button"
+      class="bottom-nav__item"
+      [class.bottom-nav__item--active]="navigation.uiMode() === 'scan'"
+      [attr.aria-pressed]="navigation.uiMode() === 'scan'"
+      (click)="navigation.setUiMode('scan')"
+    >
+      <mat-icon svgIcon="scan" aria-hidden="true"></mat-icon>
+      <span>{{ text.modeScan() }}</span>
+    </button>
+    <button
+      type="button"
+      class="bottom-nav__item"
+      [class.bottom-nav__item--active]="navigation.uiMode() === 'reports'"
+      [attr.aria-current]="navigation.uiMode() === 'reports' ? 'page' : null"
+      [attr.aria-pressed]="navigation.uiMode() === 'reports'"
+      (click)="navigation.setUiMode('reports')"
+    >
+      <mat-icon svgIcon="reports" aria-hidden="true"></mat-icon>
+      <span>{{ text.navReports() }}</span>
+    </button>
+    <button
+      type="button"
+      class="bottom-nav__item"
+      [class.bottom-nav__item--active]="navigation.uiMode() === 'settings'"
+      [attr.aria-current]="navigation.uiMode() === 'settings' ? 'page' : null"
+      [attr.aria-pressed]="navigation.uiMode() === 'settings'"
+      (click)="navigation.setUiMode('settings')"
+    >
+      <mat-icon svgIcon="settings" aria-hidden="true"></mat-icon>
+      <span>{{ text.navSettings() }}</span>
+    </button>
+  </nav>
 </div>

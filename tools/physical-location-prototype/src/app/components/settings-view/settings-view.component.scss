@@ -67,13 +67,19 @@
   cursor: pointer;
 
   &:hover {
-    background: var(--surface-container-low, #f0f3ff);
+    background: var(--surface-hover, #e7eefe);
+    color: var(--text, #151c27);
   }
 }
 
 .settings__submenu-item--active {
-  background: var(--primary-fixed, #e2dfff);
-  color: var(--on-primary-fixed, #0f0069);
+  background: var(--accent-soft, #e0e7ff);
+  color: var(--accent, #4f46e5);
+
+  &:hover {
+    background: var(--surface-hover, #e7eefe);
+    color: var(--text, #151c27);
+  }
 }
 
 .settings__form {

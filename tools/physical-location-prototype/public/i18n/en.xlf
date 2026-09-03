@@ -905,6 +905,24 @@
       <trans-unit id="settings.backupReminderMonthOption">
         <source>Every 30 days</source>
       </trans-unit>
+      <trans-unit id="settings.displayHeading">
+        <source>Appearance</source>
+      </trans-unit>
+      <trans-unit id="settings.dateFormatLabel">
+        <source>Date format</source>
+      </trans-unit>
+      <trans-unit id="settings.themeLabel">
+        <source>Theme</source>
+      </trans-unit>
+      <trans-unit id="settings.themeLightOption">
+        <source>Light</source>
+      </trans-unit>
+      <trans-unit id="settings.themeDarkOption">
+        <source>Dark</source>
+      </trans-unit>
+      <trans-unit id="settings.themeSystemOption">
+        <source>System</source>
+      </trans-unit>
       <trans-unit id="itemCategory.item_macrofossil">
         <source>Macrofossil</source>
       </trans-unit>

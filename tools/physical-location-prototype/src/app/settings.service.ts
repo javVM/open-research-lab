@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 
 export type TemperatureUnit = 'celsius' | 'fahrenheit';
 export type DateFormat = 'locale' | 'iso';
-export type ThemePreference = 'dark' | 'system';
+export type ThemePreference = 'light' | 'dark' | 'system';
 export type LabelSize = 'small' | 'medium' | 'large';
 
 export interface AppSettings {

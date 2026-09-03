@@ -21,6 +21,7 @@ export const dateFormatLabel = $localize `@@settings.dateFormatLabel:Date format
 export const dateFormatLocaleOption = $localize `@@settings.dateFormatLocaleOption:System locale`;
 export const dateFormatIsoOption = $localize `@@settings.dateFormatIsoOption:ISO 8601 (YYYY-MM-DD)`;
 export const themeLabel = $localize `@@settings.themeLabel:Theme`;
+export const themeLightOption = $localize `@@settings.themeLightOption:Light`;
 export const themeDarkOption = $localize `@@settings.themeDarkOption:Dark`;
 export const themeSystemOption = $localize `@@settings.themeSystemOption:System`;
 export const showEmptyLocationsLabel = $localize `@@settings.showEmptyLocationsLabel:Show empty locations in tree`;

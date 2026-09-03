@@ -1134,6 +1134,10 @@
         <source>Tema</source>
         <target>Tema</target>
       </trans-unit>
+      <trans-unit id="settings.themeLightOption">
+        <source>Light</source>
+        <target>Claro</target>
+      </trans-unit>
       <trans-unit id="settings.themeDarkOption">
         <source>Oscuro</source>
         <target>Oscuro</target>

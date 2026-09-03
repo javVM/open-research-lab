@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, effect, inject, signal } from '@angular/core';
 import { ancestorIds } from '../core/tree';
 import { CollectionService } from './collection.service';
 import { MoveService } from './move.service';
@@ -23,6 +23,8 @@ export class NavigationService {
   readonly treeCollapsed = signal<boolean>(false);
   /** Map / Details toggle for the centre pane — Map shows floor-plan, Details shows location bento */
   readonly viewMode = signal<'map' | 'details' | '3d' | 'data'>('map');
+  /** Which of the three explore panes is visible on narrow viewports. */
+  readonly mobileExplorePane = signal<'tree' | 'view' | 'detail'>('view');
 
   constructor() {
     // Start with the first building expanded and selected so the app opens
@@ -32,6 +34,13 @@ export class NavigationService {
       this.expandedIds.set(new Set([firstBuilding.id]));
       this.selectedLocationId.set(firstBuilding.id);
     }
+
+    // On mobile, selecting an item should reveal its detail pane, and
+    // closing the item should return to the location view pane.
+    effect(() => {
+      const itemId = this.selectedItemId();
+      this.mobileExplorePane.set(itemId ? 'detail' : 'view');
+    });
   }
 
   setUiMode(mode: 'explore' | 'scan' | 'reports' | 'settings'): void {

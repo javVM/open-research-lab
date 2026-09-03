@@ -12,8 +12,8 @@
   border-radius: 0.5rem;
   background: var(--surface, #ffffff);
   background-image:
-    linear-gradient(#dce2f3 1px, transparent 1px),
-    linear-gradient(90deg, #dce2f3 1px, transparent 1px);
+    linear-gradient(var(--surface-variant, #dce2f3) 1px, transparent 1px),
+    linear-gradient(90deg, var(--surface-variant, #dce2f3) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
@@ -91,7 +91,7 @@
 }
 
 .floor-plan-3d__reset:hover {
-  border-color: var(--accent, #5b8def);
+  border-color: var(--accent, #4f46e5);
 }
 
 .floor-plan-3d__dpad {
@@ -106,9 +106,9 @@
 }
 
 .floor-plan-3d__dpad-btn {
-  border: 1px solid var(--border, #3a3f4b);
+  border: 1px solid var(--border, #c7c4d8);
   border-radius: 0.3rem;
-  background: var(--surface, #1b1e26);
+  background: var(--surface, #ffffff);
   color: inherit;
   cursor: pointer;
   font-size: 0.7rem;
@@ -117,7 +117,7 @@
 }
 
 .floor-plan-3d__dpad-btn:hover {
-  border-color: var(--accent, #5b8def);
+  border-color: var(--accent, #4f46e5);
 }
 
 .floor-plan-3d__dpad-btn--up {
@@ -147,7 +147,7 @@
   transform: translateX(-50%);
   z-index: 2;
   font-size: 0.75rem;
-  color: var(--text-muted, #9aa1ac);
+  color: var(--text-muted, #464555);
   pointer-events: none;
   background: var(--surface, #ffffff);
   border: 1px solid var(--border, #c7c4d8);
@@ -228,7 +228,7 @@
 }
 
 .box3d--selected .box3d__top-fill {
-  border: 2px solid var(--accent, #5b8def);
+  border: 2px solid var(--accent, #4f46e5);
 }
 
 .box3d__label {
@@ -275,14 +275,14 @@
   display: inline-block;
   font-size: 0.6rem;
   font-style: italic;
-  color: var(--empty, #8b93a1);
+  color: var(--empty, #777587);
   text-shadow:
     0 1px 3px rgba(0, 0, 0, 0.85),
     0 0 6px rgba(0, 0, 0, 0.5);
 }
 
 .box3d--empty .box3d__top-fill {
-  border: 2px dashed var(--border-strong, #4a5160);
+  border: 2px dashed var(--border-strong, #777587);
 }
 
 .box3d--empty .box3d__name {

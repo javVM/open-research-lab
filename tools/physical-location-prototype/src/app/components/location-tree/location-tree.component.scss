@@ -15,15 +15,15 @@
 :host ::ng-deep .location-tree__select .mat-mdc-text-field-wrapper {
   height: 2.25rem;
   border-radius: 999px;
-  background: var(--surface-raised, #20242e);
-  border: 1px solid var(--border, #3a3f4b);
+  background: var(--surface-raised, #f0f3ff);
+  border: 1px solid var(--border, #c7c4d8);
   padding: 0 0.2rem;
   transition: border-color 0.15s ease;
 }
 
 :host ::ng-deep .location-tree__select .mat-mdc-text-field-wrapper:hover,
 :host ::ng-deep .location-tree__select.mat-focused .mat-mdc-text-field-wrapper {
-  border-color: var(--accent, #5b8def);
+  border-color: var(--accent, #4f46e5);
 }
 
 :host ::ng-deep .location-tree__select .mdc-notched-outline {
@@ -198,7 +198,7 @@
   white-space: nowrap;
   padding-bottom: 0.25rem;
   font-size: 0.8rem;
-  color: var(--text-muted, #9aa1ac);
+  color: var(--text-muted, #464555);
   scrollbar-width: none;
 }
 
@@ -209,7 +209,7 @@
 .mobile-tree__crumb {
   background: none;
   border: none;
-  color: var(--accent, #5b8def);
+  color: var(--accent, #4f46e5);
   cursor: pointer;
   font: inherit;
   padding: 0;
@@ -223,11 +223,11 @@
 
 .mobile-tree__crumb--home {
   font-weight: 600;
-  color: var(--accent, #5b8def);
+  color: var(--accent, #4f46e5);
 }
 
 .mobile-tree__crumb--current {
-  color: var(--text, #e8eaed);
+  color: var(--text, #151c27);
   font-weight: 600;
   cursor: default;
 }
@@ -257,9 +257,9 @@
   align-items: flex-start;
   gap: 0.35rem;
   padding: 0.75rem;
-  border: 1px solid var(--border, #3a3f4b);
+  border: 1px solid var(--border, #c7c4d8);
   border-radius: 0.6rem;
-  background: var(--surface, #1b1e26);
+  background: var(--surface, #ffffff);
   color: inherit;
   cursor: pointer;
   font: inherit;
@@ -268,16 +268,16 @@
 }
 
 .mobile-tree__child:hover {
-  border-color: var(--accent, #5b8def);
-  background: var(--surface-hover, #262b36);
+  border-color: var(--accent, #4f46e5);
+  background: var(--surface-hover, #e7eefe);
 }
 
 .mobile-tree__child-type {
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--text-muted, #9aa1ac);
-  border: 1px solid var(--border, #3a3f4b);
+  color: var(--text-muted, #464555);
+  border: 1px solid var(--border, #c7c4d8);
   border-radius: 0.25rem;
   padding: 0.05rem 0.35rem;
 }
@@ -291,7 +291,7 @@
 .mobile-tree__child-count {
   margin-top: auto;
   font-size: 0.75rem;
-  color: var(--text-muted, #9aa1ac);
+  color: var(--text-muted, #464555);
 }
 
 .quick-jump {
@@ -299,8 +299,8 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.45rem 0.6rem;
-  background: var(--surface-raised, #20242e);
-  border: 1px solid var(--border, #3a3f4b);
+  background: var(--surface-raised, #f0f3ff);
+  border: 1px solid var(--border, #c7c4d8);
   border-radius: 0.6rem;
   margin-bottom: 0.6rem;
   overflow: hidden;
@@ -335,9 +335,9 @@
   flex-shrink: 0;
   padding: 0.3rem 0.7rem;
   border-radius: 999px;
-  border: 1px solid var(--border, #3a3f4b);
-  background: var(--surface, #1b1e26);
-  color: var(--text, #e8eaed);
+  border: 1px solid var(--border, #c7c4d8);
+  background: var(--surface, #ffffff);
+  color: var(--text, #151c27);
   font: inherit;
   font-size: 0.78rem;
   font-weight: 500;
@@ -346,8 +346,8 @@
 }
 
 .quick-jump__chip--more {
-  background: var(--accent-soft, #23324f);
-  border-color: var(--accent, #5b8def);
+  background: var(--accent-soft, #e0e7ff);
+  border-color: var(--accent, #4f46e5);
   flex-shrink: 0;
   z-index: 1;
 }
@@ -365,8 +365,8 @@
   right: 0;
   bottom: 0;
   max-height: 78dvh;
-  background: var(--surface, #1b1e26);
-  border-top: 1px solid var(--border, #3a3f4b);
+  background: var(--surface, #ffffff);
+  border-top: 1px solid var(--border, #c7c4d8);
   border-radius: 1rem 1rem 0 0;
   z-index: 41;
   display: flex;
@@ -380,7 +380,7 @@
   align-items: center;
   justify-content: space-between;
   padding-bottom: 0.6rem;
-  border-bottom: 1px solid var(--border, #3a3f4b);
+  border-bottom: 1px solid var(--border, #c7c4d8);
   margin-bottom: 0.6rem;
   flex: none;
 }

@@ -35,8 +35,8 @@
   margin: 0;
   padding: 0.5rem 0.75rem;
   border-radius: 8px;
-  background: #fef2f2;
-  color: #991b1b;
+  background: var(--error-soft, #fef2f2);
+  color: var(--error, #991b1b);
   font-size: 0.85rem;
 }
 
@@ -56,7 +56,7 @@
 
 .modal__cancel {
   background: none;
-  border: 1px solid var(--border, #3a3f4b);
+  border: 1px solid var(--border, #c7c4d8);
   color: inherit;
 }
 

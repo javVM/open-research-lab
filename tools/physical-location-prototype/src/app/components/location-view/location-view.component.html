@@ -86,7 +86,7 @@
               <div class="printable-card__body">
                 <div class="printable-label printable-label--clickable" role="button" tabindex="0" [attr.aria-label]="'Open label preview for ' + location.name" (click)="openLabelPreview()" (keydown.enter)="openLabelPreview()" (keydown.space)="openLabelPreview(); $event.preventDefault()">
                   <div class="printable-label__header"><div><span class="printable-label__brand">Nexus Lab</span><span class="printable-label__sub">{{ location.name }}</span></div><mat-icon svgIcon="brand" aria-hidden="true"></mat-icon></div>
-                  <div class="printable-label__qr"><app-qr-label [payload]="locationQrPayload()" [format]="labelFormat()"></app-qr-label></div>
+                  <div class="printable-label__qr"><app-qr-label [payload]="locationQrPayload()" [format]="labelFormat()" variant="print"></app-qr-label></div>
                   <div class="printable-label__footer"><span class="printable-label__code">{{ location.id.slice(0, 8) }}</span><span class="printable-label__meta">{{ printableLabelMeta() }}</span></div>
                 </div>
               </div>
@@ -206,7 +206,7 @@
                       <mat-icon svgIcon="brand" aria-hidden="true"></mat-icon>
                     </div>
                     <div class="printable-label__qr">
-                      <app-qr-label [payload]="locationQrPayload()" [format]="labelFormat()"></app-qr-label>
+                      <app-qr-label [payload]="locationQrPayload()" [format]="labelFormat()" variant="print"></app-qr-label>
                     </div>
                     <div class="printable-label__footer">
                       <span class="printable-label__code">{{ location.id.slice(0, 8) }}</span>
@@ -313,7 +313,7 @@
               <mat-icon svgIcon="brand" aria-hidden="true"></mat-icon>
             </div>
             <div class="printable-label__qr">
-              <app-qr-label [payload]="locationQrPayload()" [format]="labelFormat()"></app-qr-label>
+              <app-qr-label [payload]="locationQrPayload()" [format]="labelFormat()" variant="print"></app-qr-label>
             </div>
             <div class="printable-label__footer">
               <span class="printable-label__code">{{ location.id.slice(0, 8) }}</span>

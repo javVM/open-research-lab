@@ -63,7 +63,7 @@
   right: 0;
   max-height: 22rem;
   overflow-y: auto;
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--surface-raised, #f0f3ff);
   backdrop-filter: blur(8px);
   border: 1px solid var(--border, #c7c4d8);
   border-radius: 0.85rem;
@@ -139,7 +139,7 @@
 
 .search-bar__location {
   font-size: 0.75rem;
-  color: var(--text-muted, #9aa1ac);
+  color: var(--text-muted, #464555);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -148,6 +148,6 @@
 
 .search-bar__empty {
   padding: 0.6rem;
-  color: var(--text-muted, #9aa1ac);
+  color: var(--text-muted, #464555);
   font-size: 0.9rem;
 }

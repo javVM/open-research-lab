@@ -9,8 +9,8 @@
 }
 
 .modal {
-  background: #ffffff;
-  border: 1px solid #c7c4d8;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #c7c4d8);
   border-radius: 12px;
   padding: 1.25rem;
   max-width: 24rem;
@@ -21,6 +21,7 @@
 .modal__title {
   margin: 0 0 0.75rem;
   font-size: 1.05rem;
+  color: var(--text, #151c27);
 }
 
 .modal__field {
@@ -51,16 +52,16 @@
 }
 
 .modal__cancel {
-  background: #fff;
-  border: 1px solid #c7c4d8;
-  color: #151c27;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #c7c4d8);
+  color: var(--text, #151c27);
 }
 .modal__confirm {
-  background: #4F46E5;
-  border: 1px solid #4F46E5;
-  color: #fff !important;
+  background: var(--accent, #4f46e5);
+  border: 1px solid var(--accent, #4f46e5);
+  color: var(--accent-contrast, #ffffff) !important;
   font-weight: 700;
   box-shadow: 0 2px 8px rgba(79,70,229,.25);
 }
-.modal__confirm:hover{ background:#4338ca; }
+.modal__confirm:hover{ filter: brightness(1.1); }
 .modal__confirm:disabled{ opacity:.5; }

@@ -10,8 +10,8 @@
 }
 
 .history-modal {
-  background: var(--surface, #1b1e26);
-  border: 1px solid var(--border, #3a3f4b);
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #c7c4d8);
   border-radius: 0.6rem;
   padding: 1.25rem;
   max-width: 24rem;
@@ -35,22 +35,22 @@
 }
 
 .history-list li {
-  border-left: 2px solid var(--border, #3a3f4b);
+  border-left: 2px solid var(--border, #c7c4d8);
   padding-left: 0.6rem;
 }
 
 .history-list__date {
   font-size: 0.75rem;
-  color: var(--text-muted, #9aa1ac);
+  color: var(--text-muted, #464555);
 }
 
 .history-list__note {
   font-size: 0.8rem;
-  color: var(--text-muted, #9aa1ac);
+  color: var(--text-muted, #464555);
   font-style: italic;
 }
 
 .empty-state {
-  color: var(--text-muted, #9aa1ac);
+  color: var(--text-muted, #464555);
   font-style: italic;
 }

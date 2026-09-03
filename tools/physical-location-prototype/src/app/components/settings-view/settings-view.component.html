@@ -53,6 +53,7 @@
             <mat-label>{{ text.themeLabel() }}</mat-label>
             <mat-select formControlName="themePreference" [attr.aria-label]="text.themeLabel()">
               <mat-option value="system">{{ text.themeSystemOption() }}</mat-option>
+              <mat-option value="light">{{ text.themeLightOption() }}</mat-option>
               <mat-option value="dark">{{ text.themeDarkOption() }}</mat-option>
             </mat-select>
           </mat-form-field>

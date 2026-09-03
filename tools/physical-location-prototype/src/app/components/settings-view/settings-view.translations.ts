@@ -38,6 +38,7 @@ import {
   temperatureUnitLabel,
   themeDarkOption,
   themeLabel,
+  themeLightOption,
   themeSystemOption,
   unitsHeading,
 } from './settings-view.constants';
@@ -65,6 +66,7 @@ export function createSettingsViewTranslations(i18n: TranslationService) {
     dateFormatLocaleOption: () => i18n.t('settings.dateFormatLocaleOption', dateFormatLocaleOption),
     dateFormatIsoOption: () => i18n.t('settings.dateFormatIsoOption', dateFormatIsoOption),
     themeLabel: () => i18n.t('settings.themeLabel', themeLabel),
+    themeLightOption: () => i18n.t('settings.themeLightOption', themeLightOption),
     themeDarkOption: () => i18n.t('settings.themeDarkOption', themeDarkOption),
     themeSystemOption: () => i18n.t('settings.themeSystemOption', themeSystemOption),
     showEmptyLocationsLabel: () => i18n.t('settings.showEmptyLocationsLabel', showEmptyLocationsLabel),
