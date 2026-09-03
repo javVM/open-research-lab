@@ -76,6 +76,14 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
+
+  @media (max-width: 380px) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 381px) and (max-width: 700px) {
+    gap: 8px;
+  }
 }
 .building-summary__card {
   background: var(--accent, #4f46e5);
@@ -85,6 +93,11 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
+
+  @media (max-width: 700px) {
+    padding: 12px 14px 10px;
+  }
 }
 .building-summary__top {
   display: flex;
