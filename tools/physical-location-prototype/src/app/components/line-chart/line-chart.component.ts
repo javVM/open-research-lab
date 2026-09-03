@@ -72,7 +72,9 @@ export class LineChartComponent {
     const maxCount = Math.max(...this.yTicks().map((tick) => tick.value), 1);
     const monthCount = this.formattedMonths().length;
     const xStep = monthCount > 1 ? chartWidth / (monthCount - 1) : 0;
-    const maxXLabels = Math.max(2, Math.floor(chartWidth / 60));
+    const isMobile = width < 500;
+    const labelWidth = isMobile ? 90 : 60;
+    const maxXLabels = Math.max(2, Math.floor(chartWidth / labelWidth));
     const xTickInterval = monthCount > 0 ? Math.max(1, Math.ceil(monthCount / maxXLabels)) : 1;
     const xLabels = this.formattedMonths()
       .map((label, index) => ({ label, index }))

@@ -368,7 +368,7 @@
 @include on-mobile {
   .app-shell {
     height: 100dvh;
-    overflow: hidden;
+    overflow-y: auto;
   }
 
   .sidenav {
@@ -394,17 +394,13 @@
     flex-shrink: 0;
   }
 
-  .app-footer {
-    display: none;
-  }
-
   .app-body {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     min-height: 0;
     margin-left: 0;
-    padding: 12px 12px calc(12px + 64px + 40px);
+    padding: 12px 12px calc(12px + 64px);
     overflow: hidden;
   }
 
@@ -466,22 +462,6 @@
 
   .pane__collapse,
   .tree-expand {
-    display: none;
-  }
-
-  .app-footer {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 64px;
-    height: 40px;
-    margin-left: 0;
-    padding: 0 0.75rem;
-    padding-bottom: env(safe-area-inset-bottom, 0);
-    z-index: 40;
-  }
-
-  .app-footer__text {
     display: none;
   }
 
@@ -626,6 +606,6 @@
   }
 
   @include on-mobile {
-    margin-left: 0;
+    display: none;
   }
 }

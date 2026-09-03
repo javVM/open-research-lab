@@ -352,14 +352,31 @@
 
 @include on-mobile {
   .floor-plan-3d {
-    min-height: 0;
-    height: clamp(18rem, 58vw, 24rem);
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 25.8rem;
     max-width: 100%;
     overflow: hidden;
-    padding-top: 1rem;
-    padding-bottom: 0.5rem;
-    margin-bottom: 0.75rem;
+    padding: 0;
+    margin: 0;
     isolation: isolate;
+  }
+
+  .floor-plan-3d__tools--left {
+    top: auto;
+    bottom: 12px;
+    left: auto;
+    right: 12px;
+    flex-direction: row;
+    opacity: 0.92;
+    backdrop-filter: blur(6px);
+  }
+
+  .floor-plan-3d__tools--left .floor-plan-3d__tool:nth-child(1),
+  .floor-plan-3d__tools--left .floor-plan-3d__tool:nth-child(2),
+  .floor-plan-3d__tools--left .floor-plan-3d__tool:nth-child(3),
+  .floor-plan-3d__tools-sep {
+    display: none;
   }
 
   .floor-plan-3d__hint {

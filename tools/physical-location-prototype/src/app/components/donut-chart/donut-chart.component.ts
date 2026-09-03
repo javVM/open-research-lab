@@ -24,7 +24,7 @@ export class DonutChartComponent {
   readonly segments = input.required<DonutChartSegment[]>();
   readonly centerLabel = input.required<string>();
   readonly centerValue = input.required<string | number>();
-  readonly size = input<'md' | 'sm'>('md');
+  readonly size = input<'lg' | 'md' | 'sm'>('md');
   readonly ariaLabel = input<string>('');
 
   protected readonly circumference = 2 * Math.PI * 40;

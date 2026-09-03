@@ -53,66 +53,6 @@ export class LocationTreeComponent {
     return roots;
   });
 
-  /** Only the root buildings: used by the mobile-only dropdown. */
-  protected readonly buildings = computed(() =>
-    this.collection.dataset().locations
-      .filter((location) => location.parentId === null)
-      .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
-  );
-
-  /** The id of the building that contains the currently selected location. */
-  protected readonly selectedBuildingId = computed(() => {
-    const id = this.navigation.selectedLocationId();
-    if (!id) {
-      return '';
-    }
-    let current = this.collection.dataset().locations.find((location) => location.id === id);
-    while (current && current.parentId) {
-      const parentId = current.parentId;
-      const parent = this.collection.dataset().locations.find((location) => location.id === parentId);
-      if (!parent) {
-        break;
-      }
-      current = parent;
-    }
-    return current?.id ?? '';
-  });
-
-  readonly quickRooms = computed(() => {
-    const locId = this.navigation.selectedLocationId();
-    const all = this.collection.dataset().locations;
-    if (!locId) {
-      return all.filter((l) => l.type === 'building').sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true })).slice(0, 8);
-    }
-    const loc = all.find((l) => l.id === locId) ?? null;
-    if (!loc) return [];
-    const buildingId = this.findBuildingId(locId);
-    const candidates = new Map<string, (typeof all)[number]>();
-    for (const sib of all.filter((l) => l.parentId === loc.parentId && l.type === 'room')) candidates.set(sib.id, sib);
-    if (buildingId) {
-      const queue: string[] = [buildingId];
-      while (queue.length) {
-        const cur = queue.shift()!;
-        for (const child of all.filter((c) => c.parentId === cur)) {
-          if (child.type === 'room') candidates.set(child.id, child);
-          queue.push(child.id);
-        }
-      }
-    }
-    if (loc.type === 'room') candidates.delete(loc.id);
-    return [...candidates.values()].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true })).slice(0, 8);
-  });
-
-  private findBuildingId(locationId: string): string | null {
-    let cur = this.collection.dataset().locations.find((l) => l.id === locationId) ?? null;
-    while (cur?.parentId) {
-      const parent = this.collection.dataset().locations.find((l) => l.id === cur!.parentId) ?? null;
-      if (!parent) break;
-      cur = parent;
-    }
-    return cur?.type === 'building' ? cur.id : null;
-  }
-
   pathFor(location: import('../../../core/models').Location): string {
     return breadcrumb(this.collection.dataset().locations, location.id).map((c) => c.name).join(' › ');
   }

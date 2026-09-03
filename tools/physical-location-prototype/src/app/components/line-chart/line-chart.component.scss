@@ -36,6 +36,12 @@
   text-anchor: middle;
 }
 
+@media (max-width: 700px) {
+  .line-chart__axis-label--x {
+    font-size: 8px;
+  }
+}
+
 .line-chart__line {
   stroke-width: 3;
   stroke-linecap: round;

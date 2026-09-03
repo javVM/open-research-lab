@@ -1297,6 +1297,17 @@ h2 {
     display: none;
   }
 
+  .breadcrumb {
+    position: relative;
+    top: auto;
+    background: transparent;
+    padding: 0 0 0.5rem;
+    margin: 0 0 0.5rem;
+    border-bottom: none;
+    box-shadow: none;
+    font-size: 0.8rem;
+  }
+
   .location-view {
     display: flex;
     flex-direction: column;
@@ -1306,21 +1317,6 @@ h2 {
     min-height: 0;
     height: 100%;
   }
-  .breadcrumb {
-    position: sticky; top:0; z-index:1; background:var(--surface, #ffffff);
-    padding:.35rem .6rem; margin:0 -.6rem .9rem;
-    border-bottom:1px solid var(--border-soft, rgba(199, 196, 216, 0.4));
-    border-top:none;
-    font-size:.78rem; gap:.35rem;
-    box-shadow: none;
-  }
-  .breadcrumb button {
-    padding:.28rem .55rem; background:transparent; border:1px solid transparent; border-radius:999px;
-    font-size:.77rem; font-weight:500; color:var(--text-muted, #464555);
-  }
-  .breadcrumb button:hover { background:var(--surface-raised, #f0f3ff); border-color:var(--border, #c7c4d8); color:var(--text, #151c27); }
-  .breadcrumb button:last-of-type { color:var(--text, #151c27); font-weight:700; background:var(--accent-soft, #e0e7ff); border-color:var(--border, #c7c4d8); }
-  .breadcrumb__sep { opacity:.28; margin:0 .05rem; }
 
   .location-view > app-floor-plan,
   .location-view > app-floor-plan-3d,

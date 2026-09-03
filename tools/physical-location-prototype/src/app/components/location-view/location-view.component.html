@@ -16,8 +16,8 @@
             type="button"
             mat-button
             class="view-mode-toggle__button"
-            [class.view-mode-toggle__button--active]="isMapView()"
-            [attr.aria-pressed]="isMapView()"
+            [class.view-mode-toggle__button--active]="isMapView() || is3dView()"
+            [attr.aria-pressed]="isMapView() || is3dView()"
             (click)="setViewMode('map')"
           >
             {{ text.viewModeMap() }}

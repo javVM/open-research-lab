@@ -390,3 +390,55 @@
 .quick-jump--ubicaciones {
   order: -1;
 }
+
+.location-tree--mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+
+  .quick-jump__chip--more {
+    align-self: flex-start;
+    margin-bottom: 0.25rem;
+  }
+
+  .tree-row {
+    padding: 0.65rem 0.75rem;
+    border-radius: 0.6rem;
+  }
+
+  .tree-row--all {
+    font-weight: 600;
+  }
+
+  .tree-toggle {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .tree-toggle mat-icon,
+  .tree-toggle mat-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .tree-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .tree-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .tree-name {
+    font-size: 0.95rem;
+  }
+
+  .tree-count,
+  .tree-empty {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+  }
+}

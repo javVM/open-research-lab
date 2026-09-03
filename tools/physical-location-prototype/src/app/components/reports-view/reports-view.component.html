@@ -31,6 +31,7 @@
     <section class="chart" [attr.aria-label]="text.distributionAriaLabel()">
       <h3 class="chart__title">{{ text.distributionHeading() }}</h3>
       <app-donut-chart
+        size="lg"
         [segments]="statusDonutSegments()"
         [centerLabel]="text.distributionTotalLabel()"
         [centerValue]="summary().totalItems"
@@ -41,6 +42,7 @@
     <section class="chart chart--category" [attr.aria-label]="text.byCategoryAriaLabel()">
       <h3 class="chart__title">{{ text.byCategoryHeading() }}</h3>
       <app-donut-chart
+        size="lg"
         [segments]="categoryDonutSegments()"
         [centerLabel]="text.distributionTotalLabel()"
         [centerValue]="summary().totalItems"
@@ -51,6 +53,7 @@
     <section class="chart chart--building" [attr.aria-label]="text.byBuildingAriaLabel()">
       <h3 class="chart__title">{{ text.byBuildingHeading() }}</h3>
       <app-donut-chart
+        size="lg"
         [segments]="buildingDonutSegments()"
         [centerLabel]="text.distributionTotalLabel()"
         [centerValue]="summary().totalItems"

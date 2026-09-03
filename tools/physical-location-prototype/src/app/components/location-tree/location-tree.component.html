@@ -1,11 +1,24 @@
 @if (viewport.isMobile()) {
-  <div class="quick-jump quick-jump--ubicaciones" [attr.aria-label]="text.quickJumpAriaLabel()">
-    <button type="button" class="quick-jump__chip quick-jump__chip--more" (click)="quickJump.sheetOpen.set(true)" [attr.aria-label]="text.quickJumpAriaLabel()">⌕ {{ text.quickJumpLabel() }}</button>
-    <div class="quick-jump__scroll">
-      @for (room of quickRooms(); track room.id) {
-        <button type="button" class="quick-jump__chip" (click)="select(room.id)" [attr.title]="pathFor(room)">{{ room.name }}</button>
-      }
+  <div class="location-tree location-tree--mobile" role="tree" [attr.aria-label]="text.ariaLabel()">
+    <button
+      type="button"
+      class="quick-jump__chip quick-jump__chip--more"
+      (click)="quickJump.sheetOpen.set(true)"
+      [attr.aria-label]="text.quickJumpAriaLabel()"
+    >
+      ⌕ {{ text.quickJumpLabel() }}
+    </button>
+    <div
+      class="tree-row tree-row--all"
+      [class.tree-row--selected]="!navigation.selectedLocationId()"
+      [style.paddingLeft.px]="8"
+      role="treeitem"
+      [attr.aria-selected]="!navigation.selectedLocationId()"
+      (click)="goHome()"
+    >
+      <span class="tree-name">{{ text.allLabel() }}</span>
     </div>
+    <app-location-tree-nodes [nodes]="roots()" [depth]="0" />
   </div>
 } @else {
   <div class="location-tree" role="tree" [attr.aria-label]="text.ariaLabel()">
