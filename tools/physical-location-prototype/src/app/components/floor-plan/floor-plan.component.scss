@@ -585,6 +585,10 @@
     cursor: pointer;
   }
 
+  .floor-plan__tools--right {
+    display: none;
+  }
+
   .floor-plan__resize-handle {
     display: none;
   }

@@ -376,8 +376,7 @@
   }
 
   .topbar {
-    position: sticky;
-    top: 0;
+    position: relative;
     left: 0;
     right: 0;
     flex-shrink: 0;
@@ -389,10 +388,14 @@
   }
 
   .app-disclaimer {
-    margin-left: 0;
+    margin: 0;
     padding: 0.25rem 0.6rem;
     font-size: 0.65rem;
     flex-shrink: 0;
+  }
+
+  .app-footer {
+    display: none;
   }
 
   .app-body {

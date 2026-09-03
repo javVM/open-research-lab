@@ -158,11 +158,9 @@ export class LocationViewComponent {
     return !this.isMapView() && !this.is3dView();
   });
 
-  readonly showFloorPlan = computed<boolean>(
-    () => this.isMapView() || (this.viewport.isMobile() && this.canShowMap() && !this.isTrayGrid() && this.isDetailsView()),
-  );
+  readonly showFloorPlan = computed<boolean>(() => this.isMapView());
   readonly showPositionGrid = computed<boolean>(() => this.isTrayGrid() && !this.is3dView());
-  readonly showLocationDetailsPanel = computed<boolean>(() => this.isDetailsView() && !this.viewport.isMobile());
+  readonly showLocationDetailsPanel = computed<boolean>(() => this.isDetailsView());
 
   readonly viewModeIndex = computed<number>(() =>
     this.is3dView() ? 2 : this.isMapView() ? 1 : 0
@@ -350,8 +348,8 @@ export class LocationViewComponent {
   }
 
   setViewMode(mode: 'map' | '3d' | 'data' | 'list' | 'details'): void {
-    const normalized = mode === 'list' ? 'details' : mode === 'data' ? 'details' : mode;
-    this.viewMode.set(normalized as 'map' | '3d' | 'data');
+    const normalized: 'map' | 'details' | '3d' | 'data' = mode === 'list' || mode === 'data' ? 'details' : mode;
+    this.viewMode.set(normalized);
   }
 
   itemCountAt(locationId: string): number {
