@@ -367,8 +367,9 @@
 
 @include on-mobile {
   .app-shell {
-    height: 100dvh;
-    overflow-y: auto;
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
   }
 
   .sidenav {
@@ -401,7 +402,7 @@
     min-height: 0;
     margin-left: 0;
     padding: 12px 12px calc(12px + 64px);
-    overflow: hidden;
+    overflow: visible;
   }
 
   .mobile-pane-tabs {
@@ -441,7 +442,7 @@
     flex-direction: column;
     flex: 1 1 auto;
     min-height: 0;
-    overflow: hidden;
+    overflow: visible;
     max-width: 100vw;
   }
 
@@ -450,8 +451,7 @@
   .pane > app-item-detail {
     flex: 1 1 auto;
     min-height: 0;
-    overflow-x: clip;
-    overflow-y: auto;
+    overflow: visible;
     max-width: 100%;
   }
 

@@ -1311,11 +1311,10 @@ h2 {
   .location-view {
     display: flex;
     flex-direction: column;
-    overflow-x: clip;
-    overflow-y: auto;
+    overflow: visible;
     max-width: 100%;
     min-height: 0;
-    height: 100%;
+    height: auto;
   }
 
   .location-view > app-floor-plan,
