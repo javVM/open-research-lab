@@ -54,18 +54,49 @@
 
   <section class="onboarding__visual" [attr.aria-label]="text.dnaAriaLabel()">
     <div class="dna-scene" aria-hidden="true">
+      <div class="dna-scene__halo"></div>
       <div class="dna-scene__glow"></div>
-      <div class="dna-helix">
-        @for (index of rungIndices; track index) {
-          <div class="dna-helix__rung" [style.--rung-index]="index">
-            <span class="dna-helix__dot dna-helix__dot--left"></span>
-            <span class="dna-helix__bar"></span>
-            <span class="dna-helix__dot dna-helix__dot--right"></span>
-          </div>
-        }
+
+      <div class="dna-particles" aria-hidden="true">
+        <span class="dna-particle"></span><span class="dna-particle"></span><span class="dna-particle"></span>
+        <span class="dna-particle"></span><span class="dna-particle"></span><span class="dna-particle"></span>
       </div>
+
+      <svg class="dna-unified" viewBox="-110 -190 220 380" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <path class="dna-backbone__path dna-backbone__path--left" [attr.d]="backboneLeftPath()" />
+        <path class="dna-backbone__path dna-backbone__path--right" [attr.d]="backboneRightPath()" />
+        @for (rung of rungs(); track rung.y) {
+          <line
+            class="dna-rung"
+            [attr.x1]="rung.leftX"
+            [attr.x2]="rung.rightX"
+            [attr.y1]="rung.y"
+            [attr.y2]="rung.y"
+            [attr.opacity]="rung.barOpacity"
+          />
+        }
+        @for (rung of rungs(); track rung.y) {
+          <circle
+            class="dna-dot dna-dot--left"
+            [attr.cx]="rung.leftX"
+            [attr.cy]="rung.y"
+            [attr.r]="5.2 * rung.leftScale"
+            [attr.opacity]="rung.leftOpacity"
+          />
+          <circle
+            class="dna-dot dna-dot--right"
+            [attr.cx]="rung.rightX"
+            [attr.cy]="rung.y"
+            [attr.r]="5.2 * rung.rightScale"
+            [attr.opacity]="rung.rightOpacity"
+          />
+        }
+      </svg>
+
       <div class="dna-scene__grid"></div>
     </div>
+
+    <div class="onboarding__version" aria-label="Software version">{{ version }}</div>
 
     <div class="onboarding__status-card" role="status" aria-live="polite">
       <div class="onboarding__status-title"><span class="onboarding__status-dot"></span> {{ text.systemStatusTitle() }}</div>

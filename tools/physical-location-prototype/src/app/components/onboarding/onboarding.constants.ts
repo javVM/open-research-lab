@@ -13,3 +13,6 @@ export const ONBOARDING_DEPARTMENT_OPTIONS = [
 ] as const;
 
 export const DNA_RUNG_COUNT = 18 as const;
+export const DNA_HELIX_AMPLITUDE = 84 as const;
+export const DNA_HELIX_SPACING_Y = 20 as const;
+export const DNA_HELIX_PHASE_STEP = 0.52 as const;
