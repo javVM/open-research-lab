@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { SettingsService, type DateFormat, type LabelSize, type TemperatureUnit, type ThemePreference } from '../../settings.service';
+import { SettingsService, type DateFormat, type DepartmentOption, type LabelSize, type TemperatureUnit, type ThemePreference } from '../../settings.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createSettingsViewTranslations } from './settings-view.translations';
 
@@ -29,6 +29,9 @@ export class SettingsViewComponent {
   protected readonly activeCategory = signal<SettingsCategory>('general');
 
   protected readonly form = new FormGroup({
+    operatorName: new FormControl(''),
+    institutionalEmail: new FormControl(''),
+    department: new FormControl<DepartmentOption | ''>(''),
     institutionName: new FormControl(''),
     defaultPrefix: new FormControl(''),
     temperatureUnit: new FormControl<TemperatureUnit>('celsius'),
@@ -47,6 +50,9 @@ export class SettingsViewComponent {
     const current = this.settings.settings();
     const value = this.formValue();
     return (
+      value.operatorName !== current.operatorName ||
+      value.institutionalEmail !== current.institutionalEmail ||
+      value.department !== current.department ||
       value.institutionName !== current.institutionName ||
       value.defaultPrefix !== current.defaultPrefix ||
       value.temperatureUnit !== current.temperatureUnit ||
@@ -64,6 +70,9 @@ export class SettingsViewComponent {
     const current = this.settings.settings();
     this.form.setValue(
       {
+        operatorName: current.operatorName,
+        institutionalEmail: current.institutionalEmail,
+        department: current.department,
         institutionName: current.institutionName,
         defaultPrefix: current.defaultPrefix,
         temperatureUnit: current.temperatureUnit,
@@ -82,6 +91,9 @@ export class SettingsViewComponent {
   protected save(): void {
     const value = this.formValue();
     this.settings.update({
+      operatorName: value.operatorName ?? '',
+      institutionalEmail: value.institutionalEmail ?? '',
+      department: (value.department as DepartmentOption | '') ?? '',
       institutionName: value.institutionName ?? '',
       defaultPrefix: value.defaultPrefix ?? 'ITEM-',
       temperatureUnit: value.temperatureUnit ?? 'celsius',
@@ -99,6 +111,9 @@ export class SettingsViewComponent {
     const current = this.settings.settings();
     this.form.setValue(
       {
+        operatorName: current.operatorName,
+        institutionalEmail: current.institutionalEmail,
+        department: current.department,
         institutionName: current.institutionName,
         defaultPrefix: current.defaultPrefix,
         temperatureUnit: current.temperatureUnit,

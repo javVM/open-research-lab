@@ -1,0 +1,280 @@
+:host {
+  display: block;
+  height: 100dvh;
+}
+
+.onboarding {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100dvh;
+  background: var(--surface, #fff);
+  overflow: hidden;
+}
+
+.onboarding__form-pane {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 4rem;
+  max-width: 520px;
+  width: 100%;
+  margin: 0 auto;
+  gap: 0;
+}
+
+.onboarding__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+  color: var(--accent, #4f46e5);
+}
+
+.onboarding__brand-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.onboarding__brand-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text, #151c27);
+}
+
+.onboarding__step {
+  margin-bottom: 1.25rem;
+}
+
+.onboarding__step-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent, #4f46e5);
+}
+
+.onboarding__step-track {
+  margin-top: 0.5rem;
+  height: 3px;
+  background: var(--border-soft, rgba(199,196,216,0.3));
+  border-radius: 999px;
+  display: flex;
+  gap: 6px;
+}
+
+.onboarding__step-progress {
+  width: 33%;
+  background: var(--accent, #4f46e5);
+  border-radius: 999px;
+}
+
+.onboarding__heading {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text, #151c27);
+}
+
+.onboarding__subheading {
+  margin: 0.4rem 0 1.6rem;
+  font-size: 0.85rem;
+  color: var(--text-muted, #464555);
+  line-height: 1.5;
+}
+
+.onboarding__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.onboarding__field {
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.onboarding__continue {
+  margin-top: 0.6rem;
+  height: 44px;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.onboarding__hint {
+  margin-top: 0.8rem;
+  font-size: 0.75rem;
+  color: var(--text-muted, #464555);
+  line-height: 1.4;
+}
+
+.onboarding__visual {
+  position: relative;
+  background: linear-gradient(160deg, #eef2ff 0%, #f8fafc 45%, #e0e7ff 100%);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dna-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 950px;
+  perspective-origin: 50% 42%;
+}
+
+.dna-scene__glow {
+  position: absolute;
+  width: 78%;
+  height: 72%;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 46%, rgba(99, 102, 241, 0.22), transparent 62%),
+    radial-gradient(ellipse 35% 30% at 50% 52%, rgba(14, 165, 233, 0.12), transparent 60%);
+  filter: blur(10px);
+}
+
+.dna-helix {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  transform: rotateX(14deg) rotateZ(-1deg);
+  transform-style: preserve-3d;
+  animation: helixFloat 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.dna-helix__rung {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 188px;
+  justify-content: center;
+  animation: dnaRotate 3.6s linear infinite;
+  animation-delay: calc(var(--rung-index) * -0.2s);
+  transform-style: preserve-3d;
+  will-change: transform;
+  /* subtle vertical stretch so edge-on rungs don't collapse to a hairline */
+  backface-visibility: hidden;
+}
+
+.dna-helix__bar {
+  flex: 1;
+  height: 1.9px;
+  background: linear-gradient(90deg, #4f46e5 0%, #6366f1 45%, #06b6d4 100%);
+  border-radius: 999px;
+  transform: translateZ(0);
+  opacity: 0.92;
+  box-shadow: 0 0 6px rgba(99, 102, 241, 0.18);
+}
+
+.dna-helix__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  box-shadow:
+    0 0 0 3.5px rgba(99, 102, 241, 0.1),
+    0 1px 10px rgba(79, 70, 229, 0.28),
+    inset 0 1px 1px rgba(255,255,255,0.9);
+  transform: translateZ(0);
+  transition: box-shadow 0.2s;
+}
+
+.dna-helix__dot--left {
+  background: radial-gradient(circle at 32% 32%, #7c7bff 0%, #4f46e5 62%, #3730a3 100%);
+}
+
+.dna-helix__dot--right {
+  background: radial-gradient(circle at 32% 32%, #67e8f9 0%, #06b6d4 62%, #0e7490 100%);
+  box-shadow:
+    0 0 0 3.5px rgba(6, 182, 214, 0.1),
+    0 1px 10px rgba(6, 182, 214, 0.28),
+    inset 0 1px 1px rgba(255,255,255,0.9);
+}
+
+.dna-scene__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.35;
+  mask-image: radial-gradient(ellipse at 50% 50%, black 55%, transparent 85%);
+}
+
+.onboarding__status-card {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, #c7c4d8);
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  max-width: 260px;
+}
+
+.onboarding__status-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text, #151c27);
+  margin-bottom: 0.25rem;
+}
+
+.onboarding__status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #16a34a;
+  box-shadow: 0 0 0 4px rgba(22,163,74,0.15);
+}
+
+.onboarding__status-body {
+  margin: 0;
+  font-size: 0.74rem;
+  color: var(--text-muted, #464555);
+  line-height: 1.35;
+}
+
+@keyframes dnaRotate {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+@keyframes helixFloat {
+  0%, 100% {
+    transform: rotateX(14deg) rotateZ(-1deg) translateY(0);
+  }
+  50% {
+    transform: rotateX(13deg) rotateZ(-1deg) translateY(-6px);
+  }
+}
+
+@media (max-width: 900px) {
+  .onboarding {
+    grid-template-columns: 1fr;
+  }
+
+  .onboarding__visual {
+    display: none;
+  }
+
+  .onboarding__form-pane {
+    padding: 1.5rem;
+  }
+}

@@ -78,7 +78,7 @@ export class MoveService {
       return null;
     }
     const s = this.settings.settings();
-    if (s.requireAgentOnMove && !performedBy && !s.institutionName.trim()) {
+    if (s.requireAgentOnMove && !performedBy && !s.operatorName.trim()) {
       this.moveError.set('Agente requerido: indica quién realiza el movimiento.');
       return null;
     }
@@ -86,7 +86,7 @@ export class MoveService {
       this.moveError.set('Nota requerida: añade una explicación para este movimiento.');
       return null;
     }
-    const effectivePerformedBy = performedBy ?? (s.requireAgentOnMove ? s.institutionName.trim() : undefined);
+    const effectivePerformedBy = performedBy ?? (s.operatorName.trim() || undefined);
     const effectiveNote = note?.trim() || 'Moved in prototype UI';
     const result = moveItem(this.collection.dataset(), itemId, toLocationId, new Date().toISOString(), effectiveNote, effectivePerformedBy);
     this.pendingMoveTargetId.set(null);

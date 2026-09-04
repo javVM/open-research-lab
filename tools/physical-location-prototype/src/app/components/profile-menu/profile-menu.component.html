@@ -1,0 +1,32 @@
+<div class="profile-menu">
+  <button
+    type="button"
+    class="profile-menu__avatar"
+    [attr.aria-label]="'Profile: ' + displayName()"
+    [attr.aria-expanded]="open()"
+    aria-haspopup="menu"
+    (click)="toggle()"
+  >
+    <span aria-hidden="true">{{ initials() }}</span>
+  </button>
+
+  @if (open()) {
+    <div class="profile-menu__backdrop" (click)="close()" aria-hidden="true"></div>
+    <div class="profile-menu__dropdown" role="menu">
+      <div class="profile-menu__header">
+        <div class="profile-menu__name">{{ displayName() }}</div>
+        @if (email()) {
+          <div class="profile-menu__email">{{ email() }}</div>
+        }
+      </div>
+      <button type="button" role="menuitem" class="profile-menu__item" (click)="goToProfile()">
+        <mat-icon svgIcon="settings" aria-hidden="true"></mat-icon>
+        <span>Profile settings</span>
+      </button>
+      <button type="button" role="menuitem" class="profile-menu__item profile-menu__item--danger" (click)="logout()">
+        <mat-icon svgIcon="reset" aria-hidden="true"></mat-icon>
+        <span>Logout</span>
+      </button>
+    </div>
+  }
+</div>

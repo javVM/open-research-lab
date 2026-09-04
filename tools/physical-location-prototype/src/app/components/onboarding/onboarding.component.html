@@ -1,0 +1,75 @@
+<div class="onboarding">
+  <section class="onboarding__form-pane" aria-labelledby="onboarding-heading">
+    <div class="onboarding__brand">
+      <mat-icon svgIcon="brand" aria-hidden="true" class="onboarding__brand-icon"></mat-icon>
+      <span class="onboarding__brand-name">Nexus Lab</span>
+    </div>
+
+    <div class="onboarding__step" aria-hidden="true">
+      <span class="onboarding__step-label">{{ text.stepLabel() }}</span>
+      <div class="onboarding__step-track">
+        <div class="onboarding__step-progress"></div>
+      </div>
+    </div>
+
+    <h1 id="onboarding-heading" class="onboarding__heading">{{ text.heading() }}</h1>
+    <p class="onboarding__subheading">{{ text.subheading() }}</p>
+
+    <form class="onboarding__form" [formGroup]="form" (ngSubmit)="continue()">
+      <mat-form-field appearance="outline" class="onboarding__field">
+        <mat-label>{{ text.fullNameLabel() }}</mat-label>
+        <input matInput formControlName="fullName" [placeholder]="text.fullNamePlaceholder()" autocomplete="name" aria-required="true" />
+        <mat-icon matPrefix svgIcon="user" aria-hidden="true" style="opacity:0.35"></mat-icon>
+        @if (form.controls.fullName.touched && form.controls.fullName.hasError('required')) {
+          <mat-error>{{ text.fullNameRequired() }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="onboarding__field">
+        <mat-label>{{ text.emailLabel() }}</mat-label>
+        <input matInput formControlName="institutionalEmail" [placeholder]="text.emailPlaceholder()" autocomplete="email" inputmode="email" />
+        <mat-icon matPrefix svgIcon="mail" aria-hidden="true" style="opacity:0.35"></mat-icon>
+        @if (form.controls.institutionalEmail.hasError('email')) {
+          <mat-error>{{ text.emailInvalid() }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="onboarding__field">
+        <mat-label>{{ text.departmentLabel() }}</mat-label>
+        <mat-select formControlName="department" [placeholder]="text.departmentPlaceholder()" [attr.aria-label]="text.departmentLabel()">
+          @for (option of departmentOptions; track option.value) {
+            <mat-option [value]="option.value">{{ option.fallback }}</mat-option>
+          }
+        </mat-select>
+        <mat-icon matPrefix svgIcon="domain" aria-hidden="true" style="opacity:0.35"></mat-icon>
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" type="submit" class="onboarding__continue" [disabled]="!canContinue()" aria-label="Continue">
+        {{ text.continueButton() }} <span aria-hidden="true">→</span>
+      </button>
+
+      <p class="onboarding__hint">{{ text.hint() }}</p>
+    </form>
+  </section>
+
+  <section class="onboarding__visual" [attr.aria-label]="text.dnaAriaLabel()">
+    <div class="dna-scene" aria-hidden="true">
+      <div class="dna-scene__glow"></div>
+      <div class="dna-helix">
+        @for (index of rungIndices; track index) {
+          <div class="dna-helix__rung" [style.--rung-index]="index">
+            <span class="dna-helix__dot dna-helix__dot--left"></span>
+            <span class="dna-helix__bar"></span>
+            <span class="dna-helix__dot dna-helix__dot--right"></span>
+          </div>
+        }
+      </div>
+      <div class="dna-scene__grid"></div>
+    </div>
+
+    <div class="onboarding__status-card" role="status" aria-live="polite">
+      <div class="onboarding__status-title"><span class="onboarding__status-dot"></span> {{ text.systemStatusTitle() }}</div>
+      <p class="onboarding__status-body">{{ text.systemStatusBody() }}</p>
+    </div>
+  </section>
+</div>

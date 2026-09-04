@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
@@ -11,8 +11,11 @@ import { ScanViewComponent } from './components/scan-view/scan-view.component';
 import { ReportsViewComponent } from './components/reports-view/reports-view.component';
 import { SettingsViewComponent } from './components/settings-view/settings-view.component';
 import { NotificationsBellComponent } from './components/notifications-bell/notifications-bell.component';
+import { OnboardingComponent } from './components/onboarding/onboarding.component';
+import { ProfileMenuComponent } from './components/profile-menu/profile-menu.component';
 import { CollectionService } from './collection.service';
 import { NavigationService } from './navigation.service';
+import { SettingsService } from './settings.service';
 import { ThemeService } from './theme.service';
 import { QuickJumpService } from './shared/quick-jump.service';
 import { ViewportService } from './shared/viewport.service';
@@ -37,6 +40,8 @@ import { createAppTranslations } from './app.translations';
     SettingsViewComponent,
     NotificationsBellComponent,
     QuickJumpSheetComponent,
+    OnboardingComponent,
+    ProfileMenuComponent,
   ],
   selector: 'app-root',
   styleUrl: './app.component.scss',
@@ -45,10 +50,12 @@ import { createAppTranslations } from './app.translations';
 export class App {
   protected readonly navigation = inject(NavigationService);
   protected readonly collection = inject(CollectionService);
+  protected readonly settings = inject(SettingsService);
   protected readonly text = createAppTranslations(inject(TranslationService));
   protected readonly quickJump = inject(QuickJumpService);
   protected readonly theme = inject(ThemeService);
   protected readonly viewport = inject(ViewportService);
+  protected readonly needsOnboarding = computed(() => !this.settings.hasProfile());
 
   constructor() {
     registerAppIcons();

@@ -5,7 +5,12 @@ export type DateFormat = 'locale' | 'iso';
 export type ThemePreference = 'light' | 'dark' | 'system';
 export type LabelSize = 'small' | 'medium' | 'large';
 
+export type DepartmentOption = 'natural_history' | 'paleontology' | 'geology' | 'botany' | 'zoology' | 'molecular' | 'archaeology' | 'other';
+
 export interface AppSettings {
+  operatorName: string;
+  institutionalEmail: string;
+  department: DepartmentOption | '';
   institutionName: string;
   defaultPrefix: string;
   temperatureUnit: TemperatureUnit;
@@ -22,6 +27,9 @@ export interface AppSettings {
 const SETTINGS_STORAGE_KEY = 'physical-location-prototype:settings';
 
 const DEFAULT_SETTINGS: AppSettings = {
+  operatorName: '',
+  institutionalEmail: '',
+  department: '',
   institutionName: '',
   defaultPrefix: 'ITEM-',
   temperatureUnit: 'celsius',
@@ -43,6 +51,19 @@ const DEFAULT_SETTINGS: AppSettings = {
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
   readonly settings = signal<AppSettings>(readStoredSettings());
+
+  readonly hasProfile = (): boolean => this.settings().operatorName.trim().length > 0;
+
+  readonly operatorInitials = (): string => {
+    const name = this.settings().operatorName.trim();
+    if (!name) return '?';
+    const parts = name.split(/\s+/).filter(Boolean).slice(0, 2);
+    return parts.map((p) => p[0]?.toUpperCase() ?? '').join('') || '?';
+  };
+
+  clearProfile(): void {
+    this.update({ operatorName: '', institutionalEmail: '', department: '' });
+  }
 
   update(partial: Partial<AppSettings>): void {
     const next = { ...this.settings(), ...partial };

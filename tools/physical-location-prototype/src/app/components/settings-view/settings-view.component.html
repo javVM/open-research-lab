@@ -15,6 +15,32 @@
     <form class="settings__form" [formGroup]="form" (ngSubmit)="save()">
       @if (activeCategory() === 'general') {
         <section class="settings__section">
+          <h3 class="settings__section-title">Profile</h3>
+          <p class="settings__section-hint">Stored locally — same data as the welcome screen.</p>
+          <mat-form-field class="settings__field" appearance="outline">
+            <mat-label>Full Name</mat-label>
+            <input matInput formControlName="operatorName" aria-label="Full Name" />
+          </mat-form-field>
+          <mat-form-field class="settings__field" appearance="outline">
+            <mat-label>Institutional Email</mat-label>
+            <input matInput formControlName="institutionalEmail" aria-label="Institutional Email" />
+          </mat-form-field>
+          <mat-form-field class="settings__field" appearance="outline">
+            <mat-label>Department</mat-label>
+            <mat-select formControlName="department" aria-label="Department">
+              <mat-option value="">Select your department</mat-option>
+              <mat-option value="natural_history">Natural History</mat-option>
+              <mat-option value="paleontology">Paleontology</mat-option>
+              <mat-option value="geology">Geology</mat-option>
+              <mat-option value="botany">Botany</mat-option>
+              <mat-option value="zoology">Zoology</mat-option>
+              <mat-option value="molecular">Molecular / Genetics</mat-option>
+              <mat-option value="archaeology">Archaeology</mat-option>
+              <mat-option value="other">Other</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </section>
+        <section class="settings__section">
           <h3 class="settings__section-title">{{ text.identityHeading() }}</h3>
           <p class="settings__section-hint">{{ text.identityHint() }}</p>
           <mat-form-field class="settings__field" appearance="outline">

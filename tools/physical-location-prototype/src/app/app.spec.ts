@@ -4,10 +4,19 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { App } from './app.component';
 import { LanguageSwitcherComponent } from './components/language-switcher/language-switcher.component';
+import { SettingsService } from './settings.service';
 import { TranslationService } from './i18n/translation.service';
 import { XliffTranslationLoader } from './i18n/translation-loader';
 import { parseXliff } from './i18n/xliff';
 import type { Locale } from './i18n/locale';
+
+function seedProfile(): void {
+  TestBed.inject(SettingsService).update({
+    operatorName: 'Dr. Jane Doe',
+    institutionalEmail: 'jane.doe@university.edu',
+    department: 'natural_history',
+  });
+}
 
 /**
  * Loads the real `public/i18n/*.xlf` files from disk (parsed with the same
@@ -36,11 +45,19 @@ describe('App', () => {
   });
 
   it('opens on a populated collection, not an empty shell', () => {
+    seedProfile();
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('Nexus Lab');
     expect(compiled.querySelectorAll('[data-location-id]').length).toBeGreaterThan(0);
+  });
+
+  it('shows onboarding when no profile is set', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain('Account Details');
   });
 
   it('switching the language selector updates the rendered UI, using the real XLIFF files', async () => {
@@ -51,6 +68,7 @@ describe('App', () => {
     }).compileComponents();
 
     await TestBed.inject(TranslationService).init();
+    seedProfile();
 
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
@@ -76,6 +94,7 @@ describe('App', () => {
     }).compileComponents();
 
     await TestBed.inject(TranslationService).init();
+    seedProfile();
 
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();

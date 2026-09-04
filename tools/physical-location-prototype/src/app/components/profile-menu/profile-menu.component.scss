@@ -1,0 +1,102 @@
+.profile-menu {
+  position: relative;
+}
+
+.profile-menu__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--border, #c7c4d8);
+  background: var(--accent, #4f46e5);
+  color: var(--accent-contrast, #fff);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.12s ease;
+}
+
+.profile-menu__avatar:hover {
+  filter: brightness(1.05);
+}
+
+.profile-menu__avatar:active {
+  transform: scale(0.97);
+}
+
+.profile-menu__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+}
+
+.profile-menu__dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 200px;
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, #c7c4d8);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+  z-index: 11;
+  overflow: hidden;
+  padding: 6px;
+}
+
+.profile-menu__header {
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid var(--border-soft, rgba(199,196,216,0.3));
+  margin-bottom: 6px;
+}
+
+.profile-menu__name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text, #151c27);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-menu__email {
+  font-size: 0.75rem;
+  color: var(--text-muted, #464555);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text, #151c27);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+}
+
+.profile-menu__item:hover {
+  background: var(--surface-variant, #dce2f3);
+}
+
+.profile-menu__item--danger {
+  color: var(--error, #991b1b);
+}
+
+.profile-menu__item mat-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
