@@ -1190,6 +1190,27 @@
       <trans-unit id="onboarding.dnaAriaLabel">
         <source>Animated DNA double helix</source>
       </trans-unit>
+      <trans-unit id="onboarding.login.heading">
+        <source>Welcome back</source>
+      </trans-unit>
+      <trans-unit id="onboarding.login.subheading">
+        <source>Enter your name to reclaim your local workspace. No password — it stays on this device.</source>
+      </trans-unit>
+      <trans-unit id="onboarding.login.button">
+        <source>Log in</source>
+      </trans-unit>
+      <trans-unit id="onboarding.login.noAccount">
+        <source>No account yet?</source>
+      </trans-unit>
+      <trans-unit id="onboarding.login.createWorkspace">
+        <source>Create workspace</source>
+      </trans-unit>
+      <trans-unit id="onboarding.login.alreadyHave">
+        <source>Already have a workspace?</source>
+      </trans-unit>
+      <trans-unit id="onboarding.login.link">
+        <source>Log in</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

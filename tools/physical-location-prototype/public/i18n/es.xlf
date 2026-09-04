@@ -1586,6 +1586,34 @@
         <source>Animated DNA double helix</source>
         <target>Doble hélice de ADN animada</target>
       </trans-unit>
+      <trans-unit id="onboarding.login.heading">
+        <source>Welcome back</source>
+        <target>Bienvenido de nuevo</target>
+      </trans-unit>
+      <trans-unit id="onboarding.login.subheading">
+        <source>Enter your name to reclaim your local workspace. No password — it stays on this device.</source>
+        <target>Introduce tu nombre para recuperar tu espacio local. Sin contraseña — queda en este dispositivo.</target>
+      </trans-unit>
+      <trans-unit id="onboarding.login.button">
+        <source>Log in</source>
+        <target>Entrar</target>
+      </trans-unit>
+      <trans-unit id="onboarding.login.noAccount">
+        <source>No account yet?</source>
+        <target>¿Aún no tienes un espacio?</target>
+      </trans-unit>
+      <trans-unit id="onboarding.login.createWorkspace">
+        <source>Create workspace</source>
+        <target>Crear espacio</target>
+      </trans-unit>
+      <trans-unit id="onboarding.login.alreadyHave">
+        <source>Already have a workspace?</source>
+        <target>¿Ya tienes un espacio?</target>
+      </trans-unit>
+      <trans-unit id="onboarding.login.link">
+        <source>Log in</source>
+        <target>Entrar</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

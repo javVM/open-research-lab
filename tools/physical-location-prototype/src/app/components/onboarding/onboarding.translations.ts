@@ -37,6 +37,15 @@ export function createOnboardingTranslations(translation: TranslationService) {
     continueButton: computed(() => translation.t('onboarding.continueButton', 'Continue')),
     backButton: computed(() => translation.t('onboarding.backButton', 'Back')),
     startButton: computed(() => translation.t('onboarding.startButton', 'Start exploring')),
+    loginHeading: computed(() => translation.t('onboarding.login.heading', 'Welcome back')),
+    loginSubheading: computed(() =>
+      translation.t('onboarding.login.subheading', 'Enter your name to reclaim your local workspace. No password — it stays on this device.'),
+    ),
+    loginButton: computed(() => translation.t('onboarding.login.button', 'Log in')),
+    loginNoAccount: computed(() => translation.t('onboarding.login.noAccount', 'No account yet?')),
+    loginCreateWorkspace: computed(() => translation.t('onboarding.login.createWorkspace', 'Create workspace')),
+    loginAlreadyHave: computed(() => translation.t('onboarding.login.alreadyHave', 'Already have a workspace?')),
+    loginLink: computed(() => translation.t('onboarding.login.link', 'Log in')),
     hint: computed(() =>
       translation.t(
         'onboarding.hint',

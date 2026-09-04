@@ -9,19 +9,19 @@
     </div>
 
     @if (mode() === 'login') {
-      <h1 id="onboarding-heading" class="onboarding__heading">Welcome back</h1>
-      <p class="onboarding__subheading">Enter your name to reclaim your local workspace. No password — it stays on this device.</p>
+      <h1 id="onboarding-heading" class="onboarding__heading">{{ text.loginHeading() }}</h1>
+      <p class="onboarding__subheading">{{ text.loginSubheading() }}</p>
 
       <form class="onboarding__form" [formGroup]="loginForm" (ngSubmit)="login()">
         <div class="onboarding__row">
-          <mat-form-field appearance="outline" class="onboarding__field onboarding__field--half">
+          <mat-form-field appearance="outline" subscriptSizing="dynamic" class="onboarding__field onboarding__field--half">
             <mat-label>{{ text.firstNameLabel() }}</mat-label>
             <input matInput formControlName="firstName" [placeholder]="text.firstNamePlaceholder()" autocomplete="given-name" aria-required="true" />
             @if (loginForm.controls.firstName.touched && loginForm.controls.firstName.hasError('required')) {
               <mat-error>{{ text.requiredField() }}</mat-error>
             }
           </mat-form-field>
-          <mat-form-field appearance="outline" class="onboarding__field onboarding__field--half">
+          <mat-form-field appearance="outline" subscriptSizing="dynamic" class="onboarding__field onboarding__field--half">
             <mat-label>{{ text.lastNameLabel() }}</mat-label>
             <input matInput formControlName="lastName" [placeholder]="text.lastNamePlaceholder()" autocomplete="family-name" aria-required="true" />
             @if (loginForm.controls.lastName.touched && loginForm.controls.lastName.hasError('required')) {
@@ -30,9 +30,9 @@
           </mat-form-field>
         </div>
 
-        <button mat-flat-button color="primary" type="submit" [disabled]="!canLogin()" class="onboarding__continue">Log in <span aria-hidden="true">→</span></button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="!canLogin()" class="onboarding__continue">{{ text.loginButton() }} <span aria-hidden="true">→</span></button>
 
-        <p class="onboarding__switch">No account yet? <button type="button" class="onboarding__link" (click)="switchMode('register')">Create workspace</button></p>
+        <p class="onboarding__switch">{{ text.loginNoAccount() }} <button type="button" class="onboarding__link" (click)="switchMode('register')">{{ text.loginCreateWorkspace() }}</button></p>
         <p class="onboarding__hint">{{ text.hint() }}</p>
       </form>
     } @else {
@@ -49,7 +49,7 @@
       <form class="onboarding__form" [formGroup]="form" (ngSubmit)="currentStep() === 3 ? finish() : next()">
         @if (currentStep() === 1) {
           <div class="onboarding__row">
-            <mat-form-field appearance="outline" class="onboarding__field onboarding__field--half">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic" class="onboarding__field onboarding__field--half">
               <mat-label>{{ text.firstNameLabel() }}</mat-label>
               <input matInput formControlName="firstName" [placeholder]="text.firstNamePlaceholder()" autocomplete="given-name" aria-required="true" />
               <mat-icon matPrefix svgIcon="user" aria-hidden="true" style="opacity:0.35"></mat-icon>
@@ -57,7 +57,7 @@
                 <mat-error>{{ text.requiredField() }}</mat-error>
               }
             </mat-form-field>
-            <mat-form-field appearance="outline" class="onboarding__field onboarding__field--half">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic" class="onboarding__field onboarding__field--half">
               <mat-label>{{ text.lastNameLabel() }}</mat-label>
               <input matInput formControlName="lastName" [placeholder]="text.lastNamePlaceholder()" autocomplete="family-name" aria-required="true" />
               @if (form.controls.lastName.touched && form.controls.lastName.hasError('required')) {
@@ -66,7 +66,7 @@
             </mat-form-field>
           </div>
 
-          <mat-form-field appearance="outline" class="onboarding__field">
+          <mat-form-field appearance="outline" subscriptSizing="dynamic" class="onboarding__field">
             <mat-label>{{ text.emailLabel() }}</mat-label>
             <input matInput formControlName="institutionalEmail" [placeholder]="text.emailPlaceholder()" autocomplete="email" inputmode="email" aria-required="true" />
             <mat-icon matPrefix svgIcon="mail" aria-hidden="true" style="opacity:0.35"></mat-icon>
@@ -77,7 +77,7 @@
             }
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="onboarding__field">
+          <mat-form-field appearance="outline" subscriptSizing="dynamic" class="onboarding__field">
             <mat-label>{{ text.departmentLabel() }}</mat-label>
             <mat-select formControlName="department" [placeholder]="text.departmentPlaceholder()" [attr.aria-label]="text.departmentLabel()" aria-required="true">
               @for (option of departmentOptions; track option.value) {
@@ -94,7 +94,7 @@
         }
 
         @if (currentStep() === 2) {
-          <mat-form-field appearance="outline" class="onboarding__field">
+          <mat-form-field appearance="outline" subscriptSizing="dynamic" class="onboarding__field">
             <mat-label>{{ text.institutionLabel() }}</mat-label>
             <input matInput formControlName="institutionName" [placeholder]="text.institutionPlaceholder()" autocomplete="organization" aria-required="true" />
             <mat-icon matPrefix svgIcon="domain" aria-hidden="true" style="opacity:0.35"></mat-icon>
@@ -103,7 +103,7 @@
             }
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="onboarding__field">
+          <mat-form-field appearance="outline" subscriptSizing="dynamic" class="onboarding__field">
             <mat-label>{{ text.prefixLabel() }}</mat-label>
             <input matInput formControlName="defaultPrefix" placeholder="ITEM-" aria-required="true" />
             <mat-hint>{{ text.prefixHint() }}</mat-hint>
@@ -134,7 +134,7 @@
           }
         </div>
 
-        <p class="onboarding__switch">Already have a workspace? <button type="button" class="onboarding__link" (click)="switchMode('login')">Log in</button></p>
+        <p class="onboarding__switch">{{ text.loginAlreadyHave() }} <button type="button" class="onboarding__link" (click)="switchMode('login')">{{ text.loginLink() }}</button></p>
         <p class="onboarding__hint">{{ text.hint() }}</p>
       </form>
     }

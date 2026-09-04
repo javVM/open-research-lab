@@ -94,7 +94,7 @@
 .onboarding__form {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.65rem;
 }
 
 .onboarding__field {
@@ -110,6 +110,7 @@
 .onboarding__row {
   display: flex;
   gap: 12px;
+  align-items: flex-start;
 }
 
 .onboarding__actions {
@@ -126,6 +127,10 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   min-width: 128px;
+}
+
+.onboarding__continue--spaced {
+  margin-top: 0.5rem;
 }
 
 .onboarding__summary {
