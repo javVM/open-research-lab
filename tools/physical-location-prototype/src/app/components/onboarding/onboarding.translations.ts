@@ -4,20 +4,39 @@ import { TranslationService } from '../../i18n/translation.service';
 export function createOnboardingTranslations(translation: TranslationService) {
   return {
     brandSubtitle: computed(() => translation.t('app.brand.subtitle', 'Precision Management')),
-    stepLabel: computed(() => translation.t('onboarding.stepLabel', 'STEP 1 OF 3')),
-    heading: computed(() => translation.t('onboarding.heading', 'Account Details')),
-    subheading: computed(() =>
-      translation.t('onboarding.subheading', 'Enter your basic credentials to initiate your workspace setup.'),
+    stepLabel: computed(() => translation.t('onboarding.stepLabel', 'STEP {current} OF 3')),
+    headingStep1: computed(() => translation.t('onboarding.heading.step1', 'Account Details')),
+    headingStep2: computed(() => translation.t('onboarding.heading.step2', 'Workspace')),
+    headingStep3: computed(() => translation.t('onboarding.heading.step3', 'Ready to start')),
+    subheadingStep1: computed(() =>
+      translation.t('onboarding.subheading.step1', 'Enter your basic credentials to initiate your workspace setup.'),
     ),
-    fullNameLabel: computed(() => translation.t('onboarding.fullNameLabel', 'Full Name')),
-    fullNamePlaceholder: computed(() => translation.t('onboarding.fullNamePlaceholder', 'Dr. Jane Doe')),
-    fullNameRequired: computed(() => translation.t('onboarding.fullNameRequired', 'Full name is required.')),
+    subheadingStep2: computed(() =>
+      translation.t(
+        'onboarding.subheading.step2',
+        'Name your collection and how new items will be catalogued.',
+      ),
+    ),
+    subheadingStep3: computed(() =>
+      translation.t('onboarding.subheading.step3', 'Everything stays on this device. You can change these in Settings.'),
+    ),
+    firstNameLabel: computed(() => translation.t('onboarding.firstNameLabel', 'Name')),
+    firstNamePlaceholder: computed(() => translation.t('onboarding.firstNamePlaceholder', 'Jane')),
+    lastNameLabel: computed(() => translation.t('onboarding.lastNameLabel', 'Last Name')),
+    lastNamePlaceholder: computed(() => translation.t('onboarding.lastNamePlaceholder', 'Doe')),
+    requiredField: computed(() => translation.t('onboarding.requiredField', 'This field is required.')),
     emailLabel: computed(() => translation.t('onboarding.emailLabel', 'Institutional Email')),
     emailPlaceholder: computed(() => translation.t('onboarding.emailPlaceholder', 'jane.doe@university.edu')),
     emailInvalid: computed(() => translation.t('onboarding.emailInvalid', 'Enter a valid email.')),
     departmentLabel: computed(() => translation.t('onboarding.departmentLabel', 'Department')),
     departmentPlaceholder: computed(() => translation.t('onboarding.department.placeholder', 'Select your department')),
+    institutionLabel: computed(() => translation.t('onboarding.institutionLabel', 'Collection / Institution name')),
+    institutionPlaceholder: computed(() => translation.t('onboarding.institutionPlaceholder', 'MNCN — Invertebrates')),
+    prefixLabel: computed(() => translation.t('onboarding.prefixLabel', 'Default catalogue prefix')),
+    prefixHint: computed(() => translation.t('onboarding.prefixHint', 'Used when creating new items, e.g. ITEM-0001')),
     continueButton: computed(() => translation.t('onboarding.continueButton', 'Continue')),
+    backButton: computed(() => translation.t('onboarding.backButton', 'Back')),
+    startButton: computed(() => translation.t('onboarding.startButton', 'Start exploring')),
     hint: computed(() =>
       translation.t(
         'onboarding.hint',

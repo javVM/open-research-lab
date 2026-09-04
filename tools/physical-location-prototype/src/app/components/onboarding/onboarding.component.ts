@@ -1,10 +1,12 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
 import { SettingsService, type DepartmentOption } from '../../settings.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createOnboardingTranslations } from './onboarding.translations';
@@ -32,7 +34,15 @@ interface HelixRung {
 @Component({
   standalone: true,
   selector: 'app-onboarding',
-  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatIconModule],
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatIconModule,
+    LanguageSwitcherComponent,
+  ],
   templateUrl: './onboarding.component.html',
   styleUrl: './onboarding.component.scss',
 })
@@ -46,10 +56,36 @@ export class OnboardingComponent implements OnInit, OnDestroy {
   private animationFrame: number | null = null;
   private startTime: number | null = null;
 
+  protected readonly currentStep = signal<1 | 2 | 3>(1);
+  protected readonly version = 'v0.1.0-prototype';
+
+  protected readonly stepLabel = computed(() =>
+    this.text.stepLabel().replace('{current}', String(this.currentStep())),
+  );
+  protected readonly heading = computed(() => {
+    switch (this.currentStep()) {
+      case 1:
+        return this.text.headingStep1();
+      case 2:
+        return this.text.headingStep2();
+      case 3:
+        return this.text.headingStep3();
+    }
+  });
+  protected readonly subheading = computed(() => {
+    switch (this.currentStep()) {
+      case 1:
+        return this.text.subheadingStep1();
+      case 2:
+        return this.text.subheadingStep2();
+      case 3:
+        return this.text.subheadingStep3();
+    }
+  });
+  protected readonly progressWidth = computed(() => `${(this.currentStep() / 3) * 100}%`);
+
   protected readonly backboneLeftPath = computed(() => this.buildSmoothPath(this.phase(), 0));
   protected readonly backboneRightPath = computed(() => this.buildSmoothPath(this.phase(), Math.PI));
-
-  protected readonly version = 'v0.1.0-prototype';
 
   protected readonly rungs = computed<HelixRung[]>(() => {
     const phase = this.phase();
@@ -79,12 +115,61 @@ export class OnboardingComponent implements OnInit, OnDestroy {
   });
 
   protected readonly form = new FormGroup({
-    fullName: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(2)] }),
-    institutionalEmail: new FormControl('', { nonNullable: true, validators: [Validators.email] }),
-    department: new FormControl<DepartmentOption | ''>('', { nonNullable: true }),
+    firstName: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(2)] }),
+    lastName: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(2)] }),
+    institutionalEmail: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+    department: new FormControl<DepartmentOption | ''>('', { nonNullable: true, validators: [Validators.required] }),
+    institutionName: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    defaultPrefix: new FormControl('ITEM-', { nonNullable: true, validators: [Validators.required] }),
   });
 
-  protected readonly canContinue = computed(() => this.form.controls.fullName.valid);
+  private readonly formStatus = toSignal(this.form.statusChanges, { initialValue: this.form.status });
+  private readonly formValues = toSignal(this.form.valueChanges, { initialValue: this.form.getRawValue() });
+
+  protected readonly canContinueStep1 = computed(() => {
+    this.formStatus();
+    this.formValues();
+    return (
+      this.form.controls.firstName.valid &&
+      this.form.controls.lastName.valid &&
+      this.form.controls.institutionalEmail.valid &&
+      this.form.controls.department.valid
+    );
+  });
+  protected readonly canContinueStep2 = computed(() => {
+    this.formStatus();
+    this.formValues();
+    return this.form.controls.institutionName.valid && this.form.controls.defaultPrefix.valid;
+  });
+  protected readonly canStart = computed(() => {
+    this.formStatus();
+    this.formValues();
+    return this.form.valid;
+  });
+
+  protected readonly departmentLabel = computed(() => {
+    const value = this.formValues()?.department ?? this.form.controls.department.value;
+    const option = ONBOARDING_DEPARTMENT_OPTIONS.find((entry) => entry.value === value);
+    return option?.fallback ?? value ?? '—';
+  });
+
+  constructor() {
+    const current = this.settings.settings();
+    const parts = current.operatorName.trim().split(/\s+/);
+    const firstName = parts[0] ?? '';
+    const lastName = parts.slice(1).join(' ') ?? '';
+    this.form.patchValue(
+      {
+        firstName,
+        lastName,
+        institutionalEmail: current.institutionalEmail,
+        department: current.department,
+        institutionName: current.institutionName,
+        defaultPrefix: current.defaultPrefix || 'ITEM-',
+      },
+      { emitEvent: false },
+    );
+  }
 
   ngOnInit(): void {
     const durationMs = 3600;
@@ -105,16 +190,43 @@ export class OnboardingComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected continue(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+  protected next(): void {
+    if (this.currentStep() === 1) {
+      if (!this.canContinueStep1()) {
+        this.form.controls.firstName.markAsTouched();
+        this.form.controls.lastName.markAsTouched();
+        this.form.controls.institutionalEmail.markAsTouched();
+        this.form.controls.department.markAsTouched();
+        return;
+      }
+      this.currentStep.set(2);
       return;
     }
+    if (this.currentStep() === 2) {
+      if (!this.canContinueStep2()) {
+        this.form.controls.institutionName.markAsTouched();
+        this.form.controls.defaultPrefix.markAsTouched();
+        return;
+      }
+      this.currentStep.set(3);
+    }
+  }
+
+  protected back(): void {
+    if (this.currentStep() > 1) {
+      this.currentStep.update((value) => (value === 3 ? 2 : 1) as 1 | 2 | 3);
+    }
+  }
+
+  protected finish(): void {
     const value = this.form.getRawValue();
+    const operatorName = `${value.firstName.trim()} ${value.lastName.trim()}`.trim();
     this.settings.update({
-      operatorName: value.fullName.trim(),
+      operatorName,
       institutionalEmail: value.institutionalEmail.trim(),
       department: value.department,
+      institutionName: value.institutionName.trim(),
+      defaultPrefix: value.defaultPrefix.trim() || 'ITEM-',
     });
   }
 

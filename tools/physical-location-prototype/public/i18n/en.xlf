@@ -1082,6 +1082,114 @@
       <trans-unit id="itemCategory.item_unprocessed_matrix">
         <source>Unprocessed matrix</source>
       </trans-unit>
+      <trans-unit id="onboarding.stepLabel">
+        <source>STEP {current} OF 3</source>
+      </trans-unit>
+      <trans-unit id="onboarding.heading.step1">
+        <source>Account Details</source>
+      </trans-unit>
+      <trans-unit id="onboarding.heading.step2">
+        <source>Workspace</source>
+      </trans-unit>
+      <trans-unit id="onboarding.heading.step3">
+        <source>Ready to start</source>
+      </trans-unit>
+      <trans-unit id="onboarding.subheading.step1">
+        <source>Enter your basic credentials to initiate your workspace setup.</source>
+      </trans-unit>
+      <trans-unit id="onboarding.subheading.step2">
+        <source>Name your collection and how new items will be catalogued.</source>
+      </trans-unit>
+      <trans-unit id="onboarding.subheading.step3">
+        <source>Everything stays on this device. You can change these in Settings.</source>
+      </trans-unit>
+      <trans-unit id="onboarding.firstNameLabel">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="onboarding.firstNamePlaceholder">
+        <source>Jane</source>
+      </trans-unit>
+      <trans-unit id="onboarding.lastNameLabel">
+        <source>Last Name</source>
+      </trans-unit>
+      <trans-unit id="onboarding.lastNamePlaceholder">
+        <source>Doe</source>
+      </trans-unit>
+      <trans-unit id="onboarding.requiredField">
+        <source>This field is required.</source>
+      </trans-unit>
+      <trans-unit id="onboarding.emailLabel">
+        <source>Institutional Email</source>
+      </trans-unit>
+      <trans-unit id="onboarding.emailPlaceholder">
+        <source>jane.doe@university.edu</source>
+      </trans-unit>
+      <trans-unit id="onboarding.emailInvalid">
+        <source>Enter a valid email.</source>
+      </trans-unit>
+      <trans-unit id="onboarding.departmentLabel">
+        <source>Department</source>
+      </trans-unit>
+      <trans-unit id="onboarding.department.placeholder">
+        <source>Select your department</source>
+      </trans-unit>
+      <trans-unit id="onboarding.department.naturalHistory">
+        <source>Natural History</source>
+      </trans-unit>
+      <trans-unit id="onboarding.department.paleontology">
+        <source>Paleontology</source>
+      </trans-unit>
+      <trans-unit id="onboarding.department.geology">
+        <source>Geology</source>
+      </trans-unit>
+      <trans-unit id="onboarding.department.botany">
+        <source>Botany</source>
+      </trans-unit>
+      <trans-unit id="onboarding.department.zoology">
+        <source>Zoology</source>
+      </trans-unit>
+      <trans-unit id="onboarding.department.molecular">
+        <source>Molecular / Genetics</source>
+      </trans-unit>
+      <trans-unit id="onboarding.department.archaeology">
+        <source>Archaeology</source>
+      </trans-unit>
+      <trans-unit id="onboarding.department.other">
+        <source>Other</source>
+      </trans-unit>
+      <trans-unit id="onboarding.institutionLabel">
+        <source>Collection / Institution name</source>
+      </trans-unit>
+      <trans-unit id="onboarding.institutionPlaceholder">
+        <source>MNCN — Invertebrates</source>
+      </trans-unit>
+      <trans-unit id="onboarding.prefixLabel">
+        <source>Default catalogue prefix</source>
+      </trans-unit>
+      <trans-unit id="onboarding.prefixHint">
+        <source>Used when creating new items, e.g. ITEM-0001</source>
+      </trans-unit>
+      <trans-unit id="onboarding.continueButton">
+        <source>Continue</source>
+      </trans-unit>
+      <trans-unit id="onboarding.backButton">
+        <source>Back</source>
+      </trans-unit>
+      <trans-unit id="onboarding.startButton">
+        <source>Start exploring</source>
+      </trans-unit>
+      <trans-unit id="onboarding.hint">
+        <source>This is a local workspace — no account is created, no data leaves this device. You can change this later in Settings.</source>
+      </trans-unit>
+      <trans-unit id="onboarding.systemStatusTitle">
+        <source>System Status</source>
+      </trans-unit>
+      <trans-unit id="onboarding.systemStatusBody">
+        <source>Environment ready for secure credential exchange.</source>
+      </trans-unit>
+      <trans-unit id="onboarding.dnaAriaLabel">
+        <source>Animated DNA double helix</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

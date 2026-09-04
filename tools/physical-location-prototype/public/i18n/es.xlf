@@ -1442,6 +1442,150 @@
         <source>Unprocessed matrix</source>
         <target>Matriz sin Procesar</target>
       </trans-unit>
+      <trans-unit id="onboarding.stepLabel">
+        <source>STEP {current} OF 3</source>
+        <target>PASO {current} DE 3</target>
+      </trans-unit>
+      <trans-unit id="onboarding.heading.step1">
+        <source>Account Details</source>
+        <target>Datos de la cuenta</target>
+      </trans-unit>
+      <trans-unit id="onboarding.heading.step2">
+        <source>Workspace</source>
+        <target>Espacio de trabajo</target>
+      </trans-unit>
+      <trans-unit id="onboarding.heading.step3">
+        <source>Ready to start</source>
+        <target>Todo listo</target>
+      </trans-unit>
+      <trans-unit id="onboarding.subheading.step1">
+        <source>Enter your basic credentials to initiate your workspace setup.</source>
+        <target>Introduce tus credenciales básicas para iniciar tu espacio de trabajo.</target>
+      </trans-unit>
+      <trans-unit id="onboarding.subheading.step2">
+        <source>Name your collection and how new items will be catalogued.</source>
+        <target>Nombra tu colección y cómo se catalogarán los nuevos ítems.</target>
+      </trans-unit>
+      <trans-unit id="onboarding.subheading.step3">
+        <source>Everything stays on this device. You can change these in Settings.</source>
+        <target>Todo queda en este dispositivo. Podrás cambiarlo en Ajustes.</target>
+      </trans-unit>
+      <trans-unit id="onboarding.firstNameLabel">
+        <source>Name</source>
+        <target>Nombre</target>
+      </trans-unit>
+      <trans-unit id="onboarding.firstNamePlaceholder">
+        <source>Jane</source>
+        <target>Javi</target>
+      </trans-unit>
+      <trans-unit id="onboarding.lastNameLabel">
+        <source>Last Name</source>
+        <target>Apellidos</target>
+      </trans-unit>
+      <trans-unit id="onboarding.lastNamePlaceholder">
+        <source>Doe</source>
+        <target>Marín</target>
+      </trans-unit>
+      <trans-unit id="onboarding.requiredField">
+        <source>This field is required.</source>
+        <target>Este campo es obligatorio.</target>
+      </trans-unit>
+      <trans-unit id="onboarding.emailLabel">
+        <source>Institutional Email</source>
+        <target>Correo institucional</target>
+      </trans-unit>
+      <trans-unit id="onboarding.emailPlaceholder">
+        <source>jane.doe@university.edu</source>
+        <target>javier@universidad.edu</target>
+      </trans-unit>
+      <trans-unit id="onboarding.emailInvalid">
+        <source>Enter a valid email.</source>
+        <target>Introduce un correo válido.</target>
+      </trans-unit>
+      <trans-unit id="onboarding.departmentLabel">
+        <source>Department</source>
+        <target>Departamento</target>
+      </trans-unit>
+      <trans-unit id="onboarding.department.placeholder">
+        <source>Select your department</source>
+        <target>Selecciona tu departamento</target>
+      </trans-unit>
+      <trans-unit id="onboarding.department.naturalHistory">
+        <source>Natural History</source>
+        <target>Historia Natural</target>
+      </trans-unit>
+      <trans-unit id="onboarding.department.paleontology">
+        <source>Paleontology</source>
+        <target>Paleontología</target>
+      </trans-unit>
+      <trans-unit id="onboarding.department.geology">
+        <source>Geology</source>
+        <target>Geología</target>
+      </trans-unit>
+      <trans-unit id="onboarding.department.botany">
+        <source>Botany</source>
+        <target>Botánica</target>
+      </trans-unit>
+      <trans-unit id="onboarding.department.zoology">
+        <source>Zoology</source>
+        <target>Zoología</target>
+      </trans-unit>
+      <trans-unit id="onboarding.department.molecular">
+        <source>Molecular / Genetics</source>
+        <target>Molecular / Genética</target>
+      </trans-unit>
+      <trans-unit id="onboarding.department.archaeology">
+        <source>Archaeology</source>
+        <target>Arqueología</target>
+      </trans-unit>
+      <trans-unit id="onboarding.department.other">
+        <source>Other</source>
+        <target>Otro</target>
+      </trans-unit>
+      <trans-unit id="onboarding.institutionLabel">
+        <source>Collection / Institution name</source>
+        <target>Colección / Institución</target>
+      </trans-unit>
+      <trans-unit id="onboarding.institutionPlaceholder">
+        <source>MNCN — Invertebrates</source>
+        <target>MNCN — Invertebrados</target>
+      </trans-unit>
+      <trans-unit id="onboarding.prefixLabel">
+        <source>Default catalogue prefix</source>
+        <target>Prefijo de catálogo por defecto</target>
+      </trans-unit>
+      <trans-unit id="onboarding.prefixHint">
+        <source>Used when creating new items, e.g. ITEM-0001</source>
+        <target>Se usa al crear nuevos ítems, ej. ITEM-0001</target>
+      </trans-unit>
+      <trans-unit id="onboarding.continueButton">
+        <source>Continue</source>
+        <target>Continuar</target>
+      </trans-unit>
+      <trans-unit id="onboarding.backButton">
+        <source>Back</source>
+        <target>Atrás</target>
+      </trans-unit>
+      <trans-unit id="onboarding.startButton">
+        <source>Start exploring</source>
+        <target>Empezar a explorar</target>
+      </trans-unit>
+      <trans-unit id="onboarding.hint">
+        <source>This is a local workspace — no account is created, no data leaves this device. You can change this later in Settings.</source>
+        <target>Espacio local — no se crea ninguna cuenta, ningún dato sale de este dispositivo. Podrás cambiarlo en Ajustes.</target>
+      </trans-unit>
+      <trans-unit id="onboarding.systemStatusTitle">
+        <source>System Status</source>
+        <target>Estado del sistema</target>
+      </trans-unit>
+      <trans-unit id="onboarding.systemStatusBody">
+        <source>Environment ready for secure credential exchange.</source>
+        <target>Entorno listo para intercambio seguro de credenciales.</target>
+      </trans-unit>
+      <trans-unit id="onboarding.dnaAriaLabel">
+        <source>Animated DNA double helix</source>
+        <target>Doble hélice de ADN animada</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

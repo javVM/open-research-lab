@@ -1,52 +1,110 @@
 <div class="onboarding">
   <section class="onboarding__form-pane" aria-labelledby="onboarding-heading">
     <div class="onboarding__brand">
-      <mat-icon svgIcon="brand" aria-hidden="true" class="onboarding__brand-icon"></mat-icon>
-      <span class="onboarding__brand-name">Nexus Lab</span>
+      <div class="onboarding__brand-left">
+        <mat-icon svgIcon="brand" aria-hidden="true" class="onboarding__brand-icon"></mat-icon>
+        <span class="onboarding__brand-name">Nexus Lab</span>
+      </div>
+      <app-language-switcher></app-language-switcher>
     </div>
 
     <div class="onboarding__step" aria-hidden="true">
-      <span class="onboarding__step-label">{{ text.stepLabel() }}</span>
+      <span class="onboarding__step-label">{{ stepLabel() }}</span>
       <div class="onboarding__step-track">
-        <div class="onboarding__step-progress"></div>
+        <div class="onboarding__step-progress" [style.width]="progressWidth()"></div>
       </div>
     </div>
 
-    <h1 id="onboarding-heading" class="onboarding__heading">{{ text.heading() }}</h1>
-    <p class="onboarding__subheading">{{ text.subheading() }}</p>
+    <h1 id="onboarding-heading" class="onboarding__heading">{{ heading() }}</h1>
+    <p class="onboarding__subheading">{{ subheading() }}</p>
 
-    <form class="onboarding__form" [formGroup]="form" (ngSubmit)="continue()">
-      <mat-form-field appearance="outline" class="onboarding__field">
-        <mat-label>{{ text.fullNameLabel() }}</mat-label>
-        <input matInput formControlName="fullName" [placeholder]="text.fullNamePlaceholder()" autocomplete="name" aria-required="true" />
-        <mat-icon matPrefix svgIcon="user" aria-hidden="true" style="opacity:0.35"></mat-icon>
-        @if (form.controls.fullName.touched && form.controls.fullName.hasError('required')) {
-          <mat-error>{{ text.fullNameRequired() }}</mat-error>
-        }
-      </mat-form-field>
+    <form class="onboarding__form" [formGroup]="form" (ngSubmit)="currentStep() === 3 ? finish() : next()">
+      @if (currentStep() === 1) {
+        <div class="onboarding__row">
+          <mat-form-field appearance="outline" class="onboarding__field onboarding__field--half">
+            <mat-label>{{ text.firstNameLabel() }}</mat-label>
+            <input matInput formControlName="firstName" [placeholder]="text.firstNamePlaceholder()" autocomplete="given-name" aria-required="true" />
+            <mat-icon matPrefix svgIcon="user" aria-hidden="true" style="opacity:0.35"></mat-icon>
+            @if (form.controls.firstName.touched && form.controls.firstName.hasError('required')) {
+              <mat-error>{{ text.requiredField() }}</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="onboarding__field onboarding__field--half">
+            <mat-label>{{ text.lastNameLabel() }}</mat-label>
+            <input matInput formControlName="lastName" [placeholder]="text.lastNamePlaceholder()" autocomplete="family-name" aria-required="true" />
+            @if (form.controls.lastName.touched && form.controls.lastName.hasError('required')) {
+              <mat-error>{{ text.requiredField() }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
 
-      <mat-form-field appearance="outline" class="onboarding__field">
-        <mat-label>{{ text.emailLabel() }}</mat-label>
-        <input matInput formControlName="institutionalEmail" [placeholder]="text.emailPlaceholder()" autocomplete="email" inputmode="email" />
-        <mat-icon matPrefix svgIcon="mail" aria-hidden="true" style="opacity:0.35"></mat-icon>
-        @if (form.controls.institutionalEmail.hasError('email')) {
-          <mat-error>{{ text.emailInvalid() }}</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="onboarding__field">
-        <mat-label>{{ text.departmentLabel() }}</mat-label>
-        <mat-select formControlName="department" [placeholder]="text.departmentPlaceholder()" [attr.aria-label]="text.departmentLabel()">
-          @for (option of departmentOptions; track option.value) {
-            <mat-option [value]="option.value">{{ option.fallback }}</mat-option>
+        <mat-form-field appearance="outline" class="onboarding__field">
+          <mat-label>{{ text.emailLabel() }}</mat-label>
+          <input matInput formControlName="institutionalEmail" [placeholder]="text.emailPlaceholder()" autocomplete="email" inputmode="email" aria-required="true" />
+          <mat-icon matPrefix svgIcon="mail" aria-hidden="true" style="opacity:0.35"></mat-icon>
+          @if (form.controls.institutionalEmail.touched && form.controls.institutionalEmail.hasError('required')) {
+            <mat-error>{{ text.requiredField() }}</mat-error>
+          } @else if (form.controls.institutionalEmail.hasError('email')) {
+            <mat-error>{{ text.emailInvalid() }}</mat-error>
           }
-        </mat-select>
-        <mat-icon matPrefix svgIcon="domain" aria-hidden="true" style="opacity:0.35"></mat-icon>
-      </mat-form-field>
+        </mat-form-field>
 
-      <button mat-flat-button color="primary" type="submit" class="onboarding__continue" [disabled]="!canContinue()" aria-label="Continue">
-        {{ text.continueButton() }} <span aria-hidden="true">→</span>
-      </button>
+        <mat-form-field appearance="outline" class="onboarding__field">
+          <mat-label>{{ text.departmentLabel() }}</mat-label>
+          <mat-select formControlName="department" [placeholder]="text.departmentPlaceholder()" [attr.aria-label]="text.departmentLabel()" aria-required="true">
+            @for (option of departmentOptions; track option.value) {
+              @if (option.value !== '') {
+                <mat-option [value]="option.value">{{ option.fallback }}</mat-option>
+              }
+            }
+          </mat-select>
+          <mat-icon matPrefix svgIcon="domain" aria-hidden="true" style="opacity:0.35"></mat-icon>
+          @if (form.controls.department.touched && form.controls.department.hasError('required')) {
+            <mat-error>{{ text.requiredField() }}</mat-error>
+          }
+        </mat-form-field>
+      }
+
+      @if (currentStep() === 2) {
+        <mat-form-field appearance="outline" class="onboarding__field">
+          <mat-label>{{ text.institutionLabel() }}</mat-label>
+          <input matInput formControlName="institutionName" [placeholder]="text.institutionPlaceholder()" autocomplete="organization" aria-required="true" />
+          <mat-icon matPrefix svgIcon="domain" aria-hidden="true" style="opacity:0.35"></mat-icon>
+          @if (form.controls.institutionName.touched && form.controls.institutionName.hasError('required')) {
+            <mat-error>{{ text.requiredField() }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="onboarding__field">
+          <mat-label>{{ text.prefixLabel() }}</mat-label>
+          <input matInput formControlName="defaultPrefix" placeholder="ITEM-" aria-required="true" />
+          <mat-hint>{{ text.prefixHint() }}</mat-hint>
+          @if (form.controls.defaultPrefix.touched && form.controls.defaultPrefix.hasError('required')) {
+            <mat-error>{{ text.requiredField() }}</mat-error>
+          }
+        </mat-form-field>
+      }
+
+      @if (currentStep() === 3) {
+        <div class="onboarding__summary" role="status" aria-live="polite">
+          <div class="onboarding__summary-row"><span class="onboarding__summary-label">{{ text.firstNameLabel() }} / {{ text.lastNameLabel() }}</span><span class="onboarding__summary-value">{{ form.getRawValue().firstName }} {{ form.getRawValue().lastName }}</span></div>
+          <div class="onboarding__summary-row"><span class="onboarding__summary-label">{{ text.emailLabel() }}</span><span class="onboarding__summary-value">{{ form.getRawValue().institutionalEmail }}</span></div>
+          <div class="onboarding__summary-row"><span class="onboarding__summary-label">{{ text.departmentLabel() }}</span><span class="onboarding__summary-value">{{ departmentLabel() }}</span></div>
+          <div class="onboarding__summary-row"><span class="onboarding__summary-label">{{ text.institutionLabel() }}</span><span class="onboarding__summary-value">{{ form.getRawValue().institutionName }}</span></div>
+          <div class="onboarding__summary-row"><span class="onboarding__summary-label">{{ text.prefixLabel() }}</span><span class="onboarding__summary-value">{{ form.getRawValue().defaultPrefix }}</span></div>
+        </div>
+      }
+
+      <div class="onboarding__actions">
+        @if (currentStep() > 1) {
+          <button mat-button type="button" (click)="back()" aria-label="Back">{{ text.backButton() }}</button>
+        }
+        @if (currentStep() < 3) {
+          <button mat-flat-button color="primary" type="button" (click)="next()" [disabled]="currentStep() === 1 ? !canContinueStep1() : !canContinueStep2()" class="onboarding__continue">{{ text.continueButton() }} <span aria-hidden="true">→</span></button>
+        } @else {
+          <button mat-flat-button color="primary" type="submit" [disabled]="!canStart()" class="onboarding__continue">{{ text.startButton() }} <span aria-hidden="true">→</span></button>
+        }
+      </div>
 
       <p class="onboarding__hint">{{ text.hint() }}</p>
     </form>
