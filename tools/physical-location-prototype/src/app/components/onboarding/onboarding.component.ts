@@ -56,6 +56,7 @@ export class OnboardingComponent implements OnInit, OnDestroy {
   private animationFrame: number | null = null;
   private startTime: number | null = null;
 
+  protected readonly mode = signal<'register' | 'login'>('register');
   protected readonly currentStep = signal<1 | 2 | 3>(1);
   protected readonly version = 'v0.1.0-prototype';
 
@@ -123,8 +124,15 @@ export class OnboardingComponent implements OnInit, OnDestroy {
     defaultPrefix: new FormControl('ITEM-', { nonNullable: true, validators: [Validators.required] }),
   });
 
+  protected readonly loginForm = new FormGroup({
+    firstName: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    lastName: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+  });
+
   private readonly formStatus = toSignal(this.form.statusChanges, { initialValue: this.form.status });
   private readonly formValues = toSignal(this.form.valueChanges, { initialValue: this.form.getRawValue() });
+  private readonly loginStatus = toSignal(this.loginForm.statusChanges, { initialValue: this.loginForm.status });
+  private readonly loginValues = toSignal(this.loginForm.valueChanges, { initialValue: this.loginForm.getRawValue() });
 
   protected readonly canContinueStep1 = computed(() => {
     this.formStatus();
@@ -145,6 +153,11 @@ export class OnboardingComponent implements OnInit, OnDestroy {
     this.formStatus();
     this.formValues();
     return this.form.valid;
+  });
+  protected readonly canLogin = computed(() => {
+    this.loginStatus();
+    this.loginValues();
+    return this.loginForm.valid;
   });
 
   protected readonly departmentLabel = computed(() => {
@@ -210,6 +223,23 @@ export class OnboardingComponent implements OnInit, OnDestroy {
       }
       this.currentStep.set(3);
     }
+  }
+
+  protected switchMode(mode: 'register' | 'login'): void {
+    this.mode.set(mode);
+    this.currentStep.set(1);
+  }
+
+  protected login(): void {
+    if (!this.canLogin()) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+    const value = this.loginForm.getRawValue();
+    const operatorName = `${value.firstName.trim()} ${value.lastName.trim()}`.trim();
+    // Local-only: no password, no network — just reclaims the local operator identity (ADR-0010).
+    // If the name matches a previously stored profile it will merge, otherwise it creates the identity.
+    this.settings.update({ operatorName });
   }
 
   protected back(): void {
