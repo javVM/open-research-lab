@@ -1,4 +1,4 @@
-<div class="onboarding">
+<div class="onboarding" [class.onboarding--intro]="showMobileIntro()">
   <section class="onboarding__form-pane" aria-labelledby="onboarding-heading">
     <div class="onboarding__brand">
       <div class="onboarding__brand-left">
@@ -141,7 +141,15 @@
 
   </section>
 
-  <section class="onboarding__visual" [attr.aria-label]="text.dnaAriaLabel()">
+  <section class="onboarding__visual" [attr.aria-label]="text.dnaAriaLabel()" (click)="showMobileIntro() ? skipIntro() : null">
+    <div class="dna-intro" aria-hidden="true">
+      <div class="dna-intro__brand">
+        <mat-icon svgIcon="brand" class="dna-intro__icon" aria-hidden="true"></mat-icon>
+        <span>Nexus Lab</span>
+      </div>
+      <p class="dna-intro__tagline">Precision Management</p>
+    </div>
+    <div class="dna-intro__version-bottom" aria-hidden="true">{{ version }}</div>
     <div class="dna-scene" aria-hidden="true">
       <div class="dna-scene__halo"></div>
       <div class="dna-scene__glow"></div>

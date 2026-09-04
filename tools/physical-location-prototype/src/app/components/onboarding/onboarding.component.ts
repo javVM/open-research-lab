@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
+import { ViewportService } from '../../shared/viewport.service';
 import { SettingsService, type DepartmentOption } from '../../settings.service';
 import { TranslationService } from '../../i18n/translation.service';
 import { createOnboardingTranslations } from './onboarding.translations';
@@ -48,6 +49,7 @@ interface HelixRung {
 })
 export class OnboardingComponent implements OnInit, OnDestroy {
   private readonly settings = inject(SettingsService);
+  private readonly viewport = inject(ViewportService);
   protected readonly text = createOnboardingTranslations(inject(TranslationService));
   protected readonly departmentOptions = ONBOARDING_DEPARTMENT_OPTIONS;
   protected readonly rungIndices = Array.from({ length: DNA_RUNG_COUNT }, (_, index) => index);
@@ -59,6 +61,8 @@ export class OnboardingComponent implements OnInit, OnDestroy {
   protected readonly mode = signal<'register' | 'login'>('register');
   protected readonly currentStep = signal<1 | 2 | 3>(1);
   protected readonly version = 'v0.1.0-prototype';
+  protected readonly showMobileIntro = signal(false);
+  private introTimeout: ReturnType<typeof setTimeout> | null = null;
 
   protected readonly stepLabel = computed(() =>
     this.text.stepLabel().replace('{current}', String(this.currentStep())),
@@ -195,11 +199,27 @@ export class OnboardingComponent implements OnInit, OnDestroy {
       this.animationFrame = requestAnimationFrame(tick);
     };
     this.animationFrame = requestAnimationFrame(tick);
+
+    if (this.viewport.isMobile()) {
+      this.showMobileIntro.set(true);
+      this.introTimeout = setTimeout(() => this.showMobileIntro.set(false), 1100);
+    }
+  }
+
+  protected skipIntro(): void {
+    this.showMobileIntro.set(false);
+    if (this.introTimeout !== null) {
+      clearTimeout(this.introTimeout);
+      this.introTimeout = null;
+    }
   }
 
   ngOnDestroy(): void {
     if (this.animationFrame !== null) {
       cancelAnimationFrame(this.animationFrame);
+    }
+    if (this.introTimeout !== null) {
+      clearTimeout(this.introTimeout);
     }
   }
 
