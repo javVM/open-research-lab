@@ -28,13 +28,14 @@ export class ExportService {
 
   exportMovementsCsv(): string {
     const { movements } = this.collection.dataset();
-    const header = ['id', 'itemId', 'fromLocationId', 'toLocationId', 'occurredAt', 'note'] as const;
+    const header = ['id', 'itemId', 'fromLocationId', 'toLocationId', 'occurredAt', 'performedBy', 'note'] as const;
     const rows = movements.map((m) => [
       m.id,
       m.itemId,
       m.fromLocationId ?? '',
       m.toLocationId ?? '',
       m.occurredAt,
+      m.performedBy ?? '',
       m.note ?? '',
     ]);
     return stringifyCsv(header as unknown as string[], rows);

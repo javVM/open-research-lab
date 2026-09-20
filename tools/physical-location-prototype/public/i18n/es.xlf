@@ -2162,6 +2162,46 @@
         <source>Download CSV template</source>
         <target>Descargar plantilla CSV</target>
       </trans-unit>
+      <trans-unit id="import.downloadLocationTemplate">
+        <source>Download CSV template</source>
+        <target>Descargar plantilla CSV</target>
+      </trans-unit>
+      <trans-unit id="import.dragHint">
+        <source>Drag your CSV here or click to select</source>
+        <target>Arrastra tu CSV aquí o haz clic para seleccionar</target>
+      </trans-unit>
+      <trans-unit id="import.backupHint">
+        <source>To restore a backup: import locations first, then items. Use exports as full backup.</source>
+        <target>Para restaurar un backup: importa primero ubicaciones y luego ítems. Usa los exports como respaldo completo.</target>
+      </trans-unit>
+      <trans-unit id="import.info.ubicaciones">
+        <source>CSV with columns id,name,type,parentId — creates building→floor→room→cabinet. Empty parentId for root, or id existing/in same file. Valid types: building, floor, room, cabinet, drawer, box, tray, position.</source>
+        <target>CSV con columnas id,name,type,parentId — crea edificios → plantas → salas → armarios. parentId vacío para raíz, o id existente/en el mismo archivo. Tipos válidos: building, floor, room, cabinet, drawer, box, tray, position.</target>
+      </trans-unit>
+      <trans-unit id="import.info.items">
+        <source>CSV with required catalogueNumber + optional label,category,locationId. category must be valid, locationId must exist.</source>
+        <target>CSV con columna catalogueNumber obligatoria + opcionales label,category,locationId. category debe ser válida, locationId debe existir.</target>
+      </trans-unit>
+      <trans-unit id="import.dropzone.ubicacionesTitle">
+        <source>Drag locations CSV</source>
+        <target>Arrastra CSV de ubicaciones</target>
+      </trans-unit>
+      <trans-unit id="import.dropzone.itemsTitle">
+        <source>Drag items CSV</source>
+        <target>Arrastra CSV de ítems</target>
+      </trans-unit>
+      <trans-unit id="import.dropzone.sub">
+        <source>or click to select</source>
+        <target>o haz clic para seleccionar</target>
+      </trans-unit>
+      <trans-unit id="import.intro">
+        <source>Restore a backup in 2 steps — as in Scan: first locations, then items. Each step is dry-run and atomic (all or nothing).</source>
+        <target>Restaura un backup en 2 pasos — como en Escanear: primero ubicaciones, luego ítems. Cada paso es dry-run y atómico (todo o nada).</target>
+      </trans-unit>
+      <trans-unit id="export.note">
+        <source>The 3 CSVs together are your complete backup — reimport in order: locations → items. Movements are regenerated when importing items with location.</source>
+        <target>Los 3 CSV juntos son tu backup completo — reimpórtalos en orden: ubicaciones → ítems. Movimientos se regeneran al importar ítems con ubicación.</target>
+      </trans-unit>
       <trans-unit id="export.heading">
         <source>Export</source>
         <target>Exportar</target>

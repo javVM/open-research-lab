@@ -1622,6 +1622,36 @@
       <trans-unit id="import.downloadTemplate">
         <source>Download CSV template</source>
       </trans-unit>
+      <trans-unit id="import.downloadLocationTemplate">
+        <source>Download CSV template</source>
+      </trans-unit>
+      <trans-unit id="import.dragHint">
+        <source>Drag your CSV here or click to select</source>
+      </trans-unit>
+      <trans-unit id="import.backupHint">
+        <source>To restore a backup: import locations first, then items. Use exports as full backup.</source>
+      </trans-unit>
+      <trans-unit id="import.info.ubicaciones">
+        <source>CSV with columns id,name,type,parentId — creates building→floor→room→cabinet. Empty parentId for root, or id existing/in same file. Valid types: building, floor, room, cabinet, drawer, box, tray, position.</source>
+      </trans-unit>
+      <trans-unit id="import.info.items">
+        <source>CSV with required catalogueNumber + optional label,category,locationId. category must be valid, locationId must exist.</source>
+      </trans-unit>
+      <trans-unit id="import.dropzone.ubicacionesTitle">
+        <source>Drag locations CSV</source>
+      </trans-unit>
+      <trans-unit id="import.dropzone.itemsTitle">
+        <source>Drag items CSV</source>
+      </trans-unit>
+      <trans-unit id="import.dropzone.sub">
+        <source>or click to select</source>
+      </trans-unit>
+      <trans-unit id="import.intro">
+        <source>Restore a backup in 2 steps — as in Scan: first locations, then items. Each step is dry-run and atomic (all or nothing).</source>
+      </trans-unit>
+      <trans-unit id="export.note">
+        <source>The 3 CSVs together are your complete backup — reimport in order: locations → items. Movements are regenerated when importing items with location.</source>
+      </trans-unit>
       <trans-unit id="export.heading">
         <source>Export</source>
       </trans-unit>

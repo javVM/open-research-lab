@@ -17,6 +17,16 @@ export const importColumnLabel = $localize `@@import.column.label:label`;
 export const importColumnCategory = $localize `@@import.column.category:category`;
 export const importColumnLocation = $localize `@@import.column.location:locationId`;
 export const importDownloadTemplate = $localize `@@import.downloadTemplate:Descargar plantilla CSV`;
+export const importDownloadLocationTemplate = $localize `@@import.downloadLocationTemplate:Descargar plantilla CSV`;
+export const importDragHint = $localize `@@import.dragHint:Arrastra tu CSV aquí o haz clic para seleccionar`;
+export const importBackupHint = $localize `@@import.backupHint:Para restaurar un backup: importa primero ubicaciones y luego ítems. Usa los exports como respaldo completo.`;
+export const importDropzoneUbicacionesTitle = $localize `@@import.dropzone.ubicacionesTitle:Arrastra CSV de ubicaciones`;
+export const importDropzoneItemsTitle = $localize `@@import.dropzone.itemsTitle:Arrastra CSV de ítems`;
+export const importDropzoneSub = $localize `@@import.dropzone.sub:o haz clic para seleccionar`;
+export const importIntro = $localize `@@import.intro:Restaura un backup en 2 pasos — como en Escanear: primero ubicaciones, luego ítems. Cada paso es dry-run y atómico (todo o nada).`;
+export const exportNote = $localize `@@export.note:Los 3 CSV juntos son tu backup completo — reimpórtalos en orden: ubicaciones → ítems. Movimientos se regeneran al importar ítems con ubicación.`;
+export const importInfoUbicaciones = $localize `@@import.info.ubicaciones:CSV con columnas id,name,type,parentId — crea edificios → plantas → salas → armarios. parentId vacío para raíz, o id existente/en el mismo archivo. Tipos válidos: building, floor, room, cabinet, drawer, box, tray, position.`;
+export const importInfoItems = $localize `@@import.info.items:CSV con columna catalogueNumber obligatoria + opcionales label,category,locationId. category debe ser válida, locationId debe existir.`;
 
 export const exportHeading = $localize `@@export.heading:Exportar`;
 export const exportHint = $localize `@@export.hint:Descarga todo lo que ves en un CSV que vuelve a importar limpiamente (round-trip).`;
