@@ -5,6 +5,12 @@
   </div>
   <p class="aqr-import__hint">Apunta la cámara al QR animado del desktop. Se van coleccionando frames `NLAB:01/05:…` hasta completar. Al completar se hace dry-run automático.</p>
 
+  @if (isInsecureContext) {
+    <p class="aqr-import__error" role="alert">
+      Estás en <code>http://{{ '192.168.x.x' }}</code> — el navegador bloquea la cámara en contexto no seguro. Prueba: <strong>localhost</strong> en el mismo dispositivo, o usa <em>https</em> (ng serve --ssl), o usa el modo manual de abajo.
+    </p>
+  }
+
   <div class="aqr-import__actions">
     @if (!scanning()) {
       <button mat-flat-button color="primary" type="button" (click)="startScan()">

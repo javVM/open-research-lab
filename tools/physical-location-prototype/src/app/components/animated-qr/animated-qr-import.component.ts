@@ -23,6 +23,7 @@ export class AnimatedQrImportComponent {
   protected readonly dryRunResult = signal<ReturnType<ImportService['dryRun']> | null>(null);
   protected readonly importSuccess = signal<number | null>(null);
   protected readonly error = signal<string | null>(null);
+  protected readonly isInsecureContext = typeof window !== 'undefined' && !window.isSecureContext;
 
   protected readonly progressText = computed(() => {
     const p = this.received();

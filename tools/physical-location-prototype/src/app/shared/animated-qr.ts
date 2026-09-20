@@ -8,8 +8,8 @@
  */
 
 export const ANIMATED_QR_PREFIX = 'NLAB:';
-export const ANIMATED_QR_CHUNK_SIZE = 800;
-export const ANIMATED_QR_MAX_CHUNKS = 50; // ~40KB max for POC
+export const ANIMATED_QR_CHUNK_SIZE = 600;
+export const ANIMATED_QR_MAX_CHUNKS = 50; // ~30KB max for POC
 
 export interface AnimatedQrFrame {
   readonly index: number;
