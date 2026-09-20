@@ -111,4 +111,41 @@
       </button>
     </div>
   </section>
+
+  <section class="ie-card ie-card--lab">
+    <div class="ie-card__header">
+      <h3 class="ie-card__title">POC · Transferencia offline por QR animado</h3>
+      <span class="ie-card__badge">Experimental</span>
+    </div>
+    <p class="ie-card__hint">Sin red, sin USB: el QR va cambiando y el móvil lo escanea como “transferencia por luz”. Útil para pasar 5-50 ítems al móvil en sala sin cobertura. Para &gt;100 ítems usa archivo.</p>
+
+    <div class="ie-qr-toggle" role="group" aria-label="Modo QR animado">
+      <button
+        type="button"
+        class="ie-qr-toggle__button"
+        [class.ie-qr-toggle__button--active]="qrMode() === 'transmit'"
+        [attr.aria-pressed]="qrMode() === 'transmit'"
+        (click)="qrMode.set('transmit')"
+      >
+        <mat-icon svgIcon="upload" aria-hidden="true"></mat-icon>
+        Transmitir
+      </button>
+      <button
+        type="button"
+        class="ie-qr-toggle__button"
+        [class.ie-qr-toggle__button--active]="qrMode() === 'receive'"
+        [attr.aria-pressed]="qrMode() === 'receive'"
+        (click)="qrMode.set('receive')"
+      >
+        <mat-icon svgIcon="qrCodeScanner" aria-hidden="true"></mat-icon>
+        Recibir
+      </button>
+    </div>
+
+    @if (qrMode() === 'transmit') {
+      <app-animated-qr-export></app-animated-qr-export>
+    } @else {
+      <app-animated-qr-import></app-animated-qr-import>
+    }
+  </section>
 </div>

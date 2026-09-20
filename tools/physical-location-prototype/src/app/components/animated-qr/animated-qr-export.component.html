@@ -1,0 +1,73 @@
+<div class="aqr">
+  <div class="aqr__header">
+    <h3 class="aqr__title">QR animado · POC offline → móvil</h3>
+    <span class="aqr__badge">Labs · ≤100 ítems</span>
+  </div>
+  <p class="aqr__hint">
+    Exporta sin cable ni red: el desktop compone un QR que va cambiando (transferencia por luz). El móvil lo escanea frame a frame y recompone el CSV. Limitado a {{ maxRows }} filas para la POC — para colecciones grandes usa “Exportar ítems” por archivo.
+  </p>
+
+  <div class="aqr__actions">
+    <button mat-flat-button color="primary" type="button" (click)="generate()">
+      <mat-icon svgIcon="upload" aria-hidden="true"></mat-icon>
+      Generar QR animado
+    </button>
+    @if (frames().length > 0) {
+      <button mat-stroked-button type="button" (click)="togglePlay()">
+        <mat-icon [svgIcon]="isPlaying() ? 'close' : 'explore'" aria-hidden="true"></mat-icon>
+        {{ isPlaying() ? 'Pausar' : 'Reproducir' }}
+      </button>
+      <button mat-button type="button" (click)="clear()">Limpiar</button>
+    }
+  </div>
+
+  @if (error()) {
+    <p class="aqr__error" role="alert">{{ error() }}</p>
+  }
+
+  @if (frames().length > 0) {
+    <div class="aqr__stage">
+      <div class="aqr__qr-wrap">
+        @if (dataUrl()) {
+          <img class="aqr__qr" [src]="dataUrl()!" alt="QR animado" width="280" height="280" />
+        } @else {
+          <div class="aqr__qr aqr__qr--loading">Generando…</div>
+        }
+        <span class="aqr__frame-label">{{ progressLabel() }}</span>
+      </div>
+
+      <div class="aqr__controls">
+        <div class="aqr__nav">
+          <button mat-icon-button type="button" (click)="prev()" aria-label="Anterior">
+            <mat-icon svgIcon="chevronLeft" aria-hidden="true"></mat-icon>
+          </button>
+          <span class="aqr__progress">{{ progressLabel() }} · {{ frames().length }} frames · {{ 800 }} chars/frame</span>
+          <button mat-icon-button type="button" (click)="next()" aria-label="Siguiente">
+            <mat-icon svgIcon="chevronRight" aria-hidden="true"></mat-icon>
+          </button>
+        </div>
+
+        <label class="aqr__speed">
+          <span>Velocidad: {{ speedMs() }} ms</span>
+          <input type="range" min="200" max="1500" step="100" [value]="speedMs()" (input)="onSpeedChange($event)" />
+        </label>
+
+        <p class="aqr__payload-preview">
+          <strong>Payload frame {{ (currentIndex()+1) }}:</strong>
+          <code>{{ currentFrame()?.encoded?.slice(0, 80) }}…</code>
+        </p>
+
+        <div class="aqr__receiver-demo">
+          <button mat-stroked-button type="button" (click)="simulateReception()">Simular recepción en móvil (sin cámara)</button>
+          @if (receiverText()) {
+            <p class="aqr__success">Reensamblado OK — {{ receiverText()!.split('\n').length - 1 }} filas · primeros 120 chars:</p>
+            <pre class="aqr__pre">{{ receiverText()!.slice(0, 120) }}…</pre>
+          }
+        </div>
+      </div>
+    </div>
+    <p class="aqr__hint aqr__hint--small">
+      En móvil real: abre <em>Escanear</em> en este mismo dispositivo → apunta a este QR animado → el reassembler irá marcando `{{ progressLabel() }}` hasta completar y hará dry-run automático.
+    </p>
+  }
+</div>

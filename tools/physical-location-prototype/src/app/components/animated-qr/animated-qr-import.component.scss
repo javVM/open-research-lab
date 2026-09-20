@@ -1,0 +1,120 @@
+:host {
+  display: block;
+}
+
+.aqr-import {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px dashed var(--border, #c7c4d8);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+}
+
+.aqr-import__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.aqr-import__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text, #151c27);
+}
+
+.aqr-import__badge {
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: var(--warning-soft, #fef3c7);
+  color: var(--warning, #92400e);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.aqr-import__hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  color: var(--text-muted, #464555);
+  line-height: 1.4;
+}
+
+.aqr-import__actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.aqr-import__scanner {
+  margin-top: 0.9rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border, #c7c4d8);
+  max-width: 420px;
+}
+
+.aqr-import__progress {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text, #151c27);
+}
+
+.aqr-import__error {
+  margin-top: 0.6rem;
+  color: var(--error, #991b1b);
+  font-size: 0.85rem;
+}
+
+.aqr-import__success {
+  color: var(--success, #0f7a3d);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.aqr-import__assembled {
+  margin-top: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.aqr-import__pre {
+  margin: 0;
+  padding: 0.6rem;
+  background: var(--surface-raised, #f0f3ff);
+  border: 1px solid var(--border-soft, rgba(199,196,216,0.3));
+  border-radius: 8px;
+  font-size: 0.75rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 8rem;
+  overflow: auto;
+}
+
+.aqr-import__issues {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 0.8rem;
+  color: var(--error, #991b1b);
+}
+
+.aqr-import__manual {
+  margin-top: 1rem;
+}
+
+.aqr-import__manual-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.aqr-import__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--border, #c7c4d8);
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.85rem;
+}

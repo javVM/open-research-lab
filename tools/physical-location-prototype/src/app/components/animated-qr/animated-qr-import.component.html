@@ -1,0 +1,65 @@
+<div class="aqr-import">
+  <div class="aqr-import__header">
+    <h3 class="aqr-import__title">Recibir vía QR animado (móvil)</h3>
+    <span class="aqr-import__badge">POC</span>
+  </div>
+  <p class="aqr-import__hint">Apunta la cámara al QR animado del desktop. Se van coleccionando frames `NLAB:01/05:…` hasta completar. Al completar se hace dry-run automático.</p>
+
+  <div class="aqr-import__actions">
+    @if (!scanning()) {
+      <button mat-flat-button color="primary" type="button" (click)="startScan()">
+        <mat-icon svgIcon="qrCodeScanner" aria-hidden="true"></mat-icon>
+        Iniciar escaneo animado
+      </button>
+    } @else {
+      <button mat-stroked-button type="button" (click)="stopScan()">Detener</button>
+    }
+    <button mat-button type="button" (click)="reset()">Reiniciar</button>
+  </div>
+
+  @if (scanning()) {
+    <div class="aqr-import__scanner">
+      <app-qr-scanner (scanSuccess)="onScan($event)"></app-qr-scanner>
+    </div>
+  }
+
+  <p class="aqr-import__progress">Progreso: <strong>{{ progressText() }}</strong> @if (reassembler.missingIndices().length) { · faltan: {{ reassembler.missingIndices().join(', ') }} }</p>
+
+  @if (error()) {
+    <p class="aqr-import__error" role="alert">{{ error() }}</p>
+  }
+
+  @if (assembled()) {
+    <div class="aqr-import__assembled">
+      <p class="aqr-import__success">¡Transferencia completa! {{ assembled()!.split('\n').length - 1 }} filas.</p>
+      <pre class="aqr-import__pre">{{ assembled()!.slice(0, 200) }}…</pre>
+
+      @if (dryRunResult(); as dr) {
+        @if (dr.issues.length === 0) {
+          <p class="aqr-import__success">Dry-run sin errores — {{ dr.validRows.length }} válidas.</p>
+          <button mat-flat-button color="primary" type="button" (click)="confirmImport()">Confirmar importación ({{ dr.validRows.length }})</button>
+        } @else {
+          <p class="aqr-import__error">{{ dr.issues.length }} filas con errores</p>
+          <ul class="aqr-import__issues">
+            @for (issue of dr.issues.slice(0,5); track $index) {
+              <li>línea {{ issue.line }} — {{ issue.column }}: {{ issue.reason }}</li>
+            }
+          </ul>
+        }
+      }
+    </div>
+  }
+
+  @if (importSuccess() !== null) {
+    <p class="aqr-import__success" role="status">{{ importSuccess() }} ítems importados.</p>
+  }
+
+  <details class="aqr-import__manual">
+    <summary>Pegar frame manual (sin cámara)</summary>
+    <p class="aqr-import__hint">Para probar sin cámara, copia un frame `NLAB:01/02:...` del exportador y pégalo:</p>
+    <div class="aqr-import__manual-row">
+      <input #manualInput type="text" placeholder="NLAB:01/02:catalogueNumber,..." class="aqr-import__input" />
+      <button mat-stroked-button type="button" (click)="manualAdd(manualInput.value); manualInput.value=''">Añadir</button>
+    </div>
+  </details>
+</div>
