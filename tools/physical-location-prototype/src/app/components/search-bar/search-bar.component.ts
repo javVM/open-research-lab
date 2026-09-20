@@ -1,4 +1,4 @@
-import { Component, computed, signal, inject, ElementRef, HostListener } from '@angular/core';
+import { Component, computed, signal, inject, ElementRef, HostListener, effect } from '@angular/core';
 import { form, FormField, type FieldTree } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,10 +25,23 @@ export class SearchBarComponent {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   protected readonly text = createSearchBarTranslations(inject(TranslationService));
 
+  private previousQuery = '';
+
   constructor() {
     registerAppIcons();
-    // Keep isOpen in sync when query is changed programmatically (e.g. via selectResult)
-    // No effect needed; onQueryChange handles input events and selectResult handles clearing
+    effect(() => {
+      const currentQuery = this.query().trim();
+      const hadQuery = this.previousQuery !== '';
+      const hasQuery = currentQuery !== '';
+      // Auto-open only when query transitions from empty to non-empty (e.g. typing or programmatic set in tests)
+      // Don't auto-reopen if user explicitly closed via outside click/ESC while query still has content
+      if (!hadQuery && hasQuery) {
+        this.isOpen.set(true);
+      } else if (hadQuery && !hasQuery) {
+        this.isOpen.set(false);
+      }
+      this.previousQuery = currentQuery;
+    });
   }
 
   readonly query = signal('');
