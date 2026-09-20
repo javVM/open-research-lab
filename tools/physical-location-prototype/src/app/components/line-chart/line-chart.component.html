@@ -64,14 +64,16 @@
     }
   </svg>
 
-  <ul class="line-chart__legend">
-    @for (s of series(); track s.key) {
-      <li class="legend-item">
-        <span class="legend-item__swatch" [style.background]="s.color" aria-hidden="true"></span>
-        <span class="legend-item__label">{{ s.label }}</span>
-      </li>
-    }
-  </ul>
+  @if (!hideLegend()) {
+    <ul class="line-chart__legend">
+      @for (s of series(); track s.key) {
+        <li class="legend-item">
+          <span class="legend-item__swatch" [style.background]="s.color" aria-hidden="true"></span>
+          <span class="legend-item__label">{{ s.label }}</span>
+        </li>
+      }
+    </ul>
+  }
 } @else {
   <p class="line-chart__empty">{{ emptyMessage() }}</p>
 }

@@ -64,6 +64,10 @@ export const APP_ICON = {
   notifications: 'notifications',
   user: 'user',
   mail: 'mail',
+  tune: 'tune',
+  dashboard: 'dashboard',
+  contentCopy: 'contentCopy',
+  chevronUp: 'chevronUp',
 } as const;
 export type AppIcon = (typeof APP_ICON)[keyof typeof APP_ICON];
 
@@ -344,6 +348,31 @@ const ICON_SVGS: Record<AppIcon, string> = {
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <rect x="3" y="5" width="18" height="14" rx="2"/>
       <path d="M3 7l9 6 9-6"/>
+    </svg>`,
+  [APP_ICON.tune]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="4" y1="6" x2="20" y2="6"/>
+      <line x1="4" y1="12" x2="20" y2="12"/>
+      <line x1="4" y1="18" x2="20" y2="18"/>
+      <circle cx="9" cy="6" r="2" fill="currentColor" stroke="none"/>
+      <circle cx="15" cy="12" r="2" fill="currentColor" stroke="none"/>
+      <circle cx="11" cy="18" r="2" fill="currentColor" stroke="none"/>
+    </svg>`,
+  [APP_ICON.dashboard]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1"/>
+      <rect x="14" y="3" width="7" height="7" rx="1"/>
+      <rect x="3" y="14" width="7" height="7" rx="1"/>
+      <rect x="14" y="14" width="7" height="7" rx="1"/>
+    </svg>`,
+  [APP_ICON.contentCopy]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="9" width="13" height="13" rx="2"/>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v3"/>
+    </svg>`,
+  [APP_ICON.chevronUp]: `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"/>
     </svg>`,
 };
 

@@ -5,110 +5,258 @@
       @if (settings.settings().institutionName) {
         <p class="reports__institution">{{ settings.settings().institutionName }}</p>
       } @else {
-        <p>{{ text.subheading() }}</p>
+        <p>{{ dashboard.activeTemplate().description || text.subheading() }}</p>
       }
     </div>
+    @if (!isEmptyDashboard() && !showCatalog()) {
+      <div class="reports__controls">
+        <button
+          mat-stroked-button
+          type="button"
+          class="reports__customize-button"
+          (click)="openCatalog()"
+          [attr.aria-label]="dashboardText.addWidgetButton()"
+        >
+          <mat-icon svgIcon="add" aria-hidden="true"></mat-icon>
+          {{ dashboardText.addWidgetButton() }}
+        </button>
+      </div>
+    }
   </header>
 
-  <div class="reports__metrics">
-    @for (metric of metrics(); track metric.label) {
-      <div class="metric">
-        <div class="metric__top">
-          <span class="metric__label">{{ metric.label }}</span>
-          <span class="metric__icon" aria-hidden="true">
-            <mat-icon [svgIcon]="metric.icon"></mat-icon>
-          </span>
+  @if (showCatalog()) {
+    <section class="widget-catalog" aria-label="Widget catalog" role="dialog" aria-modal="true">
+      <div class="widget-catalog__header">
+        <div>
+          <h3 class="widget-catalog__title">{{ dashboardText.catalogHeading() }}</h3>
+          <p class="widget-catalog__description">{{ dashboardText.catalogDescription() }}</p>
         </div>
-        <div class="metric__value">{{ metric.value }}</div>
-        @if (metric.caption) {
-          <div class="metric__caption">{{ metric.caption }}</div>
+        <button
+          mat-icon-button
+          type="button"
+          (click)="closeCatalog()"
+          [attr.aria-label]="dashboardText.catalogCloseLabel()"
+        >
+          <mat-icon svgIcon="close" aria-hidden="true"></mat-icon>
+        </button>
+      </div>
+      <div class="widget-catalog__grid">
+        @for (item of catalogWidgets(); track item.kind) {
+          <button
+            type="button"
+            class="widget-catalog__card"
+            [class.widget-catalog__card--added]="item.isAdded"
+            (click)="addWidgetFromCatalog(item.kind)"
+            [disabled]="item.isAdded"
+            [attr.aria-label]="item.label"
+            [attr.aria-pressed]="item.isAdded"
+          >
+            <span class="widget-catalog__card-header">
+              <span class="widget-catalog__card-title">{{ item.label }}</span>
+              @if (item.isAdded) {
+                <span class="widget-catalog__added-badge">
+                  <mat-icon svgIcon="checkCircle" aria-hidden="true"></mat-icon>
+                  {{ dashboardText.catalogAddedLabel() }}
+                </span>
+              } @else {
+                <span class="widget-catalog__add-badge">
+                  <mat-icon svgIcon="add" aria-hidden="true"></mat-icon>
+                  {{ dashboardText.catalogAddLabel() }}
+                </span>
+              }
+            </span>
+            <span class="widget-catalog__preview">
+              @if (item.kind === 'metric-total-items' || item.kind === 'metric-locations-in-use' || item.kind === 'metric-unlocated' || item.kind === 'metric-integrity') {
+                @if (previewMetric(item.kind); as metric) {
+                  <span class="metric metric--preview">
+                    <span class="metric__top">
+                      <span class="metric__label">{{ metric.label }}</span>
+                      <span class="metric__icon" aria-hidden="true">
+                        <mat-icon [svgIcon]="metric.icon"></mat-icon>
+                      </span>
+                    </span>
+                    <span class="metric__value">{{ metric.value }}</span>
+                    @if (metric.caption) {
+                      <span class="metric__caption">{{ metric.caption }}</span>
+                    }
+                  </span>
+                }
+              } @else if (item.kind === 'donut-status') {
+                <app-donut-chart size="sm" [segments]="previewDonutStatusSegments" centerLabel="TOTAL" [centerValue]="150" ariaLabel="Preview" [hideLegend]="true"></app-donut-chart>
+              } @else if (item.kind === 'donut-category') {
+                <app-donut-chart size="sm" [segments]="previewDonutCategorySegments" centerLabel="TOTAL" [centerValue]="150" ariaLabel="Preview" [hideLegend]="true"></app-donut-chart>
+              } @else if (item.kind === 'donut-building') {
+                <app-donut-chart size="sm" [segments]="previewDonutBuildingSegments" centerLabel="TOTAL" [centerValue]="150" ariaLabel="Preview" [hideLegend]="true"></app-donut-chart>
+              } @else if (item.kind === 'timeline') {
+                <app-line-chart [series]="previewTimelineSeries" [formattedMonths]="['01/2024','02/2024','03/2024']" [yTicks]="[{value:0},{value:5},{value:10},{value:15}]" ariaLabel="Preview" [hideLegend]="true"></app-line-chart>
+              } @else if (item.kind === 'table-recent') {
+                <span class="widget-catalog__table-preview" aria-hidden="true">
+                  <span class="widget-catalog__table-row"><span>MNCN-0001</span><span>Placed</span><span>Lab A</span></span>
+                  <span class="widget-catalog__table-row"><span>MNCN-0002</span><span>Extracted</span><span>Freezer 1</span></span>
+                  <span class="widget-catalog__table-row"><span>MNCN-0003</span><span>Transferred</span><span>Box 3</span></span>
+                </span>
+              }
+            </span>
+          </button>
         }
       </div>
-    }
-  </div>
-
-  <div class="reports__charts">
-    <section class="chart" [attr.aria-label]="text.distributionAriaLabel()">
-      <h3 class="chart__title">{{ text.distributionHeading() }}</h3>
-      <app-donut-chart
-        size="lg"
-        [segments]="statusDonutSegments()"
-        [centerLabel]="text.distributionTotalLabel()"
-        [centerValue]="summary().totalItems"
-        [ariaLabel]="text.distributionAriaLabel()"
-      ></app-donut-chart>
     </section>
+  }
 
-    <section class="chart chart--category" [attr.aria-label]="text.byCategoryAriaLabel()">
-      <h3 class="chart__title">{{ text.byCategoryHeading() }}</h3>
-      <app-donut-chart
-        size="lg"
-        [segments]="categoryDonutSegments()"
-        [centerLabel]="text.distributionTotalLabel()"
-        [centerValue]="summary().totalItems"
-        [ariaLabel]="text.byCategoryAriaLabel()"
-      ></app-donut-chart>
+  @if (hasVisibleMetrics()) {
+    <div class="reports__metrics">
+      @for (metric of orderedVisibleMetrics(); track metric.kind) {
+        <div class="metric metric--dashboard">
+          <button
+            mat-icon-button
+            type="button"
+            class="widget-remove"
+            (click)="setWidgetEnabled(metric.kind, false)"
+            [attr.aria-label]="'Remove ' + metric.label"
+            title="Remove widget"
+          >
+            <mat-icon svgIcon="close" aria-hidden="true"></mat-icon>
+          </button>
+          <div class="metric__top">
+            <span class="metric__label">{{ metric.label }}</span>
+            <span class="metric__icon" aria-hidden="true">
+              <mat-icon [svgIcon]="metric.icon"></mat-icon>
+            </span>
+          </div>
+          <div class="metric__value">{{ metric.value }}</div>
+          @if (metric.caption) {
+            <div class="metric__caption">{{ metric.caption }}</div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @if (hasDonutWidgets()) {
+    <div class="reports__charts">
+      @if (isWidgetVisible('donut-status')) {
+        <section class="chart" [attr.aria-label]="text.distributionAriaLabel()">
+          <button mat-icon-button type="button" class="widget-remove" (click)="setWidgetEnabled('donut-status', false)" aria-label="Remove Collection by status" title="Remove widget">
+            <mat-icon svgIcon="close" aria-hidden="true"></mat-icon>
+          </button>
+          <h3 class="chart__title">{{ text.distributionHeading() }}</h3>
+          <app-donut-chart
+            size="lg"
+            [segments]="statusDonutSegments()"
+            [centerLabel]="text.distributionTotalLabel()"
+            [centerValue]="summary().totalItems"
+            [ariaLabel]="text.distributionAriaLabel()"
+          ></app-donut-chart>
+        </section>
+      }
+      @if (isWidgetVisible('donut-category')) {
+        <section class="chart chart--category" [attr.aria-label]="text.byCategoryAriaLabel()">
+          <button mat-icon-button type="button" class="widget-remove" (click)="setWidgetEnabled('donut-category', false)" aria-label="Remove Items by category" title="Remove widget">
+            <mat-icon svgIcon="close" aria-hidden="true"></mat-icon>
+          </button>
+          <h3 class="chart__title">{{ text.byCategoryHeading() }}</h3>
+          <app-donut-chart
+            size="lg"
+            [segments]="categoryDonutSegments()"
+            [centerLabel]="text.distributionTotalLabel()"
+            [centerValue]="summary().totalItems"
+            [ariaLabel]="text.byCategoryAriaLabel()"
+          ></app-donut-chart>
+        </section>
+      }
+      @if (isWidgetVisible('donut-building')) {
+        <section class="chart chart--building" [attr.aria-label]="text.byBuildingAriaLabel()">
+          <button mat-icon-button type="button" class="widget-remove" (click)="setWidgetEnabled('donut-building', false)" aria-label="Remove Items by building" title="Remove widget">
+            <mat-icon svgIcon="close" aria-hidden="true"></mat-icon>
+          </button>
+          <h3 class="chart__title">{{ text.byBuildingHeading() }}</h3>
+          <app-donut-chart
+            size="lg"
+            [segments]="buildingDonutSegments()"
+            [centerLabel]="text.distributionTotalLabel()"
+            [centerValue]="summary().totalItems"
+            [ariaLabel]="text.byBuildingAriaLabel()"
+          ></app-donut-chart>
+        </section>
+      }
+    </div>
+  }
+
+  @if (isWidgetVisible('timeline')) {
+    <section class="chart chart--timeline" [attr.aria-label]="text.timelineAriaLabel()">
+      <button mat-icon-button type="button" class="widget-remove" (click)="setWidgetEnabled('timeline', false)" aria-label="Remove Movements over time" title="Remove widget">
+        <mat-icon svgIcon="close" aria-hidden="true"></mat-icon>
+      </button>
+      <h3 class="chart__title">{{ text.timelineHeading() }}</h3>
+      @if (timelineChart(); as chart) {
+        <app-line-chart
+          [series]="chart.series"
+          [formattedMonths]="chart.formattedMonths"
+          [yTicks]="chart.yTicks"
+          [ariaLabel]="text.timelineAriaLabel()"
+        ></app-line-chart>
+      } @else {
+        <p class="reports__empty">{{ text.emptyMovements() }}</p>
+      }
     </section>
+  }
 
-    <section class="chart chart--building" [attr.aria-label]="text.byBuildingAriaLabel()">
-      <h3 class="chart__title">{{ text.byBuildingHeading() }}</h3>
-      <app-donut-chart
-        size="lg"
-        [segments]="buildingDonutSegments()"
-        [centerLabel]="text.distributionTotalLabel()"
-        [centerValue]="summary().totalItems"
-        [ariaLabel]="text.byBuildingAriaLabel()"
-      ></app-donut-chart>
-    </section>
-  </div>
-
-  <section class="chart chart--timeline" [attr.aria-label]="text.timelineAriaLabel()">
-    <h3 class="chart__title">{{ text.timelineHeading() }}</h3>
-    @if (timelineChart(); as chart) {
-      <app-line-chart
-        [series]="chart.series"
-        [formattedMonths]="chart.formattedMonths"
-        [yTicks]="chart.yTicks"
-        [ariaLabel]="text.timelineAriaLabel()"
-      ></app-line-chart>
-    } @else {
-      <p class="reports__empty">{{ text.emptyMovements() }}</p>
-    }
-  </section>
-
-  <section class="reports__activity" [attr.aria-label]="text.recentAriaLabel()">
-    <h3 class="chart__title">{{ text.recentHeading() }}</h3>
-    @if (summary().recentMovements.length > 0) {
-      <div class="reports__table-wrap">
-        <table class="reports__table">
-          <thead>
-            <tr>
-              <th class="reports__table-item-header" scope="col">{{ text.itemColumn() }}</th>
-              <th class="reports__table-action-header" scope="col">{{ text.actionColumn() }}</th>
-              <th class="reports__table-location-header" scope="col">{{ text.locationColumn() }}</th>
-              <th class="reports__table-performed-by-header" scope="col">{{ text.performedByColumn() }}</th>
-              <th class="reports__table-time-header" scope="col">{{ text.timeColumn() }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (row of summary().recentMovements; track row.movementId; let i = $index) {
-              <tr [style.--row-index]="i">
-                <td class="reports__table-item">{{ row.catalogueNumber }}</td>
-                <td>
-                  <span class="reports__action" [class.reports__action--placed]="row.action === 'placed'" [class.reports__action--extracted]="row.action === 'extracted'">
-                    {{ actionLabel(row.action) }}
-                  </span>
-                </td>
-                <td class="reports__table-location">{{ row.locationName ?? '—' }}</td>
-                <td class="reports__table-performed-by">{{ row.performedBy ?? '—' }}</td>
-                <td class="reports__table-time">{{ formatOccurredAt(row.occurredAt) }}</td>
+  @if (isWidgetVisible('table-recent')) {
+    <section class="reports__activity" [attr.aria-label]="text.recentAriaLabel()">
+      <button mat-icon-button type="button" class="widget-remove" (click)="setWidgetEnabled('table-recent', false)" aria-label="Remove Recent movements" title="Remove widget">
+        <mat-icon svgIcon="close" aria-hidden="true"></mat-icon>
+      </button>
+      <h3 class="chart__title">{{ text.recentHeading() }}</h3>
+      @if (summary().recentMovements.length > 0) {
+        <div class="reports__table-wrap">
+          <table class="reports__table">
+            <thead>
+              <tr>
+                <th class="reports__table-item-header" scope="col">{{ text.itemColumn() }}</th>
+                <th class="reports__table-action-header" scope="col">{{ text.actionColumn() }}</th>
+                <th class="reports__table-location-header" scope="col">{{ text.locationColumn() }}</th>
+                <th class="reports__table-performed-by-header" scope="col">{{ text.performedByColumn() }}</th>
+                <th class="reports__table-time-header" scope="col">{{ text.timeColumn() }}</th>
               </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    } @else {
-      <p class="reports__empty">{{ text.emptyMovements() }}</p>
-    }
-  </section>
+            </thead>
+            <tbody>
+              @for (row of summary().recentMovements; track row.movementId; let i = $index) {
+                <tr [style.--row-index]="i">
+                  <td class="reports__table-item">{{ row.catalogueNumber }}</td>
+                  <td>
+                    <span
+                      class="reports__action"
+                      [class.reports__action--placed]="row.action === 'placed'"
+                      [class.reports__action--extracted]="row.action === 'extracted'"
+                    >
+                      {{ actionLabel(row.action) }}
+                    </span>
+                  </td>
+                  <td class="reports__table-location">{{ row.locationName ?? '—' }}</td>
+                  <td class="reports__table-performed-by">{{ row.performedBy ?? '—' }}</td>
+                  <td class="reports__table-time">{{ formatOccurredAt(row.occurredAt) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <p class="reports__empty">{{ text.emptyMovements() }}</p>
+      }
+    </section>
+  }
+
+  @if (isEmptyDashboard() && !showCatalog()) {
+    <section class="reports__empty-dashboard" aria-label="Empty dashboard">
+      <span class="reports__empty-dashboard-icon" aria-hidden="true">
+        <mat-icon svgIcon="warning"></mat-icon>
+      </span>
+      <h3 class="reports__empty-dashboard-title">{{ dashboardText.emptyTitle() }}</h3>
+      <p class="reports__empty-dashboard-description">{{ dashboardText.emptyDescription() }}</p>
+      <button mat-flat-button type="button" color="primary" (click)="openCatalog()" [attr.aria-label]="dashboardText.addWidgetButton()">
+        <mat-icon svgIcon="add" aria-hidden="true"></mat-icon>
+        {{ dashboardText.addWidgetButton() }}
+      </button>
+    </section>
+  }
 </div>

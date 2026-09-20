@@ -1211,6 +1211,111 @@
       <trans-unit id="onboarding.login.link">
         <source>Log in</source>
       </trans-unit>
+      <trans-unit id="reports.dashboard.templateSelector">
+        <source>Dashboard template</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.customize">
+        <source>Customize</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.done">
+        <source>Done</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.reset">
+        <source>Reset to default</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.duplicate">
+        <source>Duplicate template</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.customizeHeading">
+        <source>Customize dashboard</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.customizeDescription">
+        <source>Choose which statistics to show and reorder them. Changes are saved automatically.</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widgetsHeading">
+        <source>Visible widgets</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.moveUp">
+        <source>Move up</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.moveDown">
+        <source>Move down</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.emptyTitle">
+        <source>No hay métricas que mostrar</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.emptyDescription">
+        <source>Activa al menos un widget arriba para ver estadísticas</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.addWidget">
+        <source>Add widget</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.catalogHeading">
+        <source>Widget catalog</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.catalogDescription">
+        <source>Pulsa en la opción que te gusta para añadirla al dashboard</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.catalogAdd">
+        <source>Add</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.catalogAdded">
+        <source>Added</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.catalogClose">
+        <source>Close</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.metricTotalItems">
+        <source>Total items</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.metricLocationsInUse">
+        <source>Locations in use</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.metricUnlocated">
+        <source>Unlocated items</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.metricIntegrity">
+        <source>Integrity</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.donutStatus">
+        <source>Collection by status</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.donutCategory">
+        <source>Items by category</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.donutBuilding">
+        <source>Items by building</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.timeline">
+        <source>Movements over time</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.recent">
+        <source>Recent movements</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.overview">
+        <source>Overview</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.overviewDesc">
+        <source>All metrics, distribution and activity</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.operational">
+        <source>Operational</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.operationalDesc">
+        <source>Location occupancy and integrity</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.collection">
+        <source>Collection</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.collectionDesc">
+        <source>Taxonomic and status distribution</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.activity">
+        <source>Activity</source>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.activityDesc">
+        <source>Movement history and recent changes</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -42,6 +42,7 @@ export class LineChartComponent {
   readonly yTicks = input.required<LineChartTick[]>();
   readonly ariaLabel = input<string>('');
   readonly emptyMessage = input<string>('');
+  readonly hideLegend = input(false);
 
   private readonly hostSize = signal<{ width: number; height: number }>({
     width: 0,

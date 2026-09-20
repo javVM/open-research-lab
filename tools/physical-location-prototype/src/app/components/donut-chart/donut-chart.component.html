@@ -30,12 +30,14 @@
     <span class="donut__center-value">{{ centerValue() }}</span>
   </div>
 </div>
-<ul class="donut__legend">
-  @for (segment of segments(); track segment.key) {
-    <li class="legend-item">
-      <span class="legend-item__swatch" [style.background]="segment.color" aria-hidden="true"></span>
-      <span class="legend-item__label">{{ segment.label }}</span>
-      <span class="legend-item__percent">{{ segment.percent }}%</span>
-    </li>
-  }
-</ul>
+@if (!hideLegend()) {
+  <ul class="donut__legend">
+    @for (segment of segments(); track segment.key) {
+      <li class="legend-item">
+        <span class="legend-item__swatch" [style.background]="segment.color" aria-hidden="true"></span>
+        <span class="legend-item__label">{{ segment.label }}</span>
+        <span class="legend-item__percent">{{ segment.percent }}%</span>
+      </li>
+    }
+  </ul>
+}

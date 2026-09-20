@@ -1,4 +1,5 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import type { ItemCategory, ItemStatus } from '../../../core/models';
 import { computeReportSummary, type ReportMovementAction } from '../../../core/report';
@@ -15,6 +16,10 @@ import {
   categorySegmentColor,
 } from './reports-view.constants';
 import { createReportsViewTranslations } from './reports-view.translations';
+import { ALL_WIDGET_KINDS } from './dashboard.model';
+import type { WidgetKind } from './dashboard.model';
+import { DashboardService } from './dashboard.service';
+import { createDashboardTranslations } from './dashboard.translations';
 
 /**
  * Read-only analytics view over the current dataset: key metrics, donuts for
@@ -25,15 +30,24 @@ import { createReportsViewTranslations } from './reports-view.translations';
 @Component({
   standalone: true,
   selector: 'app-reports-view',
-  imports: [MatIconModule, DonutChartComponent, LineChartComponent],
+  imports: [
+    MatIconModule,
+    MatButtonModule,
+    DonutChartComponent,
+    LineChartComponent,
+  ],
   templateUrl: './reports-view.component.html',
   styleUrl: './reports-view.component.scss',
 })
 export class ReportsViewComponent {
   protected readonly collection = inject(CollectionService);
   protected readonly settings = inject(SettingsService);
+  protected readonly dashboard = inject(DashboardService);
   protected readonly text = createReportsViewTranslations(inject(TranslationService));
+  protected readonly dashboardText = createDashboardTranslations(inject(TranslationService));
   protected readonly categoryText = createItemCategoryTranslations(inject(TranslationService));
+  protected readonly showCatalog = signal(false);
+  protected readonly allWidgetKinds = ALL_WIDGET_KINDS;
 
   constructor() {
     registerAppIcons();
@@ -158,24 +172,28 @@ export class ReportsViewComponent {
     const summary = this.summary();
     return [
       {
+        kind: 'metric-total-items' as const,
         icon: 'flask',
         label: this.text.metricTotalItems(),
         value: String(summary.totalItems),
         caption: null,
       },
       {
+        kind: 'metric-locations-in-use' as const,
         icon: 'place',
         label: this.text.metricLocationsInUse(),
         value: String(summary.locationsInUse),
         caption: this.text.metricLocationsInUseCaption(),
       },
       {
+        kind: 'metric-unlocated' as const,
         icon: 'warning',
         label: this.text.metricUnlocated(),
         value: String(summary.unlocatedItems),
         caption: this.text.metricUnlocatedCaption(),
       },
       {
+        kind: 'metric-integrity' as const,
         icon: 'checkCircle',
         label: this.text.metricIntegrity(),
         value: this.integrityPercentLabel(),
@@ -183,6 +201,93 @@ export class ReportsViewComponent {
       },
     ];
   });
+
+  protected readonly visibleWidgetKinds = computed(() => new Set<WidgetKind>(this.dashboard.activeTemplate().widgetKinds));
+
+  protected readonly orderedVisibleMetrics = computed(() => {
+    const order = this.dashboard.activeTemplate().widgetKinds;
+    const orderIndex = new Map<WidgetKind, number>(order.map((kind, index) => [kind, index]));
+    return this.metrics()
+      .filter((metric) => orderIndex.has(metric.kind))
+      .sort((a, b) => (orderIndex.get(a.kind) ?? 0) - (orderIndex.get(b.kind) ?? 0));
+  });
+
+  protected readonly hasVisibleMetrics = computed(() => this.orderedVisibleMetrics().length > 0);
+
+  protected readonly hasDonutWidgets = computed(() => {
+    const visible = this.visibleWidgetKinds();
+    return visible.has('donut-status') || visible.has('donut-category') || visible.has('donut-building');
+  });
+
+  protected readonly isEmptyDashboard = computed(() => this.dashboard.activeTemplate().widgetKinds.length === 0);
+
+  protected readonly catalogWidgets = computed(() =>
+    ALL_WIDGET_KINDS.map((kind) => ({
+      kind,
+      label: this.dashboardText.widgetLabel(kind),
+      isAdded: this.visibleWidgetKinds().has(kind),
+    })),
+  );
+
+  protected readonly previewMetric = (kind: WidgetKind) => {
+    switch (kind) {
+      case 'metric-total-items':
+        return { icon: 'flask', label: this.dashboardText.widgetLabel(kind), value: '150', caption: null as string | null };
+      case 'metric-locations-in-use':
+        return { icon: 'place', label: this.dashboardText.widgetLabel(kind), value: '116', caption: 'holding at least one item' };
+      case 'metric-unlocated':
+        return { icon: 'warning', label: this.dashboardText.widgetLabel(kind), value: '26', caption: 'not in storage' };
+      case 'metric-integrity':
+        return { icon: 'checkCircle', label: this.dashboardText.widgetLabel(kind), value: '82.7%', caption: 'of items are located' };
+      default:
+        return null;
+    }
+  };
+
+  protected readonly previewDonutStatusSegments: DonutChartSegment[] = [
+    { key: 'active', label: 'Active', tooltip: 'Active: 115 (77%)', count: 115, percent: 77, color: STATUS_SEGMENT_COLOR['active'] },
+    { key: 'checked_out', label: 'Checked out', tooltip: 'Checked out: 14 (9%)', count: 14, percent: 9, color: STATUS_SEGMENT_COLOR['checked_out'] },
+    { key: 'lost', label: 'Lost', tooltip: 'Lost: 13 (9%)', count: 13, percent: 9, color: STATUS_SEGMENT_COLOR['lost'] },
+    { key: 'archived', label: 'Archived', tooltip: 'Archived: 8 (5%)', count: 8, percent: 5, color: STATUS_SEGMENT_COLOR['archived'] },
+  ];
+
+  protected readonly previewDonutCategorySegments: DonutChartSegment[] = [
+    { key: 'a', label: 'Macrofossil', tooltip: 'Macrofossil: 12 (8%)', count: 12, percent: 8, color: '#92400e' },
+    { key: 'b', label: 'Microfossil', tooltip: 'Microfossil: 10 (7%)', count: 10, percent: 7, color: '#b45309' },
+    { key: 'c', label: 'Mineral / Crystal', tooltip: 'Mineral / Crystal: 18 (12%)', count: 18, percent: 12, color: '#475569' },
+    { key: 'd', label: 'Others', tooltip: 'Others: 110 (73%)', count: 110, percent: 73, color: '#94a3b8' },
+  ];
+
+  protected readonly previewDonutBuildingSegments: DonutChartSegment[] = [
+    { key: 'a', label: 'Building A', tooltip: 'Building A: 27 (18%)', count: 27, percent: 18, color: '#c2410c' },
+    { key: 'b', label: 'Building B', tooltip: 'Building B: 24 (16%)', count: 24, percent: 16, color: '#a16207' },
+    { key: 'c', label: 'Building C', tooltip: 'Building C: 28 (19%)', count: 28, percent: 19, color: '#15803d' },
+    { key: 'd', label: 'Building D', tooltip: 'Building D: 28 (19%)', count: 28, percent: 19, color: '#2563eb' },
+    { key: 'e', label: 'Building E', tooltip: 'Building E: 16 (11%)', count: 16, percent: 11, color: '#9333ea' },
+  ];
+
+  protected readonly previewTimelineSeries: LineChartSeries[] = [
+    {
+      key: 'placed',
+      label: 'Placed',
+      color: ACTION_LINE_COLOR['placed'],
+      points: [
+        { month: '2024-01', count: 8, tooltip: '01/2024: Placed — 8' },
+        { month: '2024-02', count: 12, tooltip: '02/2024: Placed — 12' },
+        { month: '2024-03', count: 6, tooltip: '03/2024: Placed — 6' },
+      ],
+    },
+    {
+      key: 'extracted',
+      label: 'Extracted',
+      color: ACTION_LINE_COLOR['extracted'],
+      points: [
+        { month: '2024-01', count: 3, tooltip: '01/2024: Extracted — 3' },
+        { month: '2024-02', count: 5, tooltip: '02/2024: Extracted — 5' },
+        { month: '2024-03', count: 2, tooltip: '03/2024: Extracted — 2' },
+      ],
+    },
+  ];
 
   protected statusLabel(status: ItemStatus): string {
     switch (status) {
@@ -227,5 +332,31 @@ export class ReportsViewComponent {
       return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
     return d.toLocaleString();
+  }
+
+  protected isWidgetVisible(kind: WidgetKind): boolean {
+    return this.visibleWidgetKinds().has(kind);
+  }
+
+  protected widgetLabel(kind: WidgetKind): string {
+    return this.dashboardText.widgetLabel(kind);
+  }
+
+  protected setWidgetEnabled(kind: WidgetKind, checked: boolean): void {
+    this.dashboard.setWidgetEnabled(this.dashboard.activeTemplate().id, kind, checked);
+  }
+
+  protected openCatalog(): void {
+    this.showCatalog.set(true);
+  }
+
+  protected closeCatalog(): void {
+    this.showCatalog.set(false);
+  }
+
+  protected addWidgetFromCatalog(kind: WidgetKind): void {
+    if (!this.isWidgetVisible(kind)) {
+      this.dashboard.setWidgetEnabled(this.dashboard.activeTemplate().id, kind, true);
+    }
   }
 }

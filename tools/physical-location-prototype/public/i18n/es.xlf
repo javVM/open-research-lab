@@ -1614,6 +1614,146 @@
         <source>Log in</source>
         <target>Entrar</target>
       </trans-unit>
+      <trans-unit id="reports.dashboard.templateSelector">
+        <source>Dashboard template</source>
+        <target>Plantilla del dashboard</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.customize">
+        <source>Customize</source>
+        <target>Personalizar</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.done">
+        <source>Done</source>
+        <target>Hecho</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.reset">
+        <source>Reset to default</source>
+        <target>Restablecer por defecto</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.duplicate">
+        <source>Duplicate template</source>
+        <target>Duplicar plantilla</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.customizeHeading">
+        <source>Customize dashboard</source>
+        <target>Personalizar dashboard</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.customizeDescription">
+        <source>Choose which statistics to show and reorder them. Changes are saved automatically.</source>
+        <target>Elige qué estadísticas mostrar y reordénalas. Los cambios se guardan automáticamente.</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widgetsHeading">
+        <source>Visible widgets</source>
+        <target>Widgets visibles</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.moveUp">
+        <source>Move up</source>
+        <target>Mover arriba</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.moveDown">
+        <source>Move down</source>
+        <target>Mover abajo</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.emptyTitle">
+        <source>No hay métricas que mostrar</source>
+        <target>No hay métricas que mostrar</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.emptyDescription">
+        <source>Activa al menos un widget arriba para ver estadísticas</source>
+        <target>Activa al menos un widget arriba para ver estadísticas</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.addWidget">
+        <source>Add widget</source>
+        <target>Añadir widget</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.catalogHeading">
+        <source>Widget catalog</source>
+        <target>Catálogo de widgets</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.catalogDescription">
+        <source>Pulsa en la opción que te gusta para añadirla al dashboard</source>
+        <target>Pulsa en la opción que te gusta para añadirla al dashboard</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.catalogAdd">
+        <source>Add</source>
+        <target>Añadir</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.catalogAdded">
+        <source>Added</source>
+        <target>Añadido</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.catalogClose">
+        <source>Close</source>
+        <target>Cerrar</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.metricTotalItems">
+        <source>Total items</source>
+        <target>Ítems totales</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.metricLocationsInUse">
+        <source>Locations in use</source>
+        <target>Ubicaciones en uso</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.metricUnlocated">
+        <source>Unlocated items</source>
+        <target>Ítems sin ubicar</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.metricIntegrity">
+        <source>Integrity</source>
+        <target>Integridad</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.donutStatus">
+        <source>Collection by status</source>
+        <target>Colección por estado</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.donutCategory">
+        <source>Items by category</source>
+        <target>Ítems por categoría</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.donutBuilding">
+        <source>Items by building</source>
+        <target>Ítems por edificio</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.timeline">
+        <source>Movements over time</source>
+        <target>Movimientos a lo largo del tiempo</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.widget.recent">
+        <source>Recent movements</source>
+        <target>Movimientos recientes</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.overview">
+        <source>Overview</source>
+        <target>Vista general</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.overviewDesc">
+        <source>All metrics, distribution and activity</source>
+        <target>Todas las métricas, distribución y actividad</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.operational">
+        <source>Operational</source>
+        <target>Operativo</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.operationalDesc">
+        <source>Location occupancy and integrity</source>
+        <target>Ocupación e integridad</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.collection">
+        <source>Collection</source>
+        <target>Colección</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.collectionDesc">
+        <source>Taxonomic and status distribution</source>
+        <target>Distribución taxonómica y por estado</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.activity">
+        <source>Activity</source>
+        <target>Actividad</target>
+      </trans-unit>
+      <trans-unit id="reports.dashboard.template.activityDesc">
+        <source>Movement history and recent changes</source>
+        <target>Historial de movimientos</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
