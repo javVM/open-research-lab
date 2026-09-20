@@ -1,5 +1,4 @@
 import { Component, computed, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import type { ItemCategory, ItemStatus } from '../../../core/models';
 import { computeReportSummary, type ReportMovementAction } from '../../../core/report';
@@ -26,7 +25,7 @@ import { createReportsViewTranslations } from './reports-view.translations';
 @Component({
   standalone: true,
   selector: 'app-reports-view',
-  imports: [DatePipe, MatIconModule, DonutChartComponent, LineChartComponent],
+  imports: [MatIconModule, DonutChartComponent, LineChartComponent],
   templateUrl: './reports-view.component.html',
   styleUrl: './reports-view.component.scss',
 })

@@ -23,7 +23,7 @@ import { createLocationViewTranslations } from './location-view.translations';
 import { createLocationTypeTranslations } from '../../shared/location-type.translations';
 import { createQrLabelTranslations } from '../qr-label/qr-label.translations';
 import { FloorPlanComponent } from '../floor-plan/floor-plan.component';
-import { FloorPlan3dComponent } from '../floor-plan-3d/floor-plan-3d.component';
+import { FloorPlanThreeComponent } from '../floor-plan-three/floor-plan-three.component';
 import { PositionGridComponent } from '../position-grid/position-grid.component';
 import { QrLabelComponent } from '../qr-label/qr-label.component';
 import { GeometryService } from '../../shared/geometry.service';
@@ -50,7 +50,7 @@ import { registerAppIcons } from '../../shared/icons';
     MatMenuModule,
     LocationEditModalComponent,
     FloorPlanComponent,
-    FloorPlan3dComponent,
+    FloorPlanThreeComponent,
     PositionGridComponent,
     PromptModalComponent,
     QrLabelComponent,

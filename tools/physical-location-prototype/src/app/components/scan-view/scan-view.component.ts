@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { form, FormField, type FieldTree } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,7 +26,6 @@ function formatScanItemLabel(catalogue: string, label: string | null): string {
   standalone: true,
   selector: 'app-scan-view',
   imports: [
-    DatePipe,
     MatButtonModule,
     MatFormFieldModule,
     MatIconModule,

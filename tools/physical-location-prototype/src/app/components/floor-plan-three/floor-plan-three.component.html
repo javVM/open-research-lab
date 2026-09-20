@@ -1,0 +1,27 @@
+<div class="floor-plan-three" [attr.aria-label]="text.ariaLabel()">
+  <div class="floor-plan-three__tools floor-plan-three__tools--left" role="group" aria-label="Navegación">
+    <button type="button" class="floor-plan-three__tool" (click)="zoomIn()" aria-label="Zoom in" title="Zoom in"><mat-icon svgIcon="zoomIn" aria-hidden="true"></mat-icon></button>
+    <button type="button" class="floor-plan-three__tool" (click)="zoomOut()" aria-label="Zoom out" title="Zoom out"><mat-icon svgIcon="zoomOut" aria-hidden="true"></mat-icon></button>
+    <button type="button" class="floor-plan-three__tool" (click)="zoomFit()" aria-label="Reset view" title="Reset view"><mat-icon svgIcon="reset" aria-hidden="true"></mat-icon></button>
+    <span class="floor-plan-three__tools-sep" aria-hidden="true"></span>
+    <button type="button" class="floor-plan-three__tool" (click)="toggleMap.emit()" aria-label="2D view" title="Back to 2D"><mat-icon svgIcon="rect" aria-hidden="true"></mat-icon></button>
+  </div>
+  <button type="button" class="floor-plan-three__reset" [attr.title]="text.resetView()" (click)="resetView()" aria-label="Reset view">
+    <mat-icon svgIcon="reset" aria-hidden="true"></mat-icon>
+  </button>
+  <span class="floor-plan-three__hint">{{ text.orbitHint() }}</span>
+
+  <div class="floor-plan-three__dpad" role="group" [attr.aria-label]="text.rotateGroupLabel()">
+    <button type="button" class="floor-plan-three__dpad-btn floor-plan-three__dpad-btn--up" [attr.title]="text.rotateUp()" (click)="rotate('up')">▲</button>
+    <button type="button" class="floor-plan-three__dpad-btn floor-plan-three__dpad-btn--left" [attr.title]="text.rotateLeft()" (click)="rotate('left')">◀</button>
+    <button type="button" class="floor-plan-three__dpad-btn floor-plan-three__dpad-btn--right" [attr.title]="text.rotateRight()" (click)="rotate('right')">▶</button>
+    <button type="button" class="floor-plan-three__dpad-btn floor-plan-three__dpad-btn--down" [attr.title]="text.rotateDown()" (click)="rotate('down')">▼</button>
+  </div>
+
+  <div class="floor-plan-three__scene" #sceneContainer>
+    <canvas #threeCanvas class="floor-plan-three__canvas" (pointerdown)="onCanvasPointerDown($event)" (click)="onCanvasClick($event)"></canvas>
+    @if (!isWebGlAvailable) {
+      <div class="floor-plan-three__fallback">WebGL no disponible — vista 3D deshabilitada</div>
+    }
+  </div>
+</div>

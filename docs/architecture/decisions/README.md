@@ -24,3 +24,4 @@ Statuses: `Proposed` (Phase 0 — argued but not yet validated by implementation
 | [0012](0012-signals-and-bundle-budget-in-prototype.md) | Signal inputs and bundle budget in the physical-location-prototype | Proposed |
 | [0013](0013-malleable-orthogonal-outlines-in-prototype.md) | Malleable orthogonal outlines for mappable locations in the physical-location-prototype | Proposed |
 | [0014](0014-evolving-product-incubation.md) | Evolving product incubation inside the umbrella repository | Accepted |
+| [0015](0015-threejs-for-3d-view-in-prototype.md) | Three.js for the 3D spatial view in the physical-location-prototype | Proposed |

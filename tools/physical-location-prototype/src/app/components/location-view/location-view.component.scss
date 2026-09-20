@@ -18,6 +18,7 @@
 }
 
 .location-view > app-floor-plan,
+.location-view > app-floor-plan-three,
 .location-view > app-floor-plan-3d,
 .location-view > .container-grid {
   flex: 1 1 auto;
@@ -1318,6 +1319,7 @@ h2 {
   }
 
   .location-view > app-floor-plan,
+  .location-view > app-floor-plan-three,
   .location-view > app-floor-plan-3d,
   .location-view > app-position-grid,
   .location-view > .container-grid {
@@ -1328,6 +1330,7 @@ h2 {
     max-width: 100%;
   }
 
+  .location-view > app-floor-plan-three,
   .location-view > app-floor-plan-3d {
     width: 100%;
   }

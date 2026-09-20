@@ -342,7 +342,7 @@
       <app-floor-plan [locations]="children()" [containerLocationId]="location.id" (toggle3d)="setViewMode('3d')"></app-floor-plan>
     }
     @if (is3dView()) {
-      <app-floor-plan-3d [locations]="children()" [containerLocationId]="location.id" (toggleMap)="setViewMode('map')"></app-floor-plan-3d>
+      <app-floor-plan-three [locations]="children()" [containerLocationId]="location.id" (toggleMap)="setViewMode('map')"></app-floor-plan-three>
     }
     @if (showPositionGrid()) {
       <app-position-grid [positions]="children()" (addItem)="addItemToLocation($event)"></app-position-grid>
