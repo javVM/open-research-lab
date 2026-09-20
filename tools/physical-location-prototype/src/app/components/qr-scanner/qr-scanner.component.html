@@ -8,8 +8,7 @@
   @if (error()) {
     <div class="qr-scanner__alert" role="alert">
       <span class="qr-scanner__alert-icon" aria-hidden="true">⚠</span>
-      <span class="qr-scanner__alert-text">{{ error() }}</span>
-      <span class="qr-scanner__alert-hint">Si estás en móvil por IP (http://192.168.x.x), el navegador bloquea la cámara. Usa https, localhost o el modo “Pegar frame manual”.</span>
+      <span class="qr-scanner__alert-text">{{ text.cameraNotAllowed() }}</span>
     </div>
   }
 </div>

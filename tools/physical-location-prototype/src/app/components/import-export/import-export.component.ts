@@ -7,13 +7,11 @@ import { describeDelimiter } from '../../shared/csv';
 import { ExportService } from '../../export.service';
 import { ImportService, type ImportDryRunResult } from '../../import.service';
 import { createImportExportTranslations } from './import-export.translations';
-import { AnimatedQrExportComponent } from '../animated-qr/animated-qr-export.component';
-import { AnimatedQrImportComponent } from '../animated-qr/animated-qr-import.component';
 
 @Component({
   standalone: true,
   selector: 'app-import-export',
-  imports: [MatButtonModule, MatIconModule, AnimatedQrExportComponent, AnimatedQrImportComponent],
+  imports: [MatButtonModule, MatIconModule],
   templateUrl: './import-export.component.html',
   styleUrl: './import-export.component.scss',
 })
@@ -21,7 +19,6 @@ export class ImportExportComponent {
   private readonly importService = inject(ImportService);
   private readonly exportService = inject(ExportService);
   protected readonly text = createImportExportTranslations(inject(TranslationService));
-  protected readonly qrMode = signal<'transmit' | 'receive'>('transmit');
 
   protected readonly fileName = signal<string | null>(null);
   protected readonly fileText = signal<string | null>(null);
