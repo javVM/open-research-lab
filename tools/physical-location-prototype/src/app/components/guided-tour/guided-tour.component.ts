@@ -32,7 +32,7 @@ export class GuidedTourComponent {
 
   protected readonly currentIndex = signal(0);
 
-  protected readonly totalSteps = 8;
+  protected readonly totalSteps = 9;
 
   protected readonly steps = computed<TourStep[]>(() => [
     {
@@ -55,6 +55,13 @@ export class GuidedTourComponent {
       title: this.text.mapTitle,
       description: this.text.mapDescription,
       icon: 'cube',
+      mode: 'explore',
+    },
+    {
+      id: 'create',
+      title: this.text.createTitle,
+      description: this.text.createDescription,
+      icon: 'add',
       mode: 'explore',
     },
     {

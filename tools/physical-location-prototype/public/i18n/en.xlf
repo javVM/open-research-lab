@@ -1547,6 +1547,12 @@
       <trans-unit id="tour.items.description">
         <source>Click a tray to see its grid: free and occupied cells, with collision validation. Select an item on the right to see detail, full path, quantity with unit and immutable history. Moving is drag or click destination and confirm — it gets recorded.</source>
       </trans-unit>
+      <trans-unit id="tour.create.title">
+        <source>Create an item step by step</source>
+      </trans-unit>
+      <trans-unit id="tour.create.description">
+        <source>Select any location (cabinet, drawer or tray) and click “Add item”. Type the catalogue code — you can use the default prefix from Settings (e.g. ITEM-0001) and let it auto-increment —, name, category and quantity with unit. On save, the item is placed instantly and its full path appears (Building / Room / Drawer / A12).</source>
+      </trans-unit>
       <trans-unit id="tour.search.title">
         <source>Search and quick jump</source>
       </trans-unit>

@@ -19,6 +19,9 @@ export const tourExploreDescription = $localize `@@tour.explore.description:A la
 export const tourMapTitle = $localize `@@tour.map.title:Mapa 2D, 3D y formas`;
 export const tourMapDescription = $localize `@@tour.map.description:Para edificios, plantas y salas puedes alternar entre Lista, Mapa y 3D. En el Mapa arrastra y redimensiona rectángulos, edita formas en L/U a 90° y sube la imagen del plano real como fondo. En 3D las plantas se apilan en vertical.`;
 
+export const tourCreateTitle = $localize `@@tour.create.title:Crear un ítem paso a paso`;
+export const tourCreateDescription = $localize `@@tour.create.description:Selecciona cualquier ubicación (armario, cajón o bandeja) y pulsa “Añadir ítem”. Escribe el código de catálogo — puedes usar el prefijo por defecto de Ajustes (p. ej. ITEM-0001) y dejar que se autoincremente —, nombre, categoría y cantidad con unidad. Al guardar, el ítem queda colocado al instante y ya aparece su ruta completa (Edificio / Sala / Cajón / A12).`;
+
 export const tourItemsTitle = $localize `@@tour.items.title:Ítems, cuadrícula e historial`;
 export const tourItemsDescription = $localize `@@tour.items.description:Haz clic en una bandeja para ver su cuadrícula: celdas libres y ocupadas, con validación de colisión. Selecciona un ítem a la derecha para ver detalle, ruta completa, cantidad con unidad e historial inmutable. Mover es arrastrar o clicar destino y confirmar — queda registrado.`;
 

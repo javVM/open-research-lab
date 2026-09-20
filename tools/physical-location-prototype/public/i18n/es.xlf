@@ -2070,6 +2070,14 @@
         <source>At the top you have instant search: type code, name or path. Press “Go to…” in the tree for Quick Jump. Everything is designed to find a sample in seconds, even with thousands of items.</source>
         <target>Arriba tienes la búsqueda instantánea: escribe código, nombre o ruta. Pulsa «Ir a…» en el árbol para el Quick Jump. Todo está pensado para encontrar una muestra en segundos, incluso con miles de ítems.</target>
       </trans-unit>
+      <trans-unit id="tour.create.title">
+        <source>Create an item step by step</source>
+        <target>Crear un ítem paso a paso</target>
+      </trans-unit>
+      <trans-unit id="tour.create.description">
+        <source>Select any location (cabinet, drawer or tray) and click “Add item”. Type the catalogue code — you can use the default prefix from Settings (e.g. ITEM-0001) and let it auto-increment —, name, category and quantity with unit. On save, the item is placed instantly and its full path appears (Building / Room / Drawer / A12).</source>
+        <target>Selecciona cualquier ubicación (armario, cajón o bandeja) y pulsa “Añadir ítem”. Escribe el código de catálogo — puedes usar el prefijo por defecto de Ajustes (p. ej. ITEM-0001) y dejar que se autoincremente —, nombre, categoría y cantidad con unidad. Al guardar, el ítem queda colocado al instante y ya aparece su ruta completa (Edificio / Sala / Cajón / A12).</target>
+      </trans-unit>
       <trans-unit id="tour.scan.title">
         <source>Scan — in and out</source>
         <target>Escanear — entrada y salida</target>
