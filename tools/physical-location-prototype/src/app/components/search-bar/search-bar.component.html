@@ -8,9 +8,11 @@
       [placeholder]="text.placeholder()"
       [formField]="queryField"
       [attr.aria-label]="text.ariaLabel()"
+      (focus)="onFocus()"
+      (input)="onQueryChange()"
     />
   </mat-form-field>
-  @if (query().trim() !== '') {
+  @if (isOpen() && query().trim() !== '') {
     <ul class="search-bar__results" role="listbox">
       @if (results().length === 0) {
         <li class="search-bar__empty">{{ text.noMatches() }}</li>
