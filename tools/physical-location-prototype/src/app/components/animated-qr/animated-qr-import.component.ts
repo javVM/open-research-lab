@@ -50,12 +50,18 @@ export class AnimatedQrImportComponent {
   }
 
   protected onScan(code: string): void {
+    // Debug: show any QR detected
+    console.debug('[QR] scanned:', code.slice(0, 40));
     if (!isAnimatedQrPayload(code)) {
-      // Ignore non-animated QRs in this POC view
+      this.error.set(`QR leído pero no es NLAB (recibido: ${code.slice(0, 30)}…). Prueba con el QR animado, no con uno normal.`);
       return;
     }
     const added = this.reassembler.add(code);
-    if (!added) return;
+    if (!added) {
+      this.error.set(`Frame ya recibido o formato inválido: ${code.slice(0, 30)}`);
+      return;
+    }
+    this.error.set(null);
     this.received.set(this.reassembler.progress());
     if (this.reassembler.isComplete()) {
       const text = this.reassembler.reassemble();

@@ -26,7 +26,7 @@ export class AnimatedQrExportComponent {
   protected readonly frames = signal<AnimatedQrFrame[]>([]);
   protected readonly dataUrl = signal<string | null>(null);
   protected readonly error = signal<string | null>(null);
-  protected readonly speedMs = signal(800);
+  protected readonly speedMs = signal(1200);
   protected readonly showReceiver = signal(false);
   protected readonly receiverText = signal<string | null>(null);
 
@@ -152,12 +152,13 @@ export class AnimatedQrExportComponent {
   private async renderQr(text: string): Promise<void> {
     try {
       const url = await QRCode.toDataURL(text, {
-        width: 320,
-        margin: 2,
+        width: 360,
+        margin: 4,
         color: { dark: '#000000', light: '#ffffff' },
-        errorCorrectionLevel: 'Q',
+        errorCorrectionLevel: 'M',
       });
       this.dataUrl.set(url);
+      console.debug('[QR] rendered', text.length, 'chars, frame', this.currentIndex() + 1, '/', this.frames().length);
     } catch (e) {
       console.error('QR render failed', e);
       this.dataUrl.set(null);
