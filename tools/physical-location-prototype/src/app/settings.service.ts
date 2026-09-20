@@ -22,6 +22,7 @@ export interface AppSettings {
   requireAgentOnMove: boolean;
   requireNoteOnMove: boolean;
   lastBackupAt: string | null;
+  guidedTourCompleted: boolean;
 }
 
 const SETTINGS_STORAGE_KEY = 'physical-location-prototype:settings';
@@ -41,6 +42,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   requireAgentOnMove: false,
   requireNoteOnMove: false,
   lastBackupAt: null,
+  guidedTourCompleted: true,
 };
 
 /**
@@ -77,6 +79,18 @@ export class SettingsService {
 
   markBackupNow(): void {
     this.update({ lastBackupAt: new Date().toISOString() });
+  }
+
+  markGuidedTourCompleted(): void {
+    this.update({ guidedTourCompleted: true });
+  }
+
+  requestGuidedTour(): void {
+    this.update({ guidedTourCompleted: false });
+  }
+
+  resetGuidedTour(): void {
+    this.update({ guidedTourCompleted: false });
   }
 }
 

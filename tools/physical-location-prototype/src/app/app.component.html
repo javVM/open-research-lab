@@ -63,6 +63,19 @@
           <span>{{ text.navSettings() }}</span>
         </button>
       </li>
+      <li>
+        <button
+          type="button"
+          class="sidenav__link"
+          [class.sidenav__link--active]="navigation.uiMode() === 'product'"
+          [attr.aria-current]="navigation.uiMode() === 'product' ? 'page' : null"
+          [attr.aria-pressed]="navigation.uiMode() === 'product'"
+          (click)="navigation.setUiMode('product')"
+        >
+          <mat-icon svgIcon="product" aria-hidden="true"></mat-icon>
+          <span>{{ text.navProduct() }}</span>
+        </button>
+      </li>
     </ul>
 
     <div class="sidenav__bottom">
@@ -198,6 +211,9 @@
       @case ('settings') {
         <app-settings-view class="pane pane--mode"></app-settings-view>
       }
+      @case ('product') {
+        <app-product-view class="pane pane--mode"></app-product-view>
+      }
     }
   </main>
 
@@ -266,6 +282,21 @@
       <mat-icon svgIcon="settings" aria-hidden="true"></mat-icon>
       <span>{{ text.navSettings() }}</span>
     </button>
+    <button
+      type="button"
+      class="bottom-nav__item"
+      [class.bottom-nav__item--active]="navigation.uiMode() === 'product'"
+      [attr.aria-current]="navigation.uiMode() === 'product' ? 'page' : null"
+      [attr.aria-pressed]="navigation.uiMode() === 'product'"
+      (click)="navigation.setUiMode('product')"
+    >
+      <mat-icon svgIcon="product" aria-hidden="true"></mat-icon>
+      <span>{{ text.navProduct() }}</span>
+    </button>
   </nav>
+
+  @if (showTour()) {
+    <app-guided-tour></app-guided-tour>
+  }
 </div>
 }

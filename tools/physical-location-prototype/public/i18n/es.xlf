@@ -1758,6 +1758,342 @@
         <source>Movement history and recent changes</source>
         <target>Historial de movimientos</target>
       </trans-unit>
+      <trans-unit id="app.nav.product">
+        <source>About</source>
+        <target>Sobre el producto</target>
+      </trans-unit>
+      <trans-unit id="product.hero.badge">
+        <source>v0.1 — Local-first · Offline · No server</source>
+        <target>v0.1 — Local-first · Offline · Sin servidor</target>
+      </trans-unit>
+      <trans-unit id="product.hero.title">
+        <source>Nexus Lab</source>
+        <target>Nexus Lab</target>
+      </trans-unit>
+      <trans-unit id="product.hero.subtitle">
+        <source>Precision Management</source>
+        <target>Gestión de precisión</target>
+      </trans-unit>
+      <trans-unit id="product.hero.description">
+        <source>The sample and specimen tracker you can start using in five minutes, offline, that never forgets where something was. For small natural-history collections that have outgrown their spreadsheet.</source>
+        <target>El rastreador de muestras y especímenes que empiezas a usar en cinco minutos, sin conexión, que nunca olvida dónde estuvo algo. Para pequeñas colecciones de historia natural que han superado su hoja de cálculo.</target>
+      </trans-unit>
+      <trans-unit id="product.hero.primaryCta">
+        <source>Explore collection</source>
+        <target>Explorar colección</target>
+      </trans-unit>
+      <trans-unit id="product.hero.secondaryCta">
+        <source>Take guided tour</source>
+        <target>Hacer tour guiado</target>
+      </trans-unit>
+      <trans-unit id="product.purpose.eyebrow">
+        <source>Purpose</source>
+        <target>Propósito</target>
+      </trans-unit>
+      <trans-unit id="product.purpose.title">
+        <source>Built for small labs and collections</source>
+        <target>Diseñado para laboratorios y colecciones pequeñas</target>
+      </trans-unit>
+      <trans-unit id="product.purpose.description">
+        <source>A group of 1–10 people, no server, no IT support. One SQLite file you control, readable without our software, exportable to CSV at any time. Nothing is silently destroyed — every correction leaves a trace.</source>
+        <target>Un grupo de 1 a 10 personas, sin servidor ni soporte informático. Una base SQLite que tú controlas, legible sin nuestro software, exportable a CSV en cualquier momento. Nada se borra en silencio — cada corrección deja huella.</target>
+      </trans-unit>
+      <trans-unit id="product.purpose.point1Title">
+        <source>One question, always answered</source>
+        <target>Una sola pregunta, siempre respondida</target>
+      </trans-unit>
+      <trans-unit id="product.purpose.point1Desc">
+        <source>“Where is this?” and “what happened to it?” — in seconds, with full physical path.</source>
+        <target>«¿Dónde está esto?» y «¿qué le ha pasado?» — en segundos, con ruta física completa.</target>
+      </trans-unit>
+      <trans-unit id="product.purpose.point2Title">
+        <source>Local-first by principle</source>
+        <target>Local-first, por principio</target>
+      </trans-unit>
+      <trans-unit id="product.purpose.point2Desc">
+        <source>No telemetry. No accounts. No mandatory cloud. Your data never leaves this device.</source>
+        <target>Sin telemetría. Sin cuentas. Sin nube obligatoria. Tus datos nunca salen de este dispositivo.</target>
+      </trans-unit>
+      <trans-unit id="product.purpose.point3Title">
+        <source>5 minutes to first record</source>
+        <target>5 minutos hasta el primer registro</target>
+      </trans-unit>
+      <trans-unit id="product.purpose.point3Desc">
+        <source>No setup. Create your structure, add an item, move it. No documentation needed.</source>
+        <target>Sin configuración. Crea tu estructura, añade un ítem, muévelo. Sin leer documentación.</target>
+      </trans-unit>
+      <trans-unit id="product.features.eyebrow">
+        <source>Features</source>
+        <target>Funciones</target>
+      </trans-unit>
+      <trans-unit id="product.features.title">
+        <source>Everything you need to never lose track</source>
+        <target>Todo lo que necesitas para no perder nada</target>
+      </trans-unit>
+      <trans-unit id="product.features.subtitle">
+        <source>From building to tray position — every level is visual, searchable and traceable.</source>
+        <target>Del edificio a la posición en la bandeja — cada nivel es visual, buscable y trazable.</target>
+      </trans-unit>
+      <trans-unit id="product.feature.hierarchyTitle">
+        <source>Real physical hierarchy</source>
+        <target>Jerarquía física real</target>
+      </trans-unit>
+      <trans-unit id="product.feature.hierarchyDesc">
+        <source>Building → Floor → Room → Cabinet → Drawer → Tray → Position. Arbitrary depth, configurable types, no cycles allowed.</source>
+        <target>Edificio → Planta → Sala → Armario → Cajón → Bandeja → Posición. Profundidad arbitraria, tipos configurables, sin ciclos posibles.</target>
+      </trans-unit>
+      <trans-unit id="product.feature.gridTitle">
+        <source>Grid positions</source>
+        <target>Posiciones en cuadrícula</target>
+      </trans-unit>
+      <trans-unit id="product.feature.gridDesc">
+        <source>Declare rows × columns with A1…H12 labelling. Grid view with live occupancy and collision enforcement.</source>
+        <target>Declara filas × columnas con etiquetado A1…H12. Vista de cuadrícula con ocupación a tiempo real y restricción de colisión.</target>
+      </trans-unit>
+      <trans-unit id="product.feature.pathTitle">
+        <source>Full path always visible</source>
+        <target>Ruta completa siempre visible</target>
+      </trans-unit>
+      <trans-unit id="product.feature.pathDesc">
+        <source>Lab A / Freezer 1 / Rack 2 / Box 7 / C04 — navigable breadcrumb and exportable path.</source>
+        <target>Lab A / Freezer 1 / Rack 2 / Box 7 / C04 — breadcrumb navegable y ruta exportable.</target>
+      </trans-unit>
+      <trans-unit id="product.feature.historyTitle">
+        <source>Immutable history</source>
+        <target>Historial inmutable</target>
+      </trans-unit>
+      <trans-unit id="product.feature.historyDesc">
+        <source>Every move creates an event with date, agent and note. Correcting appends; the original is preserved.</source>
+        <target>Cada movimiento crea un evento con fecha, agente y nota. Añadir es corregir; el original se preserva.</target>
+      </trans-unit>
+      <trans-unit id="product.feature.searchTitle">
+        <source>Instant search</source>
+        <target>Búsqueda instantánea</target>
+      </trans-unit>
+      <trans-unit id="product.feature.searchDesc">
+        <source>One box searches code, name, type and path in &lt;200 ms over 50k items. Filters by type, status and subtree.</source>
+        <target>Una caja busca código, nombre, tipo y ruta en &lt;200 ms sobre 50k ítems. Filtros por tipo, estado y subárbol.</target>
+      </trans-unit>
+      <trans-unit id="product.feature.scanTitle">
+        <source>Scan &amp; labels</source>
+        <target>Escáner y etiquetas</target>
+      </trans-unit>
+      <trans-unit id="product.feature.scanDesc">
+        <source>QR, Data Matrix and Code 128 generated locally. Camera scanner + manual entry. 2×2″ print-ready labels.</source>
+        <target>QR, Data Matrix y Code 128 generados en local. Escáner con cámara y entrada manual. Impresión 2×2″ lista.</target>
+      </trans-unit>
+      <trans-unit id="product.feature.visualTitle">
+        <source>2D plans · 3D · Image</source>
+        <target>Planos 2D · 3D · Imagen</target>
+      </trans-unit>
+      <trans-unit id="product.feature.visualDesc">
+        <source>Draggable and resizable 2D maps, stacked 3D view, L/U orthogonal shapes and real blueprint as background.</source>
+        <target>Mapas arrastrables y redimensionables, vista 3D apilada, formas en L/U y fondo con imagen del plano real.</target>
+      </trans-unit>
+      <trans-unit id="product.feature.reportsTitle">
+        <source>Live reports</source>
+        <target>Informes vivos</target>
+      </trans-unit>
+      <trans-unit id="product.feature.reportsDesc">
+        <source>Live metrics: total items, locations in use, unlocated and integrity. Donuts by status/building/category and movement timeline.</source>
+        <target>Métricas en vivo: ítems totales, ubicaciones en uso, no ubicados e integridad. Donuts por estado, edificio y categoría y línea temporal de movimientos.</target>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.eyebrow">
+        <source>How to use</source>
+        <target>Uso</target>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.title">
+        <source>From zero to traceability in four steps</source>
+        <target>De cero a trazabilidad en cuatro pasos</target>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step1Title">
+        <source>1. Create your structure</source>
+        <target>1. Crea tu estructura</target>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step1Desc">
+        <source>Add buildings, rooms, cabinets and trays. Configure dimensions if you need positions. Drag to reposition on the plan.</source>
+        <target>Añade edificios, salas, armarios y bandejas. Configura dimensiones si necesitas posiciones. Arrastra para reubicar en el plano.</target>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step2Title">
+        <source>2. Add items</source>
+        <target>2. Añade ítems</target>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step2Desc">
+        <source>Human-readable code, name, type and custom fields. Auto-generation with prefix. Quantity always with unit.</source>
+        <target>Código legible, nombre, tipo y campos propios. Generación automática con prefijo. Cantidad siempre con unidad.</target>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step3Title">
+        <source>3. Move and track</source>
+        <target>3. Mueve y rastrea</target>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step3Desc">
+        <source>Drag or click a destination. Confirm the move — it is recorded with UTC timestamp and operator. History always visible.</source>
+        <target>Arrastra o haz clic en el destino. Confirma el movimiento — queda registrado con timestamp UTC y operador. Historial siempre visible.</target>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step4Title">
+        <source>4. Analyze and export</source>
+        <target>4. Analiza y exporta</target>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step4Desc">
+        <source>Check reports, scan with the camera, generate labels and import/export CSV with dry-run validation.</source>
+        <target>Consulta informes, escanea con la cámara, genera etiquetas e importa/exporta CSV con validación dry-run.</target>
+      </trans-unit>
+      <trans-unit id="product.principles.eyebrow">
+        <source>Principles</source>
+        <target>Principios</target>
+      </trans-unit>
+      <trans-unit id="product.principles.title">
+        <source>What we will never do</source>
+        <target>Lo que nunca haremos</target>
+      </trans-unit>
+      <trans-unit id="product.principle.localTitle">
+        <source>No telemetry</source>
+        <target>Sin telemetría</target>
+      </trans-unit>
+      <trans-unit id="product.principle.localDesc">
+        <source>We never call the network. No analytics, no tracking.</source>
+        <target>Nunca llamamos a la red. Ni analítica, ni rastreo.</target>
+      </trans-unit>
+      <trans-unit id="product.principle.ownershipTitle">
+        <source>You own your data</source>
+        <target>Tú eres dueño de tus datos</target>
+      </trans-unit>
+      <trans-unit id="product.principle.ownershipDesc">
+        <source>One SQLite file you can copy, inspect and take with a full CSV export.</source>
+        <target>Un archivo SQLite que puedes copiar, inspeccionar y llevarte con un CSV completo.</target>
+      </trans-unit>
+      <trans-unit id="product.principle.historyTitle">
+        <source>Nothing is silently destroyed</source>
+        <target>Nada se destruye en silencio</target>
+      </trans-unit>
+      <trans-unit id="product.principle.historyDesc">
+        <source>Archive, don’t delete. Every mutation leaves an event in the same transaction.</source>
+        <target>Archivar, no borrar. Cada mutación deja evento en la misma transacción.</target>
+      </trans-unit>
+      <trans-unit id="product.principle.offlineTitle">
+        <source>Works offline</source>
+        <target>Funciona offline</target>
+      </trans-unit>
+      <trans-unit id="product.principle.offlineDesc">
+        <source>Everything on this device. No account needed to use local data.</source>
+        <target>Todo en este dispositivo. Sin cuentas para usar datos locales.</target>
+      </trans-unit>
+      <trans-unit id="product.cta.title">
+        <source>Ready to start?</source>
+        <target>¿Listo para empezar?</target>
+      </trans-unit>
+      <trans-unit id="product.cta.description">
+        <source>In under five minutes you’ll have your first sample recorded and located. No servers, no friction.</source>
+        <target>En menos de cinco minutos tendrás tu primera muestra registrada y localizada. Sin servidores, sin fricción.</target>
+      </trans-unit>
+      <trans-unit id="product.cta.primary">
+        <source>Start exploring</source>
+        <target>Empezar a explorar</target>
+      </trans-unit>
+      <trans-unit id="product.cta.secondary">
+        <source>Repeat tour</source>
+        <target>Repetir tour</target>
+      </trans-unit>
+      <trans-unit id="tour.skip">
+        <source>Skip tour</source>
+        <target>Saltar tour</target>
+      </trans-unit>
+      <trans-unit id="tour.next">
+        <source>Next</source>
+        <target>Siguiente</target>
+      </trans-unit>
+      <trans-unit id="tour.back">
+        <source>Back</source>
+        <target>Atrás</target>
+      </trans-unit>
+      <trans-unit id="tour.finish">
+        <source>Start exploring!</source>
+        <target>¡Empezar a explorar!</target>
+      </trans-unit>
+      <trans-unit id="tour.progressAria">
+        <source>Tour progress</source>
+        <target>Progreso del tour</target>
+      </trans-unit>
+      <trans-unit id="tour.stepLabel">
+        <source>Step {current} of {total}</source>
+        <target>Paso {current} de {total}</target>
+      </trans-unit>
+      <trans-unit id="tour.welcome.title">
+        <source>Welcome to Nexus Lab!</source>
+        <target>¡Te damos la bienvenida a Nexus Lab!</target>
+      </trans-unit>
+      <trans-unit id="tour.welcome.description">
+        <source>Nexus Lab helps you know, in seconds, where each sample is and what happened to it. On this short tour we’ll travel through the app — no real data will be moved, just exploring.</source>
+        <target>Nexus Lab te ayuda a saber, en segundos, dónde está cada muestra y qué le ha pasado. En este breve recorrido viajaremos por la app — sin mover datos reales, solo explorando.</target>
+      </trans-unit>
+      <trans-unit id="tour.welcome.bullet1">
+        <source>Local-first: everything stays on this device</source>
+        <target>Local-first: todo queda en este dispositivo</target>
+      </trans-unit>
+      <trans-unit id="tour.welcome.bullet2">
+        <source>No servers or mandatory accounts</source>
+        <target>Sin servidores ni cuentas obligatorias</target>
+      </trans-unit>
+      <trans-unit id="tour.welcome.bullet3">
+        <source>5 minutes to your first located sample</source>
+        <target>5 minutos hasta tu primera muestra ubicada</target>
+      </trans-unit>
+      <trans-unit id="tour.explore.title">
+        <source>Explore — your store in hierarchy</source>
+        <target>Explora — tu almacén en jerarquía</target>
+      </trans-unit>
+      <trans-unit id="tour.explore.description">
+        <source>On the left you see the real hierarchy: Building → Floor → Room → Cabinet → Drawer → Tray → Position. Expand, collapse and select any level. The centre shows the contents of the selected place.</source>
+        <target>A la izquierda ves la jerarquía real: Edificio → Planta → Sala → Armario → Cajón → Bandeja → Posición. Expande, colapsa y selecciona cualquier nivel. En el centro se muestra el contenido del lugar seleccionado.</target>
+      </trans-unit>
+      <trans-unit id="tour.map.title">
+        <source>2D map, 3D and shapes</source>
+        <target>Mapa 2D, 3D y formas</target>
+      </trans-unit>
+      <trans-unit id="tour.map.description">
+        <source>For buildings, floors and rooms you can switch between List, Map and 3D. On the Map drag and resize rectangles, edit L/U shapes at 90° and upload the real blueprint as background. In 3D floors are stacked vertically.</source>
+        <target>Para edificios, plantas y salas puedes alternar entre Lista, Mapa y 3D. En el Mapa arrastra y redimensiona rectángulos, edita formas en L/U a 90° y sube la imagen del plano real como fondo. En 3D las plantas se apilan en vertical.</target>
+      </trans-unit>
+      <trans-unit id="tour.items.title">
+        <source>Items, grid and history</source>
+        <target>Ítems, cuadrícula e historial</target>
+      </trans-unit>
+      <trans-unit id="tour.items.description">
+        <source>Click a tray to see its grid: free and occupied cells, with collision validation. Select an item on the right to see detail, full path, quantity with unit and immutable history. Moving is drag or click destination and confirm — it gets recorded.</source>
+        <target>Haz clic en una bandeja para ver su cuadrícula: celdas libres y ocupadas, con validación de colisión. Selecciona un ítem a la derecha para ver detalle, ruta completa, cantidad con unidad e historial inmutable. Mover es arrastrar o clicar destino y confirmar — queda registrado.</target>
+      </trans-unit>
+      <trans-unit id="tour.search.title">
+        <source>Search and quick jump</source>
+        <target>Búsqueda y salto rápido</target>
+      </trans-unit>
+      <trans-unit id="tour.search.description">
+        <source>At the top you have instant search: type code, name or path. Press “Go to…” in the tree for Quick Jump. Everything is designed to find a sample in seconds, even with thousands of items.</source>
+        <target>Arriba tienes la búsqueda instantánea: escribe código, nombre o ruta. Pulsa «Ir a…» en el árbol para el Quick Jump. Todo está pensado para encontrar una muestra en segundos, incluso con miles de ítems.</target>
+      </trans-unit>
+      <trans-unit id="tour.scan.title">
+        <source>Scan — in and out</source>
+        <target>Escanear — entrada y salida</target>
+      </trans-unit>
+      <trans-unit id="tour.scan.description">
+        <source>In Scan you handle check-in and check-out with the camera: Place mode (scan item + destination) or Extract mode (remove from storage). On desktop you can simulate a scan by typing “item:ITEM-0001” or “loc:ID”. Every action stays in history and recent activity.</source>
+        <target>En Escanear gestionas altas y bajas con la cámara: modo Colocar (escanea ítem + destino) o Extraer (retira del almacén). En escritorio puedes simular un escaneo escribiendo «item:ITEM-0001» o «loc:ID». Cada acción queda en el historial y en la actividad reciente.</target>
+      </trans-unit>
+      <trans-unit id="tour.reports.title">
+        <source>Live reports</source>
+        <target>Informes vivos</target>
+      </trans-unit>
+      <trans-unit id="tour.reports.description">
+        <source>In Reports you see live metrics: total items, locations in use, unlocated and integrity. Donuts by status, building and category, movement timeline and recent activity table. Customize the dashboard and drag widgets.</source>
+        <target>En Informes ves métricas en vivo: ítems totales, ubicaciones en uso, no ubicados e integridad. Donuts por estado, edificio y categoría, línea temporal de movimientos y tabla de actividad reciente. Personaliza el dashboard y arrastra widgets.</target>
+      </trans-unit>
+      <trans-unit id="tour.settings.title">
+        <source>Settings and your space</source>
+        <target>Ajustes y tu espacio</target>
+      </trans-unit>
+      <trans-unit id="tour.settings.description">
+        <source>In Settings you define lab identity, units, date format, theme and traceability requirements. Everything stays local. Go back to “About” whenever you want to review features or relaunch this tour. You’re ready!</source>
+        <target>En Ajustes defines identidad del laboratorio, unidades, formato de fecha, tema y exigencias de trazabilidad. Todo sigue local. Vuelve a «Sobre el producto» cuando quieras repasar funciones o relanzar este tour. ¡Ya puedes empezar!</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

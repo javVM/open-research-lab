@@ -1319,6 +1319,258 @@
       <trans-unit id="reports.dashboard.template.activityDesc">
         <source>Movement history and recent changes</source>
       </trans-unit>
+      <trans-unit id="app.nav.product">
+        <source>About</source>
+      </trans-unit>
+      <trans-unit id="product.hero.badge">
+        <source>v0.1 — Local-first · Offline · No server</source>
+      </trans-unit>
+      <trans-unit id="product.hero.title">
+        <source>Nexus Lab</source>
+      </trans-unit>
+      <trans-unit id="product.hero.subtitle">
+        <source>Precision Management</source>
+      </trans-unit>
+      <trans-unit id="product.hero.description">
+        <source>The sample and specimen tracker you can start using in five minutes, offline, that never forgets where something was. For small natural-history collections that have outgrown their spreadsheet.</source>
+      </trans-unit>
+      <trans-unit id="product.hero.primaryCta">
+        <source>Explore collection</source>
+      </trans-unit>
+      <trans-unit id="product.hero.secondaryCta">
+        <source>Take guided tour</source>
+      </trans-unit>
+      <trans-unit id="product.purpose.eyebrow">
+        <source>Purpose</source>
+      </trans-unit>
+      <trans-unit id="product.purpose.title">
+        <source>Built for small labs and collections</source>
+      </trans-unit>
+      <trans-unit id="product.purpose.description">
+        <source>A group of 1–10 people, no server, no IT support. One SQLite file you control, readable without our software, exportable to CSV at any time. Nothing is silently destroyed — every correction leaves a trace.</source>
+      </trans-unit>
+      <trans-unit id="product.purpose.point1Title">
+        <source>One question, always answered</source>
+      </trans-unit>
+      <trans-unit id="product.purpose.point1Desc">
+        <source>“Where is this?” and “what happened to it?” — in seconds, with full physical path.</source>
+      </trans-unit>
+      <trans-unit id="product.purpose.point2Title">
+        <source>Local-first by principle</source>
+      </trans-unit>
+      <trans-unit id="product.purpose.point2Desc">
+        <source>No telemetry. No accounts. No mandatory cloud. Your data never leaves this device.</source>
+      </trans-unit>
+      <trans-unit id="product.purpose.point3Title">
+        <source>5 minutes to first record</source>
+      </trans-unit>
+      <trans-unit id="product.purpose.point3Desc">
+        <source>No setup. Create your structure, add an item, move it. No documentation needed.</source>
+      </trans-unit>
+      <trans-unit id="product.features.eyebrow">
+        <source>Features</source>
+      </trans-unit>
+      <trans-unit id="product.features.title">
+        <source>Everything you need to never lose track</source>
+      </trans-unit>
+      <trans-unit id="product.features.subtitle">
+        <source>From building to tray position — every level is visual, searchable and traceable.</source>
+      </trans-unit>
+      <trans-unit id="product.feature.hierarchyTitle">
+        <source>Real physical hierarchy</source>
+      </trans-unit>
+      <trans-unit id="product.feature.hierarchyDesc">
+        <source>Building → Floor → Room → Cabinet → Drawer → Tray → Position. Arbitrary depth, configurable types, no cycles allowed.</source>
+      </trans-unit>
+      <trans-unit id="product.feature.gridTitle">
+        <source>Grid positions</source>
+      </trans-unit>
+      <trans-unit id="product.feature.gridDesc">
+        <source>Declare rows × columns with A1…H12 labelling. Grid view with live occupancy and collision enforcement.</source>
+      </trans-unit>
+      <trans-unit id="product.feature.pathTitle">
+        <source>Full path always visible</source>
+      </trans-unit>
+      <trans-unit id="product.feature.pathDesc">
+        <source>Lab A / Freezer 1 / Rack 2 / Box 7 / C04 — navigable breadcrumb and exportable path.</source>
+      </trans-unit>
+      <trans-unit id="product.feature.historyTitle">
+        <source>Immutable history</source>
+      </trans-unit>
+      <trans-unit id="product.feature.historyDesc">
+        <source>Every move creates an event with date, agent and note. Correcting appends; the original is preserved.</source>
+      </trans-unit>
+      <trans-unit id="product.feature.searchTitle">
+        <source>Instant search</source>
+      </trans-unit>
+      <trans-unit id="product.feature.searchDesc">
+        <source>One box searches code, name, type and path in &lt;200 ms over 50k items. Filters by type, status and subtree.</source>
+      </trans-unit>
+      <trans-unit id="product.feature.scanTitle">
+        <source>Scan &amp; labels</source>
+      </trans-unit>
+      <trans-unit id="product.feature.scanDesc">
+        <source>QR, Data Matrix and Code 128 generated locally. Camera scanner + manual entry. 2×2″ print-ready labels.</source>
+      </trans-unit>
+      <trans-unit id="product.feature.visualTitle">
+        <source>2D plans · 3D · Image</source>
+      </trans-unit>
+      <trans-unit id="product.feature.visualDesc">
+        <source>Draggable and resizable 2D maps, stacked 3D view, L/U orthogonal shapes and real blueprint as background.</source>
+      </trans-unit>
+      <trans-unit id="product.feature.reportsTitle">
+        <source>Live reports</source>
+      </trans-unit>
+      <trans-unit id="product.feature.reportsDesc">
+        <source>Live metrics: total items, locations in use, unlocated and integrity. Donuts by status/building/category and movement timeline.</source>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.eyebrow">
+        <source>How to use</source>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.title">
+        <source>From zero to traceability in four steps</source>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step1Title">
+        <source>1. Create your structure</source>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step1Desc">
+        <source>Add buildings, rooms, cabinets and trays. Configure dimensions if you need positions. Drag to reposition on the plan.</source>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step2Title">
+        <source>2. Add items</source>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step2Desc">
+        <source>Human-readable code, name, type and custom fields. Auto-generation with prefix. Quantity always with unit.</source>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step3Title">
+        <source>3. Move and track</source>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step3Desc">
+        <source>Drag or click a destination. Confirm the move — it is recorded with UTC timestamp and operator. History always visible.</source>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step4Title">
+        <source>4. Analyze and export</source>
+      </trans-unit>
+      <trans-unit id="product.howItWorks.step4Desc">
+        <source>Check reports, scan with the camera, generate labels and import/export CSV with dry-run validation.</source>
+      </trans-unit>
+      <trans-unit id="product.principles.eyebrow">
+        <source>Principles</source>
+      </trans-unit>
+      <trans-unit id="product.principles.title">
+        <source>What we will never do</source>
+      </trans-unit>
+      <trans-unit id="product.principle.localTitle">
+        <source>No telemetry</source>
+      </trans-unit>
+      <trans-unit id="product.principle.localDesc">
+        <source>We never call the network. No analytics, no tracking.</source>
+      </trans-unit>
+      <trans-unit id="product.principle.ownershipTitle">
+        <source>You own your data</source>
+      </trans-unit>
+      <trans-unit id="product.principle.ownershipDesc">
+        <source>One SQLite file you can copy, inspect and take with a full CSV export.</source>
+      </trans-unit>
+      <trans-unit id="product.principle.historyTitle">
+        <source>Nothing is silently destroyed</source>
+      </trans-unit>
+      <trans-unit id="product.principle.historyDesc">
+        <source>Archive, don’t delete. Every mutation leaves an event in the same transaction.</source>
+      </trans-unit>
+      <trans-unit id="product.principle.offlineTitle">
+        <source>Works offline</source>
+      </trans-unit>
+      <trans-unit id="product.principle.offlineDesc">
+        <source>Everything on this device. No account needed to use local data.</source>
+      </trans-unit>
+      <trans-unit id="product.cta.title">
+        <source>Ready to start?</source>
+      </trans-unit>
+      <trans-unit id="product.cta.description">
+        <source>In under five minutes you’ll have your first sample recorded and located. No servers, no friction.</source>
+      </trans-unit>
+      <trans-unit id="product.cta.primary">
+        <source>Start exploring</source>
+      </trans-unit>
+      <trans-unit id="product.cta.secondary">
+        <source>Repeat tour</source>
+      </trans-unit>
+      <trans-unit id="tour.skip">
+        <source>Skip tour</source>
+      </trans-unit>
+      <trans-unit id="tour.next">
+        <source>Next</source>
+      </trans-unit>
+      <trans-unit id="tour.back">
+        <source>Back</source>
+      </trans-unit>
+      <trans-unit id="tour.finish">
+        <source>Start exploring!</source>
+      </trans-unit>
+      <trans-unit id="tour.progressAria">
+        <source>Tour progress</source>
+      </trans-unit>
+      <trans-unit id="tour.stepLabel">
+        <source>Step {current} of {total}</source>
+      </trans-unit>
+      <trans-unit id="tour.welcome.title">
+        <source>Welcome to Nexus Lab!</source>
+      </trans-unit>
+      <trans-unit id="tour.welcome.description">
+        <source>Nexus Lab helps you know, in seconds, where each sample is and what happened to it. On this short tour we’ll travel through the app — no real data will be moved, just exploring.</source>
+      </trans-unit>
+      <trans-unit id="tour.welcome.bullet1">
+        <source>Local-first: everything stays on this device</source>
+      </trans-unit>
+      <trans-unit id="tour.welcome.bullet2">
+        <source>No servers or mandatory accounts</source>
+      </trans-unit>
+      <trans-unit id="tour.welcome.bullet3">
+        <source>5 minutes to your first located sample</source>
+      </trans-unit>
+      <trans-unit id="tour.explore.title">
+        <source>Explore — your store in hierarchy</source>
+      </trans-unit>
+      <trans-unit id="tour.explore.description">
+        <source>On the left you see the real hierarchy: Building → Floor → Room → Cabinet → Drawer → Tray → Position. Expand, collapse and select any level. The centre shows the contents of the selected place.</source>
+      </trans-unit>
+      <trans-unit id="tour.map.title">
+        <source>2D map, 3D and shapes</source>
+      </trans-unit>
+      <trans-unit id="tour.map.description">
+        <source>For buildings, floors and rooms you can switch between List, Map and 3D. On the Map drag and resize rectangles, edit L/U shapes at 90° and upload the real blueprint as background. In 3D floors are stacked vertically.</source>
+      </trans-unit>
+      <trans-unit id="tour.items.title">
+        <source>Items, grid and history</source>
+      </trans-unit>
+      <trans-unit id="tour.items.description">
+        <source>Click a tray to see its grid: free and occupied cells, with collision validation. Select an item on the right to see detail, full path, quantity with unit and immutable history. Moving is drag or click destination and confirm — it gets recorded.</source>
+      </trans-unit>
+      <trans-unit id="tour.search.title">
+        <source>Search and quick jump</source>
+      </trans-unit>
+      <trans-unit id="tour.search.description">
+        <source>At the top you have instant search: type code, name or path. Press “Go to…” in the tree for Quick Jump. Everything is designed to find a sample in seconds, even with thousands of items.</source>
+      </trans-unit>
+      <trans-unit id="tour.scan.title">
+        <source>Scan — in and out</source>
+      </trans-unit>
+      <trans-unit id="tour.scan.description">
+        <source>In Scan you handle check-in and check-out with the camera: Place mode (scan item + destination) or Extract mode (remove from storage). On desktop you can simulate a scan by typing “item:ITEM-0001” or “loc:ID”. Every action stays in history and recent activity.</source>
+      </trans-unit>
+      <trans-unit id="tour.reports.title">
+        <source>Live reports</source>
+      </trans-unit>
+      <trans-unit id="tour.reports.description">
+        <source>In Reports you see live metrics: total items, locations in use, unlocated and integrity. Donuts by status, building and category, movement timeline and recent activity table. Customize the dashboard and drag widgets.</source>
+      </trans-unit>
+      <trans-unit id="tour.settings.title">
+        <source>Settings and your space</source>
+      </trans-unit>
+      <trans-unit id="tour.settings.description">
+        <source>In Settings you define lab identity, units, date format, theme and traceability requirements. Everything stays local. Go back to “About” whenever you want to review features or relaunch this tour. You’re ready!</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

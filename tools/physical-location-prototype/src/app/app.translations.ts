@@ -18,6 +18,7 @@ export const modeExplore = $localize `@@app.mode.explore:Explore`;
 export const modeScan = $localize `@@app.mode.scan:Scan`;
 export const navReports = $localize `@@app.nav.reports:Reports`;
 export const navSettings = $localize `@@app.nav.settings:Settings`;
+export const navProduct = $localize `@@app.nav.product:About`;
 export const navSupport = $localize `@@app.nav.support:Support`;
 export const treeExpand = $localize `@@app.tree.expand:Expand`;
 export const treeCollapse = $localize `@@app.tree.collapse:Collapse`;
@@ -46,6 +47,7 @@ export function createAppTranslations(i18n: TranslationService) {
     modeScan: () => i18n.t('app.mode.scan', modeScan),
     navReports: () => i18n.t('app.nav.reports', navReports),
     navSettings: () => i18n.t('app.nav.settings', navSettings),
+    navProduct: () => i18n.t('app.nav.product', navProduct),
     navSupport: () => i18n.t('app.nav.support', navSupport),
     treeExpand: () => i18n.t('app.tree.expand', treeExpand),
     treeCollapse: () => i18n.t('app.tree.collapse', treeCollapse),

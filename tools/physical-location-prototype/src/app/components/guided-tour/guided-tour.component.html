@@ -1,0 +1,58 @@
+<div class="tour" role="dialog" aria-modal="true" [attr.aria-label]="currentStep().title()">
+  <div class="tour__backdrop" (click)="skip()" aria-hidden="true"></div>
+
+  <div class="tour__card">
+    <div class="tour__progress" role="progressbar" [attr.aria-valuenow]="currentIndex() + 1" aria-valuemin="1" [attr.aria-valuemax]="totalSteps" [attr.aria-label]="text.progressAria()">
+      <div class="tour__progress-bar" [style.width.%]="progressPercent()"></div>
+    </div>
+
+    <div class="tour__header">
+      <span class="tour__eyebrow">{{ stepLabel() }}</span>
+      <button type="button" class="tour__skip" (click)="skip()" [attr.aria-label]="text.skip()">{{ text.skip() }}</button>
+    </div>
+
+    <div class="tour__icon-wrap" aria-hidden="true">
+      <mat-icon [svgIcon]="currentStep().icon" class="tour__icon"></mat-icon>
+    </div>
+
+    <h2 class="tour__title">{{ currentStep().title() }}</h2>
+    <p class="tour__description">{{ currentStep().description() }}</p>
+
+    @if (currentStep().bullets) {
+      <ul class="tour__bullets">
+        @for (b of currentStep().bullets!; track $index) {
+          <li><mat-icon svgIcon="checkCircle" aria-hidden="true"></mat-icon><span>{{ b() }}</span></li>
+        }
+      </ul>
+    }
+
+    <div class="tour__dots" aria-hidden="true">
+      @for (s of steps(); track s.id; let i = $index) {
+        <button
+          type="button"
+          class="tour__dot"
+          [class.tour__dot--active]="i === currentIndex()"
+          [class.tour__dot--past]="i < currentIndex()"
+          (click)="goTo(i)"
+          [attr.aria-label]="'Go to step ' + (i + 1)"
+        ></button>
+      }
+    </div>
+
+    <div class="tour__actions">
+      @if (!isFirst()) {
+        <button mat-button type="button" (click)="back()">{{ text.back() }}</button>
+      } @else {
+        <span></span>
+      }
+      <button mat-flat-button color="primary" type="button" (click)="next()" class="tour__next">
+        @if (isLast()) {
+          {{ text.finish() }}
+        } @else {
+          {{ text.next() }}
+        }
+        <mat-icon svgIcon="chevronRight" aria-hidden="true"></mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

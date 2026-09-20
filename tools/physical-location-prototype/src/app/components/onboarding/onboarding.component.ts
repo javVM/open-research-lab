@@ -277,6 +277,7 @@ export class OnboardingComponent implements OnInit, OnDestroy {
       department: value.department,
       institutionName: value.institutionName.trim(),
       defaultPrefix: value.defaultPrefix.trim() || 'ITEM-',
+      guidedTourCompleted: false,
     });
   }
 

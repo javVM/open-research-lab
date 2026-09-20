@@ -10,6 +10,8 @@ import { LanguageSwitcherComponent } from './components/language-switcher/langua
 import { ScanViewComponent } from './components/scan-view/scan-view.component';
 import { ReportsViewComponent } from './components/reports-view/reports-view.component';
 import { SettingsViewComponent } from './components/settings-view/settings-view.component';
+import { ProductViewComponent } from './components/product-view/product-view.component';
+import { GuidedTourComponent } from './components/guided-tour/guided-tour.component';
 import { NotificationsBellComponent } from './components/notifications-bell/notifications-bell.component';
 import { OnboardingComponent } from './components/onboarding/onboarding.component';
 import { ProfileMenuComponent } from './components/profile-menu/profile-menu.component';
@@ -38,6 +40,8 @@ import { createAppTranslations } from './app.translations';
     ScanViewComponent,
     ReportsViewComponent,
     SettingsViewComponent,
+    ProductViewComponent,
+    GuidedTourComponent,
     NotificationsBellComponent,
     QuickJumpSheetComponent,
     OnboardingComponent,
@@ -56,6 +60,9 @@ export class App {
   protected readonly theme = inject(ThemeService);
   protected readonly viewport = inject(ViewportService);
   protected readonly needsOnboarding = computed(() => !this.settings.hasProfile());
+  protected readonly showTour = computed(
+    () => this.settings.hasProfile() && !this.settings.settings().guidedTourCompleted,
+  );
 
   constructor() {
     registerAppIcons();
