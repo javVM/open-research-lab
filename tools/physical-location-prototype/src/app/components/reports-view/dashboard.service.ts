@@ -141,6 +141,23 @@ export class DashboardService {
     this.updateState({ ...current, templates });
   }
 
+  reorderWidgets(templateId: string, fromIndex: number, toIndex: number): void {
+    const current = this.state();
+    const templates = current.templates.map((template) => {
+      if (template.id !== templateId) {
+        return template;
+      }
+      const nextKinds = [...template.widgetKinds];
+      if (fromIndex < 0 || fromIndex >= nextKinds.length || toIndex < 0 || toIndex >= nextKinds.length) {
+        return template;
+      }
+      const [moved] = nextKinds.splice(fromIndex, 1);
+      nextKinds.splice(toIndex, 0, moved);
+      return { ...template, widgetKinds: nextKinds };
+    });
+    this.updateState({ ...current, templates });
+  }
+
   resetTemplate(templateId: string): void {
     const builtIn = DASHBOARD_DEFAULT_TEMPLATES.find((template) => template.id === templateId);
     if (!builtIn) {

@@ -66,7 +66,7 @@
               }
             </span>
             <span class="widget-catalog__preview">
-              @if (item.kind === 'metric-total-items' || item.kind === 'metric-locations-in-use' || item.kind === 'metric-unlocated' || item.kind === 'metric-integrity') {
+              @if (item.kind === WIDGET_KIND.METRIC_TOTAL_ITEMS || item.kind === WIDGET_KIND.METRIC_LOCATIONS_IN_USE || item.kind === WIDGET_KIND.METRIC_UNLOCATED || item.kind === WIDGET_KIND.METRIC_INTEGRITY) {
                 @if (previewMetric(item.kind); as metric) {
                   <span class="metric metric--preview">
                     <span class="metric__top">
@@ -81,15 +81,15 @@
                     }
                   </span>
                 }
-              } @else if (item.kind === 'donut-status') {
+              } @else if (item.kind === WIDGET_KIND.DONUT_STATUS) {
                 <app-donut-chart size="sm" [segments]="previewDonutStatusSegments" centerLabel="TOTAL" [centerValue]="150" ariaLabel="Preview" [hideLegend]="true"></app-donut-chart>
-              } @else if (item.kind === 'donut-category') {
+              } @else if (item.kind === WIDGET_KIND.DONUT_CATEGORY) {
                 <app-donut-chart size="sm" [segments]="previewDonutCategorySegments" centerLabel="TOTAL" [centerValue]="150" ariaLabel="Preview" [hideLegend]="true"></app-donut-chart>
-              } @else if (item.kind === 'donut-building') {
+              } @else if (item.kind === WIDGET_KIND.DONUT_BUILDING) {
                 <app-donut-chart size="sm" [segments]="previewDonutBuildingSegments" centerLabel="TOTAL" [centerValue]="150" ariaLabel="Preview" [hideLegend]="true"></app-donut-chart>
-              } @else if (item.kind === 'timeline') {
+              } @else if (item.kind === WIDGET_KIND.TIMELINE) {
                 <app-line-chart [series]="previewTimelineSeries" [formattedMonths]="['01/2024','02/2024','03/2024']" [yTicks]="[{value:0},{value:5},{value:10},{value:15}]" ariaLabel="Preview" [hideLegend]="true"></app-line-chart>
-              } @else if (item.kind === 'table-recent') {
+              } @else if (item.kind === WIDGET_KIND.TABLE_RECENT) {
                 <span class="widget-catalog__table-preview" aria-hidden="true">
                   <span class="widget-catalog__table-row"><span>MNCN-0001</span><span>Placed</span><span>Lab A</span></span>
                   <span class="widget-catalog__table-row"><span>MNCN-0002</span><span>Extracted</span><span>Freezer 1</span></span>
@@ -104,9 +104,14 @@
   }
 
   @if (hasVisibleMetrics()) {
-    <div class="reports__metrics">
+    <div
+      class="reports__metrics"
+      cdkDropList
+      cdkDropListOrientation="mixed"
+      (cdkDropListDropped)="onMetricsDrop($event)"
+    >
       @for (metric of orderedVisibleMetrics(); track metric.kind) {
-        <div class="metric metric--dashboard">
+        <div class="metric metric--dashboard" cdkDrag>
           <button
             mat-icon-button
             type="button"
@@ -133,10 +138,30 @@
   }
 
   @if (hasDonutWidgets()) {
-    <div class="reports__charts">
-      @if (isWidgetVisible('donut-status')) {
-        <section class="chart" [attr.aria-label]="text.distributionAriaLabel()">
-          <button mat-icon-button type="button" class="widget-remove" (click)="setWidgetEnabled('donut-status', false)" aria-label="Remove Collection by status" title="Remove widget">
+    <div
+      class="reports__charts"
+      cdkDropList
+      cdkDropListOrientation="mixed"
+      (cdkDropListDropped)="onChartsDrop($event)"
+    >
+      @if (isWidgetVisible(WIDGET_KIND.DONUT_STATUS)) {
+        <section
+          class="chart chart--clickable"
+          cdkDrag
+          [attr.aria-label]="text.distributionAriaLabel()"
+          (click)="openChartModal(WIDGET_KIND.DONUT_STATUS)"
+          (keydown.enter)="openChartModal(WIDGET_KIND.DONUT_STATUS)"
+          tabindex="0"
+          role="button"
+        >
+          <button
+            mat-icon-button
+            type="button"
+            class="widget-remove"
+            (click)="setWidgetEnabled(WIDGET_KIND.DONUT_STATUS, false); $event.stopPropagation()"
+            aria-label="Remove Collection by status"
+            title="Remove widget"
+          >
             <mat-icon svgIcon="close" aria-hidden="true"></mat-icon>
           </button>
           <h3 class="chart__title">{{ text.distributionHeading() }}</h3>
@@ -149,9 +174,24 @@
           ></app-donut-chart>
         </section>
       }
-      @if (isWidgetVisible('donut-category')) {
-        <section class="chart chart--category" [attr.aria-label]="text.byCategoryAriaLabel()">
-          <button mat-icon-button type="button" class="widget-remove" (click)="setWidgetEnabled('donut-category', false)" aria-label="Remove Items by category" title="Remove widget">
+      @if (isWidgetVisible(WIDGET_KIND.DONUT_CATEGORY)) {
+        <section
+          class="chart chart--category chart--clickable"
+          cdkDrag
+          [attr.aria-label]="text.byCategoryAriaLabel()"
+          (click)="openChartModal(WIDGET_KIND.DONUT_CATEGORY)"
+          (keydown.enter)="openChartModal(WIDGET_KIND.DONUT_CATEGORY)"
+          tabindex="0"
+          role="button"
+        >
+          <button
+            mat-icon-button
+            type="button"
+            class="widget-remove"
+            (click)="setWidgetEnabled(WIDGET_KIND.DONUT_CATEGORY, false); $event.stopPropagation()"
+            aria-label="Remove Items by category"
+            title="Remove widget"
+          >
             <mat-icon svgIcon="close" aria-hidden="true"></mat-icon>
           </button>
           <h3 class="chart__title">{{ text.byCategoryHeading() }}</h3>
@@ -164,9 +204,24 @@
           ></app-donut-chart>
         </section>
       }
-      @if (isWidgetVisible('donut-building')) {
-        <section class="chart chart--building" [attr.aria-label]="text.byBuildingAriaLabel()">
-          <button mat-icon-button type="button" class="widget-remove" (click)="setWidgetEnabled('donut-building', false)" aria-label="Remove Items by building" title="Remove widget">
+      @if (isWidgetVisible(WIDGET_KIND.DONUT_BUILDING)) {
+        <section
+          class="chart chart--building chart--clickable"
+          cdkDrag
+          [attr.aria-label]="text.byBuildingAriaLabel()"
+          (click)="openChartModal(WIDGET_KIND.DONUT_BUILDING)"
+          (keydown.enter)="openChartModal(WIDGET_KIND.DONUT_BUILDING)"
+          tabindex="0"
+          role="button"
+        >
+          <button
+            mat-icon-button
+            type="button"
+            class="widget-remove"
+            (click)="setWidgetEnabled(WIDGET_KIND.DONUT_BUILDING, false); $event.stopPropagation()"
+            aria-label="Remove Items by building"
+            title="Remove widget"
+          >
             <mat-icon svgIcon="close" aria-hidden="true"></mat-icon>
           </button>
           <h3 class="chart__title">{{ text.byBuildingHeading() }}</h3>
@@ -182,9 +237,16 @@
     </div>
   }
 
-  @if (isWidgetVisible('timeline')) {
+  @if (isWidgetVisible(WIDGET_KIND.TIMELINE)) {
     <section class="chart chart--timeline" [attr.aria-label]="text.timelineAriaLabel()">
-      <button mat-icon-button type="button" class="widget-remove" (click)="setWidgetEnabled('timeline', false)" aria-label="Remove Movements over time" title="Remove widget">
+      <button
+        mat-icon-button
+        type="button"
+        class="widget-remove"
+        (click)="setWidgetEnabled(WIDGET_KIND.TIMELINE, false); $event.stopPropagation()"
+        aria-label="Remove Movements over time"
+        title="Remove widget"
+      >
         <mat-icon svgIcon="close" aria-hidden="true"></mat-icon>
       </button>
       <h3 class="chart__title">{{ text.timelineHeading() }}</h3>
@@ -201,9 +263,9 @@
     </section>
   }
 
-  @if (isWidgetVisible('table-recent')) {
+  @if (isWidgetVisible(WIDGET_KIND.TABLE_RECENT)) {
     <section class="reports__activity" [attr.aria-label]="text.recentAriaLabel()">
-      <button mat-icon-button type="button" class="widget-remove" (click)="setWidgetEnabled('table-recent', false)" aria-label="Remove Recent movements" title="Remove widget">
+      <button mat-icon-button type="button" class="widget-remove" (click)="setWidgetEnabled(WIDGET_KIND.TABLE_RECENT, false)" aria-label="Remove Recent movements" title="Remove widget">
         <mat-icon svgIcon="close" aria-hidden="true"></mat-icon>
       </button>
       <h3 class="chart__title">{{ text.recentHeading() }}</h3>
@@ -258,5 +320,28 @@
         {{ dashboardText.addWidgetButton() }}
       </button>
     </section>
+  }
+
+  @if (expandedWidget(); as kind) {
+    <div class="chart-modal" role="dialog" aria-modal="true" [attr.aria-label]="widgetLabel(kind)" (click)="closeChartModal()">
+      <div class="chart-modal__content" (click)="$event.stopPropagation()">
+        <header class="chart-modal__header">
+          <h3 class="chart-modal__title">{{ widgetLabel(kind) }}</h3>
+          <button mat-icon-button type="button" (click)="closeChartModal()" aria-label="Close">
+            <mat-icon svgIcon="close" aria-hidden="true"></mat-icon>
+          </button>
+        </header>
+        <div class="chart-modal__body">
+          @if (kind === WIDGET_KIND.DONUT_STATUS) {
+            <app-donut-chart size="lg" [segments]="statusDonutSegments()" [centerLabel]="text.distributionTotalLabel()" [centerValue]="summary().totalItems" [ariaLabel]="text.distributionAriaLabel()"></app-donut-chart>
+          } @else if (kind === WIDGET_KIND.DONUT_CATEGORY) {
+            <app-donut-chart size="lg" [segments]="fullCategoryDonutSegments()" [centerLabel]="text.distributionTotalLabel()" [centerValue]="summary().totalItems" [ariaLabel]="text.byCategoryAriaLabel()"></app-donut-chart>
+            <p class="chart-modal__hint">{{ dashboardText.modalCategoryHint() }}</p>
+          } @else if (kind === WIDGET_KIND.DONUT_BUILDING) {
+            <app-donut-chart size="lg" [segments]="buildingDonutSegments()" [centerLabel]="text.distributionTotalLabel()" [centerValue]="summary().totalItems" [ariaLabel]="text.byBuildingAriaLabel()"></app-donut-chart>
+          }
+        </div>
+      </div>
+    </div>
   }
 </div>

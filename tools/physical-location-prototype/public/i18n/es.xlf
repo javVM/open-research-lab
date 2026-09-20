@@ -1686,6 +1686,10 @@
         <source>Close</source>
         <target>Cerrar</target>
       </trans-unit>
+      <trans-unit id="reports.dashboard.modalCategoryHint">
+        <source>Listado completo de categorías</source>
+        <target>Listado completo de categorías</target>
+      </trans-unit>
       <trans-unit id="reports.dashboard.widget.metricTotalItems">
         <source>Total items</source>
         <target>Ítems totales</target>

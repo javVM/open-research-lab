@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
 import type { ItemCategory, ItemStatus } from '../../../core/models';
 import { computeReportSummary, type ReportMovementAction } from '../../../core/report';
 import { CollectionService } from '../../collection.service';
@@ -16,7 +17,7 @@ import {
   categorySegmentColor,
 } from './reports-view.constants';
 import { createReportsViewTranslations } from './reports-view.translations';
-import { ALL_WIDGET_KINDS } from './dashboard.model';
+import { ALL_WIDGET_KINDS, WIDGET_KIND } from './dashboard.model';
 import type { WidgetKind } from './dashboard.model';
 import { DashboardService } from './dashboard.service';
 import { createDashboardTranslations } from './dashboard.translations';
@@ -33,6 +34,7 @@ import { createDashboardTranslations } from './dashboard.translations';
   imports: [
     MatIconModule,
     MatButtonModule,
+    DragDropModule,
     DonutChartComponent,
     LineChartComponent,
   ],
@@ -47,7 +49,9 @@ export class ReportsViewComponent {
   protected readonly dashboardText = createDashboardTranslations(inject(TranslationService));
   protected readonly categoryText = createItemCategoryTranslations(inject(TranslationService));
   protected readonly showCatalog = signal(false);
+  protected readonly expandedWidget = signal<WidgetKind | null>(null);
   protected readonly allWidgetKinds = ALL_WIDGET_KINDS;
+  protected readonly WIDGET_KIND = WIDGET_KIND;
 
   constructor() {
     registerAppIcons();
@@ -216,10 +220,34 @@ export class ReportsViewComponent {
 
   protected readonly hasDonutWidgets = computed(() => {
     const visible = this.visibleWidgetKinds();
-    return visible.has('donut-status') || visible.has('donut-category') || visible.has('donut-building');
+    return visible.has(WIDGET_KIND.DONUT_STATUS) || visible.has(WIDGET_KIND.DONUT_CATEGORY) || visible.has(WIDGET_KIND.DONUT_BUILDING);
   });
 
   protected readonly isEmptyDashboard = computed(() => this.dashboard.activeTemplate().widgetKinds.length === 0);
+
+  protected readonly fullCategoryDonutSegments = computed((): DonutChartSegment[] => {
+    const dataset = this.collection.dataset();
+    const totalItems = dataset.items.length || 1;
+    const categoryCounts = new Map<ItemCategory, number>();
+    for (const item of dataset.items) {
+      categoryCounts.set(item.category, (categoryCounts.get(item.category) ?? 0) + 1);
+    }
+    const sorted = [...categoryCounts.entries()].sort(([, a], [, b]) => b - a);
+    return sorted
+      .map(([category, count]) => {
+        const label = this.categoryLabel(category);
+        const percent = Math.round((count / totalItems) * 100);
+        return {
+          key: category,
+          label,
+          tooltip: this.text.segmentTooltip({ label, count, percent }),
+          count,
+          percent,
+          color: categorySegmentColor(category),
+        };
+      })
+      .filter((segment) => segment.count > 0);
+  });
 
   protected readonly catalogWidgets = computed(() =>
     ALL_WIDGET_KINDS.map((kind) => ({
@@ -231,13 +259,13 @@ export class ReportsViewComponent {
 
   protected readonly previewMetric = (kind: WidgetKind) => {
     switch (kind) {
-      case 'metric-total-items':
+      case WIDGET_KIND.METRIC_TOTAL_ITEMS:
         return { icon: 'flask', label: this.dashboardText.widgetLabel(kind), value: '150', caption: null as string | null };
-      case 'metric-locations-in-use':
+      case WIDGET_KIND.METRIC_LOCATIONS_IN_USE:
         return { icon: 'place', label: this.dashboardText.widgetLabel(kind), value: '116', caption: 'holding at least one item' };
-      case 'metric-unlocated':
+      case WIDGET_KIND.METRIC_UNLOCATED:
         return { icon: 'warning', label: this.dashboardText.widgetLabel(kind), value: '26', caption: 'not in storage' };
-      case 'metric-integrity':
+      case WIDGET_KIND.METRIC_INTEGRITY:
         return { icon: 'checkCircle', label: this.dashboardText.widgetLabel(kind), value: '82.7%', caption: 'of items are located' };
       default:
         return null;
@@ -358,5 +386,37 @@ export class ReportsViewComponent {
     if (!this.isWidgetVisible(kind)) {
       this.dashboard.setWidgetEnabled(this.dashboard.activeTemplate().id, kind, true);
     }
+  }
+
+  protected onMetricsDrop(event: CdkDragDrop<readonly WidgetKind[]>): void {
+    const visibleKinds = this.dashboard.activeTemplate().widgetKinds;
+    const metricKinds = visibleKinds.filter((kind) => kind.startsWith('metric-'));
+    const fromKind = metricKinds[event.previousIndex];
+    const toKind = metricKinds[event.currentIndex];
+    if (!fromKind || !toKind || fromKind === toKind) return;
+    const fromIndex = visibleKinds.indexOf(fromKind);
+    const toIndex = visibleKinds.indexOf(toKind);
+    this.dashboard.reorderWidgets(this.dashboard.activeTemplate().id, fromIndex, toIndex);
+  }
+
+  protected onChartsDrop(event: CdkDragDrop<readonly WidgetKind[]>): void {
+    const visibleKinds = this.dashboard.activeTemplate().widgetKinds;
+    const donutKinds = visibleKinds.filter((kind) => kind.startsWith('donut-'));
+    const fromKind = donutKinds[event.previousIndex];
+    const toKind = donutKinds[event.currentIndex];
+    if (!fromKind || !toKind || fromKind === toKind) return;
+    const fromIndex = visibleKinds.indexOf(fromKind);
+    const toIndex = visibleKinds.indexOf(toKind);
+    this.dashboard.reorderWidgets(this.dashboard.activeTemplate().id, fromIndex, toIndex);
+  }
+
+  protected openChartModal(kind: WidgetKind): void {
+    if (kind === WIDGET_KIND.DONUT_STATUS || kind === WIDGET_KIND.DONUT_CATEGORY || kind === WIDGET_KIND.DONUT_BUILDING) {
+      this.expandedWidget.set(kind);
+    }
+  }
+
+  protected closeChartModal(): void {
+    this.expandedWidget.set(null);
   }
 }

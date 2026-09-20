@@ -1,4 +1,5 @@
 import { $localize } from '../../i18n/localize';
+import { WIDGET_KIND } from './dashboard.model';
 import type { DashboardTemplate, WidgetKind } from './dashboard.model';
 
 export const DASHBOARD_STORAGE_KEY = 'physical-location-prototype:dashboard:v2';
@@ -22,17 +23,18 @@ export const dashboardCatalogDescription = $localize`@@reports.dashboard.catalog
 export const dashboardCatalogAddLabel = $localize`@@reports.dashboard.catalogAdd:Add`;
 export const dashboardCatalogAddedLabel = $localize`@@reports.dashboard.catalogAdded:Added`;
 export const dashboardCatalogCloseLabel = $localize`@@reports.dashboard.catalogClose:Close`;
+export const dashboardModalCategoryHint = $localize`@@reports.dashboard.modalCategoryHint:Listado completo de categorías`;
 
 export const dashboardWidgetLabel: Record<WidgetKind, string> = {
-  'metric-total-items': $localize`@@reports.dashboard.widget.metricTotalItems:Total items`,
-  'metric-locations-in-use': $localize`@@reports.dashboard.widget.metricLocationsInUse:Locations in use`,
-  'metric-unlocated': $localize`@@reports.dashboard.widget.metricUnlocated:Unlocated items`,
-  'metric-integrity': $localize`@@reports.dashboard.widget.metricIntegrity:Integrity`,
-  'donut-status': $localize`@@reports.dashboard.widget.donutStatus:Collection by status`,
-  'donut-category': $localize`@@reports.dashboard.widget.donutCategory:Items by category`,
-  'donut-building': $localize`@@reports.dashboard.widget.donutBuilding:Items by building`,
-  timeline: $localize`@@reports.dashboard.widget.timeline:Movements over time`,
-  'table-recent': $localize`@@reports.dashboard.widget.recent:Recent movements`,
+  [WIDGET_KIND.METRIC_TOTAL_ITEMS]: $localize`@@reports.dashboard.widget.metricTotalItems:Total items`,
+  [WIDGET_KIND.METRIC_LOCATIONS_IN_USE]: $localize`@@reports.dashboard.widget.metricLocationsInUse:Locations in use`,
+  [WIDGET_KIND.METRIC_UNLOCATED]: $localize`@@reports.dashboard.widget.metricUnlocated:Unlocated items`,
+  [WIDGET_KIND.METRIC_INTEGRITY]: $localize`@@reports.dashboard.widget.metricIntegrity:Integrity`,
+  [WIDGET_KIND.DONUT_STATUS]: $localize`@@reports.dashboard.widget.donutStatus:Collection by status`,
+  [WIDGET_KIND.DONUT_CATEGORY]: $localize`@@reports.dashboard.widget.donutCategory:Items by category`,
+  [WIDGET_KIND.DONUT_BUILDING]: $localize`@@reports.dashboard.widget.donutBuilding:Items by building`,
+  [WIDGET_KIND.TIMELINE]: $localize`@@reports.dashboard.widget.timeline:Movements over time`,
+  [WIDGET_KIND.TABLE_RECENT]: $localize`@@reports.dashboard.widget.recent:Recent movements`,
 };
 
 export const DASHBOARD_DEFAULT_TEMPLATES: readonly DashboardTemplate[] = [
@@ -41,15 +43,15 @@ export const DASHBOARD_DEFAULT_TEMPLATES: readonly DashboardTemplate[] = [
     name: $localize`@@reports.dashboard.template.overview:Overview`,
     description: $localize`@@reports.dashboard.template.overviewDesc:All metrics, distribution and activity`,
     widgetKinds: [
-      'metric-total-items',
-      'metric-locations-in-use',
-      'metric-unlocated',
-      'metric-integrity',
-      'donut-status',
-      'donut-category',
-      'donut-building',
-      'timeline',
-      'table-recent',
+      WIDGET_KIND.METRIC_TOTAL_ITEMS,
+      WIDGET_KIND.METRIC_LOCATIONS_IN_USE,
+      WIDGET_KIND.METRIC_UNLOCATED,
+      WIDGET_KIND.METRIC_INTEGRITY,
+      WIDGET_KIND.DONUT_STATUS,
+      WIDGET_KIND.DONUT_CATEGORY,
+      WIDGET_KIND.DONUT_BUILDING,
+      WIDGET_KIND.TIMELINE,
+      WIDGET_KIND.TABLE_RECENT,
     ],
   },
   {
@@ -57,14 +59,14 @@ export const DASHBOARD_DEFAULT_TEMPLATES: readonly DashboardTemplate[] = [
     name: $localize`@@reports.dashboard.template.operational:Operational`,
     description: $localize`@@reports.dashboard.template.operationalDesc:Location occupancy and integrity`,
     widgetKinds: [
-      'metric-total-items',
-      'metric-locations-in-use',
-      'metric-unlocated',
-      'metric-integrity',
-      'donut-status',
-      'donut-building',
-      'timeline',
-      'table-recent',
+      WIDGET_KIND.METRIC_TOTAL_ITEMS,
+      WIDGET_KIND.METRIC_LOCATIONS_IN_USE,
+      WIDGET_KIND.METRIC_UNLOCATED,
+      WIDGET_KIND.METRIC_INTEGRITY,
+      WIDGET_KIND.DONUT_STATUS,
+      WIDGET_KIND.DONUT_BUILDING,
+      WIDGET_KIND.TIMELINE,
+      WIDGET_KIND.TABLE_RECENT,
     ],
   },
   {
@@ -72,13 +74,13 @@ export const DASHBOARD_DEFAULT_TEMPLATES: readonly DashboardTemplate[] = [
     name: $localize`@@reports.dashboard.template.collection:Collection`,
     description: $localize`@@reports.dashboard.template.collectionDesc:Taxonomic and status distribution`,
     widgetKinds: [
-      'metric-total-items',
-      'metric-unlocated',
-      'metric-integrity',
-      'donut-status',
-      'donut-category',
-      'donut-building',
-      'table-recent',
+      WIDGET_KIND.METRIC_TOTAL_ITEMS,
+      WIDGET_KIND.METRIC_UNLOCATED,
+      WIDGET_KIND.METRIC_INTEGRITY,
+      WIDGET_KIND.DONUT_STATUS,
+      WIDGET_KIND.DONUT_CATEGORY,
+      WIDGET_KIND.DONUT_BUILDING,
+      WIDGET_KIND.TABLE_RECENT,
     ],
   },
   {
@@ -86,11 +88,11 @@ export const DASHBOARD_DEFAULT_TEMPLATES: readonly DashboardTemplate[] = [
     name: $localize`@@reports.dashboard.template.activity:Activity`,
     description: $localize`@@reports.dashboard.template.activityDesc:Movement history and recent changes`,
     widgetKinds: [
-      'metric-total-items',
-      'metric-locations-in-use',
-      'donut-status',
-      'timeline',
-      'table-recent',
+      WIDGET_KIND.METRIC_TOTAL_ITEMS,
+      WIDGET_KIND.METRIC_LOCATIONS_IN_USE,
+      WIDGET_KIND.DONUT_STATUS,
+      WIDGET_KIND.TIMELINE,
+      WIDGET_KIND.TABLE_RECENT,
     ],
   },
 ];

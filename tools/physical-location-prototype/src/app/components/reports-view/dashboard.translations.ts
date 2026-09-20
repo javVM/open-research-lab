@@ -13,6 +13,7 @@ import {
   dashboardDuplicateButton,
   dashboardEmptyDescription,
   dashboardEmptyTitle,
+  dashboardModalCategoryHint,
   dashboardMoveDown,
   dashboardMoveUp,
   dashboardResetButton,
@@ -42,9 +43,21 @@ export function createDashboardTranslations(i18n: TranslationService) {
     catalogAddLabel: () => i18n.t('reports.dashboard.catalogAdd', dashboardCatalogAddLabel),
     catalogAddedLabel: () => i18n.t('reports.dashboard.catalogAdded', dashboardCatalogAddedLabel),
     catalogCloseLabel: () => i18n.t('reports.dashboard.catalogClose', dashboardCatalogCloseLabel),
+    modalCategoryHint: () => i18n.t('reports.dashboard.modalCategoryHint', dashboardModalCategoryHint),
     widgetLabel: (kind: WidgetKind) => {
       const fallback = dashboardWidgetLabel[kind];
-      return i18n.t(`reports.dashboard.widget.${kind}`, fallback);
+      const keyMap: Record<WidgetKind, string> = {
+        'metric-total-items': 'reports.dashboard.widget.metricTotalItems',
+        'metric-locations-in-use': 'reports.dashboard.widget.metricLocationsInUse',
+        'metric-unlocated': 'reports.dashboard.widget.metricUnlocated',
+        'metric-integrity': 'reports.dashboard.widget.metricIntegrity',
+        'donut-status': 'reports.dashboard.widget.donutStatus',
+        'donut-category': 'reports.dashboard.widget.donutCategory',
+        'donut-building': 'reports.dashboard.widget.donutBuilding',
+        timeline: 'reports.dashboard.widget.timeline',
+        'table-recent': 'reports.dashboard.widget.recent',
+      };
+      return i18n.t(keyMap[kind], fallback);
     },
   };
 }
