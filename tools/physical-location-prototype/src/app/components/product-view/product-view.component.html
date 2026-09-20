@@ -170,8 +170,14 @@
       <h2>{{ text.ctaTitle() }}</h2>
       <p>{{ text.ctaDescription() }}</p>
       <div class="product__cta-actions">
-        <button mat-flat-button color="primary" (click)="goExplore()">{{ text.ctaPrimary() }}</button>
-        <button mat-button (click)="startTour()">{{ text.ctaSecondary() }}</button>
+        <button mat-flat-button class="product__cta-primary" (click)="goExplore()">
+          {{ text.ctaPrimary() }}
+          <mat-icon svgIcon="chevronRight" aria-hidden="true"></mat-icon>
+        </button>
+        <button mat-stroked-button class="product__cta-secondary" (click)="startTour()">
+          <mat-icon svgIcon="explore" aria-hidden="true"></mat-icon>
+          {{ text.ctaSecondary() }}
+        </button>
       </div>
     </div>
   </section>
