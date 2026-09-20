@@ -46,6 +46,7 @@ export const labelPreviewTitle = $localize `@@locationView.labelPreviewTitle:Lab
 export const addPositionHint = (position: string): string =>
   $localize `@@locationView.addPositionHint:Will be added to ${position} · first available slot`;
 export const availableLabel = $localize `@@locationView.availableLabel:available`;
+export const emptyImportCta = $localize `@@locationView.emptyImportCta:Importar CSV`;
 
 export function createLocationViewTranslations(i18n: TranslationService) {
   return {
@@ -93,5 +94,6 @@ export function createLocationViewTranslations(i18n: TranslationService) {
     addPositionHint: (position: string): string =>
       i18n.t('locationView.addPositionHint', addPositionHint(position), { position }),
     availableLabel: () => i18n.t('locationView.availableLabel', availableLabel),
+    emptyImportCta: () => i18n.t('locationView.emptyImportCta', emptyImportCta),
   };
 }

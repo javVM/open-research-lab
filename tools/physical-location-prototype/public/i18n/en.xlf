@@ -1322,6 +1322,12 @@
       <trans-unit id="app.nav.product">
         <source>About</source>
       </trans-unit>
+      <trans-unit id="app.nav.data">
+        <source>Import/Export</source>
+      </trans-unit>
+      <trans-unit id="locationView.emptyImportCta">
+        <source>Import CSV</source>
+      </trans-unit>
       <trans-unit id="product.hero.badge">
         <source>v0.1 — Local-first · Offline · No server</source>
       </trans-unit>
@@ -1576,6 +1582,60 @@
       </trans-unit>
       <trans-unit id="tour.settings.description">
         <source>In Settings you define lab identity, units, date format, theme and traceability requirements. Everything stays local. Go back to “About” whenever you want to review features or relaunch this tour. You’re ready!</source>
+      </trans-unit>
+      <trans-unit id="import.heading">
+        <source>Import from CSV</source>
+      </trans-unit>
+      <trans-unit id="import.hint">
+        <source>Upload a CSV with at least catalogueNumber column. Preview and dry-run validation before writing. All or nothing.</source>
+      </trans-unit>
+      <trans-unit id="import.selectFile">
+        <source>Choose CSV</source>
+      </trans-unit>
+      <trans-unit id="import.noFile">
+        <source>No file selected</source>
+      </trans-unit>
+      <trans-unit id="import.delimiterLabel">
+        <source>Detected delimiter</source>
+      </trans-unit>
+      <trans-unit id="import.previewHeading">
+        <source>Preview (first 5 rows)</source>
+      </trans-unit>
+      <trans-unit id="import.issuesHeading">
+        <source>Dry-run validation</source>
+      </trans-unit>
+      <trans-unit id="import.noIssues">
+        <source>No errors — ready to import.</source>
+      </trans-unit>
+      <trans-unit id="import.issuesCount">
+        <source>{count} row(s) with errors — fix CSV before confirming.</source>
+      </trans-unit>
+      <trans-unit id="import.confirm">
+        <source>Confirm import</source>
+      </trans-unit>
+      <trans-unit id="import.success">
+        <source>{count} items imported successfully.</source>
+      </trans-unit>
+      <trans-unit id="import.clear">
+        <source>Clear</source>
+      </trans-unit>
+      <trans-unit id="import.downloadTemplate">
+        <source>Download CSV template</source>
+      </trans-unit>
+      <trans-unit id="export.heading">
+        <source>Export</source>
+      </trans-unit>
+      <trans-unit id="export.hint">
+        <source>Download everything as CSV that re-imports cleanly (round-trip).</source>
+      </trans-unit>
+      <trans-unit id="export.items">
+        <source>Export items</source>
+      </trans-unit>
+      <trans-unit id="export.locations">
+        <source>Export locations</source>
+      </trans-unit>
+      <trans-unit id="export.movements">
+        <source>Export movements</source>
       </trans-unit>
     </body>
   </file>

@@ -1762,6 +1762,14 @@
         <source>About</source>
         <target>Sobre el producto</target>
       </trans-unit>
+      <trans-unit id="app.nav.data">
+        <source>Import/Export</source>
+        <target>Importar/Exportar</target>
+      </trans-unit>
+      <trans-unit id="locationView.emptyImportCta">
+        <source>Import CSV</source>
+        <target>Importar CSV</target>
+      </trans-unit>
       <trans-unit id="product.hero.badge">
         <source>v0.1 — Local-first · Offline · No server</source>
         <target>v0.1 — Local-first · Offline · Sin servidor</target>
@@ -2101,6 +2109,78 @@
       <trans-unit id="tour.settings.description">
         <source>In Settings you define lab identity, units, date format, theme and traceability requirements. Everything stays local. Go back to “About” whenever you want to review features or relaunch this tour. You’re ready!</source>
         <target>En Ajustes defines identidad del laboratorio, unidades, formato de fecha, tema y exigencias de trazabilidad. Todo sigue local. Vuelve a «Sobre el producto» cuando quieras repasar funciones o relanzar este tour. ¡Ya puedes empezar!</target>
+      </trans-unit>
+      <trans-unit id="import.heading">
+        <source>Import from CSV</source>
+        <target>Importar desde CSV</target>
+      </trans-unit>
+      <trans-unit id="import.hint">
+        <source>Upload a CSV with at least catalogueNumber column. Preview and dry-run validation before writing. All or nothing.</source>
+        <target>Carga un CSV con al menos la columna catalogueNumber. Vista previa y validación dry-run antes de escribir nada. Todo o nada.</target>
+      </trans-unit>
+      <trans-unit id="import.selectFile">
+        <source>Choose CSV</source>
+        <target>Seleccionar CSV</target>
+      </trans-unit>
+      <trans-unit id="import.noFile">
+        <source>No file selected</source>
+        <target>Ningún archivo seleccionado</target>
+      </trans-unit>
+      <trans-unit id="import.delimiterLabel">
+        <source>Detected delimiter</source>
+        <target>Delimitador detectado</target>
+      </trans-unit>
+      <trans-unit id="import.previewHeading">
+        <source>Preview (first 5 rows)</source>
+        <target>Vista previa (primeras 5 filas)</target>
+      </trans-unit>
+      <trans-unit id="import.issuesHeading">
+        <source>Dry-run validation</source>
+        <target>Validación dry-run</target>
+      </trans-unit>
+      <trans-unit id="import.noIssues">
+        <source>No errors — ready to import.</source>
+        <target>Sin errores — listo para importar.</target>
+      </trans-unit>
+      <trans-unit id="import.issuesCount">
+        <source>{count} row(s) with errors — fix CSV before confirming.</source>
+        <target>{count} fila(s) con errores — corrige el CSV antes de confirmar.</target>
+      </trans-unit>
+      <trans-unit id="import.confirm">
+        <source>Confirm import</source>
+        <target>Confirmar importación</target>
+      </trans-unit>
+      <trans-unit id="import.success">
+        <source>{count} items imported successfully.</source>
+        <target>{count} ítems importados con éxito.</target>
+      </trans-unit>
+      <trans-unit id="import.clear">
+        <source>Clear</source>
+        <target>Limpiar</target>
+      </trans-unit>
+      <trans-unit id="import.downloadTemplate">
+        <source>Download CSV template</source>
+        <target>Descargar plantilla CSV</target>
+      </trans-unit>
+      <trans-unit id="export.heading">
+        <source>Export</source>
+        <target>Exportar</target>
+      </trans-unit>
+      <trans-unit id="export.hint">
+        <source>Download everything as CSV that re-imports cleanly (round-trip).</source>
+        <target>Descarga todo lo que ves en un CSV que vuelve a importar limpiamente (round-trip).</target>
+      </trans-unit>
+      <trans-unit id="export.items">
+        <source>Export items</source>
+        <target>Exportar ítems</target>
+      </trans-unit>
+      <trans-unit id="export.locations">
+        <source>Export locations</source>
+        <target>Exportar ubicaciones</target>
+      </trans-unit>
+      <trans-unit id="export.movements">
+        <source>Export movements</source>
+        <target>Exportar movimientos</target>
       </trans-unit>
     </body>
   </file>

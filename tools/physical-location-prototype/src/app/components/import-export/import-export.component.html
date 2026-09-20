@@ -1,0 +1,114 @@
+<div class="import-export">
+  <section class="ie-card">
+    <div class="ie-card__header">
+      <h3 class="ie-card__title">{{ text.importHeading() }}</h3>
+      <button mat-stroked-button type="button" (click)="downloadTemplate()">
+        <mat-icon svgIcon="upload" aria-hidden="true"></mat-icon>
+        {{ text.importDownloadTemplate() }}
+      </button>
+    </div>
+    <p class="ie-card__hint">{{ text.importHint() }}</p>
+
+    <div class="ie-file-row">
+      <label class="ie-file-label">
+        <input type="file" accept=".csv,text/csv" (change)="onFileSelected($event)" hidden />
+        <span mat-stroked-button class="ie-file-button" role="button" tabindex="0">
+          <mat-icon svgIcon="upload" aria-hidden="true"></mat-icon>
+          {{ text.importSelectFile() }}
+        </span>
+      </label>
+      <span class="ie-file-name">{{ fileName() ?? text.importNoFile() }}</span>
+      @if (hasFile()) {
+        <button mat-button type="button" (click)="clear()">{{ text.importClear() }}</button>
+      }
+    </div>
+
+    @if (error()) {
+      <p class="ie-error" role="alert">{{ error() }}</p>
+    }
+
+    @if (dryRun(); as dr) {
+      <p class="ie-meta">{{ text.importDelimiterLabel() }}: <strong>{{ delimiterLabel() }}</strong> · {{ dr.table.header.length }} columnas · {{ dr.totalRows }} filas</p>
+
+      @if (previewRows().length > 0) {
+        <h4 class="ie-subtitle">{{ text.importPreviewHeading() }}</h4>
+        <div class="ie-table-wrap">
+          <table class="ie-table">
+            <thead>
+              <tr>
+                @for (h of dr.table.header; track $index) {
+                  <th>{{ h }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of previewRows(); track row.line) {
+                <tr>
+                  @for (value of row.values; track $index) {
+                    <td>{{ value }}</td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <h4 class="ie-subtitle">{{ text.importIssuesHeading() }}</h4>
+      @if (issues().length === 0) {
+        <p class="ie-success">{{ text.importNoIssues() }} · {{ dryRun()?.validRows?.length ?? 0 }} válidas</p>
+      } @else {
+        <p class="ie-error">{{ text.importIssuesCount(issues().length) }}</p>
+        <div class="ie-table-wrap">
+          <table class="ie-table ie-table--issues">
+            <thead>
+              <tr>
+                <th>Línea</th><th>Columna</th><th>Motivo</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (issue of issues(); track $index) {
+                <tr>
+                  <td>{{ issue.line }}</td>
+                  <td>{{ issue.column }}</td>
+                  <td>{{ issue.reason }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <div class="ie-actions">
+        <button mat-flat-button color="primary" type="button" [disabled]="!canConfirm()" (click)="confirmImport()">
+          {{ text.importConfirm() }} @if (dryRun()?.validRows?.length) { ({{ dryRun()?.validRows?.length }}) }
+        </button>
+      </div>
+    }
+
+    @if (successCount() !== null) {
+      <p class="ie-success" role="status">{{ text.importSuccess(successCount()!) }}</p>
+    }
+  </section>
+
+  <section class="ie-card">
+    <div class="ie-card__header">
+      <h3 class="ie-card__title">{{ text.exportHeading() }}</h3>
+    </div>
+    <p class="ie-card__hint">{{ text.exportHint() }}</p>
+    <div class="ie-actions">
+      <button mat-stroked-button type="button" (click)="exportItems()">
+        <mat-icon svgIcon="upload" aria-hidden="true"></mat-icon>
+        {{ text.exportItems() }}
+      </button>
+      <button mat-stroked-button type="button" (click)="exportLocations()">
+        <mat-icon svgIcon="layers" aria-hidden="true"></mat-icon>
+        {{ text.exportLocations() }}
+      </button>
+      <button mat-stroked-button type="button" (click)="exportMovements()">
+        <mat-icon svgIcon="settings" aria-hidden="true"></mat-icon>
+        {{ text.exportMovements() }}
+      </button>
+    </div>
+  </section>
+</div>

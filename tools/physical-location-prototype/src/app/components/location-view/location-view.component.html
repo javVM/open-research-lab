@@ -427,7 +427,13 @@
         </button>
       }
       @if (children().length === 0 && directItems().length === 0) {
-        <p class="empty-state">{{ text.emptyState() }}</p>
+        <div class="empty-state-wrap">
+          <p class="empty-state">{{ text.emptyState() }}</p>
+          <button type="button" mat-stroked-button class="empty-state__cta" (click)="goToData()">
+            <mat-icon svgIcon="upload" aria-hidden="true"></mat-icon>
+            {{ text.emptyImportCta() }}
+          </button>
+        </div>
       }
     </div>
   }

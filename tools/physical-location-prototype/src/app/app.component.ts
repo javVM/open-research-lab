@@ -11,6 +11,7 @@ import { ScanViewComponent } from './components/scan-view/scan-view.component';
 import { ReportsViewComponent } from './components/reports-view/reports-view.component';
 import { SettingsViewComponent } from './components/settings-view/settings-view.component';
 import { ProductViewComponent } from './components/product-view/product-view.component';
+import { ImportExportComponent } from './components/import-export/import-export.component';
 import { GuidedTourComponent } from './components/guided-tour/guided-tour.component';
 import { NotificationsBellComponent } from './components/notifications-bell/notifications-bell.component';
 import { OnboardingComponent } from './components/onboarding/onboarding.component';
@@ -41,6 +42,7 @@ import { createAppTranslations } from './app.translations';
     ReportsViewComponent,
     SettingsViewComponent,
     ProductViewComponent,
+    ImportExportComponent,
     GuidedTourComponent,
     NotificationsBellComponent,
     QuickJumpSheetComponent,

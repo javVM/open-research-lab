@@ -578,6 +578,10 @@ export class LocationViewComponent {
     this.collection.addItem(trimmed, locationId);
   }
 
+  protected goToData(): void {
+    this.navigation.setUiMode('data');
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- CdkDropList's generic is
   // invariant through its Output<T>, and this handler is shared by drop lists whose
   // `cdkDropListData` types differ (`string` vs `string | null`) depending on template context.

@@ -101,13 +101,14 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
 
     const buttons = compiled.querySelectorAll('.sidenav__link:not(.sidenav__link--disabled)');
-    // Explore + Scan + Reports + Product + Settings + Reset demo = 6 actionable links in sidenav
-    expect(buttons.length).toBe(6);
+    // Explore + Scan + Reports + Data + Settings + About + Reset demo = 7 actionable links in sidenav
+    expect(buttons.length).toBe(7);
 
     expect(Array.from(buttons).some((button) => button.textContent?.includes('Label'))).toBe(false);
     expect(Array.from(buttons).some((button) => button.textContent?.includes('Explore'))).toBe(true);
     expect(Array.from(buttons).some((button) => button.textContent?.includes('Scan'))).toBe(true);
     expect(Array.from(buttons).some((button) => button.textContent?.includes('Reports'))).toBe(true);
+    expect(Array.from(buttons).some((button) => button.textContent?.includes('Import'))).toBe(true);
     expect(Array.from(buttons).some((button) => button.textContent?.includes('About'))).toBe(true);
     expect(Array.from(buttons).some((button) => button.textContent?.includes('Settings'))).toBe(true);
   });

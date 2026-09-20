@@ -6,6 +6,7 @@ export const LOCATION_VIEW_I18N = {
   },
   cancelButton: { key: 'locationView.cancelButton', fallback: 'Cancel' },
   emptyState: { key: 'locationView.emptyState', fallback: 'Nothing recorded here yet.' },
+  emptyImportCta: { key: 'locationView.emptyImportCta', fallback: 'Importar CSV' },
   directItemsIntro: {
     key: 'locationView.directItemsIntro',
     fallback: 'Items stored directly in {name} (no finer position recorded):',

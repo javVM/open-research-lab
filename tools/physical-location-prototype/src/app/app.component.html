@@ -54,6 +54,19 @@
         <button
           type="button"
           class="sidenav__link"
+          [class.sidenav__link--active]="navigation.uiMode() === 'data'"
+          [attr.aria-current]="navigation.uiMode() === 'data' ? 'page' : null"
+          [attr.aria-pressed]="navigation.uiMode() === 'data'"
+          (click)="navigation.setUiMode('data')"
+        >
+          <mat-icon svgIcon="upload" aria-hidden="true"></mat-icon>
+          <span>{{ text.navData() }}</span>
+        </button>
+      </li>
+      <li>
+        <button
+          type="button"
+          class="sidenav__link"
           [class.sidenav__link--active]="navigation.uiMode() === 'settings'"
           [attr.aria-current]="navigation.uiMode() === 'settings' ? 'page' : null"
           [attr.aria-pressed]="navigation.uiMode() === 'settings'"
@@ -211,6 +224,9 @@
       @case ('settings') {
         <app-settings-view class="pane pane--mode"></app-settings-view>
       }
+      @case ('data') {
+        <app-import-export class="pane pane--mode"></app-import-export>
+      }
       @case ('product') {
         <app-product-view class="pane pane--mode"></app-product-view>
       }
@@ -270,6 +286,17 @@
     >
       <mat-icon svgIcon="reports" aria-hidden="true"></mat-icon>
       <span>{{ text.navReports() }}</span>
+    </button>
+    <button
+      type="button"
+      class="bottom-nav__item"
+      [class.bottom-nav__item--active]="navigation.uiMode() === 'data'"
+      [attr.aria-current]="navigation.uiMode() === 'data' ? 'page' : null"
+      [attr.aria-pressed]="navigation.uiMode() === 'data'"
+      (click)="navigation.setUiMode('data')"
+    >
+      <mat-icon svgIcon="upload" aria-hidden="true"></mat-icon>
+      <span>{{ text.navData() }}</span>
     </button>
     <button
       type="button"
