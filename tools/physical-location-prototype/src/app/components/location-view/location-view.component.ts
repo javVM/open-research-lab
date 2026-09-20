@@ -159,7 +159,7 @@ export class LocationViewComponent {
   });
 
   readonly showFloorPlan = computed<boolean>(() => this.isMapView());
-  readonly showPositionGrid = computed<boolean>(() => this.isTrayGrid() && !this.is3dView());
+  readonly showPositionGrid = computed<boolean>(() => this.isTrayGrid() && !this.isDetailsView() && !this.is3dView());
   readonly showLocationDetailsPanel = computed<boolean>(() => this.isDetailsView());
 
   readonly viewModeIndex = computed<number>(() =>
