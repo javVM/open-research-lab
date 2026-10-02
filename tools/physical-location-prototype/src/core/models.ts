@@ -272,6 +272,13 @@ export interface Item {
   category: ItemCategory;
   locationId: string | null;
   status: ItemStatus;
+  /**
+   * Expected return time for a checked-out item (ISO timestamp). Optional;
+   * only meaningful when `status === 'checked_out'`. An item whose
+   * `dueBackAt` has passed raises a non-dismissable alarm — see
+   * `core/alarms.ts`.
+   */
+  dueBackAt?: string;
 }
 
 export interface Movement {

@@ -22,3 +22,10 @@ export const QR_HINT_TYPE = {
   unknown: 'unknown',
 } as const;
 export type QrHintType = (typeof QR_HINT_TYPE)[keyof typeof QR_HINT_TYPE];
+
+/**
+ * How long a checkout is assumed to last before its item is expected back.
+ * Used to stamp `Item.dueBackAt` when the scan flow checks an item out; past
+ * this point the item raises a non-dismissable overdue alarm.
+ */
+export const DEFAULT_CHECKOUT_DURATION_DAYS = 7;

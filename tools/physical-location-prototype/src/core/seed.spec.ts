@@ -1,5 +1,6 @@
 import { generateSeed } from './seed';
 import { itemsAtLocation } from './search';
+import { computeAlarms } from './alarms';
 
 describe('generateSeed', () => {
   it('is deterministic for the same seed value', () => {
@@ -113,5 +114,14 @@ describe('generateSeed', () => {
       counts.set(movement.itemId, (counts.get(movement.itemId) ?? 0) + 1);
     }
     expect([...counts.values()].some((count) => count > 1)).toBe(true);
+  });
+
+  it('seeds checked-out items past their return time so alarms are demonstrable', () => {
+    const dataset = generateSeed();
+    const alarms = computeAlarms(dataset, '2026-10-02T12:00:00.000Z');
+    expect(alarms.length).toBeGreaterThan(0);
+    for (const alarm of alarms) {
+      expect(alarm.kind).toBe('overdue_checkout');
+    }
   });
 });

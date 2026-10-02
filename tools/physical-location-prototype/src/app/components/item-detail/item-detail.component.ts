@@ -43,6 +43,14 @@ export class ItemDetailComponent {
     return id ? this.collection.dataset().items.find((candidate) => candidate.id === id) : undefined;
   });
 
+  readonly dueBackLabel = computed<string | null>(() => {
+    const item = this.item();
+    if (!item || item.status !== 'checked_out' || !item.dueBackAt) {
+      return null;
+    }
+    return new Date(item.dueBackAt).toLocaleDateString();
+  });
+
   readonly selectedLocation = computed<Location | undefined>(() => {
     const id = this.navigation.selectedLocationId();
     return id ? this.collection.dataset().locations.find((candidate) => candidate.id === id) : undefined;

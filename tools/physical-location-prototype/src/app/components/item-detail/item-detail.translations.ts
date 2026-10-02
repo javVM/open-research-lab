@@ -16,6 +16,8 @@ export const closeDetailLabel = $localize `@@itemDetail.closeDetailLabel:Close d
 export const labelPreviewTitle = $localize `@@itemDetail.labelPreviewTitle:Label Preview`;
 export const labelFormatAriaLabel = $localize `@@itemDetail.labelFormatAriaLabel:Label format`;
 export const printLabel = $localize `@@itemDetail.printLabel:Print Label`;
+export const dueBack = (date: string): string =>
+  $localize `@@itemDetail.dueBack:Due back ${date}`;
 
 export const activeStatus = $localize `@@itemDetail.status.active:Active`;
 export const checkedOutStatus = $localize `@@itemDetail.status.checkedOut:Checked out`;
@@ -68,5 +70,6 @@ export function createItemDetailTranslations(i18n: TranslationService) {
     labelPreviewTitle: () => i18n.t('itemDetail.labelPreviewTitle', labelPreviewTitle),
     labelFormatAriaLabel: () => i18n.t('itemDetail.labelFormatAriaLabel', labelFormatAriaLabel),
     printLabel: () => i18n.t('itemDetail.printLabel', printLabel),
+    dueBack: (date: string): string => i18n.t('itemDetail.dueBack', dueBack(date), { date }),
   };
 }

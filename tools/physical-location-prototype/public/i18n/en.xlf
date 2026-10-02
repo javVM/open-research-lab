@@ -1715,6 +1715,42 @@
       <trans-unit id="export.movements">
         <source>Export movements</source>
       </trans-unit>
+      <trans-unit id="notifications.ariaLabel">
+        <source>Notifications</source>
+      </trans-unit>
+      <trans-unit id="notifications.alarmsHeading">
+        <source>Alarms</source>
+      </trans-unit>
+      <trans-unit id="notifications.noticesHeading">
+        <source>Notices</source>
+      </trans-unit>
+      <trans-unit id="notifications.empty">
+        <source>No alerts</source>
+      </trans-unit>
+      <trans-unit id="notifications.clearAll">
+        <source>Clear all</source>
+      </trans-unit>
+      <trans-unit id="notifications.dismissAria">
+        <source>Dismiss notice</source>
+      </trans-unit>
+      <trans-unit id="notifications.alarm.overdue">
+        <source>Return date passed</source>
+      </trans-unit>
+      <trans-unit id="notifications.notice.backup">
+        <source>Backup recommended — {days} days without a local backup.</source>
+      </trans-unit>
+      <trans-unit id="notifications.notice.unlocated">
+        <source>{count} items without a location.</source>
+      </trans-unit>
+      <trans-unit id="notifications.notice.agentRequired">
+        <source>Active validation — an agent is required on every move.</source>
+      </trans-unit>
+      <trans-unit id="notifications.notice.noteRequired">
+        <source>Active validation — a note is required on every move.</source>
+      </trans-unit>
+      <trans-unit id="itemDetail.dueBack">
+        <source>Due back {date}</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

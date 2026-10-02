@@ -86,6 +86,11 @@ npm start          # ng serve, http://localhost:4200
   together (e.g. between two cabinets), since Angular CDK only connects drop lists that exist in
   the same view at once.
 - **History**: every move is recorded and shown on the item detail panel.
+- **Alarms**: non-dismissable notifications derived from collection state — for now, an item
+  checked out past its expected return time (`Item.dueBackAt`, stamped on checkout with a
+  default return window and seeded on demo items). They appear in the notifications bell above
+  the dismissable housekeeping notices, and disappear only once their cause is resolved (the
+  item is checked back in).
 - **Reports**: a read-only analytics view — key metrics (total items, locations in use,
   unlocated items, integrity), donuts for collection by status, items per building and
   items per category, a line chart of monthly movement activity (placed, extracted,

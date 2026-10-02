@@ -359,7 +359,23 @@ export function generateSeed(randomSeed = 20260824): Dataset {
       }
     }
 
-    items.push({ id, catalogueNumber, label, category, locationId, status });
+    let dueBackAt: string | undefined;
+    if (status === 'checked_out') {
+      // Checked-out items carry an expected return time so the seed can
+      // demonstrate overdue-return alarms; the value sits in the frozen demo
+      // timeline, so it is already in the past relative to the running app.
+      dueBackAt = randomTimestamp(random);
+    }
+
+    items.push({
+      id,
+      catalogueNumber,
+      label,
+      category,
+      locationId,
+      status,
+      ...(dueBackAt ? { dueBackAt } : {}),
+    });
 
     if (locationId) {
       const accessionedAt = randomTimestamp(random);

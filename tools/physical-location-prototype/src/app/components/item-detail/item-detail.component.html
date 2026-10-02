@@ -9,6 +9,9 @@
       @if (item.label) {
         <p class="item-detail__subtitle">{{ item.label }}</p>
       }
+      @if (dueBackLabel(); as due) {
+        <p class="item-detail__due">{{ text.dueBack(due) }}</p>
+      }
     </div>
 
     <div class="label-preview">

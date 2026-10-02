@@ -4,7 +4,7 @@ import { descendantIds } from '../core/tree';
 import { move as moveItem } from '../core/movement';
 import { CollectionService } from './collection.service';
 import { NavigationService } from './navigation.service';
-import { QR_HINT_TIMEOUT_MS, QR_HINT_TYPE, QR_SCAN_KIND, TIME_ONLY_FORMAT, type QrHintType } from './data.constants';
+import { DEFAULT_CHECKOUT_DURATION_DAYS, QR_HINT_TIMEOUT_MS, QR_HINT_TYPE, QR_SCAN_KIND, TIME_ONLY_FORMAT, type QrHintType } from './data.constants';
 
 const SCAN_ERRORS_STORAGE_KEY = 'openResearchLab:physicalLocationPrototype:scanErrors';
 
@@ -364,8 +364,13 @@ export class ScanService {
       this.setQrHint({ type: QR_HINT_TYPE.unknown, message: result.error });
       return;
     }
+    const dueBackAt = new Date(
+      Date.now() + DEFAULT_CHECKOUT_DURATION_DAYS * 24 * 60 * 60 * 1000,
+    ).toISOString();
     const updatedItems = result.dataset.items.map((candidate) =>
-      candidate.id === item.id ? { ...candidate, status: 'checked_out' as ItemStatus } : candidate,
+      candidate.id === item.id
+        ? { ...candidate, status: 'checked_out' as ItemStatus, dueBackAt }
+        : candidate,
     );
     this.collection.setDataset({ ...result.dataset, items: updatedItems });
     this.navigation.selectItem(item.id);

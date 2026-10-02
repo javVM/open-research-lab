@@ -2286,6 +2286,54 @@
         <source>Export movements</source>
         <target>Exportar movimientos</target>
       </trans-unit>
+      <trans-unit id="notifications.ariaLabel">
+        <source>Notifications</source>
+        <target>Notificaciones</target>
+      </trans-unit>
+      <trans-unit id="notifications.alarmsHeading">
+        <source>Alarms</source>
+        <target>Alarmas</target>
+      </trans-unit>
+      <trans-unit id="notifications.noticesHeading">
+        <source>Notices</source>
+        <target>Avisos</target>
+      </trans-unit>
+      <trans-unit id="notifications.empty">
+        <source>No alerts</source>
+        <target>Sin avisos</target>
+      </trans-unit>
+      <trans-unit id="notifications.clearAll">
+        <source>Clear all</source>
+        <target>Limpiar todo</target>
+      </trans-unit>
+      <trans-unit id="notifications.dismissAria">
+        <source>Dismiss notice</source>
+        <target>Descartar aviso</target>
+      </trans-unit>
+      <trans-unit id="notifications.alarm.overdue">
+        <source>Return date passed</source>
+        <target>Fecha de devolución vencida</target>
+      </trans-unit>
+      <trans-unit id="notifications.notice.backup">
+        <source>Backup recommended — {days} days without a local backup.</source>
+        <target>Respaldo recomendado — hace {days} días sin respaldo local.</target>
+      </trans-unit>
+      <trans-unit id="notifications.notice.unlocated">
+        <source>{count} items without a location.</source>
+        <target>{count} ítems sin ubicar.</target>
+      </trans-unit>
+      <trans-unit id="notifications.notice.agentRequired">
+        <source>Active validation — an agent is required on every move.</source>
+        <target>Validación activa — se exige un agente en cada movimiento.</target>
+      </trans-unit>
+      <trans-unit id="notifications.notice.noteRequired">
+        <source>Active validation — a note is required on every move.</source>
+        <target>Validación activa — se exige una nota en cada movimiento.</target>
+      </trans-unit>
+      <trans-unit id="itemDetail.dueBack">
+        <source>Due back {date}</source>
+        <target>Devolución prevista {date}</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -69,6 +69,13 @@
   line-height: 1.35;
 }
 
+.item-detail__due {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #b45309;
+}
+
 .status-badge--activo{background:var(--success-soft, #e6f4ea);color:var(--success, #0f7a3d);border:1px solid var(--success, #0f7a3d)}
 .status-badge {
   display: inline-flex;
