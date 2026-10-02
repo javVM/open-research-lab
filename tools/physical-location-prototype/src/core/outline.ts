@@ -2,9 +2,10 @@ import type { Point } from './models';
 
 /**
  * Pure geometry for a location's orthogonal `outline` polygon: every edge is
- * axis-aligned (interior angles are 90°), so shapes are rectangles, Ls, Ts,
- * stairs and so on — never diagonals or curves. Kept framework-light so the
- * 2D map can edit and render it, and so the rules have unit tests.
+ * axis-aligned (interior angles are 90°). The shape editor drags corners to
+ * cut notches (`cutCorner`) or nudge vertices (`moveVertex`), and these helpers
+ * also render and reason about the stored outline (label anchoring, child
+ * containment). Kept framework-light so the rules have unit tests.
  */
 
 /** The four corners of a rectangle, clockwise from the top-left. */
@@ -30,14 +31,6 @@ export function isOrthogonal(points: readonly Point[]): boolean {
     }
   }
   return true;
-}
-
-/** The outline a location should use, falling back to its bounding rectangle. */
-export function outlineFor(location: { outline?: readonly Point[]; width?: number; height?: number }): Point[] {
-  if (location.outline && location.outline.length >= 4) {
-    return location.outline.map((point) => ({ ...point }));
-  }
-  return rectangleOutline(location.width ?? 0, location.height ?? 0);
 }
 
 /** The polygon's centroid, for deciding which side of an edge is "inside". */
@@ -76,10 +69,45 @@ export function inwardNormal(points: readonly Point[], index: number): Point {
 }
 
 /**
+ * Cuts a rectangular notch out of the corner at `points[index]`, whose apex is
+ * dragged inward to `(nx, ny)`. The two incident edges stay axis-aligned and
+ * the corner is replaced by three vertices (a "stair"), so a rectangle becomes
+ * an L. When the apex sits on either incident edge there is nothing to cut,
+ * and the original outline is returned unchanged.
+ */
+export function cutCorner(points: readonly Point[], index: number, nx: number, ny: number): Point[] {
+  const n = points.length;
+  const i = ((index % n) + n) % n;
+  const prev = points[(i - 1 + n) % n];
+  const curr = points[i];
+  const next = points[(i + 1) % n];
+
+  if (nx === curr.x || ny === curr.y) {
+    return points.map((point) => ({ ...point }));
+  }
+
+  const horizontalPrev = prev.y === curr.y;
+  const replacement: Point[] = horizontalPrev
+    ? [{ x: nx, y: curr.y }, { x: nx, y: ny }, { x: curr.x, y: ny }]
+    : [{ x: curr.x, y: ny }, { x: nx, y: ny }, { x: nx, y: curr.y }];
+
+  const result: Point[] = [];
+  for (let k = 0; k < i; k += 1) {
+    result.push({ ...points[k] });
+  }
+  result.push(...replacement);
+  for (let k = i + 1; k < n; k += 1) {
+    result.push({ ...points[k] });
+  }
+  return simplifyOutline(result);
+}
+
+/**
  * Slides a single vertex to `(nx, ny)`, moving the two neighbouring vertices
- * along their incident edges so every edge stays axis-aligned. This is the
- * "move a corner" primitive: on a rectangle it slides two whole edges, on an
- * L or a stair it nudges a step without introducing diagonals.
+ * along their incident edges so every edge stays axis-aligned. On a rectangle
+ * this slides two whole edges; on an L it nudges a step. The result is
+ * simplified, so dragging a notch's inner corner back onto the outer corner
+ * collapses the notch to a rectangle again.
  */
 export function moveVertex(points: readonly Point[], index: number, nx: number, ny: number): Point[] {
   const result = points.map((point) => ({ ...point }));
@@ -98,65 +126,7 @@ export function moveVertex(points: readonly Point[], index: number, nx: number, 
   } else {
     result[next].x = nx;
   }
-  return result;
-}
-
-/**
- * Cuts a rectangular notch out of the edge from `points[index]` to
- * `points[index + 1]`. `along` (0..1) is where the notch is centred along the
- * edge, `widthRatio` (0..1) its width as a fraction of the edge length, and
- * `depth` (>= 0) how far it bites inwards. Returns a new, still-orthogonal
- * outline with two extra vertices.
- */
-export function notchEdge(
-  points: readonly Point[],
-  index: number,
-  along: number,
-  widthRatio: number,
-  depth: number,
-): Point[] {
-  const n = points.length;
-  const i = ((index % n) + n) % n;
-  const a = points[i];
-  const b = points[(i + 1) % n];
-  const dx = b.x - a.x;
-  const dy = b.y - a.y;
-  const length = Math.hypot(dx, dy);
-  if (length === 0) {
-    return points.map((point) => ({ ...point }));
-  }
-  const ux = dx / length;
-  const uy = dy / length;
-  const normal = inwardNormal(points, i);
-
-  const centre = Math.min(length, Math.max(0, along * length));
-  const half = (widthRatio * length) / 2;
-  const start = Math.max(0, centre - half);
-  const end = Math.min(length, centre + half);
-
-  const onEdge = (distance: number): Point => ({ x: a.x + ux * distance, y: a.y + uy * distance });
-  const inset = (point: Point): Point => ({ x: point.x + normal.x * depth, y: point.y + normal.y * depth });
-
-  const notchStart = onEdge(start);
-  const notchEnd = onEdge(end);
-
-  const result: Point[] = [];
-  for (let k = 0; k <= i; k += 1) {
-    result.push({ ...points[k] });
-  }
-  result.push(notchStart, inset(notchStart), inset(notchEnd), notchEnd);
-  for (let k = i + 1; k < n; k += 1) {
-    result.push({ ...points[k] });
-  }
   return simplifyOutline(result);
-}
-
-/** The midpoints of every edge, in vertex order — where notch handles are drawn. */
-export function edgeMidpoints(points: readonly Point[]): Point[] {
-  return points.map((point, index) => {
-    const next = points[(index + 1) % points.length];
-    return { x: (point.x + next.x) / 2, y: (point.y + next.y) / 2 };
-  });
 }
 
 /** A rectangle in a location's local coordinates. */
@@ -273,16 +243,37 @@ export function nearestInsidePosition(rect: OutlineRect, polygon: readonly Point
   return best;
 }
 
-/** Removes redundant collinear vertices, keeping the shape and closing it. */
+/**
+ * Removes redundant vertices — consecutive duplicates and collinear points —
+ * keeping the shape and its closing edge. A vertex drag can collapse a notch
+ * into several coincident corners; these are merged before collinear removal so
+ * the surviving corner is kept.
+ */
 export function simplifyOutline(points: readonly Point[]): Point[] {
   if (points.length === 0) {
     return [];
   }
+  const deduped: Point[] = [];
+  for (const point of points) {
+    const last = deduped[deduped.length - 1];
+    if (!last || last.x !== point.x || last.y !== point.y) {
+      deduped.push({ ...point });
+    }
+  }
+  while (deduped.length > 1) {
+    const first = deduped[0];
+    const last = deduped[deduped.length - 1];
+    if (first.x === last.x && first.y === last.y) {
+      deduped.pop();
+    } else {
+      break;
+    }
+  }
   const cleaned: Point[] = [];
-  for (let i = 0; i < points.length; i += 1) {
-    const prev = points[(i - 1 + points.length) % points.length];
-    const curr = points[i];
-    const next = points[(i + 1) % points.length];
+  for (let i = 0; i < deduped.length; i += 1) {
+    const prev = deduped[(i - 1 + deduped.length) % deduped.length];
+    const curr = deduped[i];
+    const next = deduped[(i + 1) % deduped.length];
     const collinear =
       (prev.x === curr.x && curr.x === next.x) || (prev.y === curr.y && curr.y === next.y);
     if (!collinear) {
@@ -290,6 +281,62 @@ export function simplifyOutline(points: readonly Point[]): Point[] {
     }
   }
   return cleaned;
+}
+
+/** 2D cross product of the vectors `a->b` and `a->c`. */
+function orientation(a: Point, b: Point, c: Point): number {
+  return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+}
+
+/** True when `p` lies on the segment `a-b` (assumed collinear). */
+function onSegment(a: Point, b: Point, p: Point): boolean {
+  return (
+    Math.min(a.x, b.x) <= p.x &&
+    p.x <= Math.max(a.x, b.x) &&
+    Math.min(a.y, b.y) <= p.y &&
+    p.y <= Math.max(a.y, b.y)
+  );
+}
+
+/** True when the two segments cross or touch (sharing an endpoint counts). */
+function segmentsIntersect(a1: Point, a2: Point, b1: Point, b2: Point): boolean {
+  const d1 = orientation(b1, b2, a1);
+  const d2 = orientation(b1, b2, a2);
+  const d3 = orientation(a1, a2, b1);
+  const d4 = orientation(a1, a2, b2);
+  if (((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) && ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))) {
+    return true;
+  }
+  if (d1 === 0 && onSegment(b1, b2, a1)) return true;
+  if (d2 === 0 && onSegment(b1, b2, a2)) return true;
+  if (d3 === 0 && onSegment(a1, a2, b1)) return true;
+  if (d4 === 0 && onSegment(a1, a2, b2)) return true;
+  return false;
+}
+
+/**
+ * True when no two non-adjacent edges of the polygon cross or overlap — a
+ * simple polygon, as opposed to a "bow-tie" that folds over itself. Used to
+ * reject vertex moves that would twist an outline into an invalid shape.
+ */
+export function isSimplePolygon(points: readonly Point[]): boolean {
+  const n = points.length;
+  for (let i = 0; i < n; i += 1) {
+    const a1 = points[i];
+    const a2 = points[(i + 1) % n];
+    for (let j = i + 1; j < n; j += 1) {
+      // Skip the edge itself and the two edges sharing an endpoint with it.
+      if (j === i + 1 || (i === 0 && j === n - 1)) {
+        continue;
+      }
+      const b1 = points[j];
+      const b2 = points[(j + 1) % n];
+      if (segmentsIntersect(a1, a2, b1, b2)) {
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 /**

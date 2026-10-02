@@ -10,6 +10,9 @@ export const WALL_HEIGHT: Readonly<Partial<Record<LocationType, number>>> = {
 /** Wall height for any type without an explicit one (trays, drawers, …). */
 export const DEFAULT_WALL_HEIGHT = 70;
 
+/** Low border wall height around the container's own footprint in the 3D scene. */
+export const CONTAINER_WALL_HEIGHT = 4;
+
 /** Vertical gap between one floor's slab and the next, when stacking a building's floors. */
 export const FLOOR_STACK_HEIGHT = 240;
 

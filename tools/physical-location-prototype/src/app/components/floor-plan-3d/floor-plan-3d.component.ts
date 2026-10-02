@@ -178,6 +178,67 @@ export class FloorPlan3dComponent implements OnDestroy {
     return { x: 0, y: 0, width: parent.width, height: parent.height };
   }
 
+  /**
+   * Clip-path that constrains the whole 3D plane to the container's outline,
+   * matching the 2D map behaviour: children are only visible inside the
+   * parent's actual floor shape.
+   */
+  containerClipPath3d(): string | null {
+    const id = this.containerLocationId();
+    if (!id) {
+      return null;
+    }
+    const parent = this.collection.dataset().locations.find((location) => location.id === id);
+    const outline = parent?.outline;
+    const parentWidth = parent?.width;
+    const parentHeight = parent?.height;
+    if (!outline || outline.length < 4 || !parentWidth || !parentHeight) {
+      return null;
+    }
+    if (!outline.every((point) => Number.isFinite(point.x) && Number.isFinite(point.y) && point.x >= 0 && point.y >= 0)) {
+      return null;
+    }
+    const points = outline.map(
+      (point) => `${(point.x / parentWidth) * 100}% ${(point.y / parentHeight) * 100}%`,
+    );
+    return `polygon(${points.join(', ')})`;
+  }
+
+  /** True when the container parent has its own non-rectangular outline. */
+  containerHasOutline(): boolean {
+    return this.containerClipPath3d() !== null;
+  }
+
+  /** The container parent's outline points in the 3D scene's coordinate space. */
+  private containerOutline3d(): Point[] {
+    const id = this.containerLocationId();
+    if (!id) {
+      return [];
+    }
+    const parent = this.collection.dataset().locations.find((location) => location.id === id);
+    const outline = parent?.outline;
+    if (!outline || outline.length < 4 || !parent?.width || !parent?.height) {
+      return [];
+    }
+    return (
+      scaleOutline(outline, parent.width, parent.height, this.bounds().width, this.bounds().height) ??
+      []
+    );
+  }
+
+  /**
+   * Low border walls around the container's outline so the shape is readable
+   * from any orbit angle, not just from directly above.
+   */
+  containerWalls3d(): WallFace[] {
+    const points = this.containerOutline3d();
+    const height = 4;
+    if (points.length < 4) {
+      return [];
+    }
+    return points.map((point, index) => this.wallFaceFor(point, points[(index + 1) % points.length], height));
+  }
+
   resetView(): void {
     this.rotateZDeg.set(INITIAL_ROTATE_Z);
     this.rotateXDeg.set(this.viewport.isMobile() ? MOBILE_INITIAL_ROTATE_X : DESKTOP_INITIAL_ROTATE_X);

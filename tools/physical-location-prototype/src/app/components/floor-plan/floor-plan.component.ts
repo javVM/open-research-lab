@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, Output, 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import type { Location, LocationType, Point } from '../../../core/models';
-import { edgeMidpoints, inwardNormal, labelAnchor as polygonLabelAnchor, moveVertex, notchEdge, outlineFor } from '../../../core/outline';
+import { cutCorner, isSimplePolygon, labelAnchor as polygonLabelAnchor, moveVertex, nearestInsidePosition, pointInPolygon, rectangleOutline } from '../../../core/outline';
 import { CollectionService } from '../../collection.service';
 import { MoveService } from '../../move.service';
 import { NavigationService } from '../../navigation.service';
@@ -18,7 +18,7 @@ import { OCCUPANCY_PALETTE } from '../../shared/palette.constants';
 import { ID_PREFIX, newPrototypeId } from '../../shared/prototype-id';
 import { registerAppIcons } from '../../shared/icons';
 import { createFloorPlanTranslations } from './floor-plan.translations';
-import { MIN_SHAPE_EDGE, NOTCH_MIN_DEPTH, NOTCH_WIDTH_RATIO } from './floor-plan.constants';
+import { MAX_SHAPE_VERTICES, MIN_SHAPE_EDGE, SHAPE_DRAG_THRESHOLD } from './floor-plan.constants';
 
 interface DragState {
   locationId: string;
@@ -43,15 +43,14 @@ interface ResizeState {
 
 interface ShapeDragState {
   locationId: string;
-  mode: 'vertex' | 'edge';
   index: number;
   startClientX: number;
   startClientY: number;
   startOutline: Point[];
   width: number;
   height: number;
-  rectLeft: number;
-  rectTop: number;
+  /** True once the pointer has moved enough for the drag to count as intentional. */
+  hasMoved: boolean;
 }
 
 /**
@@ -451,17 +450,40 @@ export class FloorPlanComponent implements AfterViewInit, OnDestroy {
     }
     const scale = this.renderScale() || 1;
     const loc = this.locations().find((l) => l.id === state.locationId);
-    const footprint = this.containerFootprint();
-    let nextX = Math.max(0, Math.round(state.startX + rawDx / scale));
-    let nextY = Math.max(0, Math.round(state.startY + rawDy / scale));
-    if (footprint) {
-      const maxX = Math.max(0, footprint.width - (loc?.width ?? MIN_COMPONENT_SIZE));
-      const maxY = Math.max(0, footprint.height - (loc?.height ?? MIN_COMPONENT_SIZE));
-      nextX = clampTo(nextX, 0, maxX);
-      nextY = clampTo(nextY, 0, maxY);
-    }
-    this.collection.updateLocationPosition(state.locationId, nextX, nextY);
+    const nextX = Math.round(state.startX + rawDx / scale);
+    const nextY = Math.round(state.startY + rawDy / scale);
+    const constrained = this.constrainIntoContainer(
+      nextX,
+      nextY,
+      loc?.width ?? MIN_COMPONENT_SIZE,
+      loc?.height ?? MIN_COMPONENT_SIZE,
+    );
+    this.collection.updateLocationPosition(state.locationId, constrained.x, constrained.y);
   };
+
+  /**
+   * Clamps a proposed child position so the whole rectangle stays inside the
+   * container: to the container's actual outline when it has one, otherwise to
+   * its bounding rectangle. Prevents dragging a room "under" a cut-away corner.
+   */
+  private constrainIntoContainer(x: number, y: number, width: number, height: number): { x: number; y: number } {
+    const containerId = this.containerLocationId();
+    if (!containerId) {
+      return { x: Math.max(0, x), y: Math.max(0, y) };
+    }
+    const container = this.collection.dataset().locations.find((l) => l.id === containerId);
+    if (container?.outline && container.outline.length >= 4) {
+      return nearestInsidePosition({ x, y, width, height }, container.outline);
+    }
+    const footprint = this.containerFootprint();
+    if (footprint) {
+      return {
+        x: clampTo(x, 0, Math.max(0, footprint.width - width)),
+        y: clampTo(y, 0, Math.max(0, footprint.height - height)),
+      };
+    }
+    return { x: Math.max(0, x), y: Math.max(0, y) };
+  }
 
   private readonly onPointerUp = (): void => {
     window.removeEventListener('pointermove', this.onPointerMove);
@@ -610,15 +632,61 @@ export class FloorPlanComponent implements AfterViewInit, OnDestroy {
     this.refit();
   }
 
-  resetShape(): void {
-    const locationId = this.shapeTargetId();
-    if (locationId) {
-      this.collection.updateLocationOutline(locationId, null);
-    }
-  }
-
   isShapeTarget(locationId: string): boolean {
     return this.shapeMode() && this.shapeTargetId() === locationId;
+  }
+
+  /**
+   * A CSS clip-path that matches the container location's own outline, when it
+   * has one. Applied to the whole map so children are visually constrained to
+   * the parent's actual floor shape — the "floor" of the parent becomes the
+   * ceiling of what its children can show.
+   */
+  containerClipPath(): string | null {
+    const id = this.containerLocationId();
+    if (!id) {
+      return null;
+    }
+    const parent = this.collection.dataset().locations.find((location) => location.id === id);
+    const outline = parent?.outline;
+    const parentWidth = parent?.width;
+    const parentHeight = parent?.height;
+    if (!outline || outline.length < 4 || !parentWidth || !parentHeight) {
+      return null;
+    }
+    if (!outline.every((point) => Number.isFinite(point.x) && Number.isFinite(point.y) && point.x >= 0 && point.y >= 0)) {
+      return null;
+    }
+    const points = outline.map(
+      (point) => `${(point.x / parentWidth) * 100}% ${(point.y / parentHeight) * 100}%`,
+    );
+    return `polygon(${points.join(', ')})`;
+  }
+
+  /**
+   * The container parent's outline as a polygon string in the parent's own
+   * local coordinates, so the map can draw the parent's actual floor shape as
+   * a visible guide behind its children. Paired with a `viewBox` of the same
+   * dimensions so the SVG scales uniformly — a non-uniform `preserveAspectRatio`
+   * stretch (e.g. a `0 0 100 100` viewBox) breaks `non-scaling-stroke`, leaving
+   * only vertical edges with a border.
+   */
+  containerOutlinePointsString(): string | null {
+    const id = this.containerLocationId();
+    if (!id) {
+      return null;
+    }
+    const parent = this.collection.dataset().locations.find((location) => location.id === id);
+    const outline = parent?.outline;
+    const parentWidth = parent?.width;
+    const parentHeight = parent?.height;
+    if (!outline || outline.length < 4 || !parentWidth || !parentHeight) {
+      return null;
+    }
+    if (!outline.every((point) => Number.isFinite(point.x) && Number.isFinite(point.y) && point.x >= 0 && point.y >= 0)) {
+      return null;
+    }
+    return outline.map((point) => `${point.x},${point.y}`).join(' ');
   }
 
   /** The location currently targeted for shaping, when it is a child of this map. */
@@ -630,12 +698,14 @@ export class FloorPlanComponent implements AfterViewInit, OnDestroy {
     return id ? (this.locations().find((location) => location.id === id) ?? null) : null;
   }
 
+  /** The four corners of a location's rectangle, clockwise from the top-left. */
+  /** The vertices to draw shape handles at: the stored outline, or the rectangle's corners. */
   outlinePoints(location: Location): Point[] {
-    return outlineFor(location);
-  }
-
-  outlineMidpoints(location: Location): Point[] {
-    return edgeMidpoints(outlineFor(location));
+    const outline = location.outline;
+    if (outline && outline.length >= 4) {
+      return outline.map((point) => ({ ...point }));
+    }
+    return rectangleOutline(location.width ?? 0, location.height ?? 0);
   }
 
   outlinePointsString(location: Location): string | null {
@@ -681,40 +751,27 @@ export class FloorPlanComponent implements AfterViewInit, OnDestroy {
     };
   }
 
+  /**
+   * In shape mode, dragging a vertex inward cuts a notch out of that corner
+   * (`cutCorner`), and dragging a notch's inner corner back out collapses it
+   * (`moveVertex`). Both keep the polygon orthogonal and bounded to the
+   * location's rectangle, so only controlled L/U/stair shapes are possible.
+   */
   onVertexPointerDown(event: PointerEvent, location: Location, index: number): void {
     if (event.button !== 0 || this.viewport.isMobile()) {
       return;
     }
     event.preventDefault();
     event.stopPropagation();
-    this.beginShapeDrag(event, location, 'vertex', index);
-  }
-
-  onEdgePointerDown(event: PointerEvent, location: Location, index: number): void {
-    if (event.button !== 0 || this.viewport.isMobile()) {
-      return;
-    }
-    event.preventDefault();
-    event.stopPropagation();
-    this.beginShapeDrag(event, location, 'edge', index);
-  }
-
-  private beginShapeDrag(event: PointerEvent, location: Location, mode: 'vertex' | 'edge', index: number): void {
-    const rect = this.el.nativeElement.querySelector(
-      `.floor-plan__rect[data-location-id="${location.id}"]`,
-    ) as HTMLElement | null;
-    const bounds = rect?.getBoundingClientRect() ?? { left: 0, top: 0 };
     this.shapeDragState = {
       locationId: location.id,
-      mode,
       index,
       startClientX: event.clientX,
       startClientY: event.clientY,
-      startOutline: outlineFor(location),
+      startOutline: this.outlinePoints(location),
       width: location.width ?? 0,
       height: location.height ?? 0,
-      rectLeft: bounds.left,
-      rectTop: bounds.top,
+      hasMoved: false,
     };
     window.addEventListener('pointermove', this.onShapePointerMove);
     window.addEventListener('pointerup', this.onShapePointerUp);
@@ -725,14 +782,18 @@ export class FloorPlanComponent implements AfterViewInit, OnDestroy {
     if (!state) {
       return;
     }
-    if (state.mode === 'vertex') {
-      this.dragVertex(state, event);
-    } else {
-      this.dragEdgeNotch(state, event);
+    if (!state.hasMoved) {
+      const dx = event.clientX - state.startClientX;
+      const dy = event.clientY - state.startClientY;
+      if (Math.hypot(dx, dy) < SHAPE_DRAG_THRESHOLD) {
+        return;
+      }
+      state.hasMoved = true;
     }
+    this.dragShapeVertex(state, event);
   };
 
-  private dragVertex(state: ShapeDragState, event: PointerEvent): void {
+  private dragShapeVertex(state: ShapeDragState, event: PointerEvent): void {
     const rectEl = this.el.nativeElement.querySelector(
       `.floor-plan__rect[data-location-id="${state.locationId}"]`,
     ) as HTMLElement | null;
@@ -740,54 +801,34 @@ export class FloorPlanComponent implements AfterViewInit, OnDestroy {
     let scaleY = rectEl ? rectEl.getBoundingClientRect().height / (state.height || 1) : 1;
     if (!scaleX || scaleX < 0.05) scaleX = 1;
     if (!scaleY || scaleY < 0.05) scaleY = 1;
+
     const point = state.startOutline[state.index];
     const nx = clampTo(point.x + (event.clientX - state.startClientX) / scaleX, 0, state.width);
     const ny = clampTo(point.y + (event.clientY - state.startClientY) / scaleY, 0, state.height);
-    const moved = moveVertex(state.startOutline, state.index, nx, ny);
-    if (minEdgeLength(moved) >= MIN_SHAPE_EDGE) {
-      this.collection.updateLocationOutline(state.locationId, moved);
-    }
-  }
 
-  private dragEdgeNotch(state: ShapeDragState, event: PointerEvent): void {
-    const outline = state.startOutline;
-    const a = outline[state.index];
-    const b = outline[(state.index + 1) % outline.length];
-    const dx = b.x - a.x;
-    const dy = b.y - a.y;
-    const length = Math.hypot(dx, dy) || 1;
-    const ux = dx / length;
-    const uy = dy / length;
-    const normal = inwardNormal(outline, state.index);
+    // Dragging a vertex strictly inside the polygon cuts a corner; otherwise it
+    // slides the vertex (which collapses a notch when pulled back to the edge).
+    // Cutting is capped at two notches (a rectangle becomes an L, then a C/U),
+    // so the outline can never grow into an unmanageable shape.
+    const canCut = state.startOutline.length < MAX_SHAPE_VERTICES;
+    const next = pointInPolygon({ x: nx, y: ny }, state.startOutline) && canCut
+      ? cutCorner(state.startOutline, state.index, nx, ny)
+      : moveVertex(state.startOutline, state.index, nx, ny);
 
-    const rectEl = this.el.nativeElement.querySelector(
-      `.floor-plan__rect[data-location-id="${state.locationId}"]`,
-    ) as HTMLElement | null;
-    let scaleX = rectEl ? rectEl.getBoundingClientRect().width / (state.width || 1) : 1;
-    let scaleY = rectEl ? rectEl.getBoundingClientRect().height / (state.height || 1) : 1;
-    if (!scaleX || scaleX < 0.05) scaleX = 1;
-    if (!scaleY || scaleY < 0.05) scaleY = 1;
-    const px = (event.clientX - state.rectLeft) / scaleX;
-    const py = (event.clientY - state.rectTop) / scaleY;
-    const along = clampTo(((px - a.x) * ux + (py - a.y) * uy) / length, 0, 1);
-    const depth = clampTo((px - a.x) * normal.x + (py - a.y) * normal.y, 0, Math.max(state.width, state.height));
-
-    const notched = depth < NOTCH_MIN_DEPTH
-      ? state.startOutline
-      : notchEdge(state.startOutline, state.index, along, NOTCH_WIDTH_RATIO, depth);
-    if (minEdgeLength(notched) >= MIN_SHAPE_EDGE) {
-      this.collection.updateLocationOutline(state.locationId, notched);
+    if (minEdgeLength(next) >= MIN_SHAPE_EDGE && isSimplePolygon(next) && spansBounds(next, state.width, state.height)) {
+      this.collection.updateLocationOutline(state.locationId, next);
     }
   }
 
   private readonly onShapePointerUp = (): void => {
     window.removeEventListener('pointermove', this.onShapePointerMove);
     window.removeEventListener('pointerup', this.onShapePointerUp);
-    const locationId = this.shapeDragState?.locationId;
+    const state = this.shapeDragState;
     this.shapeDragState = null;
-    if (locationId) {
-      this.collection.reflowChildrenInto(locationId);
+    if (!state) {
+      return;
     }
+    this.collection.reflowChildrenInto(state.locationId);
   };
 }
 
@@ -803,4 +844,21 @@ function minEdgeLength(points: readonly Point[]): number {
     min = Math.min(min, Math.hypot(b.x - a.x, b.y - a.y));
   }
   return min;
+}
+
+function spansBounds(points: readonly Point[], width: number, height: number): boolean {
+  if (points.length === 0) {
+    return false;
+  }
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const point of points) {
+    minX = Math.min(minX, point.x);
+    minY = Math.min(minY, point.y);
+    maxX = Math.max(maxX, point.x);
+    maxY = Math.max(maxY, point.y);
+  }
+  return minX === 0 && minY === 0 && maxX === width && maxY === height;
 }

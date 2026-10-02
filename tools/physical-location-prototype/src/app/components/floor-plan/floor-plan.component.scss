@@ -12,8 +12,7 @@
   .floor-plan__upload,
   .floor-plan__add,
   .floor-plan__layout,
-  .floor-plan__shape,
-  .floor-plan__reset-shape {
+  .floor-plan__shape {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -34,8 +33,7 @@
 .floor-plan__upload svg,
 .floor-plan__add svg,
 .floor-plan__layout svg,
-.floor-plan__shape svg,
-.floor-plan__reset-shape svg {
+.floor-plan__shape svg {
   width: 1.05rem;
   height: 1.05rem;
 }
@@ -43,8 +41,7 @@
 .floor-plan__upload:hover,
 .floor-plan__add:hover,
 .floor-plan__layout:hover,
-.floor-plan__shape:hover,
-.floor-plan__reset-shape:hover {
+.floor-plan__shape:hover {
   border-color: var(--accent, #4f46e5);
   color: var(--accent, #4f46e5);
   background: var(--surface-hover, #e7eefe);
@@ -198,6 +195,13 @@
   height: 20px;
 }
 
+/* Wraps the clipped `.floor-plan` so the shape-editing handles, drawn outside
+   it, stay fully visible instead of being cut off by the map's `overflow`. */
+.floor-plan__canvas {
+  position: relative;
+  flex: none;
+}
+
 .floor-plan {
   position: relative;
   flex: none;
@@ -284,6 +288,22 @@
   border-radius: 0.5rem;
   background: rgba(79, 70, 229, 0.06);
   pointer-events: none;
+}
+
+.floor-plan__footprint--shaped {
+  border: none;
+  border-radius: 0;
+  background: none;
+}
+
+.floor-plan__footprint--shaped polygon {
+  fill: rgba(79, 70, 229, 0.06);
+  stroke: var(--accent, #4f46e5);
+  /* The map's clip-path cuts the outline at its own boundary, so draw the
+     stroke twice as thick and let the clip halve it — matching the 1px border
+     of the plain rectangular footprint. */
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
 }
 
 .floor-plan__label {
@@ -435,33 +455,36 @@
 }
 
 /* Shape-editing handles, drawn on the canvas (not inside the clipped rect) so
-   clip-path never cuts them off. Vertices slide edges; edge midpoints notch. */
-.floor-plan__vertex-handle,
-.floor-plan__edge-handle {
+   clip-path never cuts them off. Dragging a corner inward cuts a notch. */
+.floor-plan__vertex-handle {
   position: absolute;
   z-index: 5;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   cursor: move;
   touch-action: none;
-}
-
-.floor-plan__vertex-handle {
-  width: 0.75rem;
-  height: 0.75rem;
+  width: 1rem;
+  height: 1rem;
   background: var(--accent, #5b8def);
   border: 2px solid var(--background, #0d1420);
 }
 
-.floor-plan__edge-handle {
-  width: 0.6rem;
-  height: 0.6rem;
-  background: var(--surface-raised, #f0f3ff);
-  border: 2px solid var(--accent, #4f46e5);
+.floor-plan__vertex-handle:hover,
+.floor-plan__vertex-handle:focus-visible {
+  background: var(--accent, #4f46e5);
+  transform: translate(-50%, -50%) scale(1.15);
 }
 
-.floor-plan__edge-handle:hover {
-  background: var(--accent, #4f46e5);
+/* Larger transparent hit area so the small handles are easier to grab. */
+.floor-plan__vertex-handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.75rem;
+  height: 1.75rem;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
 }
 
 .floor-plan__preview-indicator {
@@ -599,8 +622,7 @@
   .floor-plan__upload,
   .floor-plan__add,
   .floor-plan__layout,
-  .floor-plan__shape,
-  .floor-plan__reset-shape {
+  .floor-plan__shape {
     height: 2rem;
     min-width: 2rem;
     padding: 0 0.5rem;

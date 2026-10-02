@@ -10,9 +10,7 @@ export const FLOOR_PLAN_I18N = {
   planLabel: { key: 'floorPlan.planLabel', fallback: 'Plan' },
   addLabel: { key: 'floorPlan.addLabel', fallback: 'Add' },
   shapeLabel: { key: 'floorPlan.shapeLabel', fallback: 'Shape' },
-  shapeHint: { key: 'floorPlan.shapeHint', fallback: 'Edit the shape (90° corners only)' },
-  resetShapeLabel: { key: 'floorPlan.resetShapeLabel', fallback: 'Reset' },
-  resetShapeHint: { key: 'floorPlan.resetShapeHint', fallback: 'Revert to a rectangle' },
+  shapeHint: { key: 'floorPlan.shapeHint', fallback: 'Drag a corner inward to cut a notch' },
   addComponent: { key: 'floorPlan.addComponent', fallback: 'Add component' },
   addComponentTitle: { key: 'floorPlan.addComponentTitle', fallback: 'Add {type}' },
   addComponentPrompt: { key: 'floorPlan.addComponentPrompt', fallback: 'Name for the new {type}:' },
@@ -20,14 +18,11 @@ export const FLOOR_PLAN_I18N = {
   cancelButton: { key: 'floorPlan.cancelButton', fallback: 'Cancel' },
 } as const;
 
-/** Diameter, in pixels, of the draggable shape-editing handles on the map. */
-export const SHAPE_HANDLE_SIZE = 12;
-
 /** Smallest allowed edge length, in layout units, while editing a shape. */
 export const MIN_SHAPE_EDGE = 8;
 
-/** A notch's width as a fraction of the edge it bites into. */
-export const NOTCH_WIDTH_RATIO = 0.3;
+/** Pointer travel, in pixels, before a shape drag is considered intentional. */
+export const SHAPE_DRAG_THRESHOLD = 4;
 
-/** Minimum inward drag, in layout units, before a notch actually appears. */
-export const NOTCH_MIN_DEPTH = 6;
+/** Most vertices an outline may reach: a rectangle (4) plus at most two corner cuts (L=6, C/U=8). */
+export const MAX_SHAPE_VERTICES = 8;

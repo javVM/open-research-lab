@@ -67,6 +67,39 @@ describe('FloorPlanThreeComponent', () => {
     expect(fixture.componentInstance.elevationFor(room('a', 0, 0))).toBe(0);
   });
 
+  it('returns the container outline scaled into the scene bounds', () => {
+    const collection = TestBed.inject(CollectionService);
+    const floor = collection.dataset().locations.find((l) => l.type === 'floor')!;
+    collection.updateLocationOutline(floor.id, [
+      { x: 0, y: 0 },
+      { x: floor.width!, y: 0 },
+      { x: floor.width!, y: 30 },
+      { x: 30, y: 30 },
+      { x: 30, y: floor.height! },
+      { x: 0, y: floor.height! },
+    ]);
+
+    const fixture = TestBed.createComponent(FloorPlanThreeComponent);
+    fixture.componentRef.setInput('locations', [room('a', 0, 0)]);
+    fixture.componentRef.setInput('containerLocationId', floor.id);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.containerOutline3d().length).toBe(6);
+    expect(fixture.componentInstance.containerOutline3d()[2]).toEqual({ x: floor.width, y: 30 });
+  });
+
+  it('returns no container outline for a plain rectangular parent', () => {
+    const collection = TestBed.inject(CollectionService);
+    const floor = collection.dataset().locations.find((l) => l.type === 'floor')!;
+
+    const fixture = TestBed.createComponent(FloorPlanThreeComponent);
+    fixture.componentRef.setInput('locations', [room('a', 0, 0)]);
+    fixture.componentRef.setInput('containerLocationId', floor.id);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.containerOutline3d()).toEqual([]);
+  });
+
   it('detects shaped outlines via hasOutline', () => {
     const shaped: Location = {
       id: 'l',

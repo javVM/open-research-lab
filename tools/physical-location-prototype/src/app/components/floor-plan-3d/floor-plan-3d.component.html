@@ -28,11 +28,30 @@
   >
     <div
       class="plane"
+      [class.plane--clipped]="containerHasOutline()"
       [style.width.px]="bounds().width"
       [style.height.px]="bounds().height"
       [style.transform]="planeTransform()"
+      [style.clipPath]="containerClipPath3d()"
     >
-      <div class="floor3d" aria-hidden="true"></div>
+      <div
+        class="floor3d"
+        [style.clipPath]="containerClipPath3d()"
+        aria-hidden="true"
+      ></div>
+
+      @if (containerHasOutline()) {
+        @for (wall of containerWalls3d(); track $index) {
+          <div
+            class="floor3d__edge"
+            [style.width.px]="wall.width"
+            [style.height.px]="wall.height"
+            [style.transform]="wall.transform"
+            aria-hidden="true"
+          ></div>
+        }
+      }
+
       @for (location of locations(); track location.id) {
         <div
           class="box3d"

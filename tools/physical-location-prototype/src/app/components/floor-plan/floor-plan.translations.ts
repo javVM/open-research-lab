@@ -14,9 +14,7 @@ export const addLabel = $localize `@@floorPlan.addLabel:Add`;
 export const layoutLabel = $localize `@@floorPlan.layoutLabel:Move`;
 export const layoutHint = $localize `@@floorPlan.layoutHint:Move and resize`;
 export const shapeLabel = $localize `@@floorPlan.shapeLabel:Shape`;
-export const shapeHint = $localize `@@floorPlan.shapeHint:Edit the shape (90° corners only)`;
-export const resetShapeLabel = $localize `@@floorPlan.resetShapeLabel:Reset`;
-export const resetShapeHint = $localize `@@floorPlan.resetShapeHint:Revert to a rectangle`;
+export const shapeHint = $localize `@@floorPlan.shapeHint:Drag a corner inward to cut a notch`;
 export const addComponent = $localize `@@floorPlan.addComponent:Add component`;
 export const addComponentTitle = (type: string): string =>
   $localize `@@floorPlan.addComponentTitle:Add ${type}`;
@@ -41,8 +39,6 @@ export function createFloorPlanTranslations(i18n: TranslationService) {
     layoutHint: () => i18n.t('floorPlan.layoutHint', layoutHint),
     shapeLabel: () => i18n.t('floorPlan.shapeLabel', shapeLabel),
     shapeHint: () => i18n.t('floorPlan.shapeHint', shapeHint),
-    resetShapeLabel: () => i18n.t('floorPlan.resetShapeLabel', resetShapeLabel),
-    resetShapeHint: () => i18n.t('floorPlan.resetShapeHint', resetShapeHint),
     addComponent: () => i18n.t('floorPlan.addComponent', addComponent),
     addComponentTitle: (type: string): string =>
       i18n.t('floorPlan.addComponentTitle', addComponentTitle(type), { type }),

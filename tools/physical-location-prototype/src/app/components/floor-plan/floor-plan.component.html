@@ -60,19 +60,6 @@
       </button>
     }
 
-    @if (shapeMode() && selectedShapeLocation()) {
-      <button
-        type="button"
-        class="floor-plan__reset-shape"
-        [attr.title]="text.resetShapeHint()"
-        [attr.aria-label]="text.resetShapeHint()"
-        (click)="resetShape()"
-      >
-        <mat-icon svgIcon="rect" aria-hidden="true"></mat-icon>
-        <span>{{ text.resetShapeLabel() }}</span>
-      </button>
-    }
-
     <span class="floor-plan__zoom-group" role="group" aria-label="Zoom">
       <button type="button" class="floor-plan__zoom-btn" (click)="zoomIn()" aria-label="Acercar"><mat-icon svgIcon="zoomIn" aria-hidden="true"></mat-icon></button>
       <button type="button" class="floor-plan__zoom-btn" (click)="zoomOut()" aria-label="Alejar"><mat-icon svgIcon="zoomOut" aria-hidden="true"></mat-icon></button>
@@ -99,6 +86,7 @@
     <button type="button" class="floor-plan__tool" [class.floor-plan__tool--active]="resizeMode()" (click)="toggleResizeMode()" aria-label="Resize" title="Resize"><mat-icon svgIcon="resize" aria-hidden="true"></mat-icon></button>
     <button type="button" class="floor-plan__tool" [class.floor-plan__tool--active]="shapeMode()" (click)="toggleShapeMode()" aria-label="Reshape" title="Reshape"><mat-icon svgIcon="shape" aria-hidden="true"></mat-icon></button>
   </div>
+<div class="floor-plan__canvas">
 <div
   class="floor-plan"
   [attr.aria-label]="text.ariaLabel()"
@@ -107,9 +95,16 @@
   [style.backgroundImage]="containerImage() ? 'url(' + containerImage()!.dataUrl + ')' : null"
   [style.backgroundSize]="containerImage() ? '100% 100%' : null"
   [style.backgroundRepeat]="'no-repeat'"
+  [style.clipPath]="containerClipPath()"
 >
-  @if (containerFootprint()) {
-    <div class="floor-plan__footprint" aria-hidden="true"></div>
+  @if (containerFootprint(); as footprint) {
+    @if (containerOutlinePointsString(); as outlinePts) {
+      <svg class="floor-plan__footprint floor-plan__footprint--shaped" [attr.viewBox]="'0 0 ' + footprint.width + ' ' + footprint.height" preserveAspectRatio="none" aria-hidden="true">
+        <polygon [attr.points]="outlinePts" />
+      </svg>
+    } @else {
+      <div class="floor-plan__footprint" aria-hidden="true"></div>
+    }
   }
   @for (location of locations(); track location.id) {
     <div
@@ -174,21 +169,15 @@
     </div>
   }
 
+</div>
+
   @if (selectedShapeLocation(); as shapeLocation) {
-    @for (point of outlinePoints(shapeLocation); track $index) {
+    @for (point of outlinePoints(shapeLocation); track $index; let index = $index) {
       <span
         class="floor-plan__vertex-handle"
         [style.left.%]="shapeHandlePercent(shapeLocation, point).x"
         [style.top.%]="shapeHandlePercent(shapeLocation, point).y"
-        (pointerdown)="onVertexPointerDown($event, shapeLocation, $index)"
-      ></span>
-    }
-    @for (point of outlineMidpoints(shapeLocation); track $index) {
-      <span
-        class="floor-plan__edge-handle"
-        [style.left.%]="shapeHandlePercent(shapeLocation, point).x"
-        [style.top.%]="shapeHandlePercent(shapeLocation, point).y"
-        (pointerdown)="onEdgePointerDown($event, shapeLocation, $index)"
+        (pointerdown)="onVertexPointerDown($event, shapeLocation, index)"
       ></span>
     }
   }

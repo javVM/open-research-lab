@@ -102,6 +102,34 @@ describe('FloorPlan3dComponent', () => {
     expect(bounds.height).toBe(floor.height!);
   });
 
+  it('clips the 3D plane and floor to the container outline so children stay inside the parent shape', () => {
+    const collection = TestBed.inject(CollectionService);
+    const floor = collection.dataset().locations.find((l) => l.type === 'floor')!;
+    collection.updateLocationOutline(floor.id, [
+      { x: 0, y: 0 },
+      { x: floor.width!, y: 0 },
+      { x: floor.width!, y: 30 },
+      { x: 30, y: 30 },
+      { x: 30, y: floor.height! },
+      { x: 0, y: floor.height! },
+    ]);
+
+    const fixture = TestBed.createComponent(FloorPlan3dComponent);
+    fixture.componentRef.setInput('locations', []);
+    fixture.componentRef.setInput('containerLocationId', floor.id);
+    fixture.detectChanges();
+
+    const plane = fixture.nativeElement.querySelector('.plane') as HTMLElement;
+    expect(plane.style.clipPath).toContain('polygon(');
+    expect(plane.classList.contains('plane--clipped')).toBe(true);
+
+    const floor3d = fixture.nativeElement.querySelector('.floor3d') as HTMLElement;
+    expect(floor3d.style.clipPath).toContain('polygon(');
+
+    // A low border wall is drawn for every edge of the container outline.
+    expect(fixture.nativeElement.querySelectorAll('.floor3d__edge').length).toBe(6);
+  });
+
   it('clicking each floor selects that specific floor, not always the topmost one', () => {
     const collection = TestBed.inject(CollectionService);
     const navigation = TestBed.inject(NavigationService);

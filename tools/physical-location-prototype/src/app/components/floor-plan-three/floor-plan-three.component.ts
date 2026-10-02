@@ -28,6 +28,7 @@ import { RenderService } from '../../shared/render.service';
 import { OCCUPANCY_PALETTE } from '../../shared/palette.constants';
 import { registerAppIcons } from '../../shared/icons';
 import {
+  CONTAINER_WALL_HEIGHT,
   DEFAULT_WALL_HEIGHT,
   DESKTOP_INITIAL_ROTATE_X,
   DESKTOP_SCENE_HEIGHT,
@@ -103,6 +104,7 @@ export class FloorPlanThreeComponent implements AfterViewInit, OnDestroy {
   private resizeObserver: ResizeObserver | null = null;
   private dragStart: { x: number; y: number } | null = null;
   private groundMesh: THREE.Mesh | null = null;
+  private containerWallsGroup: THREE.Group | null = null;
 
   constructor() {
     registerAppIcons();
@@ -111,6 +113,7 @@ export class FloorPlanThreeComponent implements AfterViewInit, OnDestroy {
   private readonly rebuildEffect = effect(() => {
     this.locations();
     this.containerLocationId();
+    this.collection.dataset();
     this.collection.locationItemCounts();
     this.navigation.selectedLocationId();
     untracked(() => {
@@ -299,6 +302,17 @@ export class FloorPlanThreeComponent implements AfterViewInit, OnDestroy {
       (this.groundMesh.material as THREE.Material).dispose();
       this.groundMesh = null;
     }
+    if (this.containerWallsGroup) {
+      this.containerWallsGroup.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          mesh.geometry?.dispose();
+          (mesh.material as THREE.Material)?.dispose();
+        }
+      });
+      this.scene?.remove(this.containerWallsGroup);
+      this.containerWallsGroup = null;
+    }
   }
 
   private rebuildScene(): void {
@@ -321,7 +335,8 @@ export class FloorPlanThreeComponent implements AfterViewInit, OnDestroy {
     if (!this.scene) return;
     const width = bounds.width || 480;
     const height = bounds.height || 320;
-    const geometry = new THREE.PlaneGeometry(width, height);
+    const outline = this.containerOutline3d();
+    const geometry = this.groundGeometry(outline, width, height);
     const gridTexture = this.createGridTexture(width, height);
     const material = new THREE.MeshStandardMaterial({
       color: new THREE.Color('#ffffff'),
@@ -338,12 +353,113 @@ export class FloorPlanThreeComponent implements AfterViewInit, OnDestroy {
     this.scene.add(mesh);
     this.groundMesh = mesh;
 
+    this.ensureContainerWalls(outline, bounds);
+
     // Suelo ya es cuadrícula vía CanvasTexture (40px como el map 2D); no añadimos
     // LineSegments extra para no duplicar rejilla. Si quieres rejilla más marcada,
     // descomenta el bloque siguiente.
     // const grid = this.createRectangularGrid(bounds);
     // this.scene.add(grid);
     // this.groundMesh.userData['grid'] = grid;
+  }
+
+  /**
+   * The container parent's own outline, scaled into the 3D scene's bounds, or
+   * an empty array when the parent has no shaped outline. Drives the shape of
+   * the ground plane and its border walls.
+   */
+  containerOutline3d(): Point[] {
+    const id = this.containerLocationId();
+    if (!id) return [];
+    const parent = this.collection.dataset().locations.find((location) => location.id === id);
+    if (!parent?.outline || parent.outline.length < 4 || !parent.width || !parent.height) {
+      return [];
+    }
+    const bounds = this.bounds();
+    return scaleOutline(parent.outline, parent.width, parent.height, bounds.width, bounds.height) ?? [];
+  }
+
+  /** Flat ground geometry: the container's outline, or a plain rectangle. */
+  private groundGeometry(outline: Point[], width: number, height: number): THREE.BufferGeometry {
+    if (outline.length < 4) {
+      return new THREE.PlaneGeometry(width, height);
+    }
+    const shape = new THREE.Shape();
+    const cx = width / 2;
+    const cy = height / 2;
+    // Negate y so the later `rotateX(-PI/2)` lays the outline down unflipped,
+    // matching the 2D map (x → X, y → Z) and the plain boxes around it.
+    shape.moveTo(outline[0].x - cx, -(outline[0].y - cy));
+    for (let i = 1; i < outline.length; i++) {
+      shape.lineTo(outline[i].x - cx, -(outline[i].y - cy));
+    }
+    shape.closePath();
+    const geometry = new THREE.ShapeGeometry(shape);
+    this.normalizeGroundUvs(geometry, width, height);
+    return geometry;
+  }
+
+  /**
+   * `ShapeGeometry` stores raw vertex coordinates as UVs rather than the
+   * `[0,1]` mapping `PlaneGeometry` uses, so the grid texture would tile at the
+   * wrong scale on a shaped floor. Normalize them to match the rectangle floor,
+   * keeping the shared `texture.repeat` grid alignment identical.
+   */
+  private normalizeGroundUvs(geometry: THREE.BufferGeometry, width: number, height: number): void {
+    const position = geometry.getAttribute('position') as THREE.BufferAttribute;
+    const uvs = new Float32Array(position.count * 2);
+    for (let i = 0; i < position.count; i++) {
+      uvs[i * 2] = (position.getX(i) + width / 2) / width;
+      uvs[i * 2 + 1] = (position.getY(i) + height / 2) / height;
+    }
+    geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+  }
+
+  /** Low border walls tracing the container's outline, so its shape reads from any orbit angle. */
+  private ensureContainerWalls(outline: Point[], bounds: Rect): void {
+    if (!this.scene || outline.length < 4) return;
+    const wallHeight = CONTAINER_WALL_HEIGHT;
+    const wallThickness = CONTAINER_WALL_HEIGHT;
+    const baseY = -1;
+    const material = new THREE.MeshStandardMaterial({
+      color: new THREE.Color('#4f46e5'),
+      transparent: true,
+      opacity: 0.28,
+      roughness: 0.6,
+      metalness: 0.05,
+    });
+    const group = new THREE.Group();
+    group.userData['isContainerWall'] = true;
+    for (let i = 0; i < outline.length; i++) {
+      const a = outline[i];
+      const b = outline[(i + 1) % outline.length];
+      const ax = bounds.x + a.x;
+      const az = bounds.y + a.y;
+      const bx = bounds.x + b.x;
+      const bz = bounds.y + b.y;
+      let geometry: THREE.BoxGeometry;
+      let cx: number;
+      let cz: number;
+      if (a.y === b.y) {
+        const length = Math.abs(bx - ax);
+        if (length === 0) continue;
+        geometry = new THREE.BoxGeometry(length, wallHeight, wallThickness);
+        cx = (ax + bx) / 2;
+        cz = az;
+      } else {
+        const length = Math.abs(bz - az);
+        if (length === 0) continue;
+        geometry = new THREE.BoxGeometry(wallThickness, wallHeight, length);
+        cx = ax;
+        cz = (az + bz) / 2;
+      }
+      const wall = new THREE.Mesh(geometry, material);
+      wall.position.set(cx, baseY + wallHeight / 2, cz);
+      wall.userData['isContainerWall'] = true;
+      group.add(wall);
+    }
+    this.scene.add(group);
+    this.containerWallsGroup = group;
   }
 
   private createGridTexture(width: number, height: number): THREE.CanvasTexture {
@@ -501,8 +617,10 @@ export class FloorPlanThreeComponent implements AfterViewInit, OnDestroy {
     if (this.hasOutline(location)) {
       const points = this.outlinePoints3d(location);
       const shape = new THREE.Shape();
-      // Center points around group origin
-      const centered = points.map((p) => ({ x: p.x - rect.width / 2, y: p.y - rect.height / 2 }));
+      // Center points around group origin; negate y so the extrusion below
+      // (`rotateX(-PI/2)`) lays the shape out unflipped, matching the 2D map
+      // and the plain boxes (x → X, y → Z).
+      const centered = points.map((p) => ({ x: p.x - rect.width / 2, y: -(p.y - rect.height / 2) }));
       shape.moveTo(centered[0].x, centered[0].y);
       for (let i = 1; i < centered.length; i++) {
         shape.lineTo(centered[i].x, centered[i].y);

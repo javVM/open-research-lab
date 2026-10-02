@@ -1,12 +1,12 @@
 import type { Point } from './models';
 import {
-  edgeMidpoints,
+  cutCorner,
   inwardNormal,
   isOrthogonal,
+  isSimplePolygon,
   labelAnchor,
   moveVertex,
   nearestInsidePosition,
-  notchEdge,
   pointInPolygon,
   rectangleOutline,
   rectInsidePolygon,
@@ -39,50 +39,71 @@ describe('isOrthogonal', () => {
   });
 });
 
-describe('moveVertex', () => {
-  it('slides the two incident edges of a rectangle corner', () => {
+describe('cutCorner', () => {
+  it('cuts a corner notch to form an L', () => {
     const rect = rectangleOutline(100, 60);
-    // Move the top-left corner to (20, 10): the top and left edges slide along.
-    const moved = moveVertex(rect, 0, 20, 10);
-    expect(moved[0]).toEqual({ x: 20, y: 10 });
-    expect(moved[1]).toEqual({ x: 100, y: 10 });
-    expect(moved[2]).toEqual({ x: 100, y: 60 });
-    expect(moved[3]).toEqual({ x: 20, y: 60 });
-    expect(isOrthogonal(moved)).toBe(true);
+    // Cut the top-right corner inward to (60, 25).
+    const cut = cutCorner(rect, 1, 60, 25);
+    expect(isOrthogonal(cut)).toBe(true);
+    expect(cut).toHaveLength(6);
+    expect(cut).toEqual([
+      { x: 0, y: 0 },
+      { x: 60, y: 0 },
+      { x: 60, y: 25 },
+      { x: 100, y: 25 },
+      { x: 100, y: 60 },
+      { x: 0, y: 60 },
+    ]);
   });
 
-  it('keeps every edge axis-aligned for an L-shaped outline', () => {
-    const l = poly([[0, 0], [100, 0], [100, 30], [40, 30], [40, 60], [0, 60]]);
-    const moved = moveVertex(l, 3, 50, 20); // nudge the inner corner
-    expect(isOrthogonal(moved)).toBe(true);
-    expect(moved).toHaveLength(6);
+  it('does nothing when the apex sits on an incident edge', () => {
+    const rect = rectangleOutline(100, 60);
+    expect(cutCorner(rect, 1, 100, 25)).toEqual(rect);
+    expect(cutCorner(rect, 1, 60, 0)).toEqual(rect);
   });
 });
 
-describe('notchEdge', () => {
-  it('cuts a corner notch to form an L', () => {
+describe('moveVertex', () => {
+  it('slides the two incident edges of a rectangle corner', () => {
     const rect = rectangleOutline(100, 60);
-    // Notch the top edge, centred near its right end, biting inwards by 30.
-    const notched = notchEdge(rect, 0, 0.75, 0.5, 30);
-    expect(isOrthogonal(notched)).toBe(true);
-    expect(notched).toHaveLength(6);
-    // The top-right region is cut: no vertex remains at y=0 beyond the notch.
-    expect(notched.some((p) => p.y === 0 && p.x > 75)).toBe(false);
+    const moved = moveVertex(rect, 0, 20, 10);
+    expect(moved).toEqual([
+      { x: 20, y: 10 },
+      { x: 100, y: 10 },
+      { x: 100, y: 60 },
+      { x: 20, y: 60 },
+    ]);
+    expect(isOrthogonal(moved)).toBe(true);
   });
 
-  it('cuts a centred notch for a U/comb shape', () => {
-    const rect = rectangleOutline(100, 60);
-    const notched = notchEdge(rect, 0, 0.5, 0.25, 20);
-    expect(isOrthogonal(notched)).toBe(true);
-    expect(notched).toHaveLength(8);
+  it('collapses a notch when its inner corner is dragged back onto the outer corner', () => {
+    const l = poly([[0, 0], [60, 0], [60, 25], [100, 25], [100, 60], [0, 60]]);
+    const moved = moveVertex(l, 2, 100, 0);
+    expect(moved).toEqual(rectangleOutline(100, 60));
+  });
+});
+
+describe('simplifyOutline', () => {
+  it('drops collinear vertices while preserving the shape', () => {
+    const withRedundant = poly([
+      [0, 0],
+      [50, 0],
+      [100, 0],
+      [100, 60],
+      [0, 60],
+    ]);
+    expect(simplifyOutline(withRedundant)).toEqual(rectangleOutline(100, 60));
+  });
+});
+
+describe('isSimplePolygon', () => {
+  it('accepts a rectangle and an L-shape', () => {
+    expect(isSimplePolygon(rectangleOutline(100, 60))).toBe(true);
+    expect(isSimplePolygon(poly([[0, 0], [60, 0], [60, 25], [100, 25], [100, 60], [0, 60]]))).toBe(true);
   });
 
-  it('can notch a second time to build a stair', () => {
-    const rect = rectangleOutline(100, 60);
-    const once = notchEdge(rect, 0, 0.75, 0.5, 30);
-    const twice = notchEdge(once, 1, 0.5, 0.5, 15);
-    expect(isOrthogonal(twice)).toBe(true);
-    expect(twice).toHaveLength(10);
+  it('rejects a bow-tie polygon that folds over itself', () => {
+    expect(isSimplePolygon(poly([[0, 0], [10, 10], [10, 0], [0, 10]]))).toBe(false);
   });
 });
 
@@ -99,31 +120,6 @@ describe('inwardNormal', () => {
       const towardCenter = (center.x - mid.x) * n.x + (center.y - mid.y) * n.y;
       expect(towardCenter).toBeGreaterThan(0);
     }
-  });
-});
-
-describe('edgeMidpoints', () => {
-  it('returns one midpoint per edge', () => {
-    expect(edgeMidpoints(rectangleOutline(100, 60))).toHaveLength(4);
-    expect(edgeMidpoints(rectangleOutline(100, 60))[0]).toEqual({ x: 50, y: 0 });
-  });
-});
-
-describe('simplifyOutline', () => {
-  it('drops collinear vertices while preserving the shape', () => {
-    const withRedundant = poly([
-      [0, 0],
-      [50, 0],
-      [100, 0],
-      [100, 60],
-      [0, 60],
-    ]);
-    expect(simplifyOutline(withRedundant)).toEqual([
-      { x: 0, y: 0 },
-      { x: 100, y: 0 },
-      { x: 100, y: 60 },
-      { x: 0, y: 60 },
-    ]);
   });
 });
 

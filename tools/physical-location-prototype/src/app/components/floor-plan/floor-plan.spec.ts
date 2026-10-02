@@ -4,6 +4,7 @@ import { CollectionService } from '../../collection.service';
 import { MoveService } from '../../move.service';
 import { NavigationService } from '../../navigation.service';
 import type { Location } from '../../../core/models';
+import { pointInPolygon } from '../../../core/outline';
 
 function room(id: string, x: number, y: number): Location {
   return { id, parentId: 'building', name: `Room ${id}`, type: 'room', x, y, width: 100, height: 80 };
@@ -85,6 +86,46 @@ describe('FloorPlanComponent', () => {
     navigation.selectedLocationId.set(null);
     rect.dispatchEvent(new MouseEvent('click'));
     expect(navigation.selectedLocationId()).toBeNull();
+  });
+
+  it('keeps a room inside the container outline instead of letting it slide under a cut-away corner', () => {
+    const collection = TestBed.inject(CollectionService);
+    const floor = collection.dataset().locations.find((l) => l.type === 'floor')!;
+    const room = collection.dataset().locations.find((l) => l.parentId === floor.id && l.type === 'room')!;
+    const w = floor.width!;
+    const h = floor.height!;
+    // Cut a square out of the floor's top-right corner.
+    const outline = [
+      { x: 0, y: 0 },
+      { x: w, y: 0 },
+      { x: w, y: 60 },
+      { x: w - 60, y: 60 },
+      { x: w - 60, y: h },
+      { x: 0, y: h },
+    ];
+    collection.updateLocationOutline(floor.id, outline);
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentRef.setInput('locations', [room]);
+    fixture.componentRef.setInput('containerLocationId', floor.id);
+    fixture.detectChanges();
+    fixture.componentInstance.toggleLayoutMode();
+    fixture.detectChanges();
+
+    const rect = fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement;
+    rect.dispatchEvent(new MouseEvent('pointerdown', { clientX: 0, clientY: 0, button: 0 }));
+    // Drag hard toward the removed top-right corner.
+    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 5000, clientY: -5000 }));
+    window.dispatchEvent(new MouseEvent('pointerup'));
+
+    const moved = collection.dataset().locations.find((l) => l.id === room.id)!;
+    const corners = [
+      { x: moved.x!, y: moved.y! },
+      { x: moved.x! + moved.width!, y: moved.y! },
+      { x: moved.x! + moved.width!, y: moved.y! + moved.height! },
+      { x: moved.x!, y: moved.y! + moved.height! },
+    ];
+    expect(corners.every((corner) => pointInPolygon(corner, outline))).toBe(true);
   });
 
   it('dragging the resize handle grows the rect via CollectionService.updateLocationSize, without selecting it', () => {
@@ -225,39 +266,31 @@ describe('FloorPlanComponent', () => {
     expect(plainRect.querySelector('.floor-plan__outline')).toBeNull();
   });
 
-  it('shows vertex and edge handles for a targeted location in shape mode', () => {
-    const shaped: Location = {
-      id: 'l',
+  it('shows four corner handles for a targeted location in shape mode', () => {
+    const rectangle: Location = {
+      id: 'r',
       parentId: 'building',
-      name: 'L room',
+      name: 'Room',
       type: 'room',
       x: 0,
       y: 0,
       width: 100,
       height: 80,
-      outline: [
-        { x: 0, y: 0 },
-        { x: 100, y: 0 },
-        { x: 100, y: 30 },
-        { x: 40, y: 30 },
-        { x: 40, y: 80 },
-        { x: 0, y: 80 },
-      ],
     };
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentRef.setInput("locations", [shaped]);
+    fixture.componentRef.setInput('locations', [rectangle]);
     fixture.componentInstance.toggleShapeMode();
     fixture.detectChanges();
 
     (fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement).click();
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelectorAll('.floor-plan__vertex-handle').length).toBe(6);
-    expect(fixture.nativeElement.querySelectorAll('.floor-plan__edge-handle').length).toBe(6);
+    expect(fixture.nativeElement.querySelectorAll('.floor-plan__vertex-handle').length).toBe(4);
+    expect(fixture.nativeElement.querySelectorAll('.floor-plan__edge-handle').length).toBe(0);
   });
 
-  it('dragging an edge handle inward notches the shape', () => {
+  it('dragging a corner handle inward in shape mode cuts a notch', () => {
     const collection = TestBed.inject(CollectionService);
     const rectangle: Location = {
       id: 'r',
@@ -272,57 +305,66 @@ describe('FloorPlanComponent', () => {
     collection.addLocation(rectangle);
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentRef.setInput("locations", [rectangle]);
+    fixture.componentRef.setInput('locations', [rectangle]);
     fixture.componentInstance.toggleShapeMode();
     fixture.detectChanges();
 
     (fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement).click();
     fixture.detectChanges();
 
-    const handle = fixture.nativeElement.querySelector('.floor-plan__edge-handle') as HTMLElement;
-    handle.dispatchEvent(new MouseEvent('pointerdown', { clientX: 50, clientY: 0, button: 0, bubbles: true }));
-    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 50, clientY: 40 }));
+    // The second vertex handle is the top-right corner: dragging it inward
+    // (left and down) cuts a notch, turning the rectangle into an L.
+    const handles = fixture.nativeElement.querySelectorAll('.floor-plan__vertex-handle') as NodeListOf<HTMLElement>;
+    handles[1].dispatchEvent(new MouseEvent('pointerdown', { clientX: 100, clientY: 0, button: 0, bubbles: true }));
+    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 60, clientY: 25 }));
     window.dispatchEvent(new MouseEvent('pointerup'));
 
     const updated = collection.dataset().locations.find((candidate) => candidate.id === 'r')!;
     expect(updated.outline).toBeDefined();
-    expect(updated.outline!.length).toBeGreaterThan(4);
+    expect(updated.outline!.length).toBe(6);
   });
 
-  it('reverting a targeted shaped location to a rectangle clears its outline', () => {
+  it('caps the outline at two notches, refusing a third cut', () => {
     const collection = TestBed.inject(CollectionService);
-    const shaped: Location = {
-      id: 'l',
+    const u: Location = {
+      id: 'u',
       parentId: 'building',
-      name: 'L room',
+      name: 'U room',
       type: 'room',
       x: 0,
       y: 0,
       width: 100,
       height: 80,
       outline: [
-        { x: 0, y: 0 },
-        { x: 100, y: 0 },
-        { x: 100, y: 30 },
+        { x: 0, y: 30 },
         { x: 40, y: 30 },
-        { x: 40, y: 80 },
+        { x: 40, y: 0 },
+        { x: 60, y: 0 },
+        { x: 60, y: 25 },
+        { x: 100, y: 25 },
+        { x: 100, y: 80 },
         { x: 0, y: 80 },
       ],
     };
-    collection.addLocation(shaped);
+    collection.addLocation(u);
 
     const fixture = TestBed.createComponent(FloorPlanComponent);
-    fixture.componentRef.setInput("locations", [shaped]);
+    fixture.componentRef.setInput('locations', [u]);
     fixture.componentInstance.toggleShapeMode();
     fixture.detectChanges();
 
     (fixture.nativeElement.querySelector('.floor-plan__rect') as HTMLElement).click();
     fixture.detectChanges();
 
-    fixture.componentInstance.resetShape();
+    // The bottom-left outer corner (last handle) is dragged inward to try to
+    // cut a third notch — it must be ignored, leaving the U/C shape untouched.
+    const handles = fixture.nativeElement.querySelectorAll('.floor-plan__vertex-handle') as NodeListOf<HTMLElement>;
+    handles[7].dispatchEvent(new MouseEvent('pointerdown', { clientX: 0, clientY: 80, button: 0, bubbles: true }));
+    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 40, clientY: 55 }));
+    window.dispatchEvent(new MouseEvent('pointerup'));
 
-    const updated = collection.dataset().locations.find((candidate) => candidate.id === 'l')!;
-    expect(updated.outline).toBeUndefined();
+    const updated = collection.dataset().locations.find((candidate) => candidate.id === 'u')!;
+    expect(updated.outline).toEqual(u.outline);
   });
 
   it('no longer shows a scaled-down preview — preview removed as confusing UX', () => {
@@ -425,6 +467,49 @@ describe('FloorPlanComponent', () => {
     const bounds = fixture.componentInstance.bounds();
     expect(bounds.width).toBe(room.width!);
     expect(bounds.height).toBe(room.height!);
+  });
+
+  it('clips the map to the container outline so children stay inside the parent shape', () => {
+    const collection = TestBed.inject(CollectionService);
+    const room = collection.dataset().locations.find((l) => l.type === 'room')!;
+    collection.updateLocationOutline(room.id, [
+      { x: 0, y: 0 },
+      { x: room.width!, y: 0 },
+      { x: room.width!, y: 30 },
+      { x: 30, y: 30 },
+      { x: 30, y: room.height! },
+      { x: 0, y: room.height! },
+    ]);
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentRef.setInput('locations', []);
+    fixture.componentRef.setInput('containerLocationId', room.id);
+    fixture.detectChanges();
+
+    const mapDiv = fixture.nativeElement.querySelector('.floor-plan') as HTMLElement;
+    expect(mapDiv.style.clipPath).toContain('polygon(');
+  });
+
+  it('draws the container outline as a visible shaped footprint when the parent is not rectangular', () => {
+    const collection = TestBed.inject(CollectionService);
+    const room = collection.dataset().locations.find((l) => l.type === 'room')!;
+    collection.updateLocationOutline(room.id, [
+      { x: 0, y: 0 },
+      { x: room.width!, y: 0 },
+      { x: room.width!, y: 30 },
+      { x: 30, y: 30 },
+      { x: 30, y: room.height! },
+      { x: 0, y: room.height! },
+    ]);
+
+    const fixture = TestBed.createComponent(FloorPlanComponent);
+    fixture.componentRef.setInput('locations', []);
+    fixture.componentRef.setInput('containerLocationId', room.id);
+    fixture.detectChanges();
+
+    const footprint = fixture.nativeElement.querySelector('.floor-plan__footprint--shaped') as HTMLElement;
+    expect(footprint).toBeTruthy();
+    expect(footprint.querySelector('polygon')).toBeTruthy();
   });
 
   it('does not draw a footprint background when the parent has no dimensions (e.g. a building)', () => {
