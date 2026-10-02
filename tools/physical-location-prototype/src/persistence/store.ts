@@ -14,6 +14,7 @@ const STORAGE_KEY = 'physical-location-prototype/dataset/v3';
  */
 export class DatasetStore {
   private dataset: Dataset;
+  private demoDataset: Dataset | null = null;
   private listeners = new Set<() => void>();
 
   constructor(initial: Dataset) {
@@ -21,12 +22,16 @@ export class DatasetStore {
   }
 
   getState(): Dataset {
-    return this.dataset;
+    return this.demoDataset ?? this.dataset;
   }
 
   setState(next: Dataset): void {
-    this.dataset = next;
-    this.persist();
+    if (this.demoDataset !== null) {
+      this.demoDataset = next;
+    } else {
+      this.dataset = next;
+      this.persist();
+    }
     for (const listener of this.listeners) {
       listener();
     }
@@ -35,6 +40,24 @@ export class DatasetStore {
   subscribe(listener: () => void): () => void {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
+  }
+
+  enterDemo(initial: Dataset): void {
+    this.demoDataset = initial;
+    for (const listener of this.listeners) {
+      listener();
+    }
+  }
+
+  exitDemo(): void {
+    this.demoDataset = null;
+    for (const listener of this.listeners) {
+      listener();
+    }
+  }
+
+  isDemoMode(): boolean {
+    return this.demoDataset !== null;
   }
 
   private persist(): void {

@@ -1535,53 +1535,101 @@
       <trans-unit id="tour.welcome.bullet3">
         <source>5 minutes to your first located sample</source>
       </trans-unit>
-      <trans-unit id="tour.explore.title">
-        <source>Explore — your store in hierarchy</source>
+      <trans-unit id="tour.navigation.title">
+        <source>Main navigation</source>
       </trans-unit>
-      <trans-unit id="tour.explore.description">
-        <source>On the left you see the real hierarchy: Building → Floor → Room → Cabinet → Drawer → Tray → Position. Expand, collapse and select any level. The centre shows the contents of the selected place.</source>
+      <trans-unit id="tour.navigation.description">
+        <source>This sidebar is your map of the app. From here you jump between Explore (your storage), Scan (check-in and check-out with camera), Reports (live metrics), Import/Export (CSV backups), Settings and About the product.</source>
       </trans-unit>
-      <trans-unit id="tour.map.title">
-        <source>2D map, 3D and shapes</source>
+      <trans-unit id="tour.locationTree.title">
+        <source>Location hierarchy</source>
       </trans-unit>
-      <trans-unit id="tour.map.description">
-        <source>For buildings, floors and rooms you can switch between List, Map and 3D. On the Map drag and resize rectangles, edit L/U shapes at 90° and upload the real blueprint as background. In 3D floors are stacked vertically.</source>
+      <trans-unit id="tour.locationTree.description">
+        <source>Here you see the real hierarchy of your collection: Building → Floor → Room → Cabinet → Drawer → Tray → Position. Expand and collapse nodes, select any level and use “Go to…” to jump straight to a sample.</source>
       </trans-unit>
-      <trans-unit id="tour.items.title">
-        <source>Items, grid and history</source>
+      <trans-unit id="tour.map2d.title">
+        <source>Building 2D map</source>
       </trans-unit>
-      <trans-unit id="tour.items.description">
-        <source>Click a tray to see its grid: free and occupied cells, with collision validation. Select an item on the right to see detail, full path, quantity with unit and immutable history. Moving is drag or click destination and confirm — it gets recorded.</source>
+      <trans-unit id="tour.map2d.description">
+        <source>For buildings, floors and rooms you can view the 2D floor plan. Drag and resize rectangles, edit L or U shapes at 90°, and upload the real blueprint image as a background.</source>
       </trans-unit>
-      <trans-unit id="tour.create.title">
-        <source>Create an item step by step</source>
+      <trans-unit id="tour.map3d.title">
+        <source>3D view</source>
       </trans-unit>
-      <trans-unit id="tour.create.description">
-        <source>Select any location (cabinet, drawer or tray) and click “Add item”. Type the catalogue code — you can use the default prefix from Settings (e.g. ITEM-0001) and let it auto-increment —, name, category and quantity with unit. On save, the item is placed instantly and its full path appears (Building / Room / Drawer / A12).</source>
+      <trans-unit id="tour.map3d.description">
+        <source>The 3D view stacks floors and rooms vertically. It helps you quickly grasp the spatial distribution and spot gaps or overcrowding at a glance.</source>
+      </trans-unit>
+      <trans-unit id="tour.trayGrid.title">
+        <source>Tray grid</source>
+      </trans-unit>
+      <trans-unit id="tour.trayGrid.description">
+        <source>When you select a tray its grid appears: free and occupied cells with collision validation. From here you know exactly where the next sample fits.</source>
+      </trans-unit>
+      <trans-unit id="tour.itemDetail.title">
+        <source>Sample detail</source>
+      </trans-unit>
+      <trans-unit id="tour.itemDetail.description">
+        <source>Clicking an item shows its full card: catalogue number, name, quantity with unit, status, full path and an immutable movement history.</source>
+      </trans-unit>
+      <trans-unit id="tour.itemDetail.bullet1">
+        <source>The path shows where it is (Building / Room / Drawer / Position)</source>
+      </trans-unit>
+      <trans-unit id="tour.itemDetail.bullet2">
+        <source>No movement is deleted; only corrections are appended</source>
+      </trans-unit>
+      <trans-unit id="tour.addItem.title">
+        <source>Create items and locations</source>
+      </trans-unit>
+      <trans-unit id="tour.addItem.description">
+        <source>This button adapts to where you are: add rooms, cabinets, drawers, trays or items. When creating an item, type its catalogue number, name, category and quantity with unit; Nexus Lab places it instantly and records the movement.</source>
       </trans-unit>
       <trans-unit id="tour.search.title">
         <source>Search and quick jump</source>
       </trans-unit>
       <trans-unit id="tour.search.description">
-        <source>At the top you have instant search: type code, name or path. Press “Go to…” in the tree for Quick Jump. Everything is designed to find a sample in seconds, even with thousands of items.</source>
+        <source>The top bar searches by code, name or full path. Find a sample in seconds even with thousands of items, and click a result to go directly to its location.</source>
       </trans-unit>
-      <trans-unit id="tour.scan.title">
-        <source>Scan — in and out</source>
+      <trans-unit id="tour.scanExtract.title">
+        <source>Scan — extract a sample</source>
       </trans-unit>
-      <trans-unit id="tour.scan.description">
-        <source>In Scan you handle check-in and check-out with the camera: Place mode (scan item + destination) or Extract mode (remove from storage). On desktop you can simulate a scan by typing “item:ITEM-0001” or “loc:ID”. Every action stays in history and recent activity.</source>
+      <trans-unit id="tour.scanExtract.description">
+        <source>Extract mode is for checking a sample out: loan, external analysis or temporary removal. Scan the item code with the camera or type it manually on desktop (“item:ITEM-0001”). The operation is recorded in history.</source>
+      </trans-unit>
+      <trans-unit id="tour.scanPlace.title">
+        <source>Scan — place a sample</source>
+      </trans-unit>
+      <trans-unit id="tour.scanPlace.description">
+        <source>Place mode locates a sample in two steps: first scan the item, then scan the destination. If something does not match (for example, the location does not exist), the warning appears in the recent activity table.</source>
+      </trans-unit>
+      <trans-unit id="tour.scanPlace.bullet1">
+        <source>Scan the sample first</source>
+      </trans-unit>
+      <trans-unit id="tour.scanPlace.bullet2">
+        <source>Then scan the destination location</source>
       </trans-unit>
       <trans-unit id="tour.reports.title">
         <source>Live reports</source>
       </trans-unit>
       <trans-unit id="tour.reports.description">
-        <source>In Reports you see live metrics: total items, locations in use, unlocated and integrity. Donuts by status, building and category, movement timeline and recent activity table. Customize the dashboard and drag widgets.</source>
+        <source>The dashboard shows live metrics: total items, locations in use, unlocated and integrity. Add widgets for status, category or building donuts, a movement timeline and the recent activity table.</source>
       </trans-unit>
-      <trans-unit id="tour.settings.title">
-        <source>Settings and your space</source>
+      <trans-unit id="tour.data.title">
+        <source>Import and export</source>
       </trans-unit>
-      <trans-unit id="tour.settings.description">
-        <source>In Settings you define lab identity, units, date format, theme and traceability requirements. Everything stays local. Go back to “About” whenever you want to review features or relaunch this tour. You’re ready!</source>
+      <trans-unit id="tour.data.description">
+        <source>In Import/Export you keep your backup. Import locations and items from CSV with dry-run validation, and export items, locations and movements whenever you want. Your data is always yours and readable outside the app.</source>
+      </trans-unit>
+      <trans-unit id="tour.finish.title">
+        <source>You’re ready</source>
+      </trans-unit>
+      <trans-unit id="tour.finish.description">
+        <source>In Settings you can change units, theme, date format and traceability requirements. From About the product you can review features or relaunch this tour whenever you need it.</source>
+      </trans-unit>
+      <trans-unit id="tour.finish.bullet1">
+        <source>All information is stored locally on this device</source>
+      </trans-unit>
+      <trans-unit id="tour.finish.bullet2">
+        <source>Nothing is erased without a trace: every change is recorded</source>
       </trans-unit>
       <trans-unit id="import.heading">
         <source>Import from CSV</source>

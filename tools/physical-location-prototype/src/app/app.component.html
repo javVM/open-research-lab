@@ -16,6 +16,7 @@
         <button
           type="button"
           class="sidenav__link"
+          data-tour="nav-explore"
           [class.sidenav__link--active]="navigation.uiMode() === 'explore'"
           [attr.aria-current]="navigation.uiMode() === 'explore' ? 'page' : null"
           [attr.aria-pressed]="navigation.uiMode() === 'explore'"
@@ -29,6 +30,7 @@
         <button
           type="button"
           class="sidenav__link"
+          data-tour="nav-scan"
           [class.sidenav__link--active]="navigation.uiMode() === 'scan'"
           [attr.aria-pressed]="navigation.uiMode() === 'scan'"
           (click)="navigation.setUiMode('scan')"
@@ -41,6 +43,7 @@
         <button
           type="button"
           class="sidenav__link"
+          data-tour="nav-reports"
           [class.sidenav__link--active]="navigation.uiMode() === 'reports'"
           [attr.aria-current]="navigation.uiMode() === 'reports' ? 'page' : null"
           [attr.aria-pressed]="navigation.uiMode() === 'reports'"
@@ -54,6 +57,7 @@
         <button
           type="button"
           class="sidenav__link"
+          data-tour="nav-data"
           [class.sidenav__link--active]="navigation.uiMode() === 'data'"
           [attr.aria-current]="navigation.uiMode() === 'data' ? 'page' : null"
           [attr.aria-pressed]="navigation.uiMode() === 'data'"
@@ -67,6 +71,7 @@
         <button
           type="button"
           class="sidenav__link"
+          data-tour="nav-settings"
           [class.sidenav__link--active]="navigation.uiMode() === 'settings'"
           [attr.aria-current]="navigation.uiMode() === 'settings' ? 'page' : null"
           [attr.aria-pressed]="navigation.uiMode() === 'settings'"
@@ -80,6 +85,7 @@
         <button
           type="button"
           class="sidenav__link"
+          data-tour="nav-product"
           [class.sidenav__link--active]="navigation.uiMode() === 'product'"
           [attr.aria-current]="navigation.uiMode() === 'product' ? 'page' : null"
           [attr.aria-pressed]="navigation.uiMode() === 'product'"
@@ -211,7 +217,7 @@
         @if (navigation.selectedItemId() && (!viewport.isMobile() || navigation.mobileExplorePane() === 'detail')) {
           <section class="pane pane--detail" [attr.aria-label]="text.itemDetailAriaLabel()">
             <h2 class="pane__heading">{{ text.detailsHeading() }}</h2>
-            <app-item-detail></app-item-detail>
+            <app-item-detail data-tour="item-detail"></app-item-detail>
           </section>
         }
       }
@@ -258,6 +264,7 @@
     <button
       type="button"
       class="bottom-nav__item"
+      data-tour="nav-explore"
       [class.bottom-nav__item--active]="navigation.uiMode() === 'explore'"
       [attr.aria-current]="navigation.uiMode() === 'explore' ? 'page' : null"
       [attr.aria-pressed]="navigation.uiMode() === 'explore'"
@@ -269,6 +276,7 @@
     <button
       type="button"
       class="bottom-nav__item"
+      data-tour="nav-scan"
       [class.bottom-nav__item--active]="navigation.uiMode() === 'scan'"
       [attr.aria-pressed]="navigation.uiMode() === 'scan'"
       (click)="navigation.setUiMode('scan')"
@@ -279,6 +287,7 @@
     <button
       type="button"
       class="bottom-nav__item"
+      data-tour="nav-reports"
       [class.bottom-nav__item--active]="navigation.uiMode() === 'reports'"
       [attr.aria-current]="navigation.uiMode() === 'reports' ? 'page' : null"
       [attr.aria-pressed]="navigation.uiMode() === 'reports'"
@@ -290,6 +299,7 @@
     <button
       type="button"
       class="bottom-nav__item"
+      data-tour="nav-data"
       [class.bottom-nav__item--active]="navigation.uiMode() === 'data'"
       [attr.aria-current]="navigation.uiMode() === 'data' ? 'page' : null"
       [attr.aria-pressed]="navigation.uiMode() === 'data'"
@@ -301,6 +311,7 @@
     <button
       type="button"
       class="bottom-nav__item"
+      data-tour="nav-settings"
       [class.bottom-nav__item--active]="navigation.uiMode() === 'settings'"
       [attr.aria-current]="navigation.uiMode() === 'settings' ? 'page' : null"
       [attr.aria-pressed]="navigation.uiMode() === 'settings'"
@@ -312,6 +323,7 @@
     <button
       type="button"
       class="bottom-nav__item"
+      data-tour="nav-product"
       [class.bottom-nav__item--active]="navigation.uiMode() === 'product'"
       [attr.aria-current]="navigation.uiMode() === 'product' ? 'page' : null"
       [attr.aria-pressed]="navigation.uiMode() === 'product'"

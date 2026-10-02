@@ -57,10 +57,10 @@
               <button type="button" class="edit-btn" (click)="editLocationName()" matTooltip="Edit" aria-label="Edit"><mat-icon svgIcon="shape" aria-hidden="true"></mat-icon></button>
             </h3>
             @if (hasMultipleAddOptions()) {
-              <button type="button" class="add-item add-item--header" [matMenuTriggerFor]="addMenuTray"><mat-icon svgIcon="add"></mat-icon> {{ headerAddLabel() }} <mat-icon svgIcon="chevronDown" style="width:14px;height:14px"></mat-icon></button>
+              <button type="button" class="add-item add-item--header" data-tour="add-item-button" [matMenuTriggerFor]="addMenuTray"><mat-icon svgIcon="add"></mat-icon> {{ headerAddLabel() }} <mat-icon svgIcon="chevronDown" style="width:14px;height:14px"></mat-icon></button>
               <mat-menu #addMenuTray="matMenu">@for (opt of headerAddOptions(); track opt.label){<button mat-menu-item (click)="opt.action()">{{opt.label}}</button>}</mat-menu>
             } @else {
-              <button type="button" class="add-item add-item--header" (click)="headerAdd()" [attr.title]="nextAvailablePositionName() ? 'Se añadirá en ' + nextAvailablePositionName() : null"><mat-icon svgIcon="add"></mat-icon> {{ headerAddLabel() }}</button>
+              <button type="button" class="add-item add-item--header" data-tour="add-item-button" (click)="headerAdd()" [attr.title]="nextAvailablePositionName() ? 'Se añadirá en ' + nextAvailablePositionName() : null"><mat-icon svgIcon="add"></mat-icon> {{ headerAddLabel() }}</button>
             }
           </div>
           <div class="detail-card__chips">
@@ -136,14 +136,14 @@
               <button type="button" class="edit-btn" (click)="editLocationName()" matTooltip="Edit" aria-label="Edit"><mat-icon svgIcon="shape" aria-hidden="true"></mat-icon></button>
             </h3>
             @if (hasMultipleAddOptions()) {
-              <button type="button" class="add-item add-item--header" [matMenuTriggerFor]="addMenu"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> {{ headerAddLabel() }} <mat-icon svgIcon="chevronDown" aria-hidden="true" style="width:14px;height:14px"></mat-icon></button>
+              <button type="button" class="add-item add-item--header" data-tour="add-item-button" [matMenuTriggerFor]="addMenu"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> {{ headerAddLabel() }} <mat-icon svgIcon="chevronDown" aria-hidden="true" style="width:14px;height:14px"></mat-icon></button>
               <mat-menu #addMenu="matMenu">
                 @for (opt of headerAddOptions(); track opt.label) {
                   <button mat-menu-item (click)="opt.action()">{{ opt.label }}</button>
                 }
               </mat-menu>
             } @else {
-              <button type="button" class="add-item add-item--header" (click)="headerAdd()"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> {{ headerAddLabel() }}</button>
+              <button type="button" class="add-item add-item--header" data-tour="add-item-button" (click)="headerAdd()"><mat-icon svgIcon="add" aria-hidden="true"></mat-icon> {{ headerAddLabel() }}</button>
             }
           </div>
           <div class="detail-card__chips">
@@ -339,13 +339,13 @@
     }
 
     @if (showFloorPlan()) {
-      <app-floor-plan [locations]="children()" [containerLocationId]="location.id" (toggle3d)="setViewMode('3d')"></app-floor-plan>
+      <app-floor-plan data-tour="floor-plan" [locations]="children()" [containerLocationId]="location.id" (toggle3d)="setViewMode('3d')"></app-floor-plan>
     }
     @if (is3dView()) {
-      <app-floor-plan-three [locations]="children()" [containerLocationId]="location.id" (toggleMap)="setViewMode('map')"></app-floor-plan-three>
+      <app-floor-plan-three data-tour="floor-plan-three" [locations]="children()" [containerLocationId]="location.id" (toggleMap)="setViewMode('map')"></app-floor-plan-three>
     }
     @if (showPositionGrid()) {
-      <app-position-grid [positions]="children()" (addItem)="addItemToLocation($event)"></app-position-grid>
+      <app-position-grid data-tour="position-grid" [positions]="children()" (addItem)="addItemToLocation($event)"></app-position-grid>
     }
   }
 

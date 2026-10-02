@@ -1,5 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
 import type { Dataset, Item, ItemCategory, Location, Movement, Point } from '../core/models';
+import { generateSeed } from '../core/seed';
 import { itemCountsByLocation } from '../core/search';
 import { nearestInsidePosition, rectInsidePolygon, scaleOutline } from '../core/outline';
 import { createStore, resetDemoData, type DatasetStore } from '../persistence/store';
@@ -50,6 +51,18 @@ export class CollectionService {
     resetDemoData();
     location.reload();
   }
+
+  /** Switches to an in-memory demo dataset so the onboarding tour can show features without touching user data. */
+  enterDemoMode(): void {
+    this.store.enterDemo(generateSeed());
+  }
+
+  /** Drops the in-memory demo dataset and returns to the user's real dataset. */
+  exitDemoMode(): void {
+    this.store.exitDemo();
+  }
+
+  readonly isDemoMode = () => this.store.isDemoMode();
 
   /**
    * Repositions a location on its `FloorPlanComponent` map. This is UI

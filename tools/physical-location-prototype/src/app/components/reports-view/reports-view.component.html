@@ -106,6 +106,7 @@
   @if (hasVisibleMetrics()) {
     <div
       class="reports__metrics"
+      data-tour="reports-metrics"
       cdkDropList
       cdkDropListOrientation="mixed"
       (cdkDropListDropped)="onMetricsDrop($event)"

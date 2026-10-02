@@ -15,15 +15,55 @@
 .tour__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(13, 17, 23, 0.58);
-  backdrop-filter: blur(6px);
+  background: rgba(13, 17, 23, 0.38);
+}
+
+.tour__spotlight {
+  position: fixed;
+  z-index: 101;
+  border-radius: 12px;
+  box-shadow: 0 0 0 9999px rgba(13, 17, 23, 0.38);
+  pointer-events: none;
+  transition: left 300ms ease, top 300ms ease, width 300ms ease, height 300ms ease;
+}
+
+.tour__highlight {
+  position: fixed;
+  z-index: 102;
+  border-radius: 12px;
+  border: 2px solid var(--accent, #4f46e5);
+  pointer-events: none;
+  animation: tourPulse 1.6s ease-in-out infinite;
+  transition: left 300ms ease, top 300ms ease, width 300ms ease, height 300ms ease;
+}
+
+@keyframes tourPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.35); }
+  50% { box-shadow: 0 0 0 6px rgba(79, 70, 229, 0); }
+}
+
+.tour__card-wrap {
+  position: relative;
+  z-index: 103;
+  width: min(560px, 100%);
+  max-height: min(82dvh, 640px);
+  animation: tourIn 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tour__card-wrap--centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tour__card-wrap--attached {
+  max-height: min(320px, 70dvh);
 }
 
 .tour__card {
-  position: relative;
-  width: min(560px, 100%);
-  max-height: min(82dvh, 640px);
-  overflow-y: auto;
+  width: 100%;
+  max-height: inherit;
+  overflow: hidden;
   background: var(--surface, #fff);
   border: 1px solid var(--border, #c7c4d8);
   border-radius: 16px;
@@ -31,12 +71,19 @@
   display: flex;
   flex-direction: column;
   padding: 0;
-  animation: tourIn 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes tourIn {
   from { opacity: 0; transform: translateY(12px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.tour__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 0.5rem;
 }
 
 .tour__progress {
@@ -170,6 +217,7 @@
   justify-content: center;
   gap: 6px;
   margin-top: 1rem;
+  margin-bottom: 0.5rem;
   flex: none;
 }
 
@@ -200,9 +248,8 @@
   justify-content: space-between;
   gap: 0.75rem;
   padding: 1rem 1.25rem 1.25rem;
-  margin-top: auto;
   border-top: 1px solid var(--border-soft, rgba(199,196,216,0.3));
-  margin-top: 1rem;
+  background: var(--surface, #fff);
   flex: none;
 }
 
@@ -216,9 +263,17 @@
     align-items: flex-end;
     padding: 0;
   }
-  .tour__card {
+  .tour__card-wrap,
+  .tour__card-wrap--attached {
     width: 100%;
     max-height: 86dvh;
+    left: 0 !important;
+    top: auto !important;
+    bottom: 0;
+    transform: none !important;
+  }
+  .tour__card {
+    width: 100%;
     border-radius: 16px 16px 0 0;
     animation: tourInMobile 360ms cubic-bezier(0.22, 1, 0.36, 1);
   }

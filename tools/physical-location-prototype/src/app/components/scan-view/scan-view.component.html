@@ -5,7 +5,7 @@
       <p>{{ text.subheading() }}</p>
     </div>
 
-    <div class="scan-mode-toggle" role="group" [attr.aria-label]="text.manualScanLabel()">
+    <div class="scan-mode-toggle" data-tour="scan-mode-toggle" role="group" [attr.aria-label]="text.manualScanLabel()">
       <button
         type="button"
         mat-button
@@ -33,6 +33,7 @@
     <section class="scan-view__steps" [attr.aria-label]="text.stepsAriaLabel()">
       <div
         class="scan-step"
+        data-tour="scan-step-item"
         [class.scan-step--active]="isStep1Active()"
         [class.scan-step--done]="isStep1Done()"
         [class.scan-step--error]="isStep1Error()"
@@ -77,6 +78,7 @@
       @if (scan.scanMode() === SCAN_MODE.place) {
         <div
           class="scan-step"
+          data-tour="scan-step-destination"
           [class.scan-step--active]="isStep2Active() && !isStep2Done()"
           [class.scan-step--done]="isStep2Done()"
           [class.scan-step--error]="isStep2Error()"
