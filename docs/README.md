@@ -56,12 +56,17 @@
 ---
 
 **Status of everything here:** Phase 1 (market validation) complete; still desk research. The
-architecture documents are proposals with rationale, and all ADRs are `Proposed`. **Nothing has
-been validated with real users**; that is Phase 2 of the [roadmap](product/roadmap.md) and it gates
-all code. `open-research-lab` is the umbrella repository — no product code lives here, and the
-Sample Operations repository does not exist yet. The one piece of code in the repository,
-[`tools/collection-validator`](../tools/collection-validator/README.md), is a throwaway prototype
-used to make Phase 2 interviews concrete; it is not a product and not an architecture precedent.
+architecture documents are proposals with rationale, and the pre-ADR-0014 ADRs are `Proposed`.
+**Nothing has been validated with real users**; that is Phase 2 of the [roadmap](product/roadmap.md)
+and it gates the standalone product repository. `open-research-lab` is the umbrella repository; the
+candidate Sample Operations product incubates here as
+[`tools/physical-location-prototype`](../tools/physical-location-prototype/README.md) (ADR-0014)
+and will be extracted when its criteria are met. The standalone `sample-operations` repository does
+not exist yet. The other code in the repository —
+[`tools/collection-validator`](../tools/collection-validator/README.md) and
+[`tools/sample-operations-slice`](../tools/sample-operations-slice/README.md) — are throwaway
+prototypes used to make Phase 2 interviews concrete; neither is a product nor an architecture
+precedent.
 
 Where Phase 0 and Phase 1 conflict, Phase 1 wins: the beachhead is small natural-history
 collections, not small research laboratories.

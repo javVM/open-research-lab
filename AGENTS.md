@@ -201,18 +201,24 @@ Full detail in [docs/architecture/testing-strategy.md](docs/architecture/testing
   being shaped toward that product but remains a prototype until it is extracted.
 - No repository-wide toolchain and no CI. `tools/collection-validator`,
   `tools/sample-operations-slice` and `tools/physical-location-prototype` each have their own
-  self-contained `package.json` and are not a workspace, a monorepo root, or a precedent for one.
-  `tools/physical-location-prototype` is the only one of the three with runtime dependencies
-  (Angular), because it is a UI experiment rather than a headless one. Its Angular version is not
-  a statement about the product's eventual UI framework; see its own README.
+  self-contained `package.json` and are not a monorepo root or a precedent for one.
+  `tools/physical-location-prototype` is, however, an **npm workspace** (realising ADR-0008's
+  modular-monolith layout inside the incubator, per ADR-0014): `packages/core` (pure domain model
+  + invariants, no I/O), `packages/persistence-sqlite` (SQLite schema, migrations, repositories),
+  `apps/cli` (the import/validate/export pipeline, thin CLI), and `apps/ui` (the Angular spatial
+  UI prototype). It is the only one of the three with runtime dependencies (Angular and
+  `better-sqlite3`). Its Angular version is not a statement about the product's eventual UI
+  framework; see its own README. Note the current asymmetry: `apps/ui` still runs on its own
+  simplified model (`apps/ui/src/core`) with `localStorage`; it is **not yet wired** to
+  `packages/core` or `packages/persistence-sqlite`, which the CLI uses today.
 - No pre-commit hooks configured (no `.pre-commit-config.yaml`, no `.husky/`). If you introduce
   a toolchain, wire lint and format into CI first; hooks are optional and must never be skipped
   with `--no-verify` once they exist.
 - Commands, run from `tools/collection-validator`: `npm install`, `npm test`,
   `npm run typecheck`, `npm run validate -- <file.csv>`. Both checks must be green before a PR
   that touches the prototype. Commands, run from `tools/physical-location-prototype`:
-  `npm install`, `npm test`, `npm run typecheck`, `npm run build`, `npm start`. There is no
-  repository-wide command.
+  `npm install`, `npm run verify` (build in dependency order + test + typecheck), `npm test`,
+  `npm run build`, `npm start`. There is no repository-wide command.
 
 ## 10. When in doubt
 

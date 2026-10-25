@@ -26,27 +26,42 @@ are throwaway demo state.
 - **Rendering**: the 2D map clips each shaped rect with `clip-path: polygon(...)`. Repositioning
   (drag) still moves `x`/`y`; resizing rescales the outline in proportion (`scaleOutline`).
 - **Editing**: a "Shape" mode in the map toolbar. Clicking a location on the map targets it and
-  reveals vertex handles (drag to slide the two incident edges) and edge-midpoint handles (drag
-  inward to cut a rectangular notch — drag toward a corner for an L, the middle for a U). A
-  "Reset" action reverts the targeted location to a rectangle. Editing is desktop-only, matching
-  reposition/resize. When a shape change (or resize) leaves a child location straddling or outside
-  the parent's outline, the child is pulled back to the nearest position that fits inside
+  reveals a vertex handle at each outline corner. Dragging a vertex strictly inside the polygon
+  cuts a notch out of that corner (`cutCorner`) — a rectangle becomes an L, an L can become a U or
+  stair — while dragging a notch's inner corner back out collapses it (`moveVertex`). Every result
+  is kept orthogonal, simple and bounded to the location's rectangle (`isSimplePolygon`,
+  `simplifyOutline`, a minimum edge length, and a bounding-box check), and cutting is capped at two
+  notches (a rectangle can become an L, then a C/U, but no more), so only controlled L/C shapes are
+  possible. The earlier edge-midpoint notch handles (which cut at any point
+  along an edge) proved too fiddly and were removed. Editing is desktop-only, matching
+  reposition/resize. When a shape change leaves a child location straddling or outside the
+  parent's outline, the child is pulled back to the nearest position that fits
   (`nearestInsidePosition`), so the parent's structure constrains its children. The on-map label
-  is re-anchored to a point inside the outline (`labelAnchor`) instead of staying at the clipped
-  corner.
+  is re-anchored to a point inside the outline (`labelAnchor`).
+- **Parent-to-child clipping**: in the 2D map the container's own outline is applied as a CSS
+  `clip-path` to the whole map canvas, and the same outline is drawn as a visible footprint guide
+  behind the children. Children therefore render only inside the parent's actual floor shape; any
+  part of a child that would spill past a cut-away corner is hidden rather than drawn over the
+  void. The 3D view applies the same container outline as a `clip-path` to the base plane and its
+  floor face, and draws a low border wall along every edge of the container outline so the shape
+  is readable from any orbit angle. This is a rendering rule, not a data change — the child's
+  stored `x`/`y`/`width`/`height` and optional own `outline` are left untouched.
+- **Accidental-change guard**: shape-handle drags only commit once the pointer has moved a few
+  pixels. A press-and-release on a handle without meaningful travel is a no-op, preventing stray
+  clicks from adding unwanted vertices.
 - **3D**: `floor-plan-3d` extrudes the same outline: the roof is clipped with the polygon and one
   vertical wall is drawn per edge, so an L-shaped room reads as an L in 3D too. Shaped locations
   do not get the drawer-shelf overlay (that overlay is specific to the four rectangular sides);
   the outline is scaled to the footprint the 3D view uses (rooms/cabinets at 1:1, floors to the
   shared `FLOOR_FOOTPRINT`).
-- **Geometry**: the edit operations live in pure, framework-free `core/outline.ts`
-  (`moveVertex`, `notchEdge`, `inwardNormal`, `simplifyOutline`, `scaleOutline`) with unit tests,
-  so the orthogonality invariant and the notch/vertex rules are enforced and verifiable
-  independently of the UI.
+- **Geometry**: the edit and containment helpers live in pure, framework-free `core/outline.ts`
+  (`cutCorner`, `moveVertex`, `simplifyOutline`, `isSimplePolygon`, `scaleOutline`,
+  `pointInPolygon`, `labelAnchor`, `nearestInsidePosition`) with unit tests, so the orthogonality
+  and validity rules are enforced and verifiable independently of the UI.
 
-The orthogonality constraint is preserved by construction: every editing primitive only ever moves
-vertices along their incident axis-aligned edges, and `notchEdge` inserts corners offset
-perpendicular to a straight edge. There is no code path that can produce a diagonal.
+The orthogonality constraint holds by construction: every editing primitive only moves vertices
+  along their incident axis-aligned edges (`moveVertex`) or cuts a corner with two axis-aligned
+  edges (`cutCorner`), so no code path can produce a diagonal.
 
 ## Alternatives considered
 
